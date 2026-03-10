@@ -35,6 +35,8 @@
 </p>
 
 ---
+https://github.com/user-attachments/assets/76af060c-fdb1-40cb-b575-46c7a807845d
+---
 
 ## 🆕 What's New in v1.5.0
 
