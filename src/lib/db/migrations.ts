@@ -582,10 +582,14 @@ const migrations: Migration[] = [
       // It should never silently wipe a production database that has accumulated real
       // work. A database with tasks in it is NOT a "fresh start" candidate.
       const taskCount = (db.prepare('SELECT COUNT(*) as count FROM tasks').get() as { count: number }).count;
-      const hasRealData = taskCount > 0;
+      const agentCount = (db.prepare("SELECT COUNT(*) as count FROM agents WHERE source = 'local'").get() as { count: number }).count;
+      // Check BOTH tables: a database with configured local agents but no tasks yet
+      // (e.g. fresh install where agents were bootstrapped but no work has been submitted)
+      // should NOT be wiped — the user's agent configuration is real data worth preserving.
+      const hasRealData = taskCount > 0 || agentCount > 0;
 
       if (hasRealData) {
-        console.warn(`[Migration 013] WARNING: Skipping data wipe — database has ${taskCount} existing task(s).`);
+        console.warn(`[Migration 013] WARNING: Skipping data wipe — database has ${taskCount} task(s) and ${agentCount} local agent(s).`);
         console.warn('[Migration 013] This migration is a dev-only reset tool and will not destroy real data.');
       } else {
         console.log('[Migration 013] Fresh database detected — wiping seed data and bootstrapping...');
@@ -644,7 +648,7 @@ const migrations: Migration[] = [
       bootstrapCoreAgentsRaw(db, 'default', missionControlUrl);
 
       if (hasRealData) {
-        console.log('[Migration 013] Complete (data wipe skipped — real data preserved)');
+        console.log(`[Migration 013] Complete (data wipe skipped — ${taskCount} task(s) and ${agentCount} local agent(s) preserved)`);
       } else {
         console.log('[Migration 013] Fresh start complete');
       }
@@ -674,12 +678,13 @@ const migrations: Migration[] = [
  * fs.copyFile() is NOT safe in WAL mode — the .db and .wal files are updated
  * separately and may not represent a coherent snapshot when copied together.
  *
- * The backup is written to the same directory as the source database, named:
- *   <original-filename>.backup.<ISO-8601-timestamp>
- * e.g.: mission-control.db.backup.2026-03-14T16-32-00
+ * The backup is written to a `db-backups/` subdirectory next to the source
+ * database, named: <original-filename>.backup.<ISO-8601-timestamp>
+ * e.g.: db-backups/mission-control.db.backup.2026-03-14T16-32-00
  *
  * Keeps the last MAX_BACKUPS backups and removes older ones automatically.
- * Backup failure is non-fatal: the caller logs a warning and proceeds.
+ * Backup failure is fatal: if the backup cannot be created, this function
+ * throws and the caller must abort the migration run.
  */
 const MAX_BACKUPS = 5;
 
@@ -693,6 +698,8 @@ function createPreMigrationBackup(db: Database.Database): void {
   }
 
   const dbDir = path.dirname(dbPath);
+  const backupDir = path.join(dbDir, 'db-backups');
+  fs.mkdirSync(backupDir, { recursive: true });
 
   // Build a timestamp string that is valid in filenames on all platforms.
   // ISO 8601 with colons replaced — colons are illegal in Windows filenames.
@@ -705,7 +712,7 @@ function createPreMigrationBackup(db: Database.Database): void {
   // the backup is clearly associated with its source database.
   const dbBasename = path.basename(dbPath);                  // "mission-control.db"
   const backupFilename = `${dbBasename}.backup.${timestamp}`; // "mission-control.db.backup.2026-03-14T16-32-00"
-  const backupPath = path.join(dbDir, backupFilename);
+  const backupPath = path.join(backupDir, backupFilename);
 
   // VACUUM INTO creates a consistent, compacted snapshot of the open database.
   // It flushes all WAL frames and writes a clean .db file — no need to also
@@ -717,15 +724,22 @@ function createPreMigrationBackup(db: Database.Database): void {
 
   // Prune old backups — keep only the most recent MAX_BACKUPS to limit disk usage.
   // ISO timestamps sort lexicographically, so a simple .sort() gives correct order.
-  const backupFiles = fs.readdirSync(dbDir)
+  const backupFiles = fs.readdirSync(backupDir)
     .filter(f => f.startsWith(`${dbBasename}.backup.`))
     .sort();
 
   if (backupFiles.length > MAX_BACKUPS) {
-    const toDelete = backupFiles.slice(0, backupFiles.length - MAX_BACKUPS);
-    for (const filename of toDelete) {
-      fs.unlinkSync(path.join(dbDir, filename));
-      console.log(`[DB] Removed old backup: ${filename}`);
+    // Wrap cleanup in its own try/catch so a failure here (e.g. file locked on
+    // Windows, permissions issue) is reported clearly as a cleanup problem —
+    // not as "backup failed". The backup itself already succeeded at this point.
+    try {
+      const toDelete = backupFiles.slice(0, backupFiles.length - MAX_BACKUPS);
+      for (const filename of toDelete) {
+        fs.unlinkSync(path.join(backupDir, filename));
+        console.log(`[DB] Removed old backup: ${filename}`);
+      }
+    } catch (cleanupError) {
+      console.warn('[DB] Warning: could not remove old backup file(s) — cleanup failed, but the backup itself is intact:', cleanupError);
     }
   }
 }
@@ -734,9 +748,10 @@ function createPreMigrationBackup(db: Database.Database): void {
  * Run all pending migrations.
  *
  * Before applying any pending migration, a timestamped backup of the database
- * file is created. Backup failure is non-fatal — a warning is logged and
- * migrations proceed. Migration failure IS fatal and throws, preventing the
- * application from starting in a partially-migrated state.
+ * file is created in a `db-backups/` subdirectory. If backup creation fails,
+ * the migration run is aborted entirely — protecting data takes priority over
+ * applying schema changes. Migration failure IS fatal and throws, preventing
+ * the application from starting in a partially-migrated state.
  */
 export function runMigrations(db: Database.Database): void {
   // Create migrations tracking table
@@ -757,19 +772,12 @@ export function runMigrations(db: Database.Database): void {
   const pending = migrations.filter(m => !applied.has(m.id));
 
   // Create a timestamped backup BEFORE touching the database.
-  // Backup failure is intentionally non-fatal: we log a prominent warning and
-  // continue rather than blocking startup. The migrations must still run — an
-  // application that fails to start is worse than one that starts without a
-  // backup. Operators should investigate and resolve the underlying cause
-  // (e.g. disk space, permissions) separately.
+  // Backup failure is FATAL — if we cannot create a recovery point, we do not
+  // apply migrations. Data safety takes priority over schema updates. Operators
+  // must resolve the underlying cause (e.g. disk space, permissions) first.
+  // The error is allowed to propagate and will abort the migration run.
   if (pending.length > 0) {
-    try {
-      createPreMigrationBackup(db);
-    } catch (backupError) {
-      console.warn('[DB] WARNING: Pre-migration backup failed — proceeding without a recovery point.');
-      console.warn('[DB] Migrations will still run. Investigate the backup error below:');
-      console.warn(backupError);
-    }
+    createPreMigrationBackup(db);
   }
 
   // Run pending migrations in order
