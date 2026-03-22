@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { queryOne, queryAll, run, transaction } from '@/lib/db';
 import { broadcast } from '@/lib/events';
 import { getMissionControlUrl } from '@/lib/config';
+import { rebuildPreferenceModel } from './preferences';
 import type { Idea, Task, Product, SwipeHistoryEntry } from '@/lib/types';
 
 interface SwipeInput {
@@ -17,7 +18,7 @@ export function recordSwipe(productId: string, input: SwipeInput): { idea: Idea;
   const idea = queryOne<Idea>('SELECT * FROM ideas WHERE id = ? AND product_id = ?', [input.idea_id, productId]);
   if (!idea) throw new Error(`Idea ${input.idea_id} not found`);
 
-  return transaction(() => {
+  const result = transaction(() => {
     const now = new Date().toISOString();
     const swipeId = uuidv4();
 
@@ -72,6 +73,13 @@ export function recordSwipe(productId: string, input: SwipeInput): { idea: Idea;
 
     return { idea: updatedIdea, task };
   });
+
+  // Rebuild preference model after each swipe (non-blocking)
+  try { rebuildPreferenceModel(productId); } catch (err) {
+    console.error('[Swipe] Failed to rebuild preferences:', err);
+  }
+
+  return result;
 }
 
 /**

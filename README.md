@@ -28,7 +28,7 @@ I highly recommend getting Hetzner VPS to run this. <a href="https://hetzner.clo
   <a href="https://missioncontrol.ghray.com"><strong>🎮 Live Demo</strong></a> •
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-docker">Docker</a> •
-  <a href="#-whats-new-in-v211">What's New</a> •
+  <a href="#-whats-new-in-v220">What's New</a> •
   <a href="#-features">Features</a> •
   <a href="#-how-it-works">How It Works</a> •
   <a href="#-configuration">Configuration</a> •
@@ -41,29 +41,38 @@ I highly recommend getting Hetzner VPS to run this. <a href="https://hetzner.clo
 
 ---
 
-## 🚀 What's New in v2.1.1
+## 🚀 What's New in v2.2.0
 
-### Bug Fix
-- **Ideation category validation** — LLM-generated idea categories are now validated against the schema before insert, preventing CHECK constraint failures that blocked idea storage.
+### Preference Learning (Karpathy AutoResearch Pattern)
+- **Your swipes train the system** — Every approve/reject/maybe builds a per-product preference model that steers future research and ideation. Categories you love get more ideas. Categories you reject get fewer. Complexity, impact scores, and tag patterns all factor in.
+- **Backfill from history** — Existing swipe data is retroactively analyzed to bootstrap preference models.
 
-### v2.1.0 — Server-Side Autopilot Pipeline
-- **Run Now works in the background** — The research → ideation pipeline now runs entirely server-side. Click "Run Now", navigate away, close the tab — the pipeline keeps running. Multiple products run concurrently.
-- **LLM retry with backoff** — Timeout and network errors retry up to 3 times with exponential backoff (5s, 10s, 20s). Fixes ideation failures from flaky gateway connections.
-
-### Error Reporting & Notifications
-- **Toast notifications** — Errors, warnings, and status updates surface as toast notifications in real-time. Autopilot failures and cost cap warnings appear automatically via SSE.
-- **One-click error reporting** — Click "Report this issue" on any error toast to open your email client pre-filled with error details and system logs. Zero friction.
-
-### Pending Ideas Badge
-- **iPhone-style notification badges** — Product cards on `/autopilot` show a red badge with the count of pending ideas awaiting review.
+### Token Tracking Fix
+- **Token counts now recorded** — Research and ideation cycles pass usage data (prompt tokens, completion tokens, model) through to the activity log and cost tracker. Previously always showed 0.
 
 ### Previous Releases
 
 <details>
+<summary>v2.1.1 — Ideation Category Validation</summary>
+
+- LLM-generated idea categories validated against schema before insert, preventing CHECK constraint failures.
+</details>
+
+<details>
+<summary>v2.1.0 — Server-Side Pipeline, Error Reporting & Badges</summary>
+
+- Research → ideation pipeline runs server-side (fire-and-forget, survives navigation)
+- LLM retry with exponential backoff on timeout/network errors
+- Toast notification system with real-time SSE error surfacing
+- One-click error reporting via mailto (pre-filled with system logs)
+- Pending ideas badge on product cards (iPhone-style notification count)
+</details>
+
+<details>
 <summary>v2.0.2 — Session Key Prefix Support</summary>
 
-- **Session Key Prefix UI** — Agents now have a configurable `session_key_prefix` field in the Agent Modal for custom OpenClaw session routing. Dynamically created agents inherit the prefix from the master agent. ([@balaji-g42](https://github.com/balaji-g42))
-- **Session key sanitization** — Empty prefixes fall back to defaults; missing trailing colons are auto-appended to prevent malformed session keys.
+- Session Key Prefix UI for custom OpenClaw session routing. ([@balaji-g42](https://github.com/balaji-g42))
+- Session key sanitization — empty prefixes fall back to defaults.
 </details>
 
 <details>

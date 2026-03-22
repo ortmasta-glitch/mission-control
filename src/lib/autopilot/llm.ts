@@ -88,6 +88,8 @@ export async function complete(prompt: string, options: CompletionOptions = {}):
 
       const content = data.choices?.[0]?.message?.content || '';
 
+      console.log(`[LLM] Response usage:`, JSON.stringify(data.usage || null), `model: ${data.model}`);
+
       return {
         content,
         model: data.model || model,
@@ -122,12 +124,12 @@ export async function complete(prompt: string, options: CompletionOptions = {}):
  * Send a prompt and parse the response as JSON.
  * Handles markdown code blocks and embedded JSON.
  */
-export async function completeJSON<T = unknown>(prompt: string, options: CompletionOptions = {}): Promise<{ data: T; raw: string; usage: CompletionResult['usage'] }> {
+export async function completeJSON<T = unknown>(prompt: string, options: CompletionOptions = {}): Promise<{ data: T; raw: string; model: string; usage: CompletionResult['usage'] }> {
   const result = await complete(prompt, options);
 
   // Try direct parse
   try {
-    return { data: JSON.parse(result.content.trim()) as T, raw: result.content, usage: result.usage };
+    return { data: JSON.parse(result.content.trim()) as T, raw: result.content, model: result.model, usage: result.usage };
   } catch {
     // Continue
   }
@@ -136,7 +138,7 @@ export async function completeJSON<T = unknown>(prompt: string, options: Complet
   const codeBlockMatch = result.content.match(/```(?:json)?\s*([\s\S]*?)```/);
   if (codeBlockMatch) {
     try {
-      return { data: JSON.parse(codeBlockMatch[1].trim()) as T, raw: result.content, usage: result.usage };
+      return { data: JSON.parse(codeBlockMatch[1].trim()) as T, raw: result.content, model: result.model, usage: result.usage };
     } catch {
       // Continue
     }
@@ -147,7 +149,7 @@ export async function completeJSON<T = unknown>(prompt: string, options: Complet
   const lastBrace = result.content.lastIndexOf('}');
   if (firstBrace !== -1 && lastBrace > firstBrace) {
     try {
-      return { data: JSON.parse(result.content.slice(firstBrace, lastBrace + 1)) as T, raw: result.content, usage: result.usage };
+      return { data: JSON.parse(result.content.slice(firstBrace, lastBrace + 1)) as T, raw: result.content, model: result.model, usage: result.usage };
     } catch {
       // Continue
     }
@@ -158,7 +160,7 @@ export async function completeJSON<T = unknown>(prompt: string, options: Complet
   const lastBracket = result.content.lastIndexOf(']');
   if (firstBracket !== -1 && lastBracket > firstBracket) {
     try {
-      return { data: JSON.parse(result.content.slice(firstBracket, lastBracket + 1)) as T, raw: result.content, usage: result.usage };
+      return { data: JSON.parse(result.content.slice(firstBracket, lastBracket + 1)) as T, raw: result.content, model: result.model, usage: result.usage };
     } catch {
       // Continue
     }

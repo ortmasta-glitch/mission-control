@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.2.0] - 2026-03-21
+
+### Added
+- **Preference Learning (Karpathy AutoResearch Pattern)** — Swipe history is now analyzed after every swipe to build a per-product preference model. The model captures category approval rates, complexity preferences, impact score thresholds, tag patterns, and examples of approved/rejected ideas. The resulting `learned_preferences_md` is injected into both research and ideation prompts, steering future cycles toward what the user actually wants.
+- **Preference Backfill API** — `POST /api/products/backfill-preferences` rebuilds preference models for all products with existing swipe history. Used to bootstrap models from historical data.
+
+### Fixed
+- **Token counts always showing 0** — Research and ideation cycles now pass token usage (`promptTokens`, `completionTokens`, `totalTokens`) and model name through to `emitAutopilotActivity()` and `recordCostEvent()`. Previously the usage data was extracted from the gateway but discarded before storage. Added debug logging (`[LLM] Response usage:`) to verify gateway returns usage data.
+
+---
+
 ## [2.1.1] - 2026-03-21
 
 ### Fixed

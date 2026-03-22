@@ -139,7 +139,7 @@ export async function runIdeationCycle(productId: string, cycleId?: string, exis
       });
       broadcast({ type: 'ideation_phase', payload: { productId, ideationId, phase: 'llm_polling' } });
 
-      const { data: rawIdeas, usage } = await completeJSON<unknown[]>(prompt, {
+      const { data: rawIdeas, model: responseModel, usage } = await completeJSON<unknown[]>(prompt, {
         systemPrompt: 'You are a product ideation agent. Respond with a JSON array of idea objects only.',
         timeoutMs: 300_000,
       });
@@ -168,11 +168,17 @@ export async function runIdeationCycle(productId: string, cycleId?: string, exis
         eventType: 'phase_ideas_parsed',
         message: `Parsed ${ideasData.length} ideas from LLM response`,
         detail: `Tokens used: ${usage.totalTokens}`,
+        tokensUsed: usage.totalTokens,
       });
       broadcast({ type: 'ideation_phase', payload: { productId, ideationId, phase: 'ideas_parsed', count: ideasData.length } });
 
       // Phase: ideas_stored — insert into ideas table
-      await storeIdeasFromPhaseData(ideationId, productId, cycleId || null, ideasData);
+      await storeIdeasFromPhaseData(ideationId, productId, cycleId || null, ideasData, {
+        model: responseModel,
+        promptTokens: usage.promptTokens,
+        completionTokens: usage.completionTokens,
+        totalTokens: usage.totalTokens,
+      });
 
       console.log(`[Ideation] Cycle ${ideationId} completed: ${ideasData.length} ideas (tokens: ${usage.totalTokens})`);
     } catch (error) {
@@ -201,7 +207,8 @@ export async function storeIdeasFromPhaseData(
   ideationId: string,
   productId: string,
   researchCycleId: string | null,
-  ideasData: unknown[]
+  ideasData: unknown[],
+  llmUsage?: { model: string; promptTokens: number; completionTokens: number; totalTokens: number }
 ): Promise<void> {
   const product = queryOne<Product>('SELECT * FROM products WHERE id = ?', [productId]);
 
@@ -275,6 +282,9 @@ export async function storeIdeasFromPhaseData(
       workspace_id: product.workspace_id,
       cycle_id: researchCycleId,
       event_type: 'ideation_cycle',
+      model: llmUsage?.model,
+      tokens_input: llmUsage?.promptTokens || 0,
+      tokens_output: llmUsage?.completionTokens || 0,
       cost_usd: 0,
     });
   }
@@ -287,7 +297,8 @@ export async function storeIdeasFromPhaseData(
     productId, cycleId: ideationId, cycleType: 'ideation',
     eventType: 'phase_completed',
     message: 'Ideation cycle completed successfully',
-    detail: `Generated ${count} ideas`,
+    detail: `Generated ${count} ideas${llmUsage ? ` | Tokens: ${llmUsage.totalTokens}` : ''}`,
+    tokensUsed: llmUsage?.totalTokens,
   });
 
   broadcast({ type: 'ideas_generated', payload: { productId, count, cycleId: researchCycleId } });

@@ -108,7 +108,7 @@ export async function runResearchCycle(productId: string, existingCycleId?: stri
       });
       broadcast({ type: 'research_phase', payload: { productId, cycleId, phase: 'llm_polling' } });
 
-      const { data: report, usage } = await completeJSON(prompt, {
+      const { data: report, model: responseModel, usage } = await completeJSON(prompt, {
         systemPrompt: 'You are a product research agent. Analyze the product and respond with a JSON research report only.',
         timeoutMs: 300_000, // 5 minutes
       });
@@ -137,7 +137,10 @@ export async function runResearchCycle(productId: string, existingCycleId?: stri
         workspace_id: product.workspace_id,
         cycle_id: cycleId,
         event_type: 'research_cycle',
-        cost_usd: 0, // TODO: calculate from usage
+        model: responseModel,
+        tokens_input: usage.promptTokens,
+        tokens_output: usage.completionTokens,
+        cost_usd: 0,
       });
 
       emitAutopilotActivity({
@@ -145,6 +148,7 @@ export async function runResearchCycle(productId: string, existingCycleId?: stri
         eventType: 'phase_completed',
         message: 'Research cycle completed successfully',
         detail: `Tokens used: ${usage.totalTokens}`,
+        tokensUsed: usage.totalTokens,
       });
 
       broadcast({ type: 'research_completed', payload: { productId, cycleId } });
