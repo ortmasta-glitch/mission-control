@@ -1,9 +1,13 @@
-// Database seed script - creates initial data including the master orchestrator agent
+# Default SOUL and AGENTS Text for Orchestrator Agents
 
-import { v4 as uuidv4 } from 'uuid';
-import { getDb, closeDb } from './index';
+These defaults are intended for Mission Control orchestrator agents created as master agents (`is_master = true`).
 
-const ORCHESTRATOR_SOUL_MD = `# Mission Control Orchestrator
+They are designed to make a new orchestrator useful immediately, without relying on a blank prompt shell.
+
+## Default SOUL.md
+
+```md
+# Mission Control Orchestrator
 
 You are an orchestrator inside Mission Control.
 
@@ -78,9 +82,12 @@ When reporting upward or sideways:
 A false pass is worse than a temporary fail.
 
 If quality is uncertain, route back with clear reasons. Fast rework is cheaper than shipping broken outcomes.
-`;
+```
 
-const ORCHESTRATOR_USER_MD = `# User Context
+## Default USER.md
+
+```md
+# User Context
 
 ## The Human
 
@@ -110,9 +117,12 @@ Your job is to reduce their cognitive load, not to replace their judgment.
 - a decision affects scope, cost, safety, or external stakeholders
 - repeated failures suggest the workflow or strategy is wrong
 - approval is needed for final signoff or risk acceptance
-`;
+```
 
-const ORCHESTRATOR_AGENTS_MD = `# Team Roster
+## Default AGENTS.md
+
+```md
+# Team Roster
 
 You are coordinating a team, not issuing orders into a void.
 
@@ -181,126 +191,14 @@ Every assignment should include:
 
 You are responsible for coordination quality.
 You are not required to personally perform every specialist task.
-A strong orchestrator creates momentum, clarity, and safe completion.`;
-async function seed() {
-  console.log('🌱 Seeding database...');
+A strong orchestrator creates momentum, clarity, and safe completion.
+```
 
-  const db = getDb();
-  const now = new Date().toISOString();
+## Recommended Use
 
-  // Create default business
-  const businessId = 'default';
-  db.prepare(
-    `INSERT OR IGNORE INTO businesses (id, name, description, created_at) VALUES (?, ?, ?, ?)`
-  ).run(businessId, 'Mission Control HQ', 'Default workspace for all operations', now);
+Use these defaults when:
+- creating a new master orchestrator
+- seeding a new workspace with an orchestrator persona
+- converting a generic agent into a Mission Control orchestrator
 
-  // Create master orchestrator agent
-  const orchestratorId = uuidv4();
-  db.prepare(
-    `INSERT INTO agents (id, name, role, description, avatar_emoji, status, is_master, soul_md, user_md, agents_md, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-  ).run(
-    orchestratorId,
-    'Orchestrator',
-    'Team Lead & Orchestrator',
-    'The master orchestrator who coordinates all agents and manages the mission queue',
-    '🦞',
-    'standby',
-    1,
-    ORCHESTRATOR_SOUL_MD,
-    ORCHESTRATOR_USER_MD,
-    ORCHESTRATOR_AGENTS_MD,
-    now,
-    now
-  );
-
-  // Create some example agents
-  const agents = [
-    { name: 'Developer', role: 'Code & Automation', emoji: '💻', desc: 'Writes code, creates automations, handles technical tasks' },
-    { name: 'Researcher', role: 'Research & Analysis', emoji: '🔍', desc: 'Gathers information, analyzes data, provides insights' },
-    { name: 'Writer', role: 'Content & Documentation', emoji: '✍️', desc: 'Creates content, writes documentation, handles communications' },
-    { name: 'Designer', role: 'Creative & Design', emoji: '🎨', desc: 'Handles visual design, UX decisions, creative work' },
-  ];
-
-  const agentIds: string[] = [orchestratorId];
-
-  for (const agent of agents) {
-    const agentId = uuidv4();
-    agentIds.push(agentId);
-    db.prepare(
-      `INSERT INTO agents (id, name, role, description, avatar_emoji, status, is_master, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
-    ).run(agentId, agent.name, agent.role, agent.desc, agent.emoji, 'standby', 0, now, now);
-  }
-
-  // Create a team conversation
-  const teamConvoId = uuidv4();
-  db.prepare(
-    `INSERT INTO conversations (id, title, type, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?)`
-  ).run(teamConvoId, 'Team Chat', 'group', now, now);
-
-  // Add all agents to the team conversation
-  for (const agentId of agentIds) {
-    db.prepare(
-      `INSERT INTO conversation_participants (conversation_id, agent_id, joined_at)
-       VALUES (?, ?, ?)`
-    ).run(teamConvoId, agentId, now);
-  }
-
-  // Create some example tasks
-  const tasks = [
-    { title: 'Set up development environment', status: 'done', priority: 'high' },
-    { title: 'Create project documentation', status: 'in_progress', priority: 'normal' },
-    { title: 'Research competitor features', status: 'assigned', priority: 'normal' },
-    { title: 'Design new dashboard layout', status: 'inbox', priority: 'low' },
-  ];
-
-  for (let i = 0; i < tasks.length; i++) {
-    const taskId = uuidv4();
-    const task = tasks[i];
-    const assignedTo = task.status !== 'inbox' ? agentIds[i % agentIds.length] : null;
-
-    db.prepare(
-      `INSERT INTO tasks (id, title, status, priority, assigned_agent_id, created_by_agent_id, business_id, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
-    ).run(taskId, task.title, task.status, task.priority, assignedTo, orchestratorId, businessId, now, now);
-  }
-
-  // Create initial events
-  const events = [
-    { type: 'system', message: 'Database seeded with initial data' },
-    { type: 'agent_joined', agentId: orchestratorId, message: 'Orchestrator joined the team' },
-    { type: 'system', message: 'Mission Control is online' },
-  ];
-
-  for (const event of events) {
-    db.prepare(
-      `INSERT INTO events (id, type, agent_id, message, created_at)
-       VALUES (?, ?, ?, ?, ?)`
-    ).run(uuidv4(), event.type, event.agentId || null, event.message, now);
-  }
-
-  // Add a welcome message from the orchestrator
-  db.prepare(
-    `INSERT INTO messages (id, conversation_id, sender_agent_id, content, message_type, created_at)
-     VALUES (?, ?, ?, ?, ?, ?)`
-  ).run(
-    uuidv4(),
-    teamConvoId,
-    orchestratorId,
-    "Welcome to Mission Control, team! 🦞 I'm your orchestrator. Let's get to work.",
-    'text',
-    now
-  );
-
-  console.log('✅ Database seeded successfully!');
-  console.log(`   - Created Orchestrator (master agent): ${orchestratorId}`);
-  console.log(`   - Created ${agents.length} additional agents`);
-  console.log(`   - Created ${tasks.length} sample tasks`);
-  console.log(`   - Created team conversation`);
-
-  closeDb();
-}
-
-seed().catch(console.error);
+If multiple orchestrators exist in one workspace, customize tone and domain scope per orchestrator, but keep the same operating contract.
