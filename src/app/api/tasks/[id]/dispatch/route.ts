@@ -310,14 +310,21 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const nextStatus = nextStage?.status || 'review';
     const failEndpoint = `POST ${missionControlUrl}/api/tasks/${task.id}/fail`;
 
+    // Include the API token so agents can authenticate against Mission Control.
+    // MC_API_TOKEN may be undefined if auth is disabled in dev mode.
+    const mcApiToken = process.env.MC_API_TOKEN;
+    const authHeader = mcApiToken
+      ? `\n   Header: Authorization: Bearer ${mcApiToken}`
+      : '';
+
     let completionInstructions: string;
     if (isBuilder) {
-      completionInstructions = `**IMPORTANT:** After completing work, you MUST call these APIs:
-1. Log activity: POST ${missionControlUrl}/api/tasks/${task.id}/activities
+      completionInstructions = `**IMPORTANT:** After completing work, you MUST call these APIs (use curl or fetch):
+1. Log activity: POST ${missionControlUrl}/api/tasks/${task.id}/activities${authHeader}
    Body: {"activity_type": "completed", "message": "Description of what was done"}
-2. Register deliverable: POST ${missionControlUrl}/api/tasks/${task.id}/deliverables
+2. Register deliverable: POST ${missionControlUrl}/api/tasks/${task.id}/deliverables${authHeader}
    Body: {"deliverable_type": "file", "title": "File name", "path": "${taskProjectDir}/filename.html"}
-3. Update status: PATCH ${missionControlUrl}/api/tasks/${task.id}
+3. Update status: PATCH ${missionControlUrl}/api/tasks/${task.id}${authHeader}
    Body: {"status": "${nextStatus}"}
 
 When complete, reply with:
@@ -328,13 +335,13 @@ When complete, reply with:
 Review the output directory for deliverables and run any applicable tests.
 
 **If tests PASS:**
-1. Log activity: POST ${missionControlUrl}/api/tasks/${task.id}/activities
+1. Log activity: POST ${missionControlUrl}/api/tasks/${task.id}/activities${authHeader}
    Body: {"activity_type": "completed", "message": "Tests passed: [summary]"}
-2. Update status: PATCH ${missionControlUrl}/api/tasks/${task.id}
+2. Update status: PATCH ${missionControlUrl}/api/tasks/${task.id}${authHeader}
    Body: {"status": "${nextStatus}"}
 
 **If tests FAIL:**
-1. ${failEndpoint}
+1. ${failEndpoint}${authHeader}
    Body: {"reason": "Detailed description of what failed and what needs fixing"}
 
 Reply with: \`TEST_PASS: [summary]\` or \`TEST_FAIL: [what failed]\``;
@@ -344,13 +351,13 @@ Reply with: \`TEST_PASS: [summary]\` or \`TEST_FAIL: [what failed]\``;
 Review deliverables, test results, and task requirements.
 
 **If verification PASSES:**
-1. Log activity: POST ${missionControlUrl}/api/tasks/${task.id}/activities
+1. Log activity: POST ${missionControlUrl}/api/tasks/${task.id}/activities${authHeader}
    Body: {"activity_type": "completed", "message": "Verification passed: [summary]"}
-2. Update status: PATCH ${missionControlUrl}/api/tasks/${task.id}
+2. Update status: PATCH ${missionControlUrl}/api/tasks/${task.id}${authHeader}
    Body: {"status": "${nextStatus}"}
 
 **If verification FAILS:**
-1. ${failEndpoint}
+1. ${failEndpoint}${authHeader}
    Body: {"reason": "Detailed description of what failed and what needs fixing"}
 
 Reply with: \`VERIFY_PASS: [summary]\` or \`VERIFY_FAIL: [what failed]\``;
@@ -441,8 +448,9 @@ If you need help or clarification, ask the orchestrator.`;
 
     // Send message to agent's session using chat.send
     try {
-      // Use sessionKey for routing to the agent's session
-      // Format: {prefix}{openclaw_session_id} where prefix defaults to 'agent:main:'
+      // Use sessionKey for routing to the agent's session.
+      // Format: {prefix}{openclaw_session_id} e.g. agent:mostek:mission-control-funnel-ux-planner
+      // The prefix routes to the right OpenClaw agent; the suffix is the persistent session name.
       const prefix = agent.session_key_prefix || 'agent:main:';
       const sessionKey = `${prefix}${session.openclaw_session_id}`;
       await client.call('chat.send', {
