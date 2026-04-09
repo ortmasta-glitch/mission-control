@@ -122,23 +122,37 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       }
     }
 
-    // Get or create OpenClaw session for this agent
-    let session = queryOne<OpenClawSession>(
-      'SELECT * FROM openclaw_sessions WHERE agent_id = ? AND status = ?',
-      [agent.id, 'active']
-    );
-
     const now = new Date().toISOString();
 
+    // Prefer an active session already bound to this task
+    let session = queryOne<OpenClawSession>(
+      'SELECT * FROM openclaw_sessions WHERE agent_id = ? AND task_id = ? AND status = ? ORDER BY updated_at DESC LIMIT 1',
+      [agent.id, task.id, 'active']
+    );
+
     if (!session) {
-      // Create session record
+      const staleAgentSessions = queryAll<OpenClawSession>(
+        'SELECT * FROM openclaw_sessions WHERE agent_id = ? AND status = ? ORDER BY updated_at DESC',
+        [agent.id, 'active']
+      );
+
+      for (const staleSession of staleAgentSessions) {
+        run(
+          `UPDATE openclaw_sessions
+           SET status = 'ended', ended_at = ?, updated_at = ?
+           WHERE id = ?`,
+          [now, now, staleSession.id]
+        );
+      }
+
+      // Create task-bound session record
       const sessionId = uuidv4();
       const openclawSessionId = `mission-control-${agent.name.toLowerCase().replace(/\s+/g, '-')}`;
       
       run(
-        `INSERT INTO openclaw_sessions (id, agent_id, openclaw_session_id, channel, status, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [sessionId, agent.id, openclawSessionId, 'mission-control', 'active', now, now]
+        `INSERT INTO openclaw_sessions (id, agent_id, openclaw_session_id, channel, status, task_id, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [sessionId, agent.id, openclawSessionId, 'mission-control', 'active', task.id, now, now]
       );
 
       session = queryOne<OpenClawSession>(
@@ -148,9 +162,9 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
       // Log session creation
       run(
-        `INSERT INTO events (id, type, agent_id, message, created_at)
-         VALUES (?, ?, ?, ?, ?)`,
-        [uuidv4(), 'agent_status_changed', agent.id, `${agent.name} session created`, now]
+        `INSERT INTO events (id, type, agent_id, task_id, message, created_at)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [uuidv4(), 'agent_status_changed', agent.id, task.id, `${agent.name} session created for task ${task.title}`, now]
       );
     }
 

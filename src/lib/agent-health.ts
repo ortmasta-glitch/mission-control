@@ -26,18 +26,21 @@ export function checkAgentHealth(agentId: string): AgentHealthState {
   if (!activeTask) return 'idle';
 
   // Check if OpenClaw session is still alive
-  const session = queryOne<{ status: string }>(
+  const taskBoundSession = queryOne<{ status: string }>(
     `SELECT status FROM openclaw_sessions WHERE agent_id = ? AND task_id = ? AND status = 'active' LIMIT 1`,
     [agentId, activeTask.id]
   );
 
-  if (!session) {
-    // Check for any active session (task might not be linked yet)
-    const anySession = queryOne<{ status: string }>(
-      `SELECT status FROM openclaw_sessions WHERE agent_id = ? AND status = 'active' LIMIT 1`,
+  if (!taskBoundSession) {
+    const latestSession = queryOne<{ status: string; task_id?: string | null }>(
+      `SELECT status, task_id FROM openclaw_sessions WHERE agent_id = ? ORDER BY updated_at DESC LIMIT 1`,
       [agentId]
     );
-    if (!anySession) return 'zombie';
+
+    if (!latestSession) return 'zombie';
+
+    const latestMatchesTask = latestSession.task_id === activeTask.id;
+    if (latestSession.status !== 'active' || !latestMatchesTask) return 'zombie';
   }
 
   // Check last REAL activity (exclude health check logs — they reset the clock and prevent stuck detection)
@@ -149,7 +152,13 @@ export async function runHealthCheckCycle(): Promise<AgentHealth[]> {
     `SELECT * FROM tasks 
      WHERE status = 'assigned' 
        AND planning_complete = 1 
-       AND (julianday('now') - julianday(updated_at)) * 1440 > ?`,
+       AND (julianday('now') - julianday(updated_at)) * 1440 > ?
+       AND NOT EXISTS (
+         SELECT 1 FROM openclaw_sessions s
+         WHERE s.agent_id = tasks.assigned_agent_id
+           AND s.task_id = tasks.id
+           AND s.status = 'active'
+       )`,
     [ASSIGNED_STALE_MINUTES]
   );
 
@@ -170,12 +179,25 @@ export async function runHealthCheckCycle(): Promise<AgentHealth[]> {
       });
 
       if (res.ok) {
-        console.log(`[Health] Auto-dispatched orphaned task "${task.title}"`);
-        run(
-          `INSERT INTO task_activities (id, task_id, agent_id, activity_type, message, created_at)
-           VALUES (?, ?, ?, 'status_changed', 'Auto-dispatched by health sweeper (was stuck in assigned)', ?)`,
-          [uuidv4(), task.id, task.assigned_agent_id, now]
+        const activeTaskSession = queryOne<{ id: string }>(
+          `SELECT id FROM openclaw_sessions WHERE agent_id = ? AND task_id = ? AND status = 'active' LIMIT 1`,
+          [task.assigned_agent_id, task.id]
         );
+
+        if (activeTaskSession) {
+          console.log(`[Health] Auto-dispatched orphaned task "${task.title}"`);
+          run(
+            `INSERT INTO task_activities (id, task_id, agent_id, activity_type, message, created_at)
+             VALUES (?, ?, ?, 'status_changed', 'Auto-dispatched by health sweeper (was stuck in assigned)', ?)`,
+            [uuidv4(), task.id, task.assigned_agent_id, now]
+          );
+        } else {
+          console.warn(`[Health] Dispatch returned ok but no active task-bound session exists for "${task.title}"`);
+          run(
+            `UPDATE tasks SET planning_dispatch_error = ?, updated_at = ? WHERE id = ?`,
+            ['Health sweeper dispatch returned ok but no active task-bound session was created', now, task.id]
+          );
+        }
       } else {
         const errorText = await res.text();
         console.error(`[Health] Failed to auto-dispatch orphaned task "${task.title}": ${errorText}`);
@@ -188,6 +210,21 @@ export async function runHealthCheckCycle(): Promise<AgentHealth[]> {
     } catch (err) {
       console.error(`[Health] Auto-dispatch error for orphaned task "${task.title}":`, (err as Error).message);
     }
+  }
+
+  // Normalize obviously stale working agents whose latest session already ended
+  const staleWorkingAgents = queryAll<{ id: string }>(
+    `SELECT a.id
+     FROM agents a
+     WHERE a.status = 'working'
+       AND NOT EXISTS (
+         SELECT 1 FROM openclaw_sessions s
+         WHERE s.agent_id = a.id
+           AND s.status = 'active'
+       )`
+  );
+  for (const { id: agentId } of staleWorkingAgents) {
+    run(`UPDATE agents SET status = 'standby', updated_at = ? WHERE id = ?`, [now, agentId]);
   }
 
   // Also set idle agents
