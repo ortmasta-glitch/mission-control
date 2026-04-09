@@ -9,6 +9,7 @@ import { queryOne, queryAll, run } from '@/lib/db';
 import { pickDynamicAgent, escalateFailureIfNeeded, recordLearnerOnTransition } from '@/lib/task-governance';
 import { getMissionControlUrl } from '@/lib/config';
 import { broadcast } from '@/lib/events';
+import { closeAgentTaskSessions } from '@/lib/session-reconciliation';
 import type { Task, WorkflowTemplate, WorkflowStage, TaskRole } from '@/lib/types';
 
 interface StageTransitionResult {
@@ -173,15 +174,16 @@ export async function handleStageTransition(
     'SELECT assigned_agent_id FROM tasks WHERE id = ?',
     [taskId]
   );
-  if (previousTask?.assigned_agent_id && previousTask.assigned_agent_id !== roleAgent.id) {
+  const prevAgentId = previousTask?.assigned_agent_id ?? null;
+  if (prevAgentId && prevAgentId !== roleAgent.id) {
     const otherActiveTasks = queryOne<{ cnt: number }>(
       `SELECT COUNT(*) as cnt FROM tasks WHERE assigned_agent_id = ? AND id != ? AND status IN ('assigned', 'in_progress', 'testing', 'verification')`,
-      [previousTask.assigned_agent_id, taskId]
+      [prevAgentId, taskId]
     );
     if (!otherActiveTasks || otherActiveTasks.cnt === 0) {
       run(
         `UPDATE agents SET status = 'standby', updated_at = datetime('now') WHERE id = ? AND status = 'working'`,
-        [previousTask.assigned_agent_id]
+        [prevAgentId]
       );
     }
   }
@@ -192,6 +194,13 @@ export async function handleStageTransition(
     'UPDATE tasks SET assigned_agent_id = ?, planning_dispatch_error = NULL, updated_at = ? WHERE id = ?',
     [roleAgent.id, now, taskId]
   );
+
+  // Close the previous agent's active sessions for this task so the health checker
+  // never sees a stale (old_agent, task, active) row and incorrectly flags the old
+  // agent as zombie while it works on its next assignment.
+  if (prevAgentId && prevAgentId !== roleAgent.id) {
+    closeAgentTaskSessions(prevAgentId, taskId, now);
+  }
 
   // Log the handoff
   run(

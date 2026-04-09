@@ -9,6 +9,7 @@ import { updateConvoyProgress, checkConvoyCompletion } from '@/lib/convoy';
 import { syncGatewayAgentsToCatalog } from '@/lib/agent-catalog-sync';
 import { triggerWorkspaceMerge } from '@/lib/workspace-isolation';
 import { UpdateTaskSchema } from '@/lib/validation';
+import { closeAgentTaskSessions } from '@/lib/session-reconciliation';
 import type { Task, UpdateTaskRequest, Agent, TaskDeliverable } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -233,6 +234,12 @@ export async function PATCH(
     if (validatedData.assigned_agent_id !== undefined && validatedData.assigned_agent_id !== existing.assigned_agent_id) {
       updates.push('assigned_agent_id = ?');
       values.push(validatedData.assigned_agent_id);
+
+      // Close the previous agent's active sessions for this task so stale rows don't
+      // create false zombie signals during the assignment → dispatch window.
+      if (existing.assigned_agent_id) {
+        closeAgentTaskSessions(existing.assigned_agent_id, id, now);
+      }
 
       if (validatedData.assigned_agent_id) {
         const agent = queryOne<Agent>('SELECT name FROM agents WHERE id = ?', [validatedData.assigned_agent_id]);

@@ -3,11 +3,16 @@ import { queryOne, queryAll, run } from '@/lib/db';
 import { broadcast } from '@/lib/events';
 import { getMissionControlUrl } from '@/lib/config';
 import { buildCheckpointContext } from '@/lib/checkpoint';
+import { repairSpuriousMasters } from '@/lib/orchestration-guard';
+import { closeOrphanedAgentSessions } from '@/lib/session-reconciliation';
 import type { Agent, AgentHealth, AgentHealthState, Task } from '@/lib/types';
 
 const STALL_THRESHOLD_MINUTES = 5;
 const STUCK_THRESHOLD_MINUTES = 15;
 const AUTO_NUDGE_AFTER_STALLS = 3;
+// How long to wait after assignment/updated_at before declaring zombie.
+// Covers the gap between task assignment and the first dispatch completing.
+const ZOMBIE_GRACE_SECONDS = 90;
 
 /**
  * Check health state for a single agent.
@@ -32,6 +37,16 @@ export function checkAgentHealth(agentId: string): AgentHealthState {
   );
 
   if (!taskBoundSession) {
+    // Grace period: if the task was recently assigned/updated, dispatch may still be
+    // in flight.  Don't declare zombie until the window expires.
+    // Use SQLite's julianday() to avoid JS Date timezone-parsing ambiguity with
+    // SQLite's UTC timestamp strings (which lack a 'Z' or 'T' suffix).
+    const inGrace = queryOne<{ in_grace: number }>(
+      `SELECT ((julianday('now') - julianday(updated_at)) * 86400 < ?) AS in_grace FROM tasks WHERE id = ?`,
+      [ZOMBIE_GRACE_SECONDS, activeTask.id]
+    );
+    if (inGrace?.in_grace) return 'working';
+
     const latestSession = queryOne<{ status: string; task_id?: string | null }>(
       `SELECT status, task_id FROM openclaw_sessions WHERE agent_id = ? ORDER BY updated_at DESC LIMIT 1`,
       [agentId]
@@ -164,19 +179,33 @@ export async function runHealthCheckCycle(): Promise<AgentHealth[]> {
 
   for (const task of orphanedTasks) {
     console.log(`[Health] Orphaned assigned task detected: "${task.title}" (${task.id}) — stale for >${ASSIGNED_STALE_MINUTES}min, auto-dispatching`);
-    
+
     const missionControlUrl = getMissionControlUrl();
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (process.env.MC_API_TOKEN) {
       headers['Authorization'] = `Bearer ${process.env.MC_API_TOKEN}`;
     }
 
-    try {
-      const res = await fetch(`${missionControlUrl}/api/tasks/${task.id}/dispatch`, {
+    const attemptDispatch = async (): Promise<Response> =>
+      fetch(`${missionControlUrl}/api/tasks/${task.id}/dispatch`, {
         method: 'POST',
         headers,
         signal: AbortSignal.timeout(30_000),
       });
+
+    try {
+      let res = await attemptDispatch();
+
+      // 409 means multiple masters — repair and retry once.
+      if (res.status === 409) {
+        const demoted = repairSpuriousMasters(task.workspace_id);
+        if (demoted.length > 0) {
+          console.warn(
+            `[Health] Repaired ${demoted.length} spurious master(s) for workspace ${task.workspace_id}, retrying dispatch for "${task.title}"`
+          );
+          res = await attemptDispatch();
+        }
+      }
 
       if (res.ok) {
         const activeTaskSession = queryOne<{ id: string }>(
@@ -201,7 +230,6 @@ export async function runHealthCheckCycle(): Promise<AgentHealth[]> {
       } else {
         const errorText = await res.text();
         console.error(`[Health] Failed to auto-dispatch orphaned task "${task.title}": ${errorText}`);
-        // Record the failure so it shows in the UI
         run(
           `UPDATE tasks SET planning_dispatch_error = ?, updated_at = ? WHERE id = ?`,
           [`Health sweeper dispatch failed: ${errorText.substring(0, 200)}`, now, task.id]
@@ -210,6 +238,44 @@ export async function runHealthCheckCycle(): Promise<AgentHealth[]> {
     } catch (err) {
       console.error(`[Health] Auto-dispatch error for orphaned task "${task.title}":`, (err as Error).message);
     }
+  }
+
+  // Sweep for Inbox tasks that have been sitting unassigned beyond the stale threshold.
+  // These tasks need operator attention — flag them with a dispatch error so they are
+  // visible in the UI.  We do NOT auto-assign here because inbox tasks have not been
+  // through planning; forcing an assignment could send them to the wrong agent.
+  const INBOX_STALE_MINUTES = 10;
+  const staleInboxTasks = queryAll<Task>(
+    `SELECT * FROM tasks
+     WHERE status = 'inbox'
+       AND assigned_agent_id IS NULL
+       AND (julianday('now') - julianday(updated_at)) * 1440 > ?`,
+    [INBOX_STALE_MINUTES]
+  );
+
+  for (const task of staleInboxTasks) {
+    const existingError = (task as Task & { planning_dispatch_error?: string }).planning_dispatch_error;
+    if (!existingError) {
+      run(
+        `UPDATE tasks SET planning_dispatch_error = ?, updated_at = ? WHERE id = ?`,
+        [`Task has been in Inbox without an assigned agent for >${INBOX_STALE_MINUTES} minutes. Assign an agent or start planning to dispatch.`, now, task.id]
+      );
+      const updatedTask = queryOne<Task>('SELECT * FROM tasks WHERE id = ?', [task.id]);
+      if (updatedTask) {
+        broadcast({ type: 'task_updated', payload: updatedTask });
+      }
+      console.warn(`[Health] Stale inbox task flagged: "${task.title}" (${task.id})`);
+    }
+  }
+
+  // Close any active sessions that are orphaned (task no longer owned by that agent
+  // or task is done/inbox).  Belt-and-suspenders for sessions that weren't retired
+  // on handoff — e.g., a crash or restart that skipped the reconciliation path.
+  const allActiveAgents = queryAll<{ id: string }>(
+    `SELECT DISTINCT agent_id as id FROM openclaw_sessions WHERE status = 'active'`
+  );
+  for (const { id: agentId } of allActiveAgents) {
+    closeOrphanedAgentSessions(agentId, now);
   }
 
   // Normalize obviously stale working agents whose latest session already ended

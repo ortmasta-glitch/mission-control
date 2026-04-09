@@ -12,6 +12,8 @@ import { buildCheckpointContext } from '@/lib/checkpoint';
 import { formatMailForDispatch } from '@/lib/mailbox';
 import { getPendingNotesForDispatch } from '@/lib/task-notes';
 import { createTaskWorkspace, determineIsolationStrategy } from '@/lib/workspace-isolation';
+import { repairSpuriousMasters } from '@/lib/orchestration-guard';
+import { closeTaskSessions } from '@/lib/session-reconciliation';
 import type { Task, Agent, Product, OpenClawSession, WorkflowStage, TaskImage } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -80,30 +82,16 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Assigned agent not found' }, { status: 404 });
     }
 
-    // Check if dispatching to the master agent while there are other orchestrators available
+    // Enforce single-master invariant: if this agent is marked is_master but other
+    // masters also exist, auto-demote the spurious duplicates and proceed rather than
+    // returning a hard 409.  A 409 here deadlocks ALL dispatch for the workspace.
     if (agent.is_master) {
-      // Check for other master agents in the same workspace (excluding this one)
-      const otherOrchestrators = queryAll<{
-        id: string;
-        name: string;
-        role: string;
-      }>(
-        `SELECT id, name, role
-         FROM agents
-         WHERE is_master = 1
-         AND id != ?
-         AND workspace_id = ?
-         AND status != 'offline'`,
-        [agent.id, task.workspace_id]
-      );
-
-      if (otherOrchestrators.length > 0) {
-        return NextResponse.json({
-          success: false,
-          warning: 'Other orchestrators available',
-          message: `There ${otherOrchestrators.length === 1 ? 'is' : 'are'} ${otherOrchestrators.length} other orchestrator${otherOrchestrators.length === 1 ? '' : 's'} available in this workspace: ${otherOrchestrators.map(o => o.name).join(', ')}. Consider assigning this task to them instead.`,
-          otherOrchestrators,
-        }, { status: 409 }); // 409 Conflict - indicating there's an alternative
+      const demoted = repairSpuriousMasters(task.workspace_id);
+      if (demoted.length > 0) {
+        console.warn(
+          `[Dispatch] Auto-repaired ${demoted.length} spurious master(s) in workspace ${task.workspace_id}: ` +
+          demoted.map(a => a.name).join(', ')
+        );
       }
     }
 
@@ -144,6 +132,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
           [now, now, staleSession.id]
         );
       }
+
+      // Also retire any active sessions from OTHER agents still bound to this task
+      // (e.g., the previous builder whose sessions were never closed on handoff).
+      closeTaskSessions(task.id, { excludeAgentId: agent.id, now });
 
       // Create task-bound session record
       const sessionId = uuidv4();
@@ -461,10 +453,16 @@ If you need help or clarification, ask the orchestrator.`;
 
       // Only move to in_progress for builder dispatch (task is in 'assigned' status)
       // For tester/reviewer/verifier, the task status is already correct
+      // Always clear any stale dispatch error on successful delivery.
       if (task.status === 'assigned') {
         run(
-          'UPDATE tasks SET status = ?, updated_at = ? WHERE id = ?',
+          'UPDATE tasks SET status = ?, planning_dispatch_error = NULL, updated_at = ? WHERE id = ?',
           ['in_progress', now, id]
+        );
+      } else {
+        run(
+          'UPDATE tasks SET planning_dispatch_error = NULL, updated_at = ? WHERE id = ?',
+          [now, id]
         );
       }
 
