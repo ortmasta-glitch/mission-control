@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { queryOne, queryAll, run } from '@/lib/db';
 import { broadcast } from '@/lib/events';
-import { getMissionControlUrl } from '@/lib/config';
+import { getInternalUrl } from '@/lib/config';
 import { handleStageTransition, handleStageFailure, getTaskWorkflow, drainQueue, populateTaskRolesFromAgents } from '@/lib/workflow-engine';
 import { hasStageEvidence, canUseBoardOverride, auditBoardOverride, taskCanBeDone, recordLearnerOnTransition } from '@/lib/task-governance';
 import { updateConvoyProgress, checkConvoyCompletion } from '@/lib/convoy';
@@ -10,6 +10,7 @@ import { syncGatewayAgentsToCatalog } from '@/lib/agent-catalog-sync';
 import { triggerWorkspaceMerge } from '@/lib/workspace-isolation';
 import { UpdateTaskSchema } from '@/lib/validation';
 import { closeAgentTaskSessions } from '@/lib/session-reconciliation';
+import { handleAutonomousCompletion, shouldLogAutonomousCompletion } from '@/lib/autonomous/completion';
 import type { Task, UpdateTaskRequest, Agent, TaskDeliverable } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -185,6 +186,19 @@ export async function PATCH(
         );
       }
 
+      // Owner gate: in_progress requires an assigned agent.
+      // Backwards-fail transitions (testing/review/verification → in_progress) are exempt
+      // because the fail endpoint handles re-assignment. Only forward transitions are blocked.
+      const isForwardToInProgress =
+        nextStatus === 'in_progress' &&
+        !['testing', 'review', 'verification'].includes(existing.status);
+      if (isForwardToInProgress && !effectiveAssignedAgentId) {
+        return NextResponse.json(
+          { error: 'Cannot set in_progress: no agent assigned. Assign an agent first — dispatch will advance the status automatically.' },
+          { status: 400 }
+        );
+      }
+
       // Failure transitions must include status_reason
       const failingBackwards = ['testing', 'review', 'verification'].includes(existing.status) && ['in_progress', 'assigned'].includes(nextStatus);
       if (failingBackwards && !validatedData.status_reason) {
@@ -311,7 +325,7 @@ export async function PATCH(
 
       if (!workflowResult.handedOff) {
         // No workflow template or no role for this stage — fall back to legacy dispatch
-        const missionControlUrl = getMissionControlUrl();
+        const missionControlUrl = getInternalUrl();
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (process.env.MC_API_TOKEN) {
           headers['Authorization'] = `Bearer ${process.env.MC_API_TOKEN}`;
@@ -375,7 +389,7 @@ export async function PATCH(
       // Clear any previous dispatch error
       run('UPDATE tasks SET planning_dispatch_error = NULL, updated_at = ? WHERE id = ?', [now, id]);
 
-      const missionControlUrl = getMissionControlUrl();
+      const missionControlUrl = getInternalUrl();
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (process.env.MC_API_TOKEN) {
         headers['Authorization'] = `Bearer ${process.env.MC_API_TOKEN}`;
@@ -450,6 +464,19 @@ export async function PATCH(
       } catch (err) {
         console.error('[Convoy] progress update failed:', err);
       }
+    }
+
+    // Append autonomous completion log when a stamped generated task reaches done.
+    // Guard: only fire on a real transition (existing.status !== 'done') so repeated
+    // PATCH calls with status:'done' don't produce duplicate COMPLETE log entries.
+    if (shouldLogAutonomousCompletion(nextStatus, existing.status) && task) {
+      handleAutonomousCompletion({
+        taskId: task.id,
+        taskTitle: task.title,
+        taskDescription: task.description,
+        workspaceId: task.workspace_id,
+        agentId: validatedData.updated_by_agent_id || task.assigned_agent_id,
+      });
     }
 
     // Extract skills from completed task (non-blocking, async)

@@ -1,5 +1,7 @@
 
 
+import { getInternalUrl } from '@/lib/config';
+
 interface AutoDispatchOptions {
   taskId: string;
   taskTitle: string;
@@ -20,8 +22,14 @@ export async function triggerAutoDispatch(options: AutoDispatchOptions): Promise
   }
 
   try {
-    const dispatchRes = await fetch(`/api/tasks/${taskId}/dispatch`, {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (process.env.MC_API_TOKEN) {
+      headers['Authorization'] = `Bearer ${process.env.MC_API_TOKEN}`;
+    }
+
+    const dispatchRes = await fetch(`${getInternalUrl()}/api/tasks/${taskId}/dispatch`, {
       method: 'POST',
+      headers,
     });
 
     if (dispatchRes.ok) {
