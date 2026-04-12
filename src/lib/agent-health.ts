@@ -10,6 +10,7 @@ import type { Agent, AgentHealth, AgentHealthState, Task } from '@/lib/types';
 const STALL_THRESHOLD_MINUTES = 5;
 const STUCK_THRESHOLD_MINUTES = 15;
 const AUTO_NUDGE_AFTER_STALLS = 3;
+const ZOMBIE_RECOVERY_THRESHOLD = 2;
 // How long to wait after assignment/updated_at before declaring zombie.
 // Covers the gap between task assignment and the first dispatch completing.
 const ZOMBIE_GRACE_SECONDS = 90;
@@ -113,7 +114,8 @@ export async function runHealthCheckCycle(): Promise<AgentHealth[]> {
     const previousState = existing?.health_state;
 
     if (existing) {
-      const consecutiveStalls = healthState === 'stalled' || healthState === 'stuck'
+      const degraded = healthState === 'stalled' || healthState === 'stuck' || healthState === 'zombie';
+      const consecutiveStalls = degraded
         ? (existing.consecutive_stall_checks || 0) + 1
         : 0;
 
@@ -148,11 +150,20 @@ export async function runHealthCheckCycle(): Promise<AgentHealth[]> {
       );
     }
 
-    // Auto-nudge after consecutive stall checks
+    // Auto-recovery / auto-nudge for degraded agents
     const updatedHealth = queryOne<AgentHealth>('SELECT * FROM agent_health WHERE agent_id = ?', [agentId]);
     if (updatedHealth) {
       results.push(updatedHealth);
-      if (updatedHealth.consecutive_stall_checks >= AUTO_NUDGE_AFTER_STALLS && healthState === 'stuck') {
+
+      if (
+        activeTask &&
+        healthState === 'zombie' &&
+        updatedHealth.consecutive_stall_checks >= ZOMBIE_RECOVERY_THRESHOLD
+      ) {
+        recoverZombieTask(activeTask, agentId).catch(err =>
+          console.error(`[Health] Zombie recovery failed for agent ${agentId}:`, err)
+        );
+      } else if (updatedHealth.consecutive_stall_checks >= AUTO_NUDGE_AFTER_STALLS && healthState === 'stuck') {
         // Auto-nudge is fire-and-forget
         nudgeAgent(agentId).catch(err =>
           console.error(`[Health] Auto-nudge failed for agent ${agentId}:`, err)
@@ -310,6 +321,88 @@ export async function runHealthCheckCycle(): Promise<AgentHealth[]> {
   }
 
   return results;
+}
+
+async function recoverZombieTask(task: Task, agentId: string): Promise<void> {
+  const now = new Date().toISOString();
+
+  const activeSession = queryOne<{ id: string }>(
+    `SELECT id FROM openclaw_sessions WHERE agent_id = ? AND task_id = ? AND status = 'active' LIMIT 1`,
+    [agentId, task.id]
+  );
+  if (activeSession) return;
+
+  const health = queryOne<AgentHealth>('SELECT * FROM agent_health WHERE agent_id = ?', [agentId]);
+  if (!health || health.health_state !== 'zombie' || health.consecutive_stall_checks < ZOMBIE_RECOVERY_THRESHOLD) {
+    return;
+  }
+
+  run(
+    `UPDATE openclaw_sessions
+     SET status = 'ended', ended_at = ?, updated_at = ?
+     WHERE agent_id = ? AND status = 'active'`,
+    [now, now, agentId]
+  );
+
+  run(
+    `UPDATE tasks
+     SET status = 'assigned',
+         planning_dispatch_error = NULL,
+         status_reason = ?,
+         updated_at = ?
+     WHERE id = ? AND status IN ('in_progress', 'testing', 'verification')`,
+    ['Zombie session detected by health monitor — resetting task for automatic redispatch', now, task.id]
+  );
+
+  run(
+    `INSERT INTO task_activities (id, task_id, agent_id, activity_type, message, created_at)
+     VALUES (?, ?, ?, 'status_changed', ?, ?)`,
+    [uuidv4(), task.id, agentId, 'Zombie session detected — task reset to assigned for redispatch', now]
+  );
+
+  const missionControlUrl = getMissionControlUrl();
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (process.env.MC_API_TOKEN) {
+    headers['Authorization'] = `Bearer ${process.env.MC_API_TOKEN}`;
+  }
+
+  const attemptDispatch = async (): Promise<Response> =>
+    fetch(`${missionControlUrl}/api/tasks/${task.id}/dispatch`, {
+      method: 'POST',
+      headers,
+      signal: AbortSignal.timeout(30_000),
+    });
+
+  let res = await attemptDispatch();
+  if (res.status === 409) {
+    const demoted = repairSpuriousMasters(task.workspace_id);
+    if (demoted.length > 0) {
+      console.warn(
+        `[Health] Repaired ${demoted.length} spurious master(s) for workspace ${task.workspace_id}, retrying zombie recovery dispatch for "${task.title}"`
+      );
+      res = await attemptDispatch();
+    }
+  }
+
+  if (res.ok) {
+    run(
+      `INSERT INTO task_activities (id, task_id, agent_id, activity_type, message, created_at)
+       VALUES (?, ?, ?, 'status_changed', ?, ?)`,
+      [uuidv4(), task.id, agentId, 'Zombie task auto-redispatched by health monitor', new Date().toISOString()]
+    );
+  } else {
+    const errorText = await res.text();
+    run(
+      `UPDATE tasks SET planning_dispatch_error = ?, status_reason = ?, updated_at = ? WHERE id = ?`,
+      [
+        `Zombie recovery dispatch failed: ${errorText.substring(0, 200)}`,
+        `Zombie recovery failed: ${errorText.substring(0, 200)}`,
+        new Date().toISOString(),
+        task.id,
+      ]
+    );
+    throw new Error(errorText);
+  }
 }
 
 /**
