@@ -102,11 +102,77 @@ export function taskCanBeDone(taskId: string): boolean {
   const task = queryOne<{ status: string; status_reason?: string }>('SELECT status, status_reason FROM tasks WHERE id = ?', [taskId]);
   if (!task) return false;
   const hasValidationFailure = (task.status_reason || '').toLowerCase().includes('fail');
-  return !hasValidationFailure && hasStageEvidence(taskId);
+  if (hasValidationFailure || !hasStageEvidence(taskId)) return false;
+
+  const deliverables = queryAll<{ title?: string; path?: string; deliverable_type?: string }>(
+    'SELECT title, path, deliverable_type FROM task_deliverables WHERE task_id = ?',
+    [taskId]
+  );
+  const activities = queryAll<{ activity_type: string; message?: string }>(
+    'SELECT activity_type, message FROM task_activities WHERE task_id = ?',
+    [taskId]
+  );
+
+  const meaningfulDeliverable = deliverables.some(d => {
+    const text = `${d.title || ''} ${d.path || ''}`.toLowerCase();
+    return Boolean(d.deliverable_type) && !text.includes('placeholder') && !text.includes('todo');
+  });
+
+  const meaningfulCompletionActivity = activities.some(a => {
+    const text = (a.message || '').toLowerCase();
+    return ['completed', 'file_created', 'updated'].includes(a.activity_type)
+      && !text.includes('dispatch failed')
+      && !text.includes('zombie')
+      && !text.includes('retry')
+      && !text.includes('status drift');
+  });
+
+  return meaningfulDeliverable && meaningfulCompletionActivity;
 }
 
 export function isActiveStatus(status: string): boolean {
   return ACTIVE_STATUSES.includes(status);
+}
+
+/**
+ * Find tasks that are stuck in_progress with no assigned agent and no activity.
+ * These tasks can never make progress and need to be reset.
+ */
+export function detectOwnerlessInProgress(): Array<{ id: string; title: string; created_at: string }> {
+  return queryAll<{ id: string; title: string; created_at: string }>(
+    `SELECT t.id, t.title, t.created_at
+     FROM tasks t
+     LEFT JOIN task_activities ta ON ta.task_id = t.id
+     WHERE t.status = 'in_progress'
+       AND t.assigned_agent_id IS NULL
+       AND ta.id IS NULL
+     GROUP BY t.id`
+  );
+}
+
+/**
+ * Move ownerless in_progress tasks back to inbox so they can be re-dispatched.
+ * Returns the number of tasks repaired.
+ */
+export function repairOwnerlessInProgress(): number {
+  const stuck = detectOwnerlessInProgress();
+  if (stuck.length === 0) return 0;
+
+  const now = new Date().toISOString();
+  transaction(() => {
+    for (const task of stuck) {
+      run(
+        `UPDATE tasks SET status = 'inbox', status_reason = ?, updated_at = ? WHERE id = ? AND status = 'in_progress' AND assigned_agent_id IS NULL`,
+        ['Repaired: was in_progress with no assigned agent and no activity', now, task.id]
+      );
+      run(
+        `INSERT INTO events (id, type, task_id, message, created_at)
+         VALUES (lower(hex(randomblob(16))), 'system', ?, 'Task reset to inbox: was ownerless in_progress', ?)`,
+        [task.id, now]
+      );
+    }
+  });
+  return stuck.length;
 }
 
 export function pickDynamicAgent(taskId: string, stageRole?: string | null): { id: string; name: string } | null {

@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
     const businessId = searchParams.get('business_id');
     const workspaceId = searchParams.get('workspace_id');
     const assignedAgentId = searchParams.get('assigned_agent_id');
+    const search = searchParams.get('search');
 
     let sql = `
       SELECT
@@ -52,6 +53,10 @@ export async function GET(request: NextRequest) {
     if (assignedAgentId) {
       sql += ' AND t.assigned_agent_id = ?';
       params.push(assignedAgentId);
+    }
+    if (search) {
+      sql += ' AND (t.title LIKE ? OR COALESCE(t.description, \'\') LIKE ?)';
+      params.push(`%${search}%`, `%${search}%`);
     }
 
     sql += ' ORDER BY t.created_at DESC';
@@ -99,6 +104,14 @@ export async function POST(request: NextRequest) {
 
     const workspaceId = validatedData.workspace_id || 'default';
     const status = validatedData.status || 'inbox';
+
+    // Guard: tasks cannot be created directly in in_progress without an assigned agent.
+    if (status === 'in_progress' && !validatedData.assigned_agent_id) {
+      return NextResponse.json(
+        { error: 'Cannot create task with status in_progress: no agent assigned.' },
+        { status: 400 }
+      );
+    }
 
     // Auto-assign the workspace's default workflow template
     const defaultTemplate = queryOne<{ id: string }>(
