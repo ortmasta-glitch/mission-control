@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { queryOne, queryAll, run } from '@/lib/db';
 import { getOpenClawClient } from '@/lib/openclaw/client';
 import { broadcast } from '@/lib/events';
-import { getProjectsPath, getMissionControlUrl } from '@/lib/config';
+import { getProjectsPath, getInternalUrl } from '@/lib/config';
 import { getRelevantKnowledge, formatKnowledgeForDispatch } from '@/lib/learner';
 import { getTaskWorkflow } from '@/lib/workflow-engine';
 import { syncGatewayAgentsToCatalog } from '@/lib/agent-catalog-sync';
@@ -246,7 +246,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const projectsPath = getProjectsPath();
     const projectDir = task.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     let taskProjectDir = `${projectsPath}/${projectDir}`;
-    const missionControlUrl = getMissionControlUrl();
+    const missionControlUrl = getInternalUrl();
 
     // Create isolated workspace if parallel builds are possible
     // Only for builder dispatches (assigned/in_progress), not tester/reviewer
