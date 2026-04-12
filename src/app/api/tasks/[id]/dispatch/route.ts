@@ -14,7 +14,54 @@ import { getPendingNotesForDispatch } from '@/lib/task-notes';
 import { createTaskWorkspace, determineIsolationStrategy } from '@/lib/workspace-isolation';
 import { repairSpuriousMasters } from '@/lib/orchestration-guard';
 import { closeTaskSessions } from '@/lib/session-reconciliation';
-import type { Task, Agent, Product, OpenClawSession, WorkflowStage, TaskImage } from '@/lib/types';
+import { extractAutonomousMetadata } from '@/lib/autonomous/metadata';
+import { logTaskDispatched } from '@/lib/autonomous/log';
+import { resolveGoalsPath } from '@/lib/autonomous/parser';
+import { getOrCreateConfig } from '@/lib/autonomous/runner';
+import type { Task, Agent, Product, OpenClawSession, WorkflowStage, TaskImage, KnowledgeEntry } from '@/lib/types';
+
+const SMALL_CONTEXT_MODEL_PATTERNS = [
+  'lmstudio/',
+  'gemma',
+  'llama',
+  'mistral',
+  'qwen',
+  'phi',
+];
+
+const SMALL_CONTEXT_SECTION_LIMITS = {
+  planningSpecChars: 3500,
+  agentInstructionsChars: 1200,
+  knowledgeEntries: 2,
+  knowledgeChars: 900,
+  skills: 2,
+  skillChars: 1400,
+  notesChars: 600,
+} as const;
+
+function isSmallContextLocalModel(model?: string | null): boolean {
+  if (!model) return false;
+  const normalized = model.toLowerCase();
+  return SMALL_CONTEXT_MODEL_PATTERNS.some(pattern => normalized.includes(pattern));
+}
+
+function truncateBlock(text: string, maxChars: number): string {
+  if (text.length <= maxChars) return text;
+  return `${text.slice(0, Math.max(0, maxChars - 64)).trimEnd()}\n\n[truncated for local-model context budget]`;
+}
+
+function compactKnowledgeForDispatch(entries: KnowledgeEntry[]): string {
+  if (entries.length === 0) return '';
+  const limited = entries.slice(0, SMALL_CONTEXT_SECTION_LIMITS.knowledgeEntries);
+  const items = limited
+    .map((e, i) => `${i + 1}. ${e.title}: ${truncateBlock(e.content, SMALL_CONTEXT_SECTION_LIMITS.knowledgeChars)}`)
+    .join('\n');
+  return `\n---\n📚 **KEY LESSONS:**\n${items}\n`;
+}
+
+function compactSkillsForDispatch(formatted: string): string {
+  return formatted ? `\n---\n🛠️ **RELEVANT SKILLS:**\n${truncateBlock(formatted, SMALL_CONTEXT_SECTION_LIMITS.skillChars)}\n` : '';
+}
 
 export const dynamic = 'force-dynamic';
 interface RouteParams {
@@ -223,6 +270,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     // Parse planning_spec and planning_agents if present (stored as JSON text on the task row)
     const rawTask = task as Task & { assigned_agent_name?: string; workspace_id: string; planning_spec?: string; planning_agents?: string };
+    const useCompactDispatch = isSmallContextLocalModel(agent.model);
     let planningSpecSection = '';
     let agentInstructionsSection = '';
 
@@ -231,10 +279,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         const spec = JSON.parse(rawTask.planning_spec);
         // planning_spec may be an object with spec_markdown, or a raw string
         const specText = typeof spec === 'string' ? spec : (spec.spec_markdown || JSON.stringify(spec, null, 2));
-        planningSpecSection = `\n---\n**📋 PLANNING SPECIFICATION:**\n${specText}\n`;
+        planningSpecSection = `\n---\n**📋 PLANNING SPECIFICATION:**\n${useCompactDispatch ? truncateBlock(specText, SMALL_CONTEXT_SECTION_LIMITS.planningSpecChars) : specText}\n`;
       } catch {
         // If not valid JSON, treat as plain text
-        planningSpecSection = `\n---\n**📋 PLANNING SPECIFICATION:**\n${rawTask.planning_spec}\n`;
+        planningSpecSection = `\n---\n**📋 PLANNING SPECIFICATION:**\n${useCompactDispatch ? truncateBlock(rawTask.planning_spec, SMALL_CONTEXT_SECTION_LIMITS.planningSpecChars) : rawTask.planning_spec}\n`;
       }
     }
 
@@ -248,13 +296,14 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
               a.agent_id === agent.id || a.name === agent.name
           );
           if (myInstructions?.instructions) {
-            agentInstructionsSection = `\n**🎯 YOUR INSTRUCTIONS:**\n${myInstructions.instructions}\n`;
+            agentInstructionsSection = `\n**🎯 YOUR INSTRUCTIONS:**\n${useCompactDispatch ? truncateBlock(myInstructions.instructions, SMALL_CONTEXT_SECTION_LIMITS.agentInstructionsChars) : myInstructions.instructions}\n`;
           } else {
             // Include all agent instructions for context
             const allInstructions = agents
               .filter((a: { instructions?: string }) => a.instructions)
+              .slice(0, useCompactDispatch ? 2 : agents.length)
               .map((a: { name?: string; role?: string; instructions?: string }) =>
-                `- **${a.name || a.role || 'Agent'}:** ${a.instructions}`
+                `- **${a.name || a.role || 'Agent'}:** ${useCompactDispatch ? truncateBlock(a.instructions || '', 400) : a.instructions}`
               )
               .join('\n');
             if (allInstructions) {
@@ -270,8 +319,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     // Inject relevant knowledge from the learner knowledge base
     let knowledgeSection = '';
     try {
-      const knowledge = getRelevantKnowledge(task.workspace_id, task.title);
-      knowledgeSection = formatKnowledgeForDispatch(knowledge);
+      const knowledge = getRelevantKnowledge(task.workspace_id, task.title, useCompactDispatch ? SMALL_CONTEXT_SECTION_LIMITS.knowledgeEntries : 5);
+      knowledgeSection = useCompactDispatch
+        ? compactKnowledgeForDispatch(knowledge)
+        : formatKnowledgeForDispatch(knowledge);
     } catch {
       // Knowledge injection is best-effort
     }
@@ -281,8 +332,16 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     if (task.product_id) {
       try {
         const { getMatchedSkills, formatSkillsForDispatch } = await import('@/lib/skills');
-        const skills = getMatchedSkills(task.product_id, task.title, task.description || '', agent.name);
-        skillsSection = formatSkillsForDispatch(skills);
+        const skills = getMatchedSkills(
+          task.product_id,
+          task.title,
+          task.description || '',
+          agent.name,
+          useCompactDispatch ? SMALL_CONTEXT_SECTION_LIMITS.skills : 5
+        );
+        skillsSection = useCompactDispatch
+          ? compactSkillsForDispatch(formatSkillsForDispatch(skills))
+          : formatSkillsForDispatch(skills);
       } catch {
         // Skills injection is best-effort
       }
@@ -425,6 +484,9 @@ Reply with: \`VERIFY_PASS: [summary]\` or \`VERIFY_FAIL: [what failed]\``;
 `;
     }
 
+    const checkpointSection = useCompactDispatch ? '' : (buildCheckpointContext(task.id) || '');
+    const mailboxSection = useCompactDispatch ? '' : (formatMailForDispatch(agent.id) || '');
+
     const roleLabel = currentStage?.label || 'Task';
     const taskMessage = `${priorityEmoji} **${isBuilder ? 'NEW TASK ASSIGNED' : `${roleLabel.toUpperCase()} STAGE — ${task.title}`}**
 
@@ -433,7 +495,7 @@ ${task.description ? `**Description:** ${task.description}\n` : ''}
 **Priority:** ${task.priority.toUpperCase()}
 ${task.due_date ? `**Due:** ${task.due_date}\n` : ''}
 **Task ID:** ${task.id}
-${planningSpecSection}${agentInstructionsSection}${skillsSection}${knowledgeSection}${imagesSection}${buildCheckpointContext(task.id) || ''}${formatMailForDispatch(agent.id) || ''}${repoSection}
+${useCompactDispatch ? '**DISPATCH MODE:** compact local-model payload\n' : ''}${planningSpecSection}${agentInstructionsSection}${skillsSection}${knowledgeSection}${imagesSection}${checkpointSection}${mailboxSection}${repoSection}
 ${isBuilder ? (workspaceIsolated
   ? `**\u{1F512} ISOLATED WORKSPACE:** ${taskProjectDir}\n- **Port:** ${workspacePort || 'default'} (use this for dev server, NOT the default)\n${workspaceBranchName ? `- **Branch:** ${workspaceBranchName}\n` : ''}- **IMPORTANT:** Do NOT modify files outside this workspace directory. Other agents may be working on the same project in parallel. All your work must stay within: ${taskProjectDir}\nCreate this directory if needed and save all deliverables there.\n`
   : `**OUTPUT DIRECTORY:** ${taskProjectDir}\nCreate this directory and save all deliverables there.\n`)
@@ -444,7 +506,10 @@ If you need help or clarification, ask the orchestrator.`;
 
     // Inject any pending operator notes (queued via /btw chat)
     const { formatted: pendingNotes } = getPendingNotesForDispatch(id);
-    const finalMessage = pendingNotes ? taskMessage + pendingNotes : taskMessage;
+    const compactPendingNotes = pendingNotes && useCompactDispatch
+      ? `\n---\n📌 **OPERATOR NOTES:**\n${truncateBlock(pendingNotes, SMALL_CONTEXT_SECTION_LIMITS.notesChars)}\n`
+      : pendingNotes;
+    const finalMessage = compactPendingNotes ? taskMessage + compactPendingNotes : taskMessage;
 
     // Send message to agent's session using chat.send
     try {
@@ -504,6 +569,20 @@ If you need help or clarification, ask the orchestrator.`;
          VALUES (?, ?, ?, ?, ?, ?)`,
         [activityId, task.id, agent.id, 'status_changed', `Task dispatched to ${agent.name} - Agent is now working on this task`, now]
       );
+
+      const autonomousMeta = extractAutonomousMetadata(task.description);
+      if (autonomousMeta) {
+        try {
+          const autonomousConfig = getOrCreateConfig(task.workspace_id);
+          const logPath = resolveGoalsPath(autonomousConfig.log_file_path);
+          logTaskDispatched(logPath, task.id, task.title, agent.id, autonomousMeta.autonomousRunId, {
+            goalTag: autonomousMeta.goalTag,
+            lane: autonomousMeta.lane,
+          });
+        } catch (err) {
+          console.error('[Autonomous] dispatch log failed:', err);
+        }
+      }
 
       return NextResponse.json({
         success: true,
