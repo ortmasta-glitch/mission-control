@@ -131,6 +131,21 @@ export function getMissionControlUrl(): string {
 }
 
 /**
+ * Get the internal (in-process) URL for server-to-self API calls.
+ *
+ * MISSION_CONTROL_URL may point to the host-mapped port (e.g. 4001) so that
+ * agent prompts give external agents the right callback address. But when the
+ * server calls its OWN API (health checks, auto-dispatch, workflow handoffs)
+ * it must use the port the process is actually listening on — not the
+ * host-mapped port, which is unreachable from inside the container.
+ *
+ * Precedence: MC_INTERNAL_URL > http://localhost:$PORT > http://localhost:4000
+ */
+export function getInternalUrl(): string {
+  return process.env.MC_INTERNAL_URL || `http://localhost:${process.env.PORT || '4000'}`;
+}
+
+/**
  * Get workspace base path
  * Server-side only - returns configured path or default
  */

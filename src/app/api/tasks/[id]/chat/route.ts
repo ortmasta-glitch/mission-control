@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createNote, getTaskNotes, getActiveSessionForTask, markNotesDelivered } from '@/lib/task-notes';
 import { getOpenClawClient } from '@/lib/openclaw/client';
-import { getMissionControlUrl } from '@/lib/config';
+import { getInternalUrl } from '@/lib/config';
 import { expectReply } from '@/lib/chat-listener';
 import { queryOne } from '@/lib/db';
 import { broadcast } from '@/lib/events';
@@ -86,7 +86,7 @@ export async function POST(
     // 2. Task is in a state where dispatch makes sense (not done, not already in_progress)
     if (!delivered && ['assigned', 'inbox', 'testing', 'review', 'verification'].includes(task.status)) {
       try {
-        const missionControlUrl = getMissionControlUrl();
+        const missionControlUrl = getInternalUrl();
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (process.env.MC_API_TOKEN) {
           headers['Authorization'] = `Bearer ${process.env.MC_API_TOKEN}`;

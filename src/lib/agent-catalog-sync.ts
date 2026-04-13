@@ -47,36 +47,58 @@ export async function syncGatewayAgentsToCatalog(options?: { force?: boolean; re
     let changed = 0;
     const ts = new Date().toISOString();
 
-    transaction(() => {
-      for (const ga of gatewayAgents) {
-        const gatewayId = ga.id || ga.name;
-        if (!gatewayId) continue;
+    // Process each gateway agent individually so one bad record can't abort the whole sync.
+    const errors: string[] = [];
+    for (const ga of gatewayAgents) {
+      const gatewayId = ga.id || ga.name;
+      if (!gatewayId) continue;
 
-        const name = ga.name || ga.label || gatewayId;
-        const role = normalizeRole(name);
-        const existingId = existingByGatewayId.get(gatewayId) || null;
+      const name = ga.name || ga.label || gatewayId;
+      const role = normalizeRole(name);
+      const existingId = existingByGatewayId.get(gatewayId) || null;
+      // Gateway sends model as either a string ("gpt-5.4") or an object
+      // ({ primary: "...", fallbacks: [...] }). better-sqlite3 treats any object
+      // as a named-binding dict, which collapses the positional param count and
+      // throws RangeError. Always coerce to a string or null before binding.
+      const modelStr: string | null =
+        ga.model == null
+          ? null
+          : typeof ga.model === 'string'
+            ? ga.model
+            : (ga.model as { primary?: string }).primary ?? JSON.stringify(ga.model);
 
-        if (existingId) {
-          run(
-            `UPDATE agents SET name = ?, role = ?, model = COALESCE(?, model), source = 'gateway', updated_at = ? WHERE id = ?`,
-            [name, role, ga.model || null, ts, existingId]
-          );
-        } else {
-          run(
-            `INSERT INTO agents (id, name, role, description, avatar_emoji, is_master, workspace_id, model, source, gateway_agent_id, created_at, updated_at)
-             VALUES (lower(hex(randomblob(16))), ?, ?, ?, '🔗', 0, 'default', ?, 'gateway', ?, ?, ?)`,
-            [name, role, `Auto-synced from OpenClaw (${gatewayId})`, ga.model || null, gatewayId, ts, ts]
-          );
-        }
+      try {
+        transaction(() => {
+          if (existingId) {
+            // 5 params for 5 placeholders: name, role, model, updated_at, id
+            run(
+              `UPDATE agents SET name = ?, role = ?, model = COALESCE(?, model), source = 'gateway', updated_at = ? WHERE id = ?`,
+              [name, role, modelStr, ts, existingId]
+            );
+          } else {
+            // 7 params for 7 placeholders: name, role, description, model, gateway_agent_id, created_at, updated_at
+            run(
+              `INSERT INTO agents (id, name, role, description, avatar_emoji, is_master, workspace_id, model, source, gateway_agent_id, created_at, updated_at)
+               VALUES (lower(hex(randomblob(16))), ?, ?, ?, '🔗', 0, 'default', ?, 'gateway', ?, ?, ?)`,
+              [name, role, `Auto-synced from OpenClaw (${gatewayId})`, modelStr, gatewayId, ts, ts]
+            );
+          }
+        });
         changed += 1;
+      } catch (agentErr) {
+        const msg = `[AgentCatalog] Failed to sync agent "${gatewayId}": ${(agentErr as Error).message}`;
+        console.error(msg);
+        errors.push(msg);
       }
+    }
 
+    transaction(() => {
       run(
         `INSERT INTO events (id, type, message, metadata, created_at)
          VALUES (lower(hex(randomblob(16))), 'system', ?, ?, ?)`,
         [
           `Agent catalog sync completed (${options?.reason || 'automatic'})`,
-          JSON.stringify({ changed, reason: options?.reason || 'automatic' }),
+          JSON.stringify({ changed, errors: errors.length > 0 ? errors : undefined, reason: options?.reason || 'automatic' }),
           ts,
         ]
       );

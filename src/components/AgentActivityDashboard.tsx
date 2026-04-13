@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, AlertTriangle, Activity, Clock, Filter, RefreshCw } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, Activity, Clock, Filter, RefreshCw, BarChart2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import type { Agent, Event, Task, Workspace } from '@/lib/types';
+import { AnthropicUsageDashboard } from '@/components/costs/AnthropicUsageDashboard';
 
 type ActivityFilter = 'all' | 'working' | 'blocked' | 'idle';
 
@@ -229,6 +230,14 @@ export function AgentActivityDashboard({ workspace }: AgentActivityDashboardProp
           <MetricCard label="Working" value={String(agents.filter((a) => a.status === 'working').length)} />
           <MetricCard label="Blocked" value={String(blockedAgentIds.size)} />
           <MetricCard label="Active Tasks" value={String(activeTasks.length)} />
+        </section>
+
+        <section className="bg-mc-bg-secondary border border-mc-border rounded-xl p-4 sm:p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart2 className="w-4 h-4 text-mc-accent" />
+            <h2 className="font-semibold">Anthropic Usage &amp; Cost</h2>
+          </div>
+          <AnthropicUsageDashboard />
         </section>
 
         <section className="bg-mc-bg-secondary border border-mc-border rounded-xl p-4">

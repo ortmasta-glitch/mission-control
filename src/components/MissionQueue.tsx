@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus, ChevronRight, GripVertical, ArrowRightLeft, AlertTriangle, MessageSquare } from 'lucide-react';
+import { Plus, ChevronRight, GripVertical, ArrowRightLeft, AlertTriangle, MessageSquare, CheckCheck, X, Check } from 'lucide-react';
 import { useMissionControl } from '@/lib/store';
 import { triggerAutoDispatch, shouldTriggerAutoDispatch } from '@/lib/auto-dispatch';
 import { getConfig } from '@/lib/config';
@@ -16,8 +16,11 @@ interface MissionQueueProps {
   isPortrait?: boolean;
 }
 
+type SourceFilter = 'all' | 'autonomous' | 'manual';
+
 const COLUMNS: { id: TaskStatus; label: string; color: string }[] = [
   { id: 'planning', label: '📋 Planning', color: 'border-t-mc-accent-purple' },
+  { id: 'pending_approval', label: '⏳ Pending Approval', color: 'border-t-amber-400' },
   { id: 'inbox', label: 'Inbox', color: 'border-t-mc-accent-pink' },
   { id: 'assigned', label: 'Assigned', color: 'border-t-mc-accent-yellow' },
   { id: 'in_progress', label: 'In Progress', color: 'border-t-mc-accent' },
@@ -31,6 +34,8 @@ const COLUMNS: { id: TaskStatus; label: string; color: string }[] = [
 export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = true }: MissionQueueProps) {
   const { tasks, updateTaskStatus, addEvent } = useMissionControl();
   const [compactEmptyColumns, setCompactEmptyColumns] = useState(true);
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all');
+  const [isBatchApproving, setIsBatchApproving] = useState(false);
   const unreadCounts = useUnreadCounts();
 
   useEffect(() => {
@@ -52,7 +57,44 @@ export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = tru
   const [statusMoveTask, setStatusMoveTask] = useState<Task | null>(null);
   const [pendingMove, setPendingMove] = useState<{ task: Task; targetStatus: TaskStatus } | null>(null);
 
-  const getTasksByStatus = (status: TaskStatus) => tasks.filter((task) => task.status === status);
+  const filteredTasks = sourceFilter === 'all'
+    ? tasks
+    : tasks.filter(t => (t.source ?? 'manual') === sourceFilter);
+
+  const getTasksByStatus = (status: TaskStatus) => filteredTasks.filter((task) => task.status === status);
+
+  const handleApproveTask = async (task: Task) => {
+    await updateTaskStatusWithPersist(task, 'inbox');
+  };
+
+  const handleRejectTask = async (task: Task) => {
+    try {
+      const res = await fetch(`/api/tasks/${task.id}`, { method: 'DELETE' });
+      if (res.ok) {
+        updateTaskStatus(task.id, 'done'); // optimistic removal
+        addEvent({
+          id: task.id + '-rejected-' + Date.now(),
+          type: 'task_status_changed',
+          task_id: task.id,
+          message: `Task "${task.title}" rejected and removed`,
+          created_at: new Date().toISOString(),
+        });
+      }
+    } catch (error) {
+      console.error('Failed to reject task:', error);
+    }
+  };
+
+  const handleBatchApprove = async () => {
+    const pendingTasks = getTasksByStatus('pending_approval');
+    if (pendingTasks.length === 0) return;
+    setIsBatchApproving(true);
+    try {
+      await Promise.all(pendingTasks.map(t => updateTaskStatusWithPersist(t, 'inbox')));
+    } finally {
+      setIsBatchApproving(false);
+    }
+  };
 
   // Active pipeline states where manual moves are dangerous
   const ACTIVE_PIPELINE_STATES: TaskStatus[] = ['assigned', 'in_progress', 'convoy_active', 'testing', 'review', 'verification'];
@@ -161,18 +203,47 @@ export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = tru
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <div className="p-3 border-b border-mc-border flex items-center justify-between">
+      <div className="p-3 border-b border-mc-border flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <ChevronRight className="w-4 h-4 text-mc-text-secondary" />
           <span className="text-sm font-medium uppercase tracking-wider">Mission Queue</span>
         </div>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-4 min-h-11 bg-mc-accent-pink text-mc-bg rounded text-sm font-medium hover:bg-mc-accent-pink/90"
-        >
-          <Plus className="w-4 h-4" />
-          New Task
-        </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Source filter pills */}
+          <div className="flex items-center gap-1 bg-mc-bg-secondary border border-mc-border rounded-full px-1 py-0.5">
+            {(['all', 'autonomous', 'manual'] as SourceFilter[]).map(f => (
+              <button
+                key={f}
+                onClick={() => setSourceFilter(f)}
+                className={`px-3 py-1 rounded-full text-xs font-medium capitalize transition-colors ${
+                  sourceFilter === f
+                    ? 'bg-mc-accent text-mc-bg'
+                    : 'text-mc-text-secondary hover:text-mc-text'
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+          {/* Batch approve button — only shown when pending_approval column has items */}
+          {getTasksByStatus('pending_approval').length > 0 && (
+            <button
+              onClick={handleBatchApprove}
+              disabled={isBatchApproving}
+              className="flex items-center gap-1.5 px-3 min-h-9 bg-amber-500/15 border border-amber-500/40 text-amber-300 rounded text-xs font-medium hover:bg-amber-500/25 disabled:opacity-50"
+            >
+              <CheckCheck className="w-3.5 h-3.5" />
+              {isBatchApproving ? 'Approving...' : `Approve all (${getTasksByStatus('pending_approval').length})`}
+            </button>
+          )}
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2 px-4 min-h-11 bg-mc-accent-pink text-mc-bg rounded text-sm font-medium hover:bg-mc-accent-pink/90"
+          >
+            <Plus className="w-4 h-4" />
+            New Task
+          </button>
+        </div>
       </div>
 
       {!mobileMode ? (
@@ -201,6 +272,8 @@ export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = tru
                       onDragStart={handleDragStart}
                       onClick={() => setEditingTask(task)}
                       onMoveStatus={() => setStatusMoveTask(task)}
+                      onApprove={() => handleApproveTask(task)}
+                      onReject={() => handleRejectTask(task)}
                       isDragging={draggedTask?.id === task.id}
                       mobileMode={false}
                       portraitMode={false}
@@ -247,6 +320,8 @@ export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = tru
                   onDragStart={handleDragStart}
                   onClick={() => setEditingTask(task)}
                   onMoveStatus={() => setStatusMoveTask(task)}
+                  onApprove={() => handleApproveTask(task)}
+                  onReject={() => handleRejectTask(task)}
                   isDragging={false}
                   mobileMode
                   portraitMode={isPortrait}
@@ -389,13 +464,15 @@ interface TaskCardProps {
   onDragStart: (e: React.DragEvent, task: Task) => void;
   onClick: () => void;
   onMoveStatus: () => void;
+  onApprove: () => void;
+  onReject: () => void;
   isDragging: boolean;
   mobileMode: boolean;
   portraitMode?: boolean;
   unreadCount?: number;
 }
 
-function TaskCard({ task, onDragStart, onClick, onMoveStatus, isDragging, mobileMode, portraitMode = true, unreadCount = 0 }: TaskCardProps) {
+function TaskCard({ task, onDragStart, onClick, onMoveStatus, onApprove, onReject, isDragging, mobileMode, portraitMode = true, unreadCount = 0 }: TaskCardProps) {
   const priorityStyles = {
     low: 'text-mc-text-secondary',
     normal: 'text-mc-accent',
@@ -414,6 +491,7 @@ function TaskCard({ task, onDragStart, onClick, onMoveStatus, isDragging, mobile
   const isConvoyActive = task.status === 'convoy_active';
   const isSubtask = !!task.is_subtask;
   const isAssigned = task.status === 'assigned';
+  const isPendingApproval = task.status === 'pending_approval';
   const dispatchError = task.planning_dispatch_error;
 
   return (
@@ -423,7 +501,7 @@ function TaskCard({ task, onDragStart, onClick, onMoveStatus, isDragging, mobile
       onClick={onClick}
       className={`group bg-mc-bg-secondary border rounded-lg cursor-pointer transition-all hover:shadow-lg hover:shadow-black/20 ${
         isDragging ? 'opacity-50 scale-95' : ''
-      } ${isPlanning ? 'border-purple-500/40 hover:border-purple-500' : 'border-mc-border/50 hover:border-mc-accent/40'}`}
+      } ${isPlanning ? 'border-purple-500/40 hover:border-purple-500' : isPendingApproval ? 'border-amber-500/40 hover:border-amber-500' : 'border-mc-border/50 hover:border-mc-accent/40'}`}
     >
       {!mobileMode && (
         <div className="flex items-center justify-center py-1.5 border-b border-mc-border/30 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -446,6 +524,31 @@ function TaskCard({ task, onDragStart, onClick, onMoveStatus, isDragging, mobile
           <div className={`flex items-center gap-2 ${portraitMode ? 'mb-3 py-2 px-3' : 'mb-2 py-1.5 px-2.5'} bg-purple-500/10 rounded-md border border-purple-500/20`}>
             <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse flex-shrink-0" />
             <span className="text-xs text-purple-400 font-medium">Continue planning</span>
+          </div>
+        )}
+
+        {isPendingApproval && (
+          <div className={`${portraitMode ? 'mb-3' : 'mb-2'}`}>
+            <div className={`flex items-center gap-2 ${portraitMode ? 'mb-2 py-2 px-3' : 'mb-1.5 py-1.5 px-2.5'} bg-amber-500/10 rounded-md border border-amber-500/30`}>
+              <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse flex-shrink-0" />
+              <span className="text-xs text-amber-200 font-medium">Awaiting your approval</span>
+            </div>
+            <div className="flex gap-1.5" onClick={e => e.stopPropagation()}>
+              <button
+                onClick={onApprove}
+                className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded border border-green-500/40 bg-green-500/10 text-green-400 hover:bg-green-500/20 text-xs font-medium"
+              >
+                <Check className="w-3 h-3" />
+                Approve
+              </button>
+              <button
+                onClick={onReject}
+                className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded border border-red-500/40 bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-medium"
+              >
+                <X className="w-3 h-3" />
+                Reject
+              </button>
+            </div>
           </div>
         )}
 

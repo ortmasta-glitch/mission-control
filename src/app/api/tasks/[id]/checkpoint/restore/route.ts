@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { buildCheckpointContext, getLatestCheckpoint } from '@/lib/checkpoint';
-import { getMissionControlUrl } from '@/lib/config';
+import { getInternalUrl } from '@/lib/config';
 import { queryOne, run } from '@/lib/db';
 import type { Task } from '@/lib/types';
 
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     );
 
     // Re-dispatch
-    const missionControlUrl = getMissionControlUrl();
+    const missionControlUrl = getInternalUrl();
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (process.env.MC_API_TOKEN) {
       headers['Authorization'] = `Bearer ${process.env.MC_API_TOKEN}`;

@@ -29,8 +29,24 @@ export function getDb(): Database.Database {
       recoverOrphanedCycles().catch(err => console.warn('[Recovery] Failed:', err))
     );
 
+    // Repair any workspaces with multiple is_master=1 agents (belt-and-suspenders
+    // guard in addition to migration 029).  Safe to run every startup — no-ops if clean.
+    if (process.env.NODE_ENV !== 'test') {
+      import('@/lib/orchestration-guard').then(({ repairAllWorkspaces }) => {
+        const demoted = repairAllWorkspaces();
+        if (demoted > 0) {
+          console.warn(`[DB] Startup orchestrator repair: demoted ${demoted} spurious master(s) across all workspaces`);
+        }
+      }).catch(err => console.warn('[DB] Startup orchestrator repair failed:', err));
+    }
+
     // Keep Mission Control's agent catalog synced with OpenClaw-installed agents
     ensureCatalogSyncScheduled();
+
+    // Schedule autonomous daily task generation checks
+    import('@/lib/autonomous/scheduler').then(({ ensureAutonomousScheduled }) => {
+      ensureAutonomousScheduled();
+    }).catch(err => console.warn('[DB] Autonomous scheduler failed to initialise:', err));
     
     if (isNewDb) {
       console.log('[DB] New database created at:', DB_PATH);

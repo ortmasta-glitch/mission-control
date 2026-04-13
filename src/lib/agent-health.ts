@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { queryOne, queryAll, run } from '@/lib/db';
 import { broadcast } from '@/lib/events';
-import { getMissionControlUrl } from '@/lib/config';
+import { getInternalUrl } from '@/lib/config';
 import { buildCheckpointContext } from '@/lib/checkpoint';
 import { repairSpuriousMasters } from '@/lib/orchestration-guard';
 import { closeOrphanedAgentSessions } from '@/lib/session-reconciliation';
@@ -191,7 +191,7 @@ export async function runHealthCheckCycle(): Promise<AgentHealth[]> {
   for (const task of orphanedTasks) {
     console.log(`[Health] Orphaned assigned task detected: "${task.title}" (${task.id}) — stale for >${ASSIGNED_STALE_MINUTES}min, auto-dispatching`);
 
-    const missionControlUrl = getMissionControlUrl();
+    const missionControlUrl = getInternalUrl();
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (process.env.MC_API_TOKEN) {
       headers['Authorization'] = `Bearer ${process.env.MC_API_TOKEN}`;
@@ -337,6 +337,24 @@ async function recoverZombieTask(task: Task, agentId: string): Promise<void> {
     return;
   }
 
+  // Governance: respect audit-driven status changes.
+  // If a task was explicitly moved out of 'done' by an acceptance audit (status_reason contains
+  // audit markers), do NOT override that decision. Instead, log the skip and leave the task alone.
+  const reason = (task.status_reason || '').toLowerCase();
+  const isAuditDriven = reason.includes('audit') || reason.includes('acceptance-fail') || reason.includes('acceptance fail') || reason.includes('failed acceptance');
+  if (isAuditDriven) {
+    console.log(
+      `[Health] Skipping zombie recovery for task "${task.title}" — status was set by acceptance audit. ` +
+      `Status: ${task.status}, Reason: ${task.status_reason}`
+    );
+    run(
+      `INSERT INTO task_activities (id, task_id, agent_id, activity_type, message, created_at)
+       VALUES (?, ?, ?, 'status_changed', ?, ?)`,
+      [uuidv4(), task.id, agentId, 'Zombie recovery skipped — task status is audit-protected', now]
+    );
+    return;
+  }
+
   run(
     `UPDATE openclaw_sessions
      SET status = 'ended', ended_at = ?, updated_at = ?
@@ -360,7 +378,7 @@ async function recoverZombieTask(task: Task, agentId: string): Promise<void> {
     [uuidv4(), task.id, agentId, 'Zombie session detected — task reset to assigned for redispatch', now]
   );
 
-  const missionControlUrl = getMissionControlUrl();
+  const missionControlUrl = getInternalUrl();
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (process.env.MC_API_TOKEN) {
     headers['Authorization'] = `Bearer ${process.env.MC_API_TOKEN}`;
@@ -444,7 +462,7 @@ export async function nudgeAgent(agentId: string): Promise<{ success: boolean; e
   }
 
   // Re-dispatch via API
-  const missionControlUrl = getMissionControlUrl();
+  const missionControlUrl = getInternalUrl();
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (process.env.MC_API_TOKEN) {
     headers['Authorization'] = `Bearer ${process.env.MC_API_TOKEN}`;

@@ -3,6 +3,7 @@ import { getDb, queryAll, queryOne, run } from '@/lib/db';
 import { getOpenClawClient } from '@/lib/openclaw/client';
 import { broadcast } from '@/lib/events';
 import { extractJSON } from '@/lib/planning-utils';
+import { getCanonicalOrchestrator, repairSpuriousMasters } from '@/lib/orchestration-guard';
 // File system imports removed - using OpenClaw API instead
 
 export const dynamic = 'force-dynamic';
@@ -98,42 +99,27 @@ export async function POST(
       return NextResponse.json({ error: 'Planning already started', sessionKey: task.planning_session_key }, { status: 400 });
     }
 
-    // Check if there are other orchestrators available before starting planning with the default master agent
-    // Get the default master agent for this workspace
-    const defaultMaster = queryOne<{ id: string; session_key_prefix?: string }>(
-      `SELECT id, session_key_prefix FROM agents WHERE is_master = 1 AND workspace_id = ? ORDER BY created_at ASC LIMIT 1`,
-      [task.workspace_id]
-    );
+    // Enforce single-master invariant before routing the planning session.
+    // Auto-repair any spurious duplicates rather than hard-blocking with 409 —
+    // a 409 here deadlocks ALL planning for the workspace.
+    const demoted = repairSpuriousMasters(task.workspace_id);
+    if (demoted.length > 0) {
+      console.warn(
+        `[Planning] Auto-repaired ${demoted.length} spurious master(s) in workspace ${task.workspace_id}: ` +
+        demoted.map(a => a.name).join(', ')
+      );
+    }
+
+    // Get the canonical master agent for this workspace (after repair)
+    const defaultMaster = getCanonicalOrchestrator(task.workspace_id);
 
     // Get assigned agent if any (for session_key_prefix)
     const taskWithAgent = getDb().prepare(`
-      SELECT a.session_key_prefix 
-      FROM tasks t 
-      LEFT JOIN agents a ON t.assigned_agent_id = a.id 
+      SELECT a.session_key_prefix
+      FROM tasks t
+      LEFT JOIN agents a ON t.assigned_agent_id = a.id
       WHERE t.id = ?
     `).get(taskId) as { session_key_prefix?: string } | undefined;
-
-    const otherOrchestrators = queryAll<{
-      id: string;
-      name: string;
-      role: string;
-    }>(
-      `SELECT id, name, role
-       FROM agents
-       WHERE is_master = 1
-       AND id != ?
-       AND workspace_id = ?
-       AND status != 'offline'`,
-      [defaultMaster?.id ?? '', task.workspace_id]
-    );
-
-    if (otherOrchestrators.length > 0) {
-      return NextResponse.json({
-        error: 'Other orchestrators available',
-        message: `There ${otherOrchestrators.length === 1 ? 'is' : 'are'} ${otherOrchestrators.length} other orchestrator${otherOrchestrators.length === 1 ? '' : 's'} available in this workspace: ${otherOrchestrators.map(o => o.name).join(', ')}. Please assign this task to them directly.`,
-        otherOrchestrators,
-      }, { status: 409 }); // 409 Conflict
-    }
 
     // Create session key for this planning task
     // Priority: custom prefix > assigned agent's prefix > master agent's prefix > default prefix

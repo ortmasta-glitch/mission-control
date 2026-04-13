@@ -49,8 +49,9 @@ CREATE TABLE IF NOT EXISTS tasks (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT,
-  status TEXT DEFAULT 'inbox' CHECK (status IN ('pending_dispatch', 'planning', 'inbox', 'assigned', 'in_progress', 'convoy_active', 'testing', 'review', 'verification', 'done')),
+  status TEXT DEFAULT 'inbox' CHECK (status IN ('pending_dispatch', 'planning', 'inbox', 'pending_approval', 'assigned', 'in_progress', 'convoy_active', 'testing', 'review', 'verification', 'done')),
   priority TEXT DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
+  source TEXT DEFAULT 'manual' CHECK (source IN ('autonomous', 'manual')),
   assigned_agent_id TEXT REFERENCES agents(id),
   created_by_agent_id TEXT REFERENCES agents(id),
   workspace_id TEXT DEFAULT 'default' REFERENCES workspaces(id),
@@ -797,4 +798,101 @@ CREATE INDEX IF NOT EXISTS idx_user_task_reads_user_task ON user_task_reads(user
 CREATE INDEX IF NOT EXISTS idx_product_skills_product ON product_skills(product_id, skill_type, status);
 CREATE INDEX IF NOT EXISTS idx_product_skills_confidence ON product_skills(confidence DESC);
 CREATE INDEX IF NOT EXISTS idx_skill_reports_skill ON skill_reports(skill_id);
+
+-- ── Autonomous Daily Task Generation ──────────────────────────────────────────
+
+-- Workspace-level config for autonomous task generation.
+-- One row per workspace; use UPSERT to set defaults without touching existing config.
+CREATE TABLE IF NOT EXISTS autonomous_configs (
+  id TEXT PRIMARY KEY,
+  workspace_id TEXT NOT NULL UNIQUE REFERENCES workspaces(id),
+  enabled INTEGER NOT NULL DEFAULT 1,
+  -- Path to the goals file (relative to PROJECTS_PATH or absolute)
+  goals_file_path TEXT NOT NULL DEFAULT 'AUTONOMOUS.md',
+  -- Append-only completion log path
+  log_file_path TEXT NOT NULL DEFAULT 'memory/tasks-log.md',
+  -- Standard 5-field cron expression; default = 08:00 every day
+  generation_cron TEXT NOT NULL DEFAULT '0 8 * * *',
+  timezone TEXT NOT NULL DEFAULT 'UTC',
+  -- How many tasks to propose per run
+  target_task_count INTEGER NOT NULL DEFAULT 5,
+  -- 0 = auto-dispatch (tasks go straight to inbox); 1 = hold for human approval (tranche 2)
+  approval_required INTEGER NOT NULL DEFAULT 0,
+  last_run_at TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
+);
+
+-- One record per daily autonomous batch run.
+-- The UNIQUE INDEX on (workspace_id, run_date) enforces one batch per calendar day.
+CREATE TABLE IF NOT EXISTS autonomous_runs (
+  id TEXT PRIMARY KEY,
+  workspace_id TEXT NOT NULL REFERENCES workspaces(id),
+  -- ISO date YYYY-MM-DD; used as idempotency key
+  run_date TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'running' CHECK (status IN ('running', 'completed', 'failed', 'partial')),
+  tasks_proposed INTEGER NOT NULL DEFAULT 0,
+  tasks_created INTEGER NOT NULL DEFAULT 0,
+  tasks_skipped INTEGER NOT NULL DEFAULT 0,
+  error_message TEXT,
+  model TEXT,
+  prompt_tokens INTEGER DEFAULT 0,
+  completion_tokens INTEGER DEFAULT 0,
+  cost_usd REAL DEFAULT 0,
+  -- Raw JSON proposal from LLM (stored for debugging / tranche-2 approval UI)
+  raw_proposal TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_autonomous_runs_workspace_date
+  ON autonomous_runs(workspace_id, run_date);
+CREATE INDEX IF NOT EXISTS idx_autonomous_runs_workspace ON autonomous_runs(workspace_id, created_at DESC);
+
+-- ── Financial Planning Tool ────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS financial_entries (
+  id TEXT PRIMARY KEY,
+  clinic TEXT,
+  month TEXT NOT NULL,
+  revenue REAL DEFAULT 0,
+  costs REAL DEFAULT 0,
+  source_file TEXT,
+  imported_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_entries_month ON financial_entries(month);
+
+-- ── Document Repository ────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS documents (
+  id TEXT PRIMARY KEY,
+  category TEXT NOT NULL,
+  filename TEXT NOT NULL,
+  original_name TEXT NOT NULL,
+  size_bytes INTEGER DEFAULT 0,
+  mime_type TEXT,
+  uploaded_at TEXT DEFAULT (datetime('now')),
+  encrypted INTEGER DEFAULT 1
+);
+
+CREATE INDEX IF NOT EXISTS idx_documents_category ON documents(category);
+
+-- ── Advertising Channels Dashboard ────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS ad_metrics (
+  id TEXT PRIMARY KEY,
+  platform TEXT NOT NULL,
+  period_start TEXT,
+  period_end TEXT,
+  spend REAL DEFAULT 0,
+  impressions INTEGER DEFAULT 0,
+  clicks INTEGER DEFAULT 0,
+  conversions REAL DEFAULT 0,
+  ctr REAL DEFAULT 0,
+  source_file TEXT,
+  imported_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_ad_metrics_platform ON ad_metrics(platform);
 `;

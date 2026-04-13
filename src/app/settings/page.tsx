@@ -10,9 +10,10 @@ import { useRouter } from 'next/navigation';
 import {
   Settings, Save, RotateCcw, Home, FolderOpen, Link as LinkIcon,
   HardDrive, Download, Upload, Trash2, RotateCw, ChevronDown, ChevronRight,
-  AlertTriangle, Check, Loader2, Cloud, CloudOff, Shield,
+  AlertTriangle, Check, Loader2, Cloud, CloudOff, Shield, BarChart2, FileText,
 } from 'lucide-react';
 import { getConfig, updateConfig, resetConfig, type MissionControlConfig } from '@/lib/config';
+import { AnthropicUsageDashboard } from '@/components/costs/AnthropicUsageDashboard';
 
 // ---------------------------------------------------------------------------
 // Types for backup data
@@ -67,6 +68,15 @@ export default function SettingsPage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Goals file state
+  const [goalsContent, setGoalsContent] = useState('');
+  const [goalsFilePath, setGoalsFilePath] = useState('');
+  const [goalsMaxChars] = useState(32_000);
+  const [isLoadingGoals, setIsLoadingGoals] = useState(false);
+  const [isSavingGoals, setIsSavingGoals] = useState(false);
+  const [goalsError, setGoalsError] = useState<string | null>(null);
+  const [goalsSuccess, setGoalsSuccess] = useState(false);
+
   // Backup state
   const [backups, setBackups] = useState<BackupMetadata[]>([]);
   const [backupTotal, setBackupTotal] = useState(0);
@@ -82,6 +92,26 @@ export default function SettingsPage() {
 
   useEffect(() => {
     setConfig(getConfig());
+  }, []);
+
+  // Fetch goals file on mount
+  useEffect(() => {
+    const fetchGoals = async () => {
+      setIsLoadingGoals(true);
+      setGoalsError(null);
+      try {
+        const res = await fetch('/api/settings/autonomous-goals');
+        if (!res.ok) throw new Error('Failed to load goals file');
+        const data = await res.json();
+        setGoalsContent(data.content ?? '');
+        setGoalsFilePath(data.filePath ?? '');
+      } catch (err) {
+        setGoalsError(err instanceof Error ? err.message : 'Failed to load goals file');
+      } finally {
+        setIsLoadingGoals(false);
+      }
+    };
+    fetchGoals();
   }, []);
 
   // Fetch backups on mount
@@ -140,6 +170,29 @@ export default function SettingsPage() {
   const handleChange = <K extends keyof MissionControlConfig>(field: K, value: MissionControlConfig[K]) => {
     if (!config) return;
     setConfig({ ...config, [field]: value });
+  };
+
+  const handleSaveGoals = async () => {
+    setIsSavingGoals(true);
+    setGoalsError(null);
+    setGoalsSuccess(false);
+    try {
+      const res = await fetch('/api/settings/autonomous-goals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: goalsContent }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to save goals file');
+      }
+      setGoalsSuccess(true);
+      setTimeout(() => setGoalsSuccess(false), 3000);
+    } catch (err) {
+      setGoalsError(err instanceof Error ? err.message : 'Failed to save goals file');
+    } finally {
+      setIsSavingGoals(false);
+    }
   };
 
   // ---------------------------------------------------------------------------
@@ -395,6 +448,63 @@ export default function SettingsPage() {
               </div>
             </div>
           </label>
+        </section>
+
+        {/* ============================================================== */}
+        {/* Goals File Editor (AUTONOMOUS.md)                               */}
+        {/* ============================================================== */}
+        <section className="mb-8 p-6 bg-mc-bg-secondary border border-mc-border rounded-lg">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <FileText className="w-5 h-5 text-mc-accent" />
+              <h2 className="text-xl font-semibold text-mc-text">Autonomous Goals</h2>
+            </div>
+            <button
+              onClick={handleSaveGoals}
+              disabled={isSavingGoals || isLoadingGoals}
+              className="px-4 py-2 bg-mc-accent text-mc-bg rounded hover:bg-mc-accent/90 flex items-center gap-2 disabled:opacity-50 text-sm font-medium"
+            >
+              {isSavingGoals ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              {isSavingGoals ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+          <p className="text-sm text-mc-text-secondary mb-1">
+            Edit <code className="px-1 py-0.5 bg-mc-bg rounded text-xs">AUTONOMOUS.md</code> — the goals file that drives autonomous task generation.
+          </p>
+          {goalsFilePath && (
+            <p className="text-xs text-mc-text-secondary/60 mb-4 font-mono">{goalsFilePath}</p>
+          )}
+
+          {goalsSuccess && (
+            <div className="mb-3 p-3 bg-green-500/10 border border-green-500/30 rounded text-green-400 text-sm flex items-center gap-2">
+              <Check className="w-4 h-4 flex-shrink-0" /> Goals file saved successfully
+            </div>
+          )}
+          {goalsError && (
+            <div className="mb-3 p-3 bg-red-500/10 border border-red-500/30 rounded text-red-400 text-sm flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 flex-shrink-0" /> {goalsError}
+            </div>
+          )}
+
+          {isLoadingGoals ? (
+            <div className="flex items-center justify-center py-8 text-mc-text-secondary text-sm">
+              <Loader2 className="w-4 h-4 animate-spin mr-2" /> Loading...
+            </div>
+          ) : (
+            <>
+              <textarea
+                value={goalsContent}
+                onChange={e => setGoalsContent(e.target.value)}
+                rows={20}
+                className="w-full px-4 py-3 bg-mc-bg border border-mc-border rounded text-mc-text text-sm font-mono focus:border-mc-accent focus:outline-none resize-y"
+                placeholder="# Goal-Driven Autonomous Source of Truth&#10;&#10;## Mission and operating bias&#10;..."
+                spellCheck={false}
+              />
+              <div className={`mt-1 text-xs text-right ${goalsContent.length > goalsMaxChars * 0.9 ? 'text-amber-400' : 'text-mc-text-secondary/60'}`}>
+                {goalsContent.length.toLocaleString()} / {goalsMaxChars.toLocaleString()} chars
+              </div>
+            </>
+          )}
         </section>
 
         {/* ============================================================== */}
@@ -665,6 +775,15 @@ export default function SettingsPage() {
           </div>
         )}
 
+        {/* Anthropic Usage & Cost */}
+        <section className="mb-8 p-6 bg-mc-bg-secondary border border-mc-border rounded-lg">
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart2 className="w-5 h-5 text-mc-accent" />
+            <h2 className="text-xl font-semibold text-mc-text">Anthropic Usage &amp; Cost</h2>
+          </div>
+          <AnthropicUsageDashboard />
+        </section>
+
         {/* Environment Variables Note */}
         <section className="p-6 bg-blue-500/10 border border-blue-500/30 rounded-lg">
           <h3 className="text-lg font-semibold text-blue-400 mb-2">
@@ -680,6 +799,7 @@ export default function SettingsPage() {
             <li><code>OPENCLAW_GATEWAY_URL</code> - Gateway WebSocket URL</li>
             <li><code>OPENCLAW_GATEWAY_TOKEN</code> - Gateway auth token</li>
             <li><code>S3_ENDPOINT</code>, <code>S3_BUCKET</code>, <code>S3_ACCESS_KEY</code>, <code>S3_SECRET_KEY</code> - S3 backup storage</li>
+            <li><code>ANTHROPIC_ADMIN_API_KEY</code> - Admin key for usage &amp; cost reporting (Organization Admin role required)</li>
           </ul>
           <p className="text-xs text-blue-400 mt-3">
             Environment variables take precedence over UI settings for server-side operations.

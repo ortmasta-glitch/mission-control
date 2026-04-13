@@ -2,7 +2,7 @@
 
 export type AgentStatus = 'standby' | 'working' | 'offline';
 
-export type TaskStatus = 'pending_dispatch' | 'planning' | 'inbox' | 'assigned' | 'in_progress' | 'convoy_active' | 'testing' | 'review' | 'verification' | 'done';
+export type TaskStatus = 'pending_dispatch' | 'planning' | 'inbox' | 'pending_approval' | 'assigned' | 'in_progress' | 'convoy_active' | 'testing' | 'review' | 'verification' | 'done';
 
 export type TaskPriority = 'low' | 'normal' | 'high' | 'urgent';
 
@@ -62,6 +62,7 @@ export interface Task {
   description?: string;
   status: TaskStatus;
   priority: TaskPriority;
+  source?: 'autonomous' | 'manual';
   assigned_agent_id: string | null;
   created_by_agent_id: string | null;
   workspace_id: string;
@@ -167,6 +168,7 @@ export interface WorkspaceStats {
     pending_dispatch: number;
     planning: number;
     inbox: number;
+    pending_approval: number;
     assigned: number;
     in_progress: number;
     convoy_active: number;

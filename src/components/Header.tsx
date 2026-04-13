@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Zap, Settings, ChevronLeft, LayoutGrid, Rocket } from 'lucide-react';
+import { Zap, Settings, ChevronLeft, LayoutGrid, Rocket, BarChart2, FolderOpen, Megaphone, TrendingUp } from 'lucide-react';
 import { useMissionControl } from '@/lib/store';
 import { format } from 'date-fns';
 import type { Workspace } from '@/lib/types';
@@ -70,6 +70,18 @@ export function Header({ workspace, isPortrait = true }: HeaderProps) {
 
             <Link href="/autopilot" className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Autopilot">
               <Rocket className="w-5 h-5" />
+            </Link>
+            <Link href="/financial" className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Financial Planning">
+              <TrendingUp className="w-5 h-5" />
+            </Link>
+            <Link href="/documents" className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Documents">
+              <FolderOpen className="w-5 h-5" />
+            </Link>
+            <Link href="/advertising" className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Advertising">
+              <Megaphone className="w-5 h-5" />
+            </Link>
+            <Link href="/usage" className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Anthropic Usage &amp; Cost">
+              <BarChart2 className="w-5 h-5" />
             </Link>
             <button onClick={() => router.push('/settings')} className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary shrink-0" title="Settings">
               <Settings className="w-5 h-5" />
@@ -155,6 +167,18 @@ export function Header({ workspace, isPortrait = true }: HeaderProps) {
             </div>
             <Link href="/autopilot" className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Autopilot">
               <Rocket className="w-5 h-5" />
+            </Link>
+            <Link href="/financial" className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Financial Planning">
+              <TrendingUp className="w-5 h-5" />
+            </Link>
+            <Link href="/documents" className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Documents">
+              <FolderOpen className="w-5 h-5" />
+            </Link>
+            <Link href="/advertising" className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Advertising">
+              <Megaphone className="w-5 h-5" />
+            </Link>
+            <Link href="/usage" className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Anthropic Usage &amp; Cost">
+              <BarChart2 className="w-5 h-5" />
             </Link>
             <button onClick={() => router.push('/settings')} className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Settings">
               <Settings className="w-5 h-5" />

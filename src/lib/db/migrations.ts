@@ -1595,6 +1595,281 @@ const migrations: Migration[] = [
 
       console.log('[Migration 028] product_skills and skill_reports tables created');
     }
+  },
+  {
+    id: '029',
+    name: 'enforce_single_master_per_workspace',
+    up: (db) => {
+      console.log('[Migration 029] Enforcing single-master-per-workspace invariant...');
+
+      // Find all workspaces that have more than one is_master = 1 agent.
+      // Keep the oldest (created_at ASC) and demote the rest.
+      const duplicates = db.prepare(
+        `SELECT workspace_id, COUNT(*) as cnt
+         FROM agents
+         WHERE is_master = 1
+         GROUP BY workspace_id
+         HAVING COUNT(*) > 1`
+      ).all() as { workspace_id: string; cnt: number }[];
+
+      const now = new Date().toISOString();
+      let totalDemoted = 0;
+
+      for (const { workspace_id, cnt } of duplicates) {
+        // Get all masters ordered oldest first
+        const masters = db.prepare(
+          `SELECT id, name FROM agents WHERE is_master = 1 AND workspace_id = ? ORDER BY created_at ASC`
+        ).all(workspace_id) as { id: string; name: string }[];
+
+        // Demote all except the first (oldest)
+        const [, ...spurious] = masters;
+        for (const agent of spurious) {
+          db.prepare(`UPDATE agents SET is_master = 0, updated_at = ? WHERE id = ?`).run(now, agent.id);
+          console.warn(`[Migration 029] Demoted spurious master: "${agent.name}" (${agent.id}) in workspace ${workspace_id}`);
+          totalDemoted++;
+        }
+        console.log(`[Migration 029] Workspace ${workspace_id}: kept 1 of ${cnt} masters, demoted ${spurious.length}`);
+      }
+
+      if (totalDemoted === 0) {
+        console.log('[Migration 029] No spurious masters found — all workspaces are clean');
+      } else {
+        console.log(`[Migration 029] Total demoted: ${totalDemoted}`);
+      }
+      // Note: a DB-level partial unique index is intentionally NOT added here.
+      // Ongoing enforcement is handled at the application layer (dispatch, planning,
+      // health sweeper) via repairSpuriousMasters().  A DB-level unique constraint
+      // would also block the repair code itself (UPDATE to is_master=0 requires the
+      // old row to still be is_master=1 during the transaction, and SQLite evaluates
+      // the unique constraint before the UPDATE completes in some edge cases).
+      // Application-layer enforcement is sufficient and testable.
+    }
+  },
+  {
+    id: '030',
+    name: 'add_autonomous_task_generation',
+    up: (db) => {
+      console.log('[Migration 030] Adding autonomous task generation tables...');
+
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS autonomous_configs (
+          id TEXT PRIMARY KEY,
+          workspace_id TEXT NOT NULL UNIQUE REFERENCES workspaces(id),
+          enabled INTEGER NOT NULL DEFAULT 1,
+          goals_file_path TEXT NOT NULL DEFAULT 'AUTONOMOUS.md',
+          log_file_path TEXT NOT NULL DEFAULT 'memory/tasks-log.md',
+          generation_cron TEXT NOT NULL DEFAULT '0 8 * * *',
+          timezone TEXT NOT NULL DEFAULT 'UTC',
+          target_task_count INTEGER NOT NULL DEFAULT 5,
+          approval_required INTEGER NOT NULL DEFAULT 0,
+          last_run_at TEXT,
+          created_at TEXT DEFAULT (datetime('now')),
+          updated_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS autonomous_runs (
+          id TEXT PRIMARY KEY,
+          workspace_id TEXT NOT NULL REFERENCES workspaces(id),
+          run_date TEXT NOT NULL,
+          status TEXT NOT NULL DEFAULT 'running' CHECK (status IN ('running', 'completed', 'failed', 'partial')),
+          tasks_proposed INTEGER NOT NULL DEFAULT 0,
+          tasks_created INTEGER NOT NULL DEFAULT 0,
+          tasks_skipped INTEGER NOT NULL DEFAULT 0,
+          error_message TEXT,
+          model TEXT,
+          prompt_tokens INTEGER DEFAULT 0,
+          completion_tokens INTEGER DEFAULT 0,
+          cost_usd REAL DEFAULT 0,
+          raw_proposal TEXT,
+          created_at TEXT DEFAULT (datetime('now')),
+          updated_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+
+      db.exec(`
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_autonomous_runs_workspace_date
+          ON autonomous_runs(workspace_id, run_date)
+      `);
+      db.exec(`
+        CREATE INDEX IF NOT EXISTS idx_autonomous_runs_workspace
+          ON autonomous_runs(workspace_id, created_at DESC)
+      `);
+
+      console.log('[Migration 030] Autonomous task generation tables created');
+    }
+  },
+  {
+    id: '031',
+    name: 'add_pending_approval_and_source_to_tasks',
+    up: (db) => {
+      console.log('[Migration 031] Adding pending_approval status and source column to tasks...');
+
+      // Get current columns so we can copy them safely
+      const oldCols = (db.prepare('PRAGMA table_info(tasks)').all() as { name: string }[]).map(c => c.name);
+
+      db.exec(`ALTER TABLE tasks RENAME TO _tasks_old_031`);
+
+      db.exec(`
+        CREATE TABLE tasks (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          description TEXT,
+          status TEXT DEFAULT 'inbox' CHECK (status IN (
+            'pending_dispatch', 'planning', 'inbox', 'pending_approval',
+            'assigned', 'in_progress', 'convoy_active', 'testing',
+            'review', 'verification', 'done'
+          )),
+          priority TEXT DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
+          source TEXT DEFAULT 'manual' CHECK (source IN ('autonomous', 'manual')),
+          assigned_agent_id TEXT REFERENCES agents(id),
+          created_by_agent_id TEXT REFERENCES agents(id),
+          workspace_id TEXT DEFAULT 'default' REFERENCES workspaces(id),
+          business_id TEXT DEFAULT 'default',
+          due_date TEXT,
+          workflow_template_id TEXT REFERENCES workflow_templates(id),
+          planning_session_key TEXT,
+          planning_messages TEXT,
+          planning_complete INTEGER DEFAULT 0,
+          planning_spec TEXT,
+          planning_agents TEXT,
+          planning_dispatch_error TEXT,
+          status_reason TEXT,
+          images TEXT,
+          convoy_id TEXT,
+          is_subtask INTEGER DEFAULT 0,
+          product_id TEXT REFERENCES products(id),
+          idea_id TEXT REFERENCES ideas(id),
+          estimated_cost_usd REAL,
+          actual_cost_usd REAL DEFAULT 0,
+          repo_url TEXT,
+          repo_branch TEXT,
+          pr_url TEXT,
+          pr_status TEXT CHECK (pr_status IN ('pending', 'open', 'merged', 'closed')),
+          workspace_path TEXT,
+          workspace_strategy TEXT,
+          workspace_port INTEGER,
+          workspace_base_commit TEXT,
+          merge_status TEXT,
+          merge_pr_url TEXT,
+          created_at TEXT DEFAULT (datetime('now')),
+          updated_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+
+      // Copy only columns that exist in both old and new tables
+      const newCols = new Set(
+        (db.prepare('PRAGMA table_info(tasks)').all() as { name: string }[]).map(c => c.name)
+      );
+      const safeCols = oldCols.filter(c => newCols.has(c)).join(', ');
+      db.exec(`INSERT INTO tasks (${safeCols}) SELECT ${safeCols} FROM _tasks_old_031`);
+      db.exec(`DROP TABLE _tasks_old_031`);
+
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status)`);
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_tasks_assigned ON tasks(assigned_agent_id)`);
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_tasks_workspace ON tasks(workspace_id)`);
+
+      console.log('[Migration 031] Tasks table updated with pending_approval status and source column');
+    }
+  },
+  {
+    id: '032',
+    name: 'add_tranche3_tables',
+    up: (db) => {
+      console.log('[Migration 032] Adding financial_entries, documents, ad_metrics tables...');
+
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS financial_entries (
+          id TEXT PRIMARY KEY,
+          clinic TEXT,
+          month TEXT NOT NULL,
+          revenue REAL DEFAULT 0,
+          costs REAL DEFAULT 0,
+          source_file TEXT,
+          imported_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_financial_entries_month ON financial_entries(month)`);
+
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS documents (
+          id TEXT PRIMARY KEY,
+          category TEXT NOT NULL,
+          filename TEXT NOT NULL,
+          original_name TEXT NOT NULL,
+          size_bytes INTEGER DEFAULT 0,
+          mime_type TEXT,
+          uploaded_at TEXT DEFAULT (datetime('now')),
+          encrypted INTEGER DEFAULT 1
+        )
+      `);
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_documents_category ON documents(category)`);
+
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS ad_metrics (
+          id TEXT PRIMARY KEY,
+          platform TEXT NOT NULL,
+          period_start TEXT,
+          period_end TEXT,
+          spend REAL DEFAULT 0,
+          impressions INTEGER DEFAULT 0,
+          clicks INTEGER DEFAULT 0,
+          conversions REAL DEFAULT 0,
+          ctr REAL DEFAULT 0,
+          source_file TEXT,
+          imported_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_ad_metrics_platform ON ad_metrics(platform)`);
+
+      console.log('[Migration 032] Tranche 3 tables created');
+    }
+  },
+  {
+    id: '033',
+    name: 'repair_ownerless_in_progress_tasks',
+    up: (db) => {
+      console.log('[Migration 033] Repairing ownerless in_progress tasks...');
+
+      // Find tasks that are stuck in_progress with no assigned agent and no activity.
+      // These tasks can never make progress and must be reset to inbox.
+      const stuck = db.prepare(
+        `SELECT t.id, t.title
+         FROM tasks t
+         LEFT JOIN task_activities ta ON ta.task_id = t.id
+         WHERE t.status = 'in_progress'
+           AND t.assigned_agent_id IS NULL
+           AND ta.id IS NULL
+         GROUP BY t.id`
+      ).all() as { id: string; title: string }[];
+
+      if (stuck.length === 0) {
+        console.log('[Migration 033] No ownerless in_progress tasks found — skipping');
+        return;
+      }
+
+      const now = new Date().toISOString();
+      const resetStmt = db.prepare(
+        `UPDATE tasks
+         SET status = 'inbox',
+             status_reason = 'Repaired by migration 033: was in_progress with no assigned agent and no activity',
+             updated_at = ?
+         WHERE id = ? AND status = 'in_progress' AND assigned_agent_id IS NULL`
+      );
+      const eventStmt = db.prepare(
+        `INSERT INTO events (id, type, task_id, message, created_at)
+         VALUES (lower(hex(randomblob(16))), 'system', ?, 'Task reset to inbox by migration 033: was ownerless in_progress', ?)`
+      );
+
+      for (const task of stuck) {
+        resetStmt.run(now, task.id);
+        eventStmt.run(task.id, now);
+        console.log(`[Migration 033] Reset task "${task.title}" (${task.id}) → inbox`);
+      }
+
+      console.log(`[Migration 033] Repaired ${stuck.length} ownerless in_progress task(s)`);
+    }
   }
 ];
 
