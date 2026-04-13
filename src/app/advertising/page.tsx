@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, RefreshCw, Loader2, Megaphone } from 'lucide-react';
+import { ChevronLeft, RefreshCw, Loader2, Megaphone, AlertTriangle, FileText } from 'lucide-react';
 import * as echarts from 'echarts/core';
 import { BarChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components';
@@ -25,6 +25,8 @@ const PLATFORM_COLORS: Record<string, string> = {
   'TikTok': '#ff0050',
 };
 
+const STALE_THRESHOLD_DAYS = 14;
+
 interface ChannelSummary {
   platform: string;
   spend: number;
@@ -32,8 +34,12 @@ interface ChannelSummary {
   clicks: number;
   conversions: number;
   ctr: number;
+  cpc: number | null;
+  cpa: number | null;
+  cvr: number | null;
   last_import: string | null;
   last_period_end: string | null;
+  source_file: string | null;
   row_count: number;
   hasData: boolean;
 }
@@ -53,14 +59,14 @@ function formatPLN(n: number): string {
   return `${n.toLocaleString('pl-PL', { maximumFractionDigits: 0 })} PLN`;
 }
 
-function dataFreshnessStatus(channel: ChannelSummary): { label: string; color: string } {
-  if (!channel.hasData) return { label: '⚫ No data', color: 'text-mc-text-secondary' };
-  if (!channel.last_import) return { label: '⚫ No data', color: 'text-mc-text-secondary' };
+function dataFreshnessStatus(channel: ChannelSummary): { label: string; color: string; stale: boolean } {
+  if (!channel.hasData) return { label: '⚫ No data', color: 'text-mc-text-secondary', stale: false };
+  if (!channel.last_import) return { label: '⚫ No data', color: 'text-mc-text-secondary', stale: false };
   const age = Date.now() - new Date(channel.last_import).getTime();
   const days = age / 86_400_000;
-  if (days <= 7) return { label: '🟢 Active', color: 'text-green-400' };
-  if (days <= 30) return { label: '🟡 Limited', color: 'text-yellow-400' };
-  return { label: '🔴 Paused', color: 'text-red-400' };
+  if (days <= 7) return { label: '🟢 Active', color: 'text-green-400', stale: false };
+  if (days <= STALE_THRESHOLD_DAYS) return { label: '🟡 Limited', color: 'text-yellow-400', stale: false };
+  return { label: '🔴 Paused', color: 'text-red-400', stale: true };
 }
 
 function ComparisonChart({ channels }: { channels: ChannelSummary[] }) {
@@ -161,6 +167,7 @@ export default function AdvertisingPage() {
   useEffect(() => { load(); }, []);
 
   const hasAnyData = data?.channels.some(c => c.hasData);
+  const stalePlatforms = data?.channels.filter(c => dataFreshnessStatus(c).stale) ?? [];
 
   return (
     <div className="min-h-screen bg-mc-bg text-mc-text">
@@ -190,6 +197,14 @@ export default function AdvertisingPage() {
           <div className="text-center py-16 text-red-400">{error}</div>
         ) : (
           <>
+            {/* Stale import warning */}
+            {stalePlatforms.length > 0 && (
+              <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded flex items-center gap-2 text-yellow-400 text-sm">
+                <AlertTriangle className="w-4 h-4 shrink-0" />
+                <span>Stale data: {stalePlatforms.map(p => p.platform).join(', ')} — last import more than {STALE_THRESHOLD_DAYS} days ago. Consider uploading fresh exports.</span>
+              </div>
+            )}
+
             {/* 4 platform cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               {data!.channels.map(channel => {
@@ -237,12 +252,34 @@ export default function AdvertisingPage() {
                             <span className="text-mc-text-secondary">Conversions</span>
                             <span className="font-mono text-green-400">{channel.conversions.toFixed(1)}</span>
                           </div>
+                          {/* CPC / CPA / CVR */}
+                          <div className="border-t border-mc-border/50 pt-2 mt-1 space-y-1.5">
+                            <div className="flex justify-between text-xs">
+                              <span className="text-mc-text-secondary">CPC</span>
+                              <span className="font-mono">{channel.cpc != null ? formatPLN(channel.cpc) : '—'}</span>
+                            </div>
+                            <div className="flex justify-between text-xs">
+                              <span className="text-mc-text-secondary">CPA</span>
+                              <span className="font-mono">{channel.cpa != null ? formatPLN(channel.cpa) : '—'}</span>
+                            </div>
+                            <div className="flex justify-between text-xs">
+                              <span className="text-mc-text-secondary">CVR</span>
+                              <span className="font-mono">{channel.cvr != null ? `${channel.cvr.toFixed(2)}%` : '—'}</span>
+                            </div>
+                          </div>
                         </div>
-                        {channel.last_import && (
-                          <p className="text-xs text-mc-text-secondary mt-3 pt-2 border-t border-mc-border/50">
-                            Updated {formatDistanceToNow(new Date(channel.last_import), { addSuffix: true })}
-                          </p>
-                        )}
+                        {/* Source file + last import */}
+                        <div className="text-xs text-mc-text-secondary mt-3 pt-2 border-t border-mc-border/50 space-y-1">
+                          {channel.source_file && (
+                            <div className="flex items-center gap-1">
+                              <FileText className="w-3 h-3" />
+                              <span className="truncate">{channel.source_file}</span>
+                            </div>
+                          )}
+                          {channel.last_import && (
+                            <span>Updated {formatDistanceToNow(new Date(channel.last_import), { addSuffix: true })}</span>
+                          )}
+                        </div>
                       </>
                     )}
                   </div>
