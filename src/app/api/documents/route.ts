@@ -67,34 +67,56 @@ export async function POST(request: NextRequest) {
 
     // Trigger re-parse if financial or advertising
     const now = new Date().toISOString();
+    let parse_status: string | null = null;
+    let parse_error: string | null = null;
+
     if (category === 'financial') {
       try {
-        const rows = parseFinancialBuffer(buffer, file.name);
+        const result = parseFinancialBuffer(buffer, file.name, { source_document_id: id, import_mode: 'manual' });
         const insert = db.prepare(`
           INSERT INTO financial_entries (id, clinic, month, revenue, costs, source_file, imported_at)
           VALUES (?, ?, ?, ?, ?, ?, ?)
         `);
-        for (const row of rows) {
+        for (const row of result.data) {
           insert.run(uuidv4(), row.clinic, row.month, row.revenue, row.costs, file.name, now);
         }
+        parse_status = result.status;
+        if (result.errors.length > 0) {
+          parse_error = `${result.rows_failed} row(s) failed, ${result.rows_skipped} skipped`;
+        }
       } catch (parseErr) {
+        parse_status = 'failed';
+        parse_error = parseErr instanceof Error ? parseErr.message : String(parseErr);
         console.warn('[documents POST] financial parse error:', parseErr);
       }
     }
 
     if (category === 'advertising') {
       try {
-        const rows = parseAdvertisingBuffer(buffer, file.name);
+        const result = parseAdvertisingBuffer(buffer, file.name, { source_document_id: id, import_mode: 'manual' });
         const insert = db.prepare(`
           INSERT INTO ad_metrics (id, platform, period_start, period_end, spend, impressions, clicks, conversions, ctr, source_file, imported_at)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `);
-        for (const row of rows) {
+        for (const row of result.data) {
           insert.run(uuidv4(), row.platform, row.period_start, row.period_end, row.spend, row.impressions, row.clicks, row.conversions, row.ctr, file.name, now);
         }
+        parse_status = result.status;
+        if (result.errors.length > 0) {
+          parse_error = `${result.rows_failed} row(s) failed, ${result.rows_skipped} skipped`;
+        }
       } catch (parseErr) {
+        parse_status = 'failed';
+        parse_error = parseErr instanceof Error ? parseErr.message : String(parseErr);
         console.warn('[documents POST] advertising parse error:', parseErr);
       }
+    }
+
+    // Store parse status on document
+    if (parse_status) {
+      try {
+        db.prepare('UPDATE documents SET parse_status = ?, parse_error = ? WHERE id = ?').run(parse_status, parse_error, id);
+      } catch { /* column may not exist yet */ }
     }
 
     const doc = db.prepare('SELECT * FROM documents WHERE id = ?').get(id);
