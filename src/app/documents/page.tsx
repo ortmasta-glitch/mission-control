@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import {
   ChevronLeft, Upload, Trash2, Download, FileText, AlertTriangle,
-  Loader2, FolderOpen, Check,
+  Loader2, FolderOpen, Check, Search, ArrowUpDown, AlertCircle,
+  RotateCw, FileDown, Info,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -19,6 +20,19 @@ const CATEGORY_ICONS: Record<Category, string> = {
   operations: '⚙️',
 };
 
+const ACCEPTED_MIME_TYPES: Record<string, string[]> = {
+  financial: ['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf'],
+  advertising: ['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf'],
+  hr: ['application/pdf', 'text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'],
+  legal: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'],
+  operations: ['application/pdf', 'text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/png'],
+};
+
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+
+type SortMode = 'newest' | 'oldest' | 'largest';
+type ParseStatusFilter = 'all' | 'success' | 'failed' | 'pending' | 'stale';
+
 interface Document {
   id: string;
   category: Category;
@@ -28,6 +42,8 @@ interface Document {
   mime_type: string | null;
   uploaded_at: string;
   encrypted: number;
+  parse_status?: string | null;
+  parse_error?: string | null;
 }
 
 function formatBytes(bytes: number): string {
@@ -35,6 +51,21 @@ function formatBytes(bytes: number): string {
   const units = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return `${(bytes / Math.pow(1024, i)).toFixed(i > 0 ? 1 : 0)} ${units[i]}`;
+}
+
+function hasPathTraversal(filename: string): boolean {
+  const normalized = filename.replace(/\\/g, '/');
+  return normalized.includes('..') || normalized.startsWith('/') || /^[a-zA-Z]:/.test(normalized);
+}
+
+function generateSampleCSV(category: Category): string {
+  if (category === 'financial') {
+    return 'month,clinic,revenue,costs\n2026-01,Olsztyn,150000,90000\n2026-01,Elbląg,80000,50000\n2026-02,Olsztyn,160000,92000';
+  }
+  if (category === 'advertising') {
+    return 'platform,period_start,period_end,spend,impressions,clicks,conversions,ctr\nGoogle Ads,2026-01-01,2026-01-31,5000,120000,3600,120,3.0\nFacebook,2026-01-01,2026-01-31,3000,80000,2000,80,2.5';
+  }
+  return 'date,description,amount\n2026-01-15,Example entry,1000';
 }
 
 export default function DocumentsPage() {
@@ -46,6 +77,9 @@ export default function DocumentsPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortMode, setSortMode] = useState<SortMode>('newest');
+  const [parseStatusFilter, setParseStatusFilter] = useState<ParseStatusFilter>('all');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadDocuments = useCallback(async () => {
@@ -62,6 +96,25 @@ export default function DocumentsPage() {
   useEffect(() => { loadDocuments(); }, [loadDocuments]);
 
   const uploadFile = async (file: File) => {
+    // MIME type validation
+    const accepted = ACCEPTED_MIME_TYPES[activeCategory] || [];
+    if (accepted.length > 0 && file.type && !accepted.includes(file.type) && !accepted.includes('application/octet-stream')) {
+      setError(`File type "${file.type}" not accepted for ${activeCategory}. Accepted: ${accepted.join(', ')}`);
+      return;
+    }
+
+    // Size limit
+    if (file.size > MAX_FILE_SIZE) {
+      setError(`File too large (${formatBytes(file.size)}). Maximum is ${formatBytes(MAX_FILE_SIZE)}.`);
+      return;
+    }
+
+    // Path traversal check
+    if (hasPathTraversal(file.name)) {
+      setError('Invalid filename: path traversal characters not allowed.');
+      return;
+    }
+
     setUploading(true);
     setError(null);
     try {
@@ -107,7 +160,47 @@ export default function DocumentsPage() {
     }
   };
 
-  const categoryDocs = documents.filter(d => d.category === activeCategory);
+  const handleRetryParse = async (doc: Document) => {
+    try {
+      const res = await fetch(`/api/documents/${doc.id}/parse`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ import_mode: 'retry' }) });
+      if (!res.ok) throw new Error('Retry parse failed');
+      await loadDocuments();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Retry parse failed');
+    }
+  };
+
+  const downloadSample = (category: Category) => {
+    const csv = generateSampleCSV(category);
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sample-${category}-template.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Filter and sort
+  let categoryDocs = documents.filter(d => d.category === activeCategory);
+
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    categoryDocs = categoryDocs.filter(d => d.original_name.toLowerCase().includes(q));
+  }
+
+  if (parseStatusFilter !== 'all') {
+    categoryDocs = categoryDocs.filter(d => (d.parse_status || 'pending') === parseStatusFilter);
+  }
+
+  categoryDocs = [...categoryDocs].sort((a, b) => {
+    if (sortMode === 'newest') return new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime();
+    if (sortMode === 'oldest') return new Date(a.uploaded_at).getTime() - new Date(b.uploaded_at).getTime();
+    if (sortMode === 'largest') return b.size_bytes - a.size_bytes;
+    return 0;
+  });
+
+  const acceptedMimes = ACCEPTED_MIME_TYPES[activeCategory] || [];
 
   return (
     <div className="min-h-screen bg-mc-bg text-mc-text">
@@ -127,7 +220,7 @@ export default function DocumentsPage() {
           {CATEGORIES.map(cat => (
             <button
               key={cat}
-              onClick={() => setActiveCategory(cat)}
+              onClick={() => { setActiveCategory(cat); setSearchQuery(''); setParseStatusFilter('all'); }}
               className={`w-full flex items-center gap-2 px-4 py-2.5 text-sm transition-colors ${
                 activeCategory === cat
                   ? 'bg-mc-accent/10 text-mc-accent border-r-2 border-mc-accent'
@@ -174,7 +267,7 @@ export default function DocumentsPage() {
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`mb-6 border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+              className={`mb-4 border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
                 dragOver
                   ? 'border-mc-accent bg-mc-accent/10'
                   : 'border-mc-border hover:border-mc-accent/50 hover:bg-mc-bg-tertiary'
@@ -191,12 +284,70 @@ export default function DocumentsPage() {
                   <Upload className="w-8 h-8 text-mc-text-secondary" />
                   <p className="text-sm font-medium">Drop a file here or click to upload</p>
                   <p className="text-xs text-mc-text-secondary">
-                    CSV, XLSX, PDF — stored encrypted at rest
+                    Max {formatBytes(MAX_FILE_SIZE)} · Stored encrypted at rest
                     {(activeCategory === 'financial' || activeCategory === 'advertising') && (
                       <span className="ml-1 text-mc-accent">· auto-parsed into dashboard</span>
                     )}
                   </p>
+                  <div className="flex items-center gap-1 mt-1 text-xs text-mc-text-secondary">
+                    <Info className="w-3 h-3" />
+                    Accepted: {acceptedMimes.length > 0 ? acceptedMimes.join(', ') : 'any'}
+                  </div>
                 </div>
+              )}
+            </div>
+
+            {/* Sample template + schema help */}
+            {(activeCategory === 'financial' || activeCategory === 'advertising') && (
+              <div className="mb-4 flex items-center gap-3">
+                <button
+                  onClick={() => downloadSample(activeCategory)}
+                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-mc-bg-tertiary border border-mc-border rounded hover:border-mc-accent/50 text-mc-text-secondary hover:text-mc-text"
+                >
+                  <FileDown className="w-3.5 h-3.5" />
+                  Download sample CSV template
+                </button>
+                <span className="text-xs text-mc-text-secondary">
+                  {activeCategory === 'financial'
+                    ? 'Columns: month, clinic, revenue, costs'
+                    : 'Columns: platform, period_start, period_end, spend, impressions, clicks, conversions, ctr'}
+                </span>
+              </div>
+            )}
+
+            {/* Search, sort, filter bar */}
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              <div className="flex-1 min-w-[180px] relative">
+                <Search className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-mc-text-secondary" />
+                <input
+                  type="text"
+                  placeholder="Search by filename..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="w-full pl-8 pr-3 py-1.5 text-sm bg-mc-bg-secondary border border-mc-border rounded focus:outline-none focus:border-mc-accent/50"
+                />
+              </div>
+              <select
+                value={sortMode}
+                onChange={e => setSortMode(e.target.value as SortMode)}
+                className="text-xs px-2 py-1.5 bg-mc-bg-secondary border border-mc-border rounded focus:outline-none"
+              >
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="largest">Largest first</option>
+              </select>
+              {(activeCategory === 'financial' || activeCategory === 'advertising') && (
+                <select
+                  value={parseStatusFilter}
+                  onChange={e => setParseStatusFilter(e.target.value as ParseStatusFilter)}
+                  className="text-xs px-2 py-1.5 bg-mc-bg-secondary border border-mc-border rounded focus:outline-none"
+                >
+                  <option value="all">All statuses</option>
+                  <option value="success">Parsed OK</option>
+                  <option value="failed">Parse failed</option>
+                  <option value="pending">Pending</option>
+                  <option value="stale">Stale</option>
+                </select>
               )}
             </div>
 
@@ -209,7 +360,7 @@ export default function DocumentsPage() {
             ) : categoryDocs.length === 0 ? (
               <div className="text-center py-12 text-mc-text-secondary">
                 <FolderOpen className="w-10 h-10 mx-auto mb-3 opacity-40" />
-                <p>No documents in {activeCategory} yet</p>
+                <p>{searchQuery || parseStatusFilter !== 'all' ? 'No documents match filters' : `No documents in ${activeCategory} yet`}</p>
                 <p className="text-xs mt-1 opacity-60">Upload a file above to get started</p>
               </div>
             ) : (
@@ -225,9 +376,33 @@ export default function DocumentsPage() {
                       <p className="text-xs text-mc-text-secondary">
                         {formatBytes(doc.size_bytes)} · {formatDistanceToNow(new Date(doc.uploaded_at), { addSuffix: true })}
                         {doc.encrypted ? ' · 🔒' : ''}
+                        {doc.parse_status && doc.parse_status !== 'success' && (
+                          <span className={`ml-1 ${
+                            doc.parse_status === 'failed' ? 'text-red-400' :
+                            doc.parse_status === 'stale' ? 'text-yellow-400' :
+                            'text-mc-text-secondary'
+                          }`}>
+                            · {doc.parse_status}
+                          </span>
+                        )}
                       </p>
+                      {doc.parse_error && (
+                        <p className="text-xs text-red-400 mt-0.5 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3 shrink-0" />
+                          <span className="truncate">{doc.parse_error}</span>
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
+                      {(doc.parse_status === 'failed' || doc.parse_status === 'stale') && (
+                        <button
+                          onClick={() => handleRetryParse(doc)}
+                          className="p-2 text-mc-text-secondary hover:text-mc-accent hover:bg-mc-bg-tertiary rounded transition-colors"
+                          title="Retry parse"
+                        >
+                          <RotateCw className="w-4 h-4" />
+                        </button>
+                      )}
                       <a
                         href={`/api/documents/${doc.id}/download`}
                         target="_blank"
