@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, TrendingUp, TrendingDown, DollarSign, RefreshCw, Loader2, BarChart2 } from 'lucide-react';
+import { ChevronLeft, TrendingUp, TrendingDown, DollarSign, RefreshCw, Loader2, BarChart2, AlertTriangle, Filter } from 'lucide-react';
 import * as echarts from 'echarts/core';
 import { BarChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components';
@@ -16,6 +16,7 @@ interface MonthlySummary {
   revenue: number;
   costs: number;
   net: number;
+  margin_pct?: number;
 }
 
 interface FinancialData {
@@ -23,7 +24,7 @@ interface FinancialData {
   projections: MonthlySummary[];
   mtd: MonthlySummary | null;
   prevMonth: MonthlySummary | null;
-  clinics: { clinic: string; revenue: number; costs: number }[];
+  clinics: { clinic: string; revenue: number; costs: number; margin_pct: number }[];
   lastImport: string | null;
   totalEntries: number;
 }
@@ -119,6 +120,7 @@ export default function FinancialPage() {
   const [data, setData] = useState<FinancialData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [clinicFilter, setClinicFilter] = useState<string>('all');
 
   const load = async () => {
     setLoading(true);
@@ -137,6 +139,21 @@ export default function FinancialPage() {
   useEffect(() => { load(); }, []);
 
   const isEmpty = !data?.totalEntries;
+
+  // Filtered data based on clinic selection
+  const filteredMonthly = clinicFilter === 'all'
+    ? data?.monthly ?? []
+    : data?.monthly.filter(() => true) ?? []; // API would filter; client shows all for now
+
+  const filteredClinics = clinicFilter === 'all'
+    ? data?.clinics ?? []
+    : data?.clinics.filter(c => c.clinic === clinicFilter) ?? [];
+
+  // Low-confidence projection warning: sparse data = fewer than 3 months
+  const isLowConfidence = (data?.monthly.length ?? 0) < 3;
+
+  // Margin % for MTD
+  const mtdMarginPct = data?.mtd ? (data.mtd.revenue > 0 ? ((data.mtd.revenue - data.mtd.costs) / data.mtd.revenue * 100) : 0) : 0;
 
   return (
     <div className="min-h-screen bg-mc-bg text-mc-text">
@@ -180,8 +197,34 @@ export default function FinancialPage() {
           </div>
         ) : (
           <>
+            {/* Low-confidence warning */}
+            {isLowConfidence && (
+              <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded flex items-center gap-2 text-yellow-400 text-sm">
+                <AlertTriangle className="w-4 h-4 shrink-0" />
+                <span>Low-confidence projection: only {data!.monthly.length} month(s) of data. Projections are unreliable with fewer than 3 months of history.</span>
+              </div>
+            )}
+
+            {/* Clinic filter */}
+            {data!.clinics.length > 1 && (
+              <div className="mb-4 flex items-center gap-2">
+                <Filter className="w-4 h-4 text-mc-text-secondary" />
+                <span className="text-xs text-mc-text-secondary">Clinic:</span>
+                <select
+                  value={clinicFilter}
+                  onChange={e => setClinicFilter(e.target.value)}
+                  className="text-xs px-2 py-1 bg-mc-bg-secondary border border-mc-border rounded focus:outline-none"
+                >
+                  <option value="all">All clinics</option>
+                  {data!.clinics.map(c => (
+                    <option key={c.clinic} value={c.clinic}>{c.clinic}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             {/* Summary cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
               {[
                 {
                   label: 'Revenue (MTD)',
@@ -203,6 +246,13 @@ export default function FinancialPage() {
                   delta: data?.prevMonth ? delta(data.mtd!.net, data.prevMonth.net) : null,
                   icon: <TrendingUp className="w-5 h-5" />,
                   color: (data?.mtd?.net ?? 0) >= 0 ? 'text-green-400' : 'text-red-400',
+                },
+                {
+                  label: 'Margin %',
+                  value: `${mtdMarginPct.toFixed(1)}%`,
+                  delta: null,
+                  icon: <BarChart2 className="w-5 h-5" />,
+                  color: mtdMarginPct >= 20 ? 'text-green-400' : mtdMarginPct >= 0 ? 'text-yellow-400' : 'text-red-400',
                 },
                 {
                   label: 'Avg Net / Month',
@@ -240,6 +290,9 @@ export default function FinancialPage() {
               <div className="bg-mc-bg-secondary border border-mc-border rounded-lg p-4">
                 <h2 className="text-sm font-medium text-mc-text-secondary uppercase tracking-wider mb-4">
                   3-Month Linear Projection
+                  {isLowConfidence && (
+                    <span className="ml-2 text-yellow-400 font-normal">⚠ Low confidence</span>
+                  )}
                 </h2>
                 {data!.projections.length === 0 ? (
                   <p className="text-sm text-mc-text-secondary">Not enough data for projection</p>
@@ -251,19 +304,26 @@ export default function FinancialPage() {
                         <th className="text-right py-1">Revenue</th>
                         <th className="text-right py-1">Costs</th>
                         <th className="text-right py-1">Net</th>
+                        <th className="text-right py-1">Margin</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {data!.projections.map(p => (
-                        <tr key={p.month} className="border-t border-mc-border/50">
-                          <td className="py-2 font-mono">{p.month}</td>
-                          <td className="py-2 text-right text-blue-400">{formatPLN(p.revenue)}</td>
-                          <td className="py-2 text-right text-red-400">{formatPLN(p.costs)}</td>
-                          <td className={`py-2 text-right font-medium ${p.net >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            {formatPLN(p.net)}
-                          </td>
-                        </tr>
-                      ))}
+                      {data!.projections.map(p => {
+                        const margin = p.revenue > 0 ? ((p.revenue - p.costs) / p.revenue * 100) : 0;
+                        return (
+                          <tr key={p.month} className="border-t border-mc-border/50">
+                            <td className="py-2 font-mono">{p.month}</td>
+                            <td className="py-2 text-right text-blue-400">{formatPLN(p.revenue)}</td>
+                            <td className="py-2 text-right text-red-400">{formatPLN(p.costs)}</td>
+                            <td className={`py-2 text-right font-medium ${p.net >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                              {formatPLN(p.net)}
+                            </td>
+                            <td className={`py-2 text-right text-xs ${margin >= 20 ? 'text-green-400' : margin >= 0 ? 'text-yellow-400' : 'text-red-400'}`}>
+                              {margin.toFixed(1)}%
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 )}
@@ -274,7 +334,7 @@ export default function FinancialPage() {
                 <h2 className="text-sm font-medium text-mc-text-secondary uppercase tracking-wider mb-4">
                   Clinic Breakdown
                 </h2>
-                {data!.clinics.length === 0 ? (
+                {filteredClinics.length === 0 ? (
                   <p className="text-sm text-mc-text-secondary">No per-clinic data available</p>
                 ) : (
                   <table className="w-full text-sm">
@@ -284,16 +344,20 @@ export default function FinancialPage() {
                         <th className="text-right py-1">Revenue</th>
                         <th className="text-right py-1">Costs</th>
                         <th className="text-right py-1">Net</th>
+                        <th className="text-right py-1">Margin</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {data!.clinics.map(c => (
+                      {filteredClinics.map(c => (
                         <tr key={c.clinic} className="border-t border-mc-border/50">
                           <td className="py-2">{c.clinic}</td>
                           <td className="py-2 text-right text-blue-400">{formatPLN(c.revenue)}</td>
                           <td className="py-2 text-right text-red-400">{formatPLN(c.costs)}</td>
                           <td className={`py-2 text-right font-medium ${c.revenue - c.costs >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                             {formatPLN(c.revenue - c.costs)}
+                          </td>
+                          <td className={`py-2 text-right text-xs ${c.margin_pct >= 20 ? 'text-green-400' : c.margin_pct >= 0 ? 'text-yellow-400' : 'text-red-400'}`}>
+                            {c.margin_pct.toFixed(1)}%
                           </td>
                         </tr>
                       ))}
