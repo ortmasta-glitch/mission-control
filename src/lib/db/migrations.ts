@@ -1870,6 +1870,85 @@ const migrations: Migration[] = [
 
       console.log(`[Migration 033] Repaired ${stuck.length} ownerless in_progress task(s)`);
     }
+  },
+  {
+    id: '034',
+    name: 't3_remediation_provenance_trust_and_hardening',
+    up: (db) => {
+      console.log('[Migration 034] T3 remediation: provenance, trust cues, and hardening...');
+
+      // --- Documents table: add parse_status, parse_error columns ---
+      const docsInfo = db.prepare("PRAGMA table_info(documents)").all() as { name: string }[];
+      if (!docsInfo.some(col => col.name === 'parse_status')) {
+        db.exec('ALTER TABLE documents ADD COLUMN parse_status TEXT DEFAULT NULL');
+        console.log('[Migration 034] Added parse_status to documents');
+      }
+      if (!docsInfo.some(col => col.name === 'parse_error')) {
+        db.exec('ALTER TABLE documents ADD COLUMN parse_error TEXT DEFAULT NULL');
+        console.log('[Migration 034] Added parse_error to documents');
+      }
+
+      // --- Financial entries: add provenance columns ---
+      const finInfo = db.prepare("PRAGMA table_info(financial_entries)").all() as { name: string }[];
+      if (!finInfo.some(col => col.name === 'source_document_id')) {
+        db.exec('ALTER TABLE financial_entries ADD COLUMN source_document_id TEXT');
+        console.log('[Migration 034] Added source_document_id to financial_entries');
+      }
+      if (!finInfo.some(col => col.name === 'parse_timestamp')) {
+        db.exec('ALTER TABLE financial_entries ADD COLUMN parse_timestamp TEXT');
+        console.log('[Migration 034] Added parse_timestamp to financial_entries');
+      }
+      if (!finInfo.some(col => col.name === 'parser_version')) {
+        db.exec('ALTER TABLE financial_entries ADD COLUMN parser_version TEXT');
+        console.log('[Migration 034] Added parser_version to financial_entries');
+      }
+      if (!finInfo.some(col => col.name === 'import_mode')) {
+        db.exec('ALTER TABLE financial_entries ADD COLUMN import_mode TEXT DEFAULT \'manual\'');
+        console.log('[Migration 034] Added import_mode to financial_entries');
+      }
+
+      // --- Ad metrics: add provenance and calculated columns ---
+      const adInfo = db.prepare("PRAGMA table_info(ad_metrics)").all() as { name: string }[];
+      if (!adInfo.some(col => col.name === 'source_document_id')) {
+        db.exec('ALTER TABLE ad_metrics ADD COLUMN source_document_id TEXT');
+        console.log('[Migration 034] Added source_document_id to ad_metrics');
+      }
+      if (!adInfo.some(col => col.name === 'parse_timestamp')) {
+        db.exec('ALTER TABLE ad_metrics ADD COLUMN parse_timestamp TEXT');
+        console.log('[Migration 034] Added parse_timestamp to ad_metrics');
+      }
+      if (!adInfo.some(col => col.name === 'parser_version')) {
+        db.exec('ALTER TABLE ad_metrics ADD COLUMN parser_version TEXT');
+        console.log('[Migration 034] Added parser_version to ad_metrics');
+      }
+      if (!adInfo.some(col => col.name === 'import_mode')) {
+        db.exec('ALTER TABLE ad_metrics ADD COLUMN import_mode TEXT DEFAULT \'manual\'');
+        console.log('[Migration 034] Added import_mode to ad_metrics');
+      }
+      if (!adInfo.some(col => col.name === 'cpc')) {
+        db.exec('ALTER TABLE ad_metrics ADD COLUMN cpc REAL');
+        console.log('[Migration 034] Added cpc to ad_metrics');
+      }
+      if (!adInfo.some(col => col.name === 'cpa')) {
+        db.exec('ALTER TABLE ad_metrics ADD COLUMN cpa REAL');
+        console.log('[Migration 034] Added cpa to ad_metrics');
+      }
+      if (!adInfo.some(col => col.name === 'cvr')) {
+        db.exec('ALTER TABLE ad_metrics ADD COLUMN cvr REAL');
+        console.log('[Migration 034] Added cvr to ad_metrics');
+      }
+      if (!adInfo.some(col => col.name === 'raw_data')) {
+        db.exec('ALTER TABLE ad_metrics ADD COLUMN raw_data TEXT'); // JSON blob of original row
+        console.log('[Migration 034] Added raw_data to ad_metrics');
+      }
+
+      // --- New index: source_document_id lookups ---
+      db.exec('CREATE INDEX IF NOT EXISTS idx_financial_entries_source_doc ON financial_entries(source_document_id)');
+      db.exec('CREATE INDEX IF NOT EXISTS idx_ad_metrics_source_doc ON ad_metrics(source_document_id)');
+      db.exec('CREATE INDEX IF NOT EXISTS idx_documents_parse_status ON documents(parse_status)');
+
+      console.log('[Migration 034] T3 remediation migration complete');
+    }
   }
 ];
 

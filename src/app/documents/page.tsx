@@ -77,6 +77,7 @@ export default function DocumentsPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [importSummary, setImportSummary] = useState<{ rows_imported: number; parse_status: string | null; parse_error: string | null } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortMode, setSortMode] = useState<SortMode>('newest');
   const [parseStatusFilter, setParseStatusFilter] = useState<ParseStatusFilter>('all');
@@ -126,8 +127,10 @@ export default function DocumentsPage() {
         const body = await res.json();
         throw new Error(body.error || 'Upload failed');
       }
+      const body = await res.json();
+      setImportSummary(body.import_summary || null);
       setUploadSuccess(true);
-      setTimeout(() => setUploadSuccess(false), 3000);
+      setTimeout(() => { setUploadSuccess(false); setImportSummary(null); }, 6000);
       await loadDocuments();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
@@ -253,11 +256,20 @@ export default function DocumentsPage() {
               </div>
             )}
 
-            {/* Upload success */}
+            {/* Upload success with import summary */}
             {uploadSuccess && (
-              <div className="mb-4 p-3 bg-green-500/10 border border-green-500/30 rounded flex items-center gap-2 text-green-400 text-sm">
-                <Check className="w-4 h-4" />
-                File uploaded successfully
+              <div className="mb-4 p-3 bg-green-500/10 border border-green-500/30 rounded flex flex-col gap-1 text-sm">
+                <div className="flex items-center gap-2 text-green-400">
+                  <Check className="w-4 h-4" />
+                  File uploaded successfully
+                </div>
+                {importSummary && (activeCategory === 'financial' || activeCategory === 'advertising') && (
+                  <div className="ml-6 text-xs space-y-0.5 text-mc-text-secondary">
+                    <div>Imported: <span className="text-green-400 font-mono">{importSummary.rows_imported}</span> rows</div>
+                    {importSummary.parse_status && <div>Parse status: <span className={importSummary.parse_status === 'success' ? 'text-green-400' : importSummary.parse_status === 'failed' ? 'text-red-400' : 'text-yellow-400'}>{importSummary.parse_status}</span></div>}
+                    {importSummary.parse_error && <div className="text-red-400">⚠ {importSummary.parse_error}</div>}
+                  </div>
+                )}
               </div>
             )}
 
@@ -293,6 +305,14 @@ export default function DocumentsPage() {
                     <Info className="w-3 h-3" />
                     Accepted: {acceptedMimes.length > 0 ? acceptedMimes.join(', ') : 'any'}
                   </div>
+                  {(activeCategory === 'financial' || activeCategory === 'advertising') && (
+                    <div className="mt-2 text-xs text-mc-text-secondary border border-mc-border/50 rounded px-3 py-1.5 bg-mc-bg-tertiary/50">
+                      <span className="text-mc-accent font-medium">Required columns:</span>{' '}
+                      {activeCategory === 'financial'
+                        ? 'month (YYYY-MM), clinic, revenue, costs'
+                        : 'platform, period_start, period_end, spend, impressions, clicks, conversions, ctr'}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

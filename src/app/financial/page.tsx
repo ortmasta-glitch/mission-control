@@ -26,6 +26,9 @@ interface FinancialData {
   prevMonth: MonthlySummary | null;
   clinics: { clinic: string; revenue: number; costs: number; margin_pct: number }[];
   lastImport: string | null;
+  lastParseTimestamp: string | null;
+  lastParserVersion: string | null;
+  sourceFiles: { source_file: string; source_document_id: string | null; imported_at: string; parse_timestamp: string | null; parser_version: string | null }[];
   totalEntries: number;
 }
 
@@ -166,8 +169,9 @@ export default function FinancialPage() {
         <h1 className="font-semibold text-lg">Financial Planning</h1>
         <div className="ml-auto flex items-center gap-3">
           {data?.lastImport && (
-            <span className="text-xs text-mc-text-secondary">
+            <span className="text-xs text-mc-text-secondary" title={data.lastParseTimestamp ? `Parsed: ${data.lastParseTimestamp}` : undefined}>
               Updated {formatDistanceToNow(new Date(data.lastImport), { addSuffix: true })}
+              {data.lastParserVersion && <span className="ml-1 opacity-50">v{data.lastParserVersion}</span>}
             </span>
           )}
           <button onClick={load} className="p-1.5 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary">
@@ -203,6 +207,35 @@ export default function FinancialPage() {
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>Low-confidence projection: only {data!.monthly.length} month(s) of data. Projections are unreliable with fewer than 3 months of history.</span>
               </div>
+            )}
+
+            {/* Data provenance: source files feeding this dashboard */}
+            {data!.sourceFiles.length > 0 && (
+              <details className="mb-6 bg-mc-bg-secondary border border-mc-border rounded-lg">
+                <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-mc-text-secondary hover:text-mc-text transition-colors">
+                  📄 Data Sources ({data!.sourceFiles.length} file{data!.sourceFiles.length !== 1 ? 's' : ''})
+                </summary>
+                <div className="px-4 pb-3">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="text-mc-text-secondary">
+                        <th className="text-left py-1">Source File</th>
+                        <th className="text-left py-1">Imported</th>
+                        <th className="text-left py-1">Parser</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data!.sourceFiles.map(sf => (
+                        <tr key={sf.source_file} className="border-t border-mc-border/50">
+                          <td className="py-1.5 font-mono">{sf.source_file}</td>
+                          <td className="py-1.5">{sf.imported_at ? formatDistanceToNow(new Date(sf.imported_at), { addSuffix: true }) : '—'}</td>
+                          <td className="py-1.5">{sf.parser_version || '—'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </details>
             )}
 
             {/* Clinic filter */}

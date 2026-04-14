@@ -40,6 +40,9 @@ interface ChannelSummary {
   last_import: string | null;
   last_period_end: string | null;
   source_file: string | null;
+  source_document_id: string | null;
+  last_parse_timestamp: string | null;
+  last_parser_version: string | null;
   row_count: number;
   hasData: boolean;
 }
@@ -197,6 +200,39 @@ export default function AdvertisingPage() {
           <div className="text-center py-16 text-red-400">{error}</div>
         ) : (
           <>
+            {/* Data provenance: source documents */}
+            {data!.channels.filter(c => c.source_file).length > 0 && (
+              <details className="mb-6 bg-mc-bg-secondary border border-mc-border rounded-lg">
+                <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-mc-text-secondary hover:text-mc-text transition-colors">
+                  📄 Data Sources ({data!.channels.filter(c => c.source_file).length} platform{data!.channels.filter(c => c.source_file).length !== 1 ? 's' : ''})
+                </summary>
+                <div className="px-4 pb-3">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="text-mc-text-secondary">
+                        <th className="text-left py-1">Platform</th>
+                        <th className="text-left py-1">Source File</th>
+                        <th className="text-left py-1">Rows</th>
+                        <th className="text-left py-1">Parsed</th>
+                        <th className="text-left py-1">Parser</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data!.channels.filter(c => c.source_file).map(c => (
+                        <tr key={c.platform} className="border-t border-mc-border/50">
+                          <td className="py-1.5 font-medium">{PLATFORM_ICONS[c.platform] || '📊'} {c.platform}</td>
+                          <td className="py-1.5 font-mono">{c.source_file}</td>
+                          <td className="py-1.5 font-mono">{c.row_count}</td>
+                          <td className="py-1.5">{c.last_import ? formatDistanceToNow(new Date(c.last_import), { addSuffix: true }) : '—'}</td>
+                          <td className="py-1.5">{c.last_parser_version || '—'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+            )}
+
             {/* Stale import warning */}
             {stalePlatforms.length > 0 && (
               <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded flex items-center gap-2 text-yellow-400 text-sm">
@@ -268,16 +304,21 @@ export default function AdvertisingPage() {
                             </div>
                           </div>
                         </div>
-                        {/* Source file + last import */}
+                        {/* Source file + provenance */}
                         <div className="text-xs text-mc-text-secondary mt-3 pt-2 border-t border-mc-border/50 space-y-1">
                           {channel.source_file && (
                             <div className="flex items-center gap-1">
                               <FileText className="w-3 h-3" />
-                              <span className="truncate">{channel.source_file}</span>
+                              <span className="truncate" title={channel.source_file}>{channel.source_file}</span>
                             </div>
                           )}
                           {channel.last_import && (
-                            <span>Updated {formatDistanceToNow(new Date(channel.last_import), { addSuffix: true })}</span>
+                            <span title={channel.last_parse_timestamp ? `Parsed: ${channel.last_parse_timestamp}` : undefined}>
+                              Updated {formatDistanceToNow(new Date(channel.last_import), { addSuffix: true })}
+                            </span>
+                          )}
+                          {channel.last_parser_version && (
+                            <span className="opacity-50"> · v{channel.last_parser_version}</span>
                           )}
                         </div>
                       </>

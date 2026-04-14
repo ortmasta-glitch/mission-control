@@ -858,10 +858,15 @@ CREATE TABLE IF NOT EXISTS financial_entries (
   revenue REAL DEFAULT 0,
   costs REAL DEFAULT 0,
   source_file TEXT,
-  imported_at TEXT DEFAULT (datetime('now'))
+  imported_at TEXT DEFAULT (datetime('now')),
+  source_document_id TEXT,
+  parse_timestamp TEXT,
+  parser_version TEXT,
+  import_mode TEXT DEFAULT 'manual'
 );
 
 CREATE INDEX IF NOT EXISTS idx_financial_entries_month ON financial_entries(month);
+CREATE INDEX IF NOT EXISTS idx_financial_entries_source_doc ON financial_entries(source_document_id);
 
 -- ── Document Repository ────────────────────────────────────────────────────────
 
@@ -873,10 +878,13 @@ CREATE TABLE IF NOT EXISTS documents (
   size_bytes INTEGER DEFAULT 0,
   mime_type TEXT,
   uploaded_at TEXT DEFAULT (datetime('now')),
-  encrypted INTEGER DEFAULT 1
+  encrypted INTEGER DEFAULT 1,
+  parse_status TEXT DEFAULT NULL,
+  parse_error TEXT DEFAULT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_documents_category ON documents(category);
+CREATE INDEX IF NOT EXISTS idx_documents_parse_status ON documents(parse_status);
 
 -- ── Advertising Channels Dashboard ────────────────────────────────────────────
 
@@ -891,8 +899,17 @@ CREATE TABLE IF NOT EXISTS ad_metrics (
   conversions REAL DEFAULT 0,
   ctr REAL DEFAULT 0,
   source_file TEXT,
-  imported_at TEXT DEFAULT (datetime('now'))
+  imported_at TEXT DEFAULT (datetime('now')),
+  source_document_id TEXT,
+  parse_timestamp TEXT,
+  parser_version TEXT,
+  import_mode TEXT DEFAULT 'manual',
+  cpc REAL,
+  cpa REAL,
+  cvr REAL,
+  raw_data TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_ad_metrics_platform ON ad_metrics(platform);
+CREATE INDEX IF NOT EXISTS idx_ad_metrics_source_doc ON ad_metrics(source_document_id);
 `;
