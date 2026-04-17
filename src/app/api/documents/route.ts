@@ -21,8 +21,6 @@ const ACCEPTED_MIME_TYPES: Record<string, string[]> = {
 };
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-
-// Dangerous extensions that should never be stored
 const BLOCKED_EXTENSIONS = ['.exe', '.bat', '.cmd', '.ps1', '.sh', '.js', '.vbs', '.wsf', '.msi', '.dll', '.com', '.scr'];
 
 function hasPathTraversal(filename: string): boolean {
@@ -31,9 +29,7 @@ function hasPathTraversal(filename: string): boolean {
 }
 
 function sanitizeFilename(filename: string): string {
-  // Remove directory components, null bytes, and leading dots
   let safe = path.basename(filename).replace(/\0/g, '').replace(/^\./, '_');
-  // Strip any remaining path separators
   safe = safe.replace(/[/\\]/g, '_');
   return safe;
 }
@@ -75,43 +71,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `Invalid category. Must be one of: ${VALID_CATEGORIES.join(', ')}` }, { status: 400 });
     }
 
-    // Server-side validation: MIME type
     const acceptedMimes = ACCEPTED_MIME_TYPES[category] || [];
     if (acceptedMimes.length > 0 && file.type && !acceptedMimes.includes(file.type) && file.type !== 'application/octet-stream') {
       return NextResponse.json({ error: `File type "${file.type}" not accepted for ${category}. Accepted: ${acceptedMimes.join(', ')}` }, { status: 400 });
     }
 
-    // Server-side validation: file size
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json({ error: `File too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximum is ${MAX_FILE_SIZE / 1024 / 1024} MB.` }, { status: 400 });
     }
 
-    // Server-side validation: path traversal
     if (hasPathTraversal(file.name)) {
       return NextResponse.json({ error: 'Invalid filename: path traversal characters not allowed.' }, { status: 400 });
     }
 
-    // Server-side validation: blocked extensions
     const ext = path.extname(file.name).toLowerCase();
     if (BLOCKED_EXTENSIONS.includes(ext)) {
       return NextResponse.json({ error: `File extension "${ext}" is not allowed for security reasons.` }, { status: 400 });
     }
 
-    // Sanitize filename (server-generated storage uses UUID anyway, but original_name is stored)
     const safeOriginalName = sanitizeFilename(file.name);
-
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const encrypted = encrypt(buffer);
 
-    // Use server-generated UUID for storage filename — never trust user-supplied names
     const id = uuidv4();
     const safeExt = ext || '';
     const storedFilename = `${id}${safeExt}.enc`;
     const dir = ensureCategoryDir(category);
     const filePath = path.join(dir, storedFilename);
 
-    // Write encrypted file to disk
     fs.writeFileSync(filePath, encrypted);
 
     const db = getDb();
@@ -120,17 +108,17 @@ export async function POST(request: NextRequest) {
       VALUES (?, ?, ?, ?, ?, ?, datetime('now'), 1)
     `).run(id, category, storedFilename, safeOriginalName, file.size, file.type || null);
 
-    // Trigger re-parse if financial or advertising
     const now = new Date().toISOString();
     let parse_status: string | null = null;
     let parse_error: string | null = null;
+    let import_summary: Record<string, unknown> | undefined = undefined;
 
     if (category === 'financial') {
       try {
         const result = parseFinancialBuffer(buffer, safeOriginalName, { source_document_id: id, import_mode: 'manual' });
 
-        // Idempotent import: delete existing entries from same source file before re-importing
-        db.prepare('DELETE FROM financial_entries WHERE source_file = ?').run(safeOriginalName);
+        // Idempotent: clear old entries from this source, then re-import
+        db.prepare('DELETE FROM financial_entries WHERE source_document_id = ?').run(id);
 
         const insert = db.prepare(`
           INSERT INTO financial_entries (id, clinic, month, revenue, costs, source_file, imported_at, source_document_id, parse_timestamp, parser_version, import_mode)
@@ -140,12 +128,27 @@ export async function POST(request: NextRequest) {
           insert.run(uuidv4(), row.clinic, row.month, row.revenue, row.costs, safeOriginalName, now, id, result.provenance.parse_timestamp, result.provenance.parser_version, result.provenance.import_mode);
         }
         parse_status = result.status;
+        
+        // Build detailed import summary for trust cues
+        import_summary = {
+          rows_imported: result.rows_imported,
+          rows_skipped: result.rows_skipped,
+          rows_failed: result.rows_failed,
+          parse_status: result.status,
+          parse_timestamp: result.provenance.parse_timestamp,
+          parser_version: result.provenance.parser_version,
+          import_mode: result.provenance.import_mode,
+          validation: result.validation_summary,
+          errors: result.errors.slice(0, 10), // First 10 errors for UI display
+        };
+
         if (result.errors.length > 0) {
           parse_error = `${result.rows_failed} row(s) failed, ${result.rows_skipped} skipped`;
         }
       } catch (parseErr) {
         parse_status = 'failed';
         parse_error = parseErr instanceof Error ? parseErr.message : String(parseErr);
+        import_summary = { parse_status: 'failed', parse_error: parse_error, rows_imported: 0 };
         console.warn('[documents POST] financial parse error:', parseErr);
       }
     }
@@ -154,8 +157,7 @@ export async function POST(request: NextRequest) {
       try {
         const result = parseAdvertisingBuffer(buffer, safeOriginalName, { source_document_id: id, import_mode: 'manual' });
 
-        // Idempotent import: delete existing entries from same source file before re-importing
-        db.prepare('DELETE FROM ad_metrics WHERE source_file = ?').run(safeOriginalName);
+        db.prepare('DELETE FROM ad_metrics WHERE source_document_id = ?').run(id);
 
         const insert = db.prepare(`
           INSERT INTO ad_metrics (id, platform, period_start, period_end, spend, impressions, clicks, conversions, ctr, source_file, imported_at, source_document_id, parse_timestamp, parser_version, import_mode, cpc, cpa, cvr, raw_data)
@@ -171,36 +173,33 @@ export async function POST(request: NextRequest) {
           );
         }
         parse_status = result.status;
+        import_summary = {
+          rows_imported: result.rows_imported,
+          rows_skipped: result.rows_skipped,
+          rows_failed: result.rows_failed,
+          parse_status: result.status,
+          parse_timestamp: result.provenance.parse_timestamp,
+          parser_version: result.provenance.parser_version,
+        };
         if (result.errors.length > 0) {
           parse_error = `${result.rows_failed} row(s) failed, ${result.rows_skipped} skipped`;
         }
       } catch (parseErr) {
         parse_status = 'failed';
         parse_error = parseErr instanceof Error ? parseErr.message : String(parseErr);
+        import_summary = { parse_status: 'failed', parse_error: parse_error, rows_imported: 0 };
         console.warn('[documents POST] advertising parse error:', parseErr);
       }
     }
 
-    // Store parse status on document (now with proper columns via migration 034)
     try {
       db.prepare('UPDATE documents SET parse_status = ?, parse_error = ? WHERE id = ?').run(parse_status, parse_error, id);
     } catch (updateErr) {
-      console.warn('[documents POST] Could not update parse_status (migration may not have run):', updateErr);
+      console.warn('[documents POST] Could not update parse_status:', updateErr);
     }
 
     const doc = db.prepare('SELECT * FROM documents WHERE id = ?').get(id);
-
-    // Return import summary alongside document for dashboard trust cues
-    const importSummary = (category === 'financial' || category === 'advertising') ? {
-      rows_imported: category === 'financial'
-        ? (db.prepare('SELECT COUNT(*) as count FROM financial_entries WHERE source_document_id = ?').get(id) as { count: number })?.count ?? 0
-        : (db.prepare('SELECT COUNT(*) as count FROM ad_metrics WHERE source_document_id = ?').get(id) as { count: number })?.count ?? 0,
-      parse_status,
-      parse_error,
-      parser_version: category === 'financial' ? '2.0.0' : '2.0.0',
-    } : undefined;
-
-    const responseObj = { ...(doc as Record<string, unknown>), import_summary: importSummary };
+    const responseObj = { ...(doc as Record<string, unknown>), import_summary };
     return NextResponse.json(responseObj, { status: 201 });
   } catch (error) {
     console.error('[documents POST]', error);

@@ -5,9 +5,9 @@ import Link from 'next/link';
 import {
   ChevronLeft, Upload, Trash2, Download, FileText, AlertTriangle,
   Loader2, FolderOpen, Check, Search, ArrowUpDown, AlertCircle,
-  RotateCw, FileDown, Info,
+  RotateCw, FileDown, Info, XCircle, CheckCircle, Clock,
 } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, formatISO, parseISO } from 'date-fns';
 
 const CATEGORIES = ['financial', 'advertising', 'hr', 'legal', 'operations'] as const;
 type Category = typeof CATEGORIES[number];
@@ -28,10 +28,15 @@ const ACCEPTED_MIME_TYPES: Record<string, string[]> = {
   operations: ['application/pdf', 'text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/png'],
 };
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
+
+function hasPathTraversal(filename: string): boolean {
+  const normalized = filename.replace(/\\/g, '/');
+  return normalized.includes('..') || normalized.startsWith('/') || /^[a-zA-Z]:/.test(normalized);
+}
 
 type SortMode = 'newest' | 'oldest' | 'largest';
-type ParseStatusFilter = 'all' | 'success' | 'failed' | 'pending' | 'stale';
+type ParseStatusFilter = 'all' | 'success' | 'failed' | 'pending' | 'partial';
 
 interface Document {
   id: string;
@@ -44,6 +49,23 @@ interface Document {
   encrypted: number;
   parse_status?: string | null;
   parse_error?: string | null;
+  import_summary?: {
+    rows_imported: number;
+    rows_skipped: number;
+    rows_failed: number;
+    parse_status: string | null;
+    parse_timestamp: string | null;
+    parser_version: string | null;
+    import_mode: string | null;
+    validation?: {
+      required_columns_found: string[];
+      required_columns_missing: string[];
+      header_normalization_applied: boolean;
+      total_rows: number;
+      empty_rows_skipped: number;
+    };
+    errors?: Array<{ row_index: number; reason: string; severity: string }>;
+  };
 }
 
 function formatBytes(bytes: number): string {
@@ -53,19 +75,30 @@ function formatBytes(bytes: number): string {
   return `${(bytes / Math.pow(1024, i)).toFixed(i > 0 ? 1 : 0)} ${units[i]}`;
 }
 
-function hasPathTraversal(filename: string): boolean {
-  const normalized = filename.replace(/\\/g, '/');
-  return normalized.includes('..') || normalized.startsWith('/') || /^[a-zA-Z]:/.test(normalized);
+function formatTimestamp(iso: string | null): string {
+  if (!iso) return '—';
+  try {
+    const d = parseISO(iso);
+    return formatISO(d, { representation: 'complete' }).replace('T', ' ').slice(0, 19);
+  } catch {
+    return iso;
+  }
 }
 
-function generateSampleCSV(category: Category): string {
-  if (category === 'financial') {
-    return 'month,clinic,revenue,costs\n2026-01,Olsztyn,150000,90000\n2026-01,Elbląg,80000,50000\n2026-02,Olsztyn,160000,92000';
-  }
-  if (category === 'advertising') {
-    return 'platform,period_start,period_end,spend,impressions,clicks,conversions,ctr\nGoogle Ads,2026-01-01,2026-01-31,5000,120000,3600,120,3.0\nFacebook,2026-01-01,2026-01-31,3000,80000,2000,80,2.5';
-  }
-  return 'date,description,amount\n2026-01-15,Example entry,1000';
+function ParseStatusBadge({ status }: { status: string | null | undefined }) {
+  if (!status) return <span className="text-xs text-mc-text-secondary">Not parsed</span>;
+  const config: Record<string, { icon: JSX.Element; color: string; label: string }> = {
+    success: { icon: <CheckCircle className="w-3 h-3" />, color: 'text-green-400 bg-green-400/10', label: 'Success' },
+    failed: { icon: <XCircle className="w-3 h-3" />, color: 'text-red-400 bg-red-400/10', label: 'Failed' },
+    partial: { icon: <AlertCircle className="w-3 h-3" />, color: 'text-yellow-400 bg-yellow-400/10', label: 'Partial' },
+    pending: { icon: <Clock className="w-3 h-3" />, color: 'text-mc-text-secondary bg-mc-bg-tertiary', label: 'Pending' },
+  };
+  const c = config[status] || config.pending;
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] ${c.color}`}>
+      {c.icon}{c.label}
+    </span>
+  );
 }
 
 export default function DocumentsPage() {
@@ -77,7 +110,7 @@ export default function DocumentsPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [importSummary, setImportSummary] = useState<{ rows_imported: number; parse_status: string | null; parse_error: string | null } | null>(null);
+  const [importSummary, setImportSummary] = useState<Document['import_summary'] | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortMode, setSortMode] = useState<SortMode>('newest');
   const [parseStatusFilter, setParseStatusFilter] = useState<ParseStatusFilter>('all');
@@ -97,41 +130,35 @@ export default function DocumentsPage() {
   useEffect(() => { loadDocuments(); }, [loadDocuments]);
 
   const uploadFile = async (file: File) => {
-    // MIME type validation
-    const accepted = ACCEPTED_MIME_TYPES[activeCategory] || [];
-    if (accepted.length > 0 && file.type && !accepted.includes(file.type) && !accepted.includes('application/octet-stream')) {
-      setError(`File type "${file.type}" not accepted for ${activeCategory}. Accepted: ${accepted.join(', ')}`);
-      return;
-    }
-
-    // Size limit
-    if (file.size > MAX_FILE_SIZE) {
-      setError(`File too large (${formatBytes(file.size)}). Maximum is ${formatBytes(MAX_FILE_SIZE)}.`);
-      return;
-    }
-
-    // Path traversal check
     if (hasPathTraversal(file.name)) {
-      setError('Invalid filename: path traversal characters not allowed.');
+      setError('Invalid filename: path traversal not allowed');
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      setError(`File too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Max: ${MAX_FILE_SIZE / 1024 / 1024} MB`);
       return;
     }
 
     setUploading(true);
     setError(null);
+    setUploadSuccess(false);
+    setImportSummary(null);
+
     try {
-      const fd = new FormData();
-      fd.append('file', file);
-      fd.append('category', activeCategory);
-      const res = await fetch('/api/documents', { method: 'POST', body: fd });
-      if (!res.ok) {
-        const body = await res.json();
-        throw new Error(body.error || 'Upload failed');
-      }
-      const body = await res.json();
-      setImportSummary(body.import_summary || null);
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('category', activeCategory);
+
+      const res = await fetch('/api/documents', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+
       setUploadSuccess(true);
-      setTimeout(() => { setUploadSuccess(false); setImportSummary(null); }, 6000);
+      setImportSummary(data.import_summary || null);
       await loadDocuments();
+
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
@@ -139,331 +166,283 @@ export default function DocumentsPage() {
     }
   };
 
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) uploadFile(file);
-    e.target.value = '';
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
-    const file = e.dataTransfer.files[0];
+    const file = e.dataTransfer.files?.[0];
     if (file) uploadFile(file);
-  };
+  }, [activeCategory]);
 
   const handleDelete = async (id: string) => {
     try {
       const res = await fetch(`/api/documents/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Delete failed');
-      setDocuments(d => d.filter(doc => doc.id !== id));
-      setDeleteConfirm(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Delete failed');
+      if (res.ok) await loadDocuments();
+      else throw new Error('Delete failed');
+    } catch {
+      setError('Failed to delete document');
     }
+    setDeleteConfirm(null);
   };
 
-  const handleRetryParse = async (doc: Document) => {
+  const handleReparse = async (doc: Document) => {
     try {
-      const res = await fetch(`/api/documents/${doc.id}/parse`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ import_mode: 'retry' }) });
-      if (!res.ok) throw new Error('Retry parse failed');
-      await loadDocuments();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Retry parse failed');
+      const res = await fetch(`/api/documents/${doc.id}/parse`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ import_mode: 'manual' }) });
+      const data = await res.json();
+      if (res.ok) {
+        setImportSummary({
+          rows_imported: data.rows_imported,
+          rows_skipped: 0,
+          rows_failed: data.rows_failed,
+          parse_status: data.parse_status,
+          parse_timestamp: null,
+          parser_version: null,
+          import_mode: data.import_mode,
+        });
+        await loadDocuments();
+      } else {
+        setError(data.error || 'Re-parse failed');
+      }
+    } catch {
+      setError('Re-parse failed');
     }
   };
 
-  const downloadSample = (category: Category) => {
-    const csv = generateSampleCSV(category);
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `sample-${category}-template.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const filteredDocs = documents
+    .filter(d => d.category === activeCategory)
+    .filter(d => {
+      if (!searchQuery) return true;
+      const q = searchQuery.toLowerCase();
+      return d.original_name.toLowerCase().includes(q) || d.filename.toLowerCase().includes(q);
+    })
+    .filter(d => {
+      if (parseStatusFilter === 'all') return true;
+      return d.parse_status === parseStatusFilter;
+    })
+    .sort((a, b) => {
+      if (sortMode === 'newest') return new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime();
+      if (sortMode === 'oldest') return new Date(a.uploaded_at).getTime() - new Date(b.uploaded_at).getTime();
+      if (sortMode === 'largest') return b.size_bytes - a.size_bytes;
+      return 0;
+    });
 
-  // Filter and sort
-  let categoryDocs = documents.filter(d => d.category === activeCategory);
-
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    categoryDocs = categoryDocs.filter(d => d.original_name.toLowerCase().includes(q));
-  }
-
-  if (parseStatusFilter !== 'all') {
-    categoryDocs = categoryDocs.filter(d => (d.parse_status || 'pending') === parseStatusFilter);
-  }
-
-  categoryDocs = [...categoryDocs].sort((a, b) => {
-    if (sortMode === 'newest') return new Date(b.uploaded_at).getTime() - new Date(a.uploaded_at).getTime();
-    if (sortMode === 'oldest') return new Date(a.uploaded_at).getTime() - new Date(b.uploaded_at).getTime();
-    if (sortMode === 'largest') return b.size_bytes - a.size_bytes;
-    return 0;
-  });
-
-  const acceptedMimes = ACCEPTED_MIME_TYPES[activeCategory] || [];
+  const isEmpty = filteredDocs.length === 0;
 
   return (
     <div className="min-h-screen bg-mc-bg text-mc-text">
-      {/* Header */}
       <header className="border-b border-mc-border bg-mc-bg-secondary px-4 py-3 flex items-center gap-3">
         <Link href="/" className="text-mc-text-secondary hover:text-mc-text transition-colors">
           <ChevronLeft className="w-5 h-5" />
         </Link>
         <FolderOpen className="w-5 h-5 text-mc-accent" />
         <h1 className="font-semibold text-lg">Document Repository</h1>
-        <span className="ml-auto text-xs text-mc-text-secondary">{documents.length} documents total</span>
       </header>
 
-      <div className="flex h-[calc(100vh-57px)]">
-        {/* Sidebar — categories */}
-        <aside className="w-48 border-r border-mc-border bg-mc-bg-secondary flex-shrink-0 py-3">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              onClick={() => { setActiveCategory(cat); setSearchQuery(''); setParseStatusFilter('all'); }}
-              className={`w-full flex items-center gap-2 px-4 py-2.5 text-sm transition-colors ${
-                activeCategory === cat
-                  ? 'bg-mc-accent/10 text-mc-accent border-r-2 border-mc-accent'
-                  : 'text-mc-text-secondary hover:text-mc-text hover:bg-mc-bg-tertiary'
-              }`}
-            >
-              <span>{CATEGORY_ICONS[cat]}</span>
-              <span className="capitalize">{cat}</span>
-              <span className="ml-auto text-xs opacity-60">
-                {documents.filter(d => d.category === cat).length}
-              </span>
-            </button>
-          ))}
-        </aside>
-
-        {/* Main content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-3xl mx-auto">
-            <div className="flex items-center gap-2 mb-6">
-              <span className="text-2xl">{CATEGORY_ICONS[activeCategory]}</span>
-              <h2 className="text-xl font-semibold capitalize">{activeCategory}</h2>
+      <main className="max-w-6xl mx-auto px-4 py-6">
+        {/* Upload success with import summary */}
+        {uploadSuccess && importSummary && (
+          <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+            <div className="flex items-center gap-2 text-green-400 mb-2">
+              <CheckCircle className="w-5 h-5" />
+              <span className="font-medium">Upload successful</span>
             </div>
+            <div className="text-sm text-mc-text-secondary grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div><span className="opacity-70">Rows imported:</span> <span className="text-mc-text">{importSummary.rows_imported}</span></div>
+              <div><span className="opacity-70">Rows skipped:</span> <span className="text-mc-text">{importSummary.rows_skipped}</span></div>
+              <div><span className="opacity-70">Rows failed:</span> <span className="text-mc-text">{importSummary.rows_failed}</span></div>
+              <div><span className="opacity-70">Parser:</span> <span className="text-mc-text font-mono">{importSummary.parser_version}</span></div>
+              {importSummary.validation && (
+                <>
+                  <div><span className="opacity-70">Columns found:</span> <span className="text-mc-text">{importSummary.validation.required_columns_found.join(', ') || 'none'}</span></div>
+                  {importSummary.validation.required_columns_missing.length > 0 && (
+                    <div><span className="opacity-70">Columns missing:</span> <span className="text-red-400">{importSummary.validation.required_columns_missing.join(', ')}</span></div>
+                  )}
+                  {importSummary.errors && importSummary.errors.length > 0 && (
+                    <div className="col-span-full">
+                      <span className="opacity-70">Errors:</span>
+                      <ul className="text-xs mt-1 space-y-0.5">
+                        {importSummary.errors.slice(0, 5).map((e, i) => (
+                          <li key={i} className="text-red-400">Row {e.row_index}: {e.reason}</li>
+                        ))}
+                        {importSummary.errors.length > 5 && <li className="text-mc-text-secondary">…and {importSummary.errors.length - 5} more</li>}
+                      </ul>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
-            {/* Error */}
-            {error && (
-              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded flex items-center gap-2 text-red-400 text-sm">
-                <AlertTriangle className="w-4 h-4 shrink-0" />
-                {error}
-                <button onClick={() => setError(null)} className="ml-auto text-red-400/60 hover:text-red-400">✕</button>
-              </div>
-            )}
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-2 text-red-400">
+            <AlertCircle className="w-5 h-5" />
+            <span>{error}</span>
+            <button onClick={() => setError(null)} className="ml-auto text-sm underline">Dismiss</button>
+          </div>
+        )}
 
-            {/* Upload success with import summary */}
-            {uploadSuccess && (
-              <div className="mb-4 p-3 bg-green-500/10 border border-green-500/30 rounded flex flex-col gap-1 text-sm">
-                <div className="flex items-center gap-2 text-green-400">
-                  <Check className="w-4 h-4" />
-                  File uploaded successfully
-                </div>
-                {importSummary && (activeCategory === 'financial' || activeCategory === 'advertising') && (
-                  <div className="ml-6 text-xs space-y-0.5 text-mc-text-secondary">
-                    <div>Imported: <span className="text-green-400 font-mono">{importSummary.rows_imported}</span> rows</div>
-                    {importSummary.parse_status && <div>Parse status: <span className={importSummary.parse_status === 'success' ? 'text-green-400' : importSummary.parse_status === 'failed' ? 'text-red-400' : 'text-yellow-400'}>{importSummary.parse_status}</span></div>}
-                    {importSummary.parse_error && <div className="text-red-400">⚠ {importSummary.parse_error}</div>}
-                  </div>
-                )}
-              </div>
-            )}
+        <div className="grid lg:grid-cols-4 gap-4">
+          {/* Category sidebar */}
+          <div className="lg:col-span-1 space-y-2">
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat}
+                onClick={() => { setActiveCategory(cat); setParseStatusFilter('all'); setSearchQuery(''); }}
+                className={`w-full text-left px-4 py-3 rounded-lg border transition-colors flex items-center justify-between ${
+                  activeCategory === cat 
+                    ? 'bg-mc-accent/10 border-mc-accent/30 text-mc-accent' 
+                    : 'bg-mc-bg-secondary border-mc-border hover:border-mc-accent/30'
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <span>{CATEGORY_ICONS[cat]}</span>
+                  <span className="capitalize">{cat}</span>
+                </span>
+                <span className="text-xs opacity-50">{documents.filter(d => d.category === cat).length}</span>
+              </button>
+            ))}
+          </div>
 
-            {/* Drop zone */}
+          {/* Document list */}
+          <div className="lg:col-span-3">
+            {/* Upload zone */}
             <div
               onDragOver={e => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={`mb-4 border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-                dragOver
-                  ? 'border-mc-accent bg-mc-accent/10'
-                  : 'border-mc-border hover:border-mc-accent/50 hover:bg-mc-bg-tertiary'
+              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                dragOver ? 'border-mc-accent bg-mc-accent/5' : 'border-mc-border hover:border-mc-accent/30'
               }`}
             >
-              <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileInput} />
-              {uploading ? (
-                <div className="flex flex-col items-center gap-2">
-                  <Loader2 className="w-8 h-8 text-mc-accent animate-spin" />
-                  <p className="text-sm text-mc-text-secondary">Uploading...</p>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center gap-2">
-                  <Upload className="w-8 h-8 text-mc-text-secondary" />
-                  <p className="text-sm font-medium">Drop a file here or click to upload</p>
-                  <p className="text-xs text-mc-text-secondary">
-                    Max {formatBytes(MAX_FILE_SIZE)} · Stored encrypted at rest
-                    {(activeCategory === 'financial' || activeCategory === 'advertising') && (
-                      <span className="ml-1 text-mc-accent">· auto-parsed into dashboard</span>
-                    )}
-                  </p>
-                  <div className="flex items-center gap-1 mt-1 text-xs text-mc-text-secondary">
-                    <Info className="w-3 h-3" />
-                    Accepted: {acceptedMimes.length > 0 ? acceptedMimes.join(', ') : 'any'}
-                  </div>
-                  {(activeCategory === 'financial' || activeCategory === 'advertising') && (
-                    <div className="mt-2 text-xs text-mc-text-secondary border border-mc-border/50 rounded px-3 py-1.5 bg-mc-bg-tertiary/50">
-                      <span className="text-mc-accent font-medium">Required columns:</span>{' '}
-                      {activeCategory === 'financial'
-                        ? 'month (YYYY-MM), clinic, revenue, costs'
-                        : 'platform, period_start, period_end, spend, impressions, clicks, conversions, ctr'}
-                    </div>
-                  )}
-                </div>
-              )}
+              <Upload className="w-8 h-8 mx-auto mb-3 text-mc-text-secondary opacity-50" />
+              <p className="text-sm text-mc-text-secondary mb-2">Drag & drop a file here, or click to select</p>
+              <p className="text-xs text-mc-text-secondary opacity-70 mb-4">
+                Accepted: {ACCEPTED_MIME_TYPES[activeCategory].join(', ')}
+              </p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                onChange={e => e.target.files?.[0] && uploadFile(e.target.files[0])}
+                className="hidden"
+                id="file-upload"
+              />
+              <label htmlFor="file-upload" className="inline-block px-4 py-2 bg-mc-accent text-mc-bg rounded-lg text-sm font-medium cursor-pointer hover:bg-mc-accent/90">
+                {uploading ? 'Uploading…' : 'Select file'}
+              </label>
             </div>
 
-            {/* Sample template + schema help */}
-            {(activeCategory === 'financial' || activeCategory === 'advertising') && (
-              <div className="mb-4 flex items-center gap-3">
-                <button
-                  onClick={() => downloadSample(activeCategory)}
-                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-mc-bg-tertiary border border-mc-border rounded hover:border-mc-accent/50 text-mc-text-secondary hover:text-mc-text"
-                >
-                  <FileDown className="w-3.5 h-3.5" />
-                  Download sample CSV template
-                </button>
-                <span className="text-xs text-mc-text-secondary">
-                  {activeCategory === 'financial'
-                    ? 'Columns: month, clinic, revenue, costs'
-                    : 'Columns: platform, period_start, period_end, spend, impressions, clicks, conversions, ctr'}
-                </span>
-              </div>
-            )}
-
-            {/* Search, sort, filter bar */}
-            <div className="mb-4 flex flex-wrap items-center gap-2">
-              <div className="flex-1 min-w-[180px] relative">
-                <Search className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-mc-text-secondary" />
+            {/* Filters */}
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <div className="relative flex-1 min-w-[200px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-mc-text-secondary" />
                 <input
                   type="text"
-                  placeholder="Search by filename..."
+                  placeholder="Search files…"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1.5 text-sm bg-mc-bg-secondary border border-mc-border rounded focus:outline-none focus:border-mc-accent/50"
+                  className="w-full pl-10 pr-4 py-2 bg-mc-bg-secondary border border-mc-border rounded-lg text-sm focus:outline-none"
                 />
               </div>
               <select
+                value={parseStatusFilter}
+                onChange={e => setParseStatusFilter(e.target.value as ParseStatusFilter)}
+                className="px-3 py-2 bg-mc-bg-secondary border border-mc-border rounded-lg text-sm"
+              >
+                <option value="all">All statuses</option>
+                <option value="success">Success</option>
+                <option value="partial">Partial</option>
+                <option value="failed">Failed</option>
+                <option value="pending">Not parsed</option>
+              </select>
+              <select
                 value={sortMode}
                 onChange={e => setSortMode(e.target.value as SortMode)}
-                className="text-xs px-2 py-1.5 bg-mc-bg-secondary border border-mc-border rounded focus:outline-none"
+                className="px-3 py-2 bg-mc-bg-secondary border border-mc-border rounded-lg text-sm"
               >
                 <option value="newest">Newest first</option>
                 <option value="oldest">Oldest first</option>
                 <option value="largest">Largest first</option>
               </select>
-              {(activeCategory === 'financial' || activeCategory === 'advertising') && (
-                <select
-                  value={parseStatusFilter}
-                  onChange={e => setParseStatusFilter(e.target.value as ParseStatusFilter)}
-                  className="text-xs px-2 py-1.5 bg-mc-bg-secondary border border-mc-border rounded focus:outline-none"
-                >
-                  <option value="all">All statuses</option>
-                  <option value="success">Parsed OK</option>
-                  <option value="failed">Parse failed</option>
-                  <option value="pending">Pending</option>
-                  <option value="stale">Stale</option>
-                </select>
-              )}
             </div>
 
-            {/* File list */}
+            {/* Document table */}
             {loading ? (
-              <div className="text-center py-12 text-mc-text-secondary">
-                <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2" />
-                Loading…
+              <div className="flex items-center justify-center py-24">
+                <Loader2 className="w-6 h-6 animate-spin text-mc-text-secondary" />
               </div>
-            ) : categoryDocs.length === 0 ? (
-              <div className="text-center py-12 text-mc-text-secondary">
-                <FolderOpen className="w-10 h-10 mx-auto mb-3 opacity-40" />
-                <p>{searchQuery || parseStatusFilter !== 'all' ? 'No documents match filters' : `No documents in ${activeCategory} yet`}</p>
-                <p className="text-xs mt-1 opacity-60">Upload a file above to get started</p>
+            ) : isEmpty ? (
+              <div className="text-center py-16 text-mc-text-secondary">
+                <FileText className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                <p>No documents in this category</p>
               </div>
             ) : (
-              <div className="space-y-2">
-                {categoryDocs.map(doc => (
-                  <div
-                    key={doc.id}
-                    className="flex items-center gap-3 p-3 bg-mc-bg-secondary border border-mc-border rounded-lg hover:border-mc-border/80 transition-colors"
-                  >
-                    <FileText className="w-5 h-5 text-mc-text-secondary shrink-0" />
+              <div className="mt-4 space-y-2">
+                {filteredDocs.map(doc => (
+                  <div key={doc.id} className="bg-mc-bg-secondary border border-mc-border rounded-lg p-4 flex items-center gap-4">
+                    <FileText className="w-8 h-8 text-mc-text-secondary opacity-50" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{doc.original_name}</p>
-                      <p className="text-xs text-mc-text-secondary">
-                        {formatBytes(doc.size_bytes)} · {formatDistanceToNow(new Date(doc.uploaded_at), { addSuffix: true })}
-                        {doc.encrypted ? ' · 🔒' : ''}
-                        {doc.parse_status && doc.parse_status !== 'success' && (
-                          <span className={`ml-1 ${
-                            doc.parse_status === 'failed' ? 'text-red-400' :
-                            doc.parse_status === 'stale' ? 'text-yellow-400' :
-                            'text-mc-text-secondary'
-                          }`}>
-                            · {doc.parse_status}
-                          </span>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium truncate">{doc.original_name}</span>
+                        <ParseStatusBadge status={doc.parse_status} />
+                      </div>
+                      <div className="text-xs text-mc-text-secondary flex items-center gap-3">
+                        <span>{formatBytes(doc.size_bytes)}</span>
+                        <span>•</span>
+                        <span>{formatDistanceToNow(parseISO(doc.uploaded_at), { addSuffix: true })}</span>
+                        {doc.parse_error && (
+                          <>
+                            <span>•</span>
+                            <span className="text-red-400 truncate max-w-md">{doc.parse_error}</span>
+                          </>
                         )}
-                      </p>
-                      {doc.parse_error && (
-                        <p className="text-xs text-red-400 mt-0.5 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3 shrink-0" />
-                          <span className="truncate">{doc.parse_error}</span>
-                        </p>
-                      )}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 shrink-0">
-                      {(doc.parse_status === 'failed' || doc.parse_status === 'stale') && (
+                    <div className="flex items-center gap-2">
+                      {(doc.category === 'financial' || doc.category === 'advertising') && (
                         <button
-                          onClick={() => handleRetryParse(doc)}
-                          className="p-2 text-mc-text-secondary hover:text-mc-accent hover:bg-mc-bg-tertiary rounded transition-colors"
-                          title="Retry parse"
+                          onClick={() => handleReparse(doc)}
+                          className="p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary"
+                          title="Re-parse"
                         >
                           <RotateCw className="w-4 h-4" />
                         </button>
                       )}
                       <a
                         href={`/api/documents/${doc.id}/download`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 text-mc-text-secondary hover:text-mc-text hover:bg-mc-bg-tertiary rounded transition-colors"
+                        className="p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary"
                         title="Download"
                       >
                         <Download className="w-4 h-4" />
                       </a>
-                      {deleteConfirm === doc.id ? (
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => handleDelete(doc.id)}
-                            className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
-                          >
-                            Delete
-                          </button>
-                          <button
-                            onClick={() => setDeleteConfirm(null)}
-                            className="px-2 py-1 text-xs border border-mc-border rounded text-mc-text-secondary hover:text-mc-text"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => setDeleteConfirm(doc.id)}
-                          className="p-2 text-mc-text-secondary hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setDeleteConfirm(doc.id)}
+                        className="p-2 hover:bg-red-500/10 rounded text-red-400"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
+
+      {/* Delete confirmation modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-mc-bg-secondary border border-mc-border rounded-lg p-6 max-w-md">
+            <h3 className="text-lg font-medium mb-2">Delete document?</h3>
+            <p className="text-sm text-mc-text-secondary mb-4">This action cannot be undone.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setDeleteConfirm(null)} className="flex-1 px-4 py-2 bg-mc-bg-tertiary rounded-lg">Cancel</button>
+              <button onClick={() => handleDelete(deleteConfirm)} className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg">Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
