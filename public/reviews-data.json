@@ -1,0 +1,167 @@
+{
+  "scrape_timestamp": "2026-04-19T05:10:51.624731",
+  "total_reviews": 120,
+  "scraped_reviews": 10,
+  "rating": 5,
+  "sources": {
+    "znanyLekarz": {
+      "total": 120,
+      "scraped": 10,
+      "rating": 5
+    },
+    "google": {
+      "total": 0,
+      "scraped": 0,
+      "rating": 0,
+      "note": "Google Business Profile reviews need manual import or API access"
+    }
+  },
+  "reviews": [
+    {
+      "source": "znanyLekarz",
+      "location": "WCP",
+      "reviewer": "anonymous",
+      "date": "2026-04-16",
+      "text": "Wizyta przebiegła w spokojnej i przyjaznej atmosferze. Otrzymaliśmy konkretne wskazówki dotyczące dalszego postępowania oraz propozycję planu pracy, co daje poczucie, że jesteśmy w dobrych rękach. Polecam serdecznie",
+      "therapist": "mgr Karolina Zagała",
+      "rating": 5,
+      "sentiment": "positive",
+      "verified": true
+    },
+    {
+      "source": "znanyLekarz",
+      "location": "WCP",
+      "reviewer": "anonymous",
+      "date": "2026-03-03",
+      "text": "Zapisałem się na wizytę do konkretnej osoby przedstawionej jako Karolina, natomiast na miejscu pojawiła się zupełnie inna terapeutka. Nie zostałem wcześniej poinformowany o zmianie. Dla mnie było to bardzo niekomfortowe i zaburzyło poczucie bezpieczeństwa, ponieważ decydowałem się na wizytę na podstawie konkretnego profilu i zdjęcia.\n\nDodatkowo terapeutka miała wyraźny akcent, co momentami utrudniało swobodną komunikację. W terapii zaufanie i poczucie komfortu są kluczowe, dlatego taka zmiana bez uprzedzenia wpłynęła negatywnie na moje odczucia.\n\nMimo że mogłem się wygadać, nie czułem, że trafiłem do osoby, do której się zapisywałem, co sprawiło, że odbieram tę wizytę jako nietrafioną decyzję. Z tego powodu nie zdecydowałem się na kontynuację terapii w tym miejscu.",
+      "therapist": "mgr Karolina Zagała",
+      "rating": 1,
+      "sentiment": "negative",
+      "verified": true
+    },
+    {
+      "source": "znanyLekarz",
+      "location": "WCP",
+      "reviewer": "anonymous",
+      "date": "2025-12-31",
+      "text": "Polecam, rzeczowe i profesjonalne podejście w przyjaznej atmosferze.",
+      "therapist": "mgr Karolina Zagała",
+      "rating": 5,
+      "sentiment": "positive",
+      "verified": true
+    },
+    {
+      "source": "znanyLekarz",
+      "location": "WCP",
+      "reviewer": "anonymous",
+      "date": "2025-10-06",
+      "text": "Polecam. Terapeutka sumienna i przyjazna pacjenta. Umówiłam się na następną wizytę.",
+      "therapist": "mgr Karolina Zagała",
+      "rating": 5,
+      "sentiment": "positive",
+      "verified": true
+    },
+    {
+      "source": "znanyLekarz",
+      "location": "WCP",
+      "reviewer": "anonymous",
+      "date": "2025-09-16",
+      "text": "Byłam u Pani Julii Bochko. Serdecznie polecam. Jest bardzo ciepłą i otwartą osobą. Z dużym doświadczeniem. Jest bardzo cierpliwa. Drąży temat tam gdzie uważa, że powinna. Silnie motywuje do działania używając trafionych argumentów. Pomaga znaleźć rozwiązanie problemów, które pomogą odzyskać spokój.",
+      "therapist": "mgr Karolina Zagała",
+      "rating": 5,
+      "sentiment": "positive",
+      "verified": true
+    },
+    {
+      "source": "znanyLekarz",
+      "location": "WCP",
+      "reviewer": "anonymous",
+      "date": "2025-08-23",
+      "text": "Bardzo udana wizyta. Sympatyczna pani psycholog. Otrzymaliśmy przydatne wskazówki do pracy z dzieckiem z których oczywiście sko zystamy.",
+      "therapist": "mgr Karolina Zagała",
+      "rating": 5,
+      "sentiment": "positive",
+      "verified": true
+    },
+    {
+      "source": "znanyLekarz",
+      "location": "WCP",
+      "reviewer": "anonymous",
+      "date": "2025-05-28",
+      "text": "Jestem zadowolona, Miło sympatycznie!!\nDużo konkretow",
+      "therapist": "mgr Karolina Zagała",
+      "rating": 5,
+      "sentiment": "positive",
+      "verified": true
+    },
+    {
+      "source": "znanyLekarz",
+      "location": "WCP",
+      "reviewer": "anonymous",
+      "date": "2025-05-15",
+      "text": "Profesjonalna obsuługa okołowizytowa tzn. kontakt, zainteresowanie, szczegółowe wyjaśnienia. Pani Terapeutka ciepła, konkretna, przyjazna. Wizyta spełniła moje oczekiwania. Polecam.",
+      "therapist": "mgr Karolina Zagała",
+      "rating": 5,
+      "sentiment": "positive",
+      "verified": true
+    },
+    {
+      "source": "znanyLekarz",
+      "location": "WCP",
+      "reviewer": "anonymous",
+      "date": "2025-04-08",
+      "text": "Fantastyczna atmosfera. Pełne zrozumienie. Możliwość przerwy:)",
+      "therapist": "mgr Karolina Zagała",
+      "rating": 5,
+      "sentiment": "positive",
+      "verified": true
+    },
+    {
+      "source": "znanyLekarz",
+      "location": "WCP",
+      "reviewer": "anonymous",
+      "date": "2024-12-19",
+      "text": "Pani psycholog empatyczna , wzbudziła we mnie wielkie zaufanie nawet po kilku krótkich pytaniach,  nie oceniała,  słuchała,  starala się zrozumieć i dać wskazówki.",
+      "therapist": "mgr Karolina Zagała",
+      "rating": 5,
+      "sentiment": "positive",
+      "verified": true
+    }
+  ],
+  "monthly_counts": {
+    "2026-04": 1,
+    "2026-03": 1,
+    "2025-12": 1,
+    "2025-10": 1,
+    "2025-09": 1,
+    "2025-08": 1,
+    "2025-05": 2,
+    "2025-04": 1,
+    "2024-12": 1
+  },
+  "sentiment_counts": {
+    "positive": 9,
+    "neutral": 0,
+    "negative": 1
+  },
+  "by_therapist": {
+    "mgr Karolina Zagała": {
+      "positive": 9,
+      "negative": 1,
+      "neutral": 0,
+      "total": 10,
+      "avg_rating": 4.6
+    }
+  },
+  "last_negative": {
+    "source": "znanyLekarz",
+    "location": "WCP",
+    "reviewer": "anonymous",
+    "date": "2026-03-03",
+    "text": "Zapisałem się na wizytę do konkretnej osoby przedstawionej jako Karolina, natomiast na miejscu pojawiła się zupełnie inna terapeutka. Nie zostałem wcześniej poinformowany o zmianie. Dla mnie było to bardzo niekomfortowe i zaburzyło poczucie bezpieczeństwa, ponieważ decydowałem się na wizytę na podstawie konkretnego profilu i zdjęcia.\n\nDodatkowo terapeutka miała wyraźny akcent, co momentami utrudniało swobodną komunikację. W terapii zaufanie i poczucie komfortu są kluczowe, dlatego taka zmiana bez uprzedzenia wpłynęła negatywnie na moje odczucia.\n\nMimo że mogłem się wygadać, nie czułem, że trafiłem do osoby, do której się zapisywałem, co sprawiło, że odbieram tę wizytę jako nietrafioną decyzję. Z tego powodu nie zdecydowałem się na kontynuację terapii w tym miejscu.",
+    "therapist": "mgr Karolina Zagała",
+    "rating": 1,
+    "sentiment": "negative",
+    "verified": true
+  }
+}
