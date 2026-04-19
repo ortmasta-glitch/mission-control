@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus, ChevronRight, GripVertical, ArrowRightLeft, AlertTriangle, MessageSquare, CheckCheck, X, Check } from 'lucide-react';
+import { Plus, ChevronRight, GripVertical, ArrowRightLeft, AlertTriangle, MessageSquare, CheckCheck, X, Check, Pencil } from 'lucide-react';
 import { useMissionControl } from '@/lib/store';
 import { triggerAutoDispatch, shouldTriggerAutoDispatch } from '@/lib/auto-dispatch';
 import { getConfig } from '@/lib/config';
 import { useUnreadCounts } from '@/hooks/useUnreadCounts';
 import type { Task, TaskStatus } from '@/lib/types';
 import { TaskModal } from './TaskModal';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 
 interface MissionQueueProps {
   workspaceId?: string;
@@ -22,6 +22,7 @@ const COLUMNS: { id: TaskStatus; label: string; color: string }[] = [
   { id: 'planning', label: '📋 Planning', color: 'border-t-mc-accent-purple' },
   { id: 'pending_approval', label: '⏳ Pending Approval', color: 'border-t-amber-400' },
   { id: 'inbox', label: 'Inbox', color: 'border-t-mc-accent-pink' },
+  { id: 'paused', label: '⏸️ Paused', color: 'border-t-slate-400' },
   { id: 'assigned', label: 'Assigned', color: 'border-t-mc-accent-yellow' },
   { id: 'in_progress', label: 'In Progress', color: 'border-t-mc-accent' },
   { id: 'convoy_active', label: '🚚 Convoy', color: 'border-t-cyan-400' },
@@ -271,6 +272,7 @@ export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = tru
                       task={task}
                       onDragStart={handleDragStart}
                       onClick={() => setEditingTask(task)}
+                      onEdit={() => setEditingTask(task)}
                       onMoveStatus={() => setStatusMoveTask(task)}
                       onApprove={() => handleApproveTask(task)}
                       onReject={() => handleRejectTask(task)}
@@ -319,6 +321,7 @@ export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = tru
                   task={task}
                   onDragStart={handleDragStart}
                   onClick={() => setEditingTask(task)}
+                  onEdit={() => setEditingTask(task)}
                   onMoveStatus={() => setStatusMoveTask(task)}
                   onApprove={() => handleApproveTask(task)}
                   onReject={() => handleRejectTask(task)}
@@ -470,9 +473,11 @@ interface TaskCardProps {
   mobileMode: boolean;
   portraitMode?: boolean;
   unreadCount?: number;
+  onEdit: () => void;
 }
 
-function TaskCard({ task, onDragStart, onClick, onMoveStatus, onApprove, onReject, isDragging, mobileMode, portraitMode = true, unreadCount = 0 }: TaskCardProps) {
+function TaskCard({ task, onDragStart, onClick, onEdit, onMoveStatus, onApprove, onReject, isDragging, mobileMode, portraitMode = true, unreadCount = 0 }: TaskCardProps) {
+  const [descExpanded, setDescExpanded] = useState(false);
   const priorityStyles = {
     low: 'text-mc-text-secondary',
     normal: 'text-mc-accent',
@@ -511,14 +516,33 @@ function TaskCard({ task, onDragStart, onClick, onMoveStatus, onApprove, onRejec
 
       <div className={portraitMode ? 'p-4' : 'p-3'}>
         <div className="flex items-start justify-between gap-1.5">
-          <h4 className={`font-medium leading-snug line-clamp-2 ${portraitMode ? 'text-sm mb-3' : 'text-xs mb-2'}`}>{task.title}</h4>
-          {unreadCount > 0 && (
-            <span className="flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 bg-mc-accent/15 text-mc-accent rounded text-[10px] font-medium" title={`${unreadCount} unread message${unreadCount !== 1 ? 's' : ''}`}>
-              <MessageSquare className="w-2.5 h-2.5" />
-              {unreadCount}
-            </span>
-          )}
+          <h4 className={`font-medium leading-snug line-clamp-2 ${portraitMode ? 'text-sm mb-1.5' : 'text-xs mb-1'}`}>{task.title}</h4>
+          <div className="flex items-center gap-1 flex-shrink-0">
+            {unreadCount > 0 && (
+              <span className="flex items-center gap-1 px-1.5 py-0.5 bg-mc-accent/15 text-mc-accent rounded text-[10px] font-medium" title={`${unreadCount} unread message${unreadCount !== 1 ? 's' : ''}`}>
+                <MessageSquare className="w-2.5 h-2.5" />
+                {unreadCount}
+              </span>
+            )}
+            <button
+              onClick={(e) => { e.stopPropagation(); onEdit(); }}
+              className="p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-mc-bg-tertiary text-mc-text-secondary hover:text-mc-text transition-all"
+              title="Edit task"
+            >
+              <Pencil className="w-3 h-3" />
+            </button>
+          </div>
         </div>
+
+        {task.description && (
+          <div
+            className={`${portraitMode ? 'text-xs mb-2.5' : 'text-[11px] mb-2'} text-mc-text-secondary/75 leading-relaxed cursor-pointer ${descExpanded ? '' : 'line-clamp-3'}`}
+            onClick={(e) => { e.stopPropagation(); setDescExpanded(v => !v); }}
+            title={descExpanded ? 'Click to collapse' : 'Click to expand'}
+          >
+            {task.description}
+          </div>
+        )}
 
         {isPlanning && (
           <div className={`flex items-center gap-2 ${portraitMode ? 'mb-3 py-2 px-3' : 'mb-2 py-1.5 px-2.5'} bg-purple-500/10 rounded-md border border-purple-500/20`}>
@@ -617,7 +641,7 @@ function TaskCard({ task, onDragStart, onClick, onMoveStatus, onApprove, onRejec
             <div className={`w-1.5 h-1.5 rounded-full ${priorityDots[task.priority]}`} />
             <span className={`text-xs capitalize ${priorityStyles[task.priority]}`}>{task.priority}</span>
           </div>
-          <span className="text-[10px] text-mc-text-secondary/60">{formatDistanceToNow(new Date(task.created_at), { addSuffix: true })}</span>
+          <span className="text-[10px] text-mc-text-secondary/60" title={formatDistanceToNow(new Date(task.created_at), { addSuffix: true })}>{format(new Date(task.created_at), 'MMM d, yyyy')}</span>
         </div>
 
         {mobileMode && (

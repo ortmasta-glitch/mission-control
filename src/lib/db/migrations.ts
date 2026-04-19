@@ -1949,6 +1949,69 @@ const migrations: Migration[] = [
 
       console.log('[Migration 034] T3 remediation migration complete');
     }
+  },
+  {
+    id: '035',
+    name: 'add_paused_task_status',
+    up: (db) => {
+      console.log('[Migration 035] Adding "paused" to tasks status CHECK constraint...');
+
+      // SQLite cannot ALTER CHECK constraints — recreate the tasks table
+      const colInfo = db.prepare("PRAGMA table_info(tasks)").all() as { name: string }[];
+      const cols = colInfo.map(c => c.name).join(', ');
+
+      db.exec('ALTER TABLE tasks RENAME TO _tasks_old_035');
+      db.exec(`CREATE TABLE tasks (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  status TEXT DEFAULT 'inbox' CHECK (status IN ('pending_dispatch', 'planning', 'inbox', 'pending_approval', 'paused', 'assigned', 'in_progress', 'convoy_active', 'testing', 'review', 'verification', 'done')),
+  priority TEXT DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
+  source TEXT DEFAULT 'manual' CHECK (source IN ('autonomous', 'manual')),
+  assigned_agent_id TEXT REFERENCES agents(id),
+  created_by_agent_id TEXT REFERENCES agents(id),
+  workspace_id TEXT DEFAULT 'default' REFERENCES workspaces(id),
+  business_id TEXT DEFAULT 'default',
+  due_date TEXT,
+  workflow_template_id TEXT REFERENCES workflow_templates(id),
+  planning_session_key TEXT,
+  planning_messages TEXT,
+  planning_complete INTEGER DEFAULT 0,
+  planning_spec TEXT,
+  planning_agents TEXT,
+  planning_dispatch_error TEXT,
+  status_reason TEXT,
+  images TEXT,
+  convoy_id TEXT,
+  is_subtask INTEGER DEFAULT 0,
+  product_id TEXT REFERENCES products(id),
+  idea_id TEXT REFERENCES ideas(id),
+  estimated_cost_usd REAL,
+  actual_cost_usd REAL DEFAULT 0,
+  repo_url TEXT,
+  repo_branch TEXT,
+  pr_url TEXT,
+  pr_status TEXT CHECK (pr_status IN ('pending', 'open', 'merged', 'closed')),
+  workspace_path TEXT,
+  workspace_strategy TEXT,
+  workspace_port INTEGER,
+  workspace_base_commit TEXT,
+  merge_status TEXT,
+  merge_pr_url TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
+)`);
+      db.exec(`INSERT INTO tasks (${cols}) SELECT ${cols} FROM _tasks_old_035`);
+      db.exec('DROP TABLE _tasks_old_035');
+
+      // Recreate indexes
+      db.exec('CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status)');
+      db.exec('CREATE INDEX IF NOT EXISTS idx_tasks_assigned ON tasks(assigned_agent_id)');
+      db.exec('CREATE INDEX IF NOT EXISTS idx_tasks_workspace ON tasks(workspace_id)');
+      db.exec('CREATE INDEX IF NOT EXISTS idx_tasks_created ON tasks(created_at DESC)');
+
+      console.log('[Migration 035] "paused" status added to tasks table');
+    }
   }
 ];
 

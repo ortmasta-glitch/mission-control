@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT,
-  status TEXT DEFAULT 'inbox' CHECK (status IN ('pending_dispatch', 'planning', 'inbox', 'pending_approval', 'assigned', 'in_progress', 'convoy_active', 'testing', 'review', 'verification', 'done')),
+  status TEXT DEFAULT 'inbox' CHECK (status IN ('pending_dispatch', 'planning', 'inbox', 'pending_approval', 'paused', 'assigned', 'in_progress', 'convoy_active', 'testing', 'review', 'verification', 'done')),
   priority TEXT DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
   source TEXT DEFAULT 'manual' CHECK (source IN ('autonomous', 'manual')),
   assigned_agent_id TEXT REFERENCES agents(id),

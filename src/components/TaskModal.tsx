@@ -186,6 +186,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
   };
 
   const priorities: TaskPriority[] = ['low', 'normal', 'high', 'urgent'];
+  const statuses: TaskStatus[] = ['pending_dispatch', 'planning', 'inbox', 'pending_approval', 'paused', 'assigned', 'in_progress', 'convoy_active', 'testing', 'review', 'verification', 'done'];
 
   const tabs = [
     { id: 'overview' as TabType, label: 'Overview', icon: null },
@@ -353,6 +354,24 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
               />
             </div>
           </div>
+
+          {/* Status — only shown when editing existing task */}
+          {task && (
+            <div>
+              <label className="block text-sm font-medium mb-1">Status</label>
+              <select
+                value={form.status}
+                onChange={(e) => setForm({ ...form, status: e.target.value as TaskStatus })}
+                className="w-full min-h-11 bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm focus:outline-none focus:border-mc-accent"
+              >
+                {statuses.map((s) => (
+                  <option key={s} value={s}>
+                    {s.replace(/_/g, ' ')}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Pull Request section */}
           {task?.pr_url && (

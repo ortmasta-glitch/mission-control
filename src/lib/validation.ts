@@ -6,6 +6,7 @@ const TaskStatus = z.enum([
   'planning',
   'inbox',
   'pending_approval',
+  'paused',
   'assigned',
   'in_progress',
   'convoy_active',
