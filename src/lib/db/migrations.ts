@@ -22,6 +22,45 @@ interface Migration {
 // All migrations in order - NEVER remove or reorder existing migrations
 const migrations: Migration[] = [
   {
+    id: '037',
+    name: 'add_replies_table',
+    up: (db) => {
+      console.log('[Migration 037] Creating replies table...');
+      
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS replies (
+          id TEXT PRIMARY KEY,
+          channel TEXT NOT NULL,
+          channel_id TEXT,
+          message_id TEXT NOT NULL,
+          reply_to_message_id TEXT,
+          content TEXT NOT NULL,
+          response TEXT,
+          sender TEXT,
+          sender_id TEXT,
+          workspace_id TEXT,
+          task_id TEXT,
+          thread_id TEXT,
+          priority TEXT DEFAULT 'normal',
+          status TEXT DEFAULT 'pending',
+          agent_id TEXT,
+          metadata TEXT,
+          sent_at TEXT,
+          created_at TEXT DEFAULT (datetime('now')),
+          updated_at TEXT DEFAULT (datetime('now')),
+          FOREIGN KEY (workspace_id) REFERENCES workspaces(id),
+          FOREIGN KEY (task_id) REFERENCES tasks(id)
+        )
+      `);
+
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_replies_status ON replies(status)`);
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_replies_channel ON replies(channel)`);
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_replies_workspace ON replies(workspace_id)`);
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_replies_task ON replies(task_id)`);
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_replies_created ON replies(created_at)`);
+    }
+  },
+  {
     id: '001',
     name: 'initial_schema',
     up: (db) => {

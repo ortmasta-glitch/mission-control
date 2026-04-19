@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, ArrowRight, Folder, Users, CheckSquare, Trash2, AlertTriangle, Activity, Rocket, BarChart2, FolderOpen, Megaphone, FileText, Star, Phone } from 'lucide-react';
+import { Plus, ArrowRight, Folder, Users, CheckSquare, Trash2, AlertTriangle, Activity, Rocket, BarChart2, FolderOpen, Megaphone, FileText, Star, Phone, LayoutGrid, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import type { WorkspaceStats } from '@/lib/types';
 
@@ -107,6 +107,20 @@ export function WorkspaceDashboard() {
               >
                 <Phone className="w-4 h-4" />
                 Funnel
+              </Link>
+              <Link
+                href="/projects"
+                className="min-h-11 px-4 rounded-lg border border-mc-border bg-mc-bg text-mc-text-secondary hover:text-mc-text hover:bg-mc-bg-tertiary flex items-center gap-2 text-sm"
+              >
+                <LayoutGrid className="w-4 h-4" />
+                Projects
+              </Link>
+              <Link
+                href="/replies"
+                className="min-h-11 px-4 rounded-lg border border-mc-border bg-mc-bg text-mc-text-secondary hover:text-mc-text hover:bg-mc-bg-tertiary flex items-center gap-2 text-sm"
+              >
+                <MessageSquare className="w-4 h-4" />
+                Replies
               </Link>
               <button
                 onClick={() => setShowCreateModal(true)}
