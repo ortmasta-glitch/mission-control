@@ -2012,7 +2012,6 @@ const migrations: Migration[] = [
 
       console.log('[Migration 035] "paused" status added to tasks table');
     }
-  }
   },
   {
     id: '036',

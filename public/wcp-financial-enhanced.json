@@ -1,0 +1,811 @@
+{
+  "metadata": {
+    "source": "WCP Bank Statements (Santander) + ANALIZA Cost Sheets",
+    "clinics": [
+      "Olsztyn",
+      "Elbląg",
+      "Ostróda"
+    ],
+    "currency": "PLN",
+    "dateRange": "2023-01 to 2026-03",
+    "generatedAt": "2026-04-19"
+  },
+  "monthly": [
+    {
+      "month": "2023-01",
+      "revenue": 94704.92,
+      "total_costs": 78132.53,
+      "operational_costs": 23091.49,
+      "net_cashflow": 16572.39,
+      "balance_end": 22681.35,
+      "cost_breakdown": {
+        "rent": 13389.85,
+        "utilities": 266.57,
+        "marketing": 1778.98,
+        "office": 85.9,
+        "salary_extras": 300.0,
+        "other": 7270.19,
+        "taxes": 74200.0
+      },
+      "margin_pct": 17.5,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-02",
+      "revenue": 81363.21,
+      "total_costs": 86051.79,
+      "operational_costs": 23353.22,
+      "net_cashflow": -4688.58,
+      "balance_end": 17992.77,
+      "cost_breakdown": {
+        "rent": 13810.11,
+        "utilities": 334.87,
+        "marketing": 2211.27,
+        "office": 46.25,
+        "salary_extras": 0,
+        "other": 6950.72,
+        "taxes": 66100.0
+      },
+      "margin_pct": -5.8,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-03",
+      "revenue": 88657.42,
+      "total_costs": 84310.14,
+      "operational_costs": 23469.08,
+      "net_cashflow": 4347.28,
+      "balance_end": 22340.05,
+      "cost_breakdown": {
+        "rent": 13210.85,
+        "utilities": 296.64,
+        "marketing": 1487.1,
+        "office": 59.0,
+        "salary_extras": 400.0,
+        "other": 8015.49,
+        "taxes": 84325.0
+      },
+      "margin_pct": 4.9,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-04",
+      "revenue": 293757.18,
+      "total_costs": 296085.15,
+      "operational_costs": 25688.16,
+      "net_cashflow": -2327.97,
+      "balance_end": 20012.08,
+      "cost_breakdown": {
+        "rent": 10077.42,
+        "utilities": 393.08,
+        "marketing": 1792.32,
+        "office": 949.17,
+        "salary_extras": 460.0,
+        "other": 12016.17,
+        "taxes": 77350.0
+      },
+      "margin_pct": -0.8,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-05",
+      "revenue": 81440.37,
+      "total_costs": 91032.86,
+      "operational_costs": 18832.43,
+      "net_cashflow": -9592.49,
+      "balance_end": 10419.59,
+      "cost_breakdown": {
+        "rent": 9334.41,
+        "utilities": 135.07,
+        "marketing": 3410.3,
+        "office": 55.6,
+        "salary_extras": 400.0,
+        "other": 5497.05,
+        "taxes": 80700.0
+      },
+      "margin_pct": -11.8,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-06",
+      "revenue": 91609.63,
+      "total_costs": 89321.43,
+      "operational_costs": 89321.43,
+      "net_cashflow": 2288.2,
+      "balance_end": 12707.79,
+      "cost_breakdown": {
+        "rent": 0,
+        "utilities": 0,
+        "marketing": 0,
+        "office": 0,
+        "salary_extras": 0,
+        "other": 0,
+        "taxes": 0
+      },
+      "margin_pct": 2.5,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-07",
+      "revenue": 71674.22,
+      "total_costs": 73366.16,
+      "operational_costs": 18778.07,
+      "net_cashflow": -1691.94,
+      "balance_end": 11015.85,
+      "cost_breakdown": {
+        "rent": 10501.57,
+        "utilities": 167.43,
+        "marketing": 1182.67,
+        "office": 15.0,
+        "salary_extras": 400.0,
+        "other": 6511.4,
+        "taxes": 61850.0
+      },
+      "margin_pct": -2.4,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-08",
+      "revenue": 60285.9,
+      "total_costs": 68790.28,
+      "operational_costs": 17529.26,
+      "net_cashflow": -8504.38,
+      "balance_end": 2511.47,
+      "cost_breakdown": {
+        "rent": 8985.11,
+        "utilities": 208.49,
+        "marketing": 2547.26,
+        "office": 87.19,
+        "salary_extras": 400.0,
+        "other": 5301.21,
+        "taxes": 55000.0
+      },
+      "margin_pct": -14.1,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-09",
+      "revenue": 92334.71,
+      "total_costs": 82657.39,
+      "operational_costs": 82657.39,
+      "net_cashflow": 9677.32,
+      "balance_end": 12188.79,
+      "cost_breakdown": {
+        "rent": 0,
+        "utilities": 0,
+        "marketing": 0,
+        "office": 0,
+        "salary_extras": 0,
+        "other": 0,
+        "taxes": 0
+      },
+      "margin_pct": 10.5,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-10",
+      "revenue": 94799.47,
+      "total_costs": 79022.49,
+      "operational_costs": 16730.96,
+      "net_cashflow": 15776.98,
+      "balance_end": 27965.77,
+      "cost_breakdown": {
+        "rent": 6786.14,
+        "utilities": 118.65,
+        "marketing": 3126.4,
+        "office": 103.28,
+        "salary_extras": 400.0,
+        "other": 6196.49,
+        "taxes": 71950.0
+      },
+      "margin_pct": 16.6,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-11",
+      "revenue": 98121.67,
+      "total_costs": 103358.31,
+      "operational_costs": 21756.34,
+      "net_cashflow": -5236.64,
+      "balance_end": 22729.13,
+      "cost_breakdown": {
+        "rent": 8593.42,
+        "utilities": 143.95,
+        "marketing": 3239.66,
+        "office": 39.3,
+        "salary_extras": 470.0,
+        "other": 9270.01,
+        "taxes": 80700.0
+      },
+      "margin_pct": -5.3,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2023-12",
+      "revenue": 63095.78,
+      "total_costs": 82705.05,
+      "operational_costs": 17479.16,
+      "net_cashflow": -19609.27,
+      "balance_end": 3119.86,
+      "cost_breakdown": {
+        "rent": 8253.67,
+        "utilities": 93.05,
+        "marketing": 2914.18,
+        "office": 23.8,
+        "salary_extras": 400.0,
+        "other": 5794.46,
+        "taxes": 54500.0
+      },
+      "margin_pct": -31.1,
+      "yoy_revenue_growth": null
+    },
+    {
+      "month": "2024-01",
+      "revenue": 80068.87,
+      "total_costs": 80707.14,
+      "operational_costs": 15192.7,
+      "net_cashflow": -638.27,
+      "balance_end": 2481.59,
+      "cost_breakdown": {
+        "rent": 7178.23,
+        "utilities": 94.94,
+        "marketing": 1782.91,
+        "office": 80.0,
+        "salary_extras": 400.0,
+        "other": 5656.62,
+        "taxes": 70725.0
+      },
+      "margin_pct": -0.8,
+      "yoy_revenue_growth": -15.5
+    },
+    {
+      "month": "2024-02",
+      "revenue": 82061.72,
+      "total_costs": 71802.11,
+      "operational_costs": 19752.79,
+      "net_cashflow": 10259.61,
+      "balance_end": 12741.2,
+      "cost_breakdown": {
+        "rent": 9277.18,
+        "utilities": 148.1,
+        "marketing": 3005.94,
+        "office": 25.0,
+        "salary_extras": 400.0,
+        "other": 6896.57,
+        "taxes": 52780.0
+      },
+      "margin_pct": 12.5,
+      "yoy_revenue_growth": 0.9
+    },
+    {
+      "month": "2024-03",
+      "revenue": 75362.22,
+      "total_costs": 75934.56,
+      "operational_costs": 18775.01,
+      "net_cashflow": -572.34,
+      "balance_end": 12168.86,
+      "cost_breakdown": {
+        "rent": 8630.42,
+        "utilities": 89.3,
+        "marketing": 2077.02,
+        "office": 112.5,
+        "salary_extras": 400.0,
+        "other": 7465.77,
+        "taxes": 44550.0
+      },
+      "margin_pct": -0.8,
+      "yoy_revenue_growth": -15.0
+    },
+    {
+      "month": "2024-04",
+      "revenue": 81204.6,
+      "total_costs": 74766.12,
+      "operational_costs": 17535.97,
+      "net_cashflow": 6438.48,
+      "balance_end": 18607.34,
+      "cost_breakdown": {
+        "rent": 8109.16,
+        "utilities": 109.74,
+        "marketing": 1251.73,
+        "office": 167.29,
+        "salary_extras": 400.0,
+        "other": 7498.05,
+        "taxes": 67150.0
+      },
+      "margin_pct": 7.9,
+      "yoy_revenue_growth": -72.4
+    },
+    {
+      "month": "2024-05",
+      "revenue": 70067.25,
+      "total_costs": 76924.16,
+      "operational_costs": 15009.31,
+      "net_cashflow": -6856.91,
+      "balance_end": 11750.43,
+      "cost_breakdown": {
+        "rent": 7636.92,
+        "utilities": 236.16,
+        "marketing": 460.84,
+        "office": 45.6,
+        "salary_extras": 400.0,
+        "other": 6229.79,
+        "taxes": 61350.0
+      },
+      "margin_pct": -9.8,
+      "yoy_revenue_growth": -14.0
+    },
+    {
+      "month": "2024-06",
+      "revenue": 90946.62,
+      "total_costs": 81268.03,
+      "operational_costs": 24532.09,
+      "net_cashflow": 9678.59,
+      "balance_end": 21429.02,
+      "cost_breakdown": {
+        "rent": 8083.39,
+        "utilities": 3434.02,
+        "marketing": 2097.66,
+        "office": 55.4,
+        "salary_extras": 3350.0,
+        "other": 7511.62,
+        "taxes": 62180.0
+      },
+      "margin_pct": 10.6,
+      "yoy_revenue_growth": -0.7
+    },
+    {
+      "month": "2024-07",
+      "revenue": 80097.35,
+      "total_costs": 74736.49,
+      "operational_costs": 17951.59,
+      "net_cashflow": 5360.86,
+      "balance_end": 26789.88,
+      "cost_breakdown": {
+        "rent": 7546.95,
+        "utilities": 358.72,
+        "marketing": 2105.48,
+        "office": 45.6,
+        "salary_extras": 1450.0,
+        "other": 6444.84,
+        "taxes": 71250.0
+      },
+      "margin_pct": 6.7,
+      "yoy_revenue_growth": 11.8
+    },
+    {
+      "month": "2024-08",
+      "revenue": 77710.46,
+      "total_costs": 76205.93,
+      "operational_costs": 15047.35,
+      "net_cashflow": 1504.53,
+      "balance_end": 28294.41,
+      "cost_breakdown": {
+        "rent": 8336.82,
+        "utilities": 83.76,
+        "marketing": 2262.11,
+        "office": 114.0,
+        "salary_extras": 1450.0,
+        "other": 2800.66,
+        "taxes": 57350.0
+      },
+      "margin_pct": 1.9,
+      "yoy_revenue_growth": 28.9
+    },
+    {
+      "month": "2024-09",
+      "revenue": 80395.68,
+      "total_costs": 78574.17,
+      "operational_costs": 21799.66,
+      "net_cashflow": 1821.51,
+      "balance_end": 30115.92,
+      "cost_breakdown": {
+        "rent": 7598.89,
+        "utilities": 74.69,
+        "marketing": 2045.14,
+        "office": 71.92,
+        "salary_extras": 2300.0,
+        "other": 9709.02,
+        "taxes": 68225.0
+      },
+      "margin_pct": 2.3,
+      "yoy_revenue_growth": -12.9
+    },
+    {
+      "month": "2024-10",
+      "revenue": 92486.86,
+      "total_costs": 82561.73,
+      "operational_costs": 21715.7,
+      "net_cashflow": 9925.13,
+      "balance_end": 40041.05,
+      "cost_breakdown": {
+        "rent": 7749.51,
+        "utilities": 0,
+        "marketing": 2115.46,
+        "office": 16.2,
+        "salary_extras": 2600.0,
+        "other": 9234.53,
+        "taxes": 78250.0
+      },
+      "margin_pct": 10.7,
+      "yoy_revenue_growth": -2.4
+    },
+    {
+      "month": "2024-11",
+      "revenue": 88124.22,
+      "total_costs": 97710.21,
+      "operational_costs": 22443.04,
+      "net_cashflow": -9585.99,
+      "balance_end": 30455.06,
+      "cost_breakdown": {
+        "rent": 8332.86,
+        "utilities": 0,
+        "marketing": 2524.29,
+        "office": 52.2,
+        "salary_extras": 900.0,
+        "other": 10633.69,
+        "taxes": 49600.0
+      },
+      "margin_pct": -10.9,
+      "yoy_revenue_growth": -10.2
+    },
+    {
+      "month": "2024-12",
+      "revenue": 99546.18,
+      "total_costs": 115812.62,
+      "operational_costs": 14074.06,
+      "net_cashflow": -16266.44,
+      "balance_end": 14188.62,
+      "cost_breakdown": {
+        "rent": 9215.52,
+        "utilities": 117.9,
+        "marketing": 1798.32,
+        "office": 0,
+        "salary_extras": 700.0,
+        "other": 2242.32,
+        "taxes": 56100.0
+      },
+      "margin_pct": -16.3,
+      "yoy_revenue_growth": 57.8
+    },
+    {
+      "month": "2025-01",
+      "revenue": 79145.79,
+      "total_costs": 69928.36,
+      "operational_costs": 14782.74,
+      "net_cashflow": 9217.43,
+      "balance_end": 23406.05,
+      "cost_breakdown": {
+        "rent": 8734.17,
+        "utilities": 562.21,
+        "marketing": 1641.39,
+        "office": 35.8,
+        "salary_extras": 900.0,
+        "other": 2909.17,
+        "taxes": 62850.0
+      },
+      "margin_pct": 11.6,
+      "yoy_revenue_growth": -1.2
+    },
+    {
+      "month": "2025-02",
+      "revenue": 87306.37,
+      "total_costs": 85216.31,
+      "operational_costs": 22364.79,
+      "net_cashflow": 2090.06,
+      "balance_end": 25496.11,
+      "cost_breakdown": {
+        "rent": 8819.33,
+        "utilities": 3037.63,
+        "marketing": 1258.64,
+        "office": 2239.53,
+        "salary_extras": 903.5,
+        "other": 6106.16,
+        "taxes": 68500.0
+      },
+      "margin_pct": 2.4,
+      "yoy_revenue_growth": 6.4
+    },
+    {
+      "month": "2025-03",
+      "revenue": 93688.86,
+      "total_costs": 88681.54,
+      "operational_costs": 24255.15,
+      "net_cashflow": 5007.32,
+      "balance_end": 30503.43,
+      "cost_breakdown": {
+        "rent": 10811.78,
+        "utilities": 602.35,
+        "marketing": 2542.21,
+        "office": 203.65,
+        "salary_extras": 3300.0,
+        "other": 6795.16,
+        "taxes": 85350.0
+      },
+      "margin_pct": 5.3,
+      "yoy_revenue_growth": 24.3
+    },
+    {
+      "month": "2025-04",
+      "revenue": 90677.37,
+      "total_costs": 100958.3,
+      "operational_costs": 19627.4,
+      "net_cashflow": -10280.93,
+      "balance_end": 20222.5,
+      "cost_breakdown": {
+        "rent": 11327.31,
+        "utilities": 541.6,
+        "marketing": 2388.18,
+        "office": 67.34,
+        "salary_extras": 2000.0,
+        "other": 3302.97,
+        "taxes": 77150.0
+      },
+      "margin_pct": -11.3,
+      "yoy_revenue_growth": 11.7
+    },
+    {
+      "month": "2025-05",
+      "revenue": 103437.41,
+      "total_costs": 96091.1,
+      "operational_costs": 18300.62,
+      "net_cashflow": 7346.31,
+      "balance_end": 27568.81,
+      "cost_breakdown": {
+        "rent": 10304.06,
+        "utilities": 1932.71,
+        "marketing": 2516.53,
+        "office": 136.24,
+        "salary_extras": 400.0,
+        "other": 3011.08,
+        "taxes": 79000.0
+      },
+      "margin_pct": 7.1,
+      "yoy_revenue_growth": 47.6
+    },
+    {
+      "month": "2025-06",
+      "revenue": 101845.26,
+      "total_costs": 101997.7,
+      "operational_costs": 24362.85,
+      "net_cashflow": -152.44,
+      "balance_end": 27416.37,
+      "cost_breakdown": {
+        "rent": 9972.11,
+        "utilities": 418.65,
+        "marketing": 2808.54,
+        "office": 105.34,
+        "salary_extras": 2600.0,
+        "other": 8458.21,
+        "taxes": 81150.0
+      },
+      "margin_pct": -0.1,
+      "yoy_revenue_growth": 12.0
+    },
+    {
+      "month": "2025-07",
+      "revenue": 95793.03,
+      "total_costs": 106976.03,
+      "operational_costs": 18015.68,
+      "net_cashflow": -11183.0,
+      "balance_end": 16233.37,
+      "cost_breakdown": {
+        "rent": 9698.94,
+        "utilities": 0,
+        "marketing": 2841.12,
+        "office": 31.8,
+        "salary_extras": 2950.0,
+        "other": 2493.82,
+        "taxes": 50300.0
+      },
+      "margin_pct": -11.7,
+      "yoy_revenue_growth": 19.6
+    },
+    {
+      "month": "2025-08",
+      "revenue": 89864.26,
+      "total_costs": 96106.87,
+      "operational_costs": 24054.48,
+      "net_cashflow": -6242.61,
+      "balance_end": 9990.76,
+      "cost_breakdown": {
+        "rent": 11638.79,
+        "utilities": 323.55,
+        "marketing": 2156.23,
+        "office": 0,
+        "salary_extras": 2100.0,
+        "other": 7835.91,
+        "taxes": 71901.0
+      },
+      "margin_pct": -6.9,
+      "yoy_revenue_growth": 15.6
+    },
+    {
+      "month": "2025-09",
+      "revenue": 96507.5,
+      "total_costs": 100348.11,
+      "operational_costs": 22875.77,
+      "net_cashflow": -3840.61,
+      "balance_end": 6150.15,
+      "cost_breakdown": {
+        "rent": 11287.31,
+        "utilities": 502.49,
+        "marketing": 2203.14,
+        "office": 0,
+        "salary_extras": 4400.0,
+        "other": 4482.83,
+        "taxes": 64245.0
+      },
+      "margin_pct": -4.0,
+      "yoy_revenue_growth": 20.0
+    },
+    {
+      "month": "2025-10",
+      "revenue": 127317.45,
+      "total_costs": 116263.4,
+      "operational_costs": 26234.15,
+      "net_cashflow": 11054.05,
+      "balance_end": 17204.2,
+      "cost_breakdown": {
+        "rent": 10875.05,
+        "utilities": 2148.54,
+        "marketing": 3520.38,
+        "office": 36.0,
+        "salary_extras": 2600.0,
+        "other": 7054.18,
+        "taxes": 83500.0
+      },
+      "margin_pct": 8.7,
+      "yoy_revenue_growth": 37.7
+    },
+    {
+      "month": "2025-11",
+      "revenue": 120724.72,
+      "total_costs": 114575.25,
+      "operational_costs": 25577.16,
+      "net_cashflow": 6149.47,
+      "balance_end": 23353.67,
+      "cost_breakdown": {
+        "rent": 11565.74,
+        "utilities": 2240.32,
+        "marketing": 2924.59,
+        "office": 49.5,
+        "salary_extras": 5620.54,
+        "other": 3176.47,
+        "taxes": 109575.0
+      },
+      "margin_pct": 5.1,
+      "yoy_revenue_growth": 37.0
+    },
+    {
+      "month": "2025-12",
+      "revenue": 133281.93,
+      "total_costs": 112726.98,
+      "operational_costs": 27536.29,
+      "net_cashflow": 20554.95,
+      "balance_end": 43908.62,
+      "cost_breakdown": {
+        "rent": 12633.14,
+        "utilities": 765.67,
+        "marketing": 3073.96,
+        "office": 75.5,
+        "salary_extras": 5767.78,
+        "other": 5220.24,
+        "taxes": 80090.0
+      },
+      "margin_pct": 15.4,
+      "yoy_revenue_growth": 33.9
+    },
+    {
+      "month": "2026-01",
+      "revenue": 116779.65,
+      "total_costs": 124202.77,
+      "operational_costs": 124202.77,
+      "net_cashflow": -7423.12,
+      "balance_end": 36485.5,
+      "cost_breakdown": {
+        "rent": 0,
+        "utilities": 0,
+        "marketing": 0,
+        "office": 0,
+        "salary_extras": 0,
+        "other": 0,
+        "taxes": 0
+      },
+      "margin_pct": -6.4,
+      "yoy_revenue_growth": 47.6
+    },
+    {
+      "month": "2026-02",
+      "revenue": 97206.02,
+      "total_costs": 103274.94,
+      "operational_costs": 103274.94,
+      "net_cashflow": -6068.92,
+      "balance_end": 30416.58,
+      "cost_breakdown": {
+        "rent": 0,
+        "utilities": 0,
+        "marketing": 0,
+        "office": 0,
+        "salary_extras": 0,
+        "other": 0,
+        "taxes": 0
+      },
+      "margin_pct": -6.2,
+      "yoy_revenue_growth": 11.3
+    },
+    {
+      "month": "2026-03",
+      "revenue": 123844.1,
+      "total_costs": 113563.36,
+      "operational_costs": 113563.36,
+      "net_cashflow": 10280.74,
+      "balance_end": 40697.32,
+      "cost_breakdown": {
+        "rent": 0,
+        "utilities": 0,
+        "marketing": 0,
+        "office": 0,
+        "salary_extras": 0,
+        "other": 0,
+        "taxes": 0
+      },
+      "margin_pct": 8.3,
+      "yoy_revenue_growth": 32.2
+    }
+  ],
+  "yearlySummary": {
+    "2023": {
+      "months": 12,
+      "totalRevenue": 1211844.48,
+      "totalCosts": 1214833.58,
+      "totalNet": -2989.1,
+      "avgMonthlyRevenue": 100987.04,
+      "avgMonthlyCosts": 101236.13,
+      "avgMargin": -0.2,
+      "bestMonth": "2023-04",
+      "worstMonth": "2023-12",
+      "avgBalance": 15473.71
+    },
+    "2024": {
+      "months": 12,
+      "totalRevenue": 998072.03,
+      "totalCosts": 987003.27,
+      "totalNet": 11068.76,
+      "avgMonthlyRevenue": 83172.67,
+      "avgMonthlyCosts": 82250.27,
+      "avgMargin": 1.1,
+      "bestMonth": "2024-12",
+      "worstMonth": "2024-12",
+      "avgBalance": 20755.28
+    },
+    "2025": {
+      "months": 12,
+      "totalRevenue": 1219589.95,
+      "totalCosts": 1189869.95,
+      "totalNet": 29720.0,
+      "avgMonthlyRevenue": 101632.5,
+      "avgMonthlyCosts": 99155.83,
+      "avgMargin": 2.4,
+      "bestMonth": "2025-12",
+      "worstMonth": "2025-07",
+      "avgBalance": 22621.17
+    },
+    "2026": {
+      "months": 3,
+      "totalRevenue": 337829.77,
+      "totalCosts": 341041.07,
+      "totalNet": -3211.3,
+      "avgMonthlyRevenue": 112609.92,
+      "avgMonthlyCosts": 113680.36,
+      "avgMargin": -1.0,
+      "bestMonth": "2026-03",
+      "worstMonth": "2026-01",
+      "avgBalance": 35866.47
+    }
+  },
+  "kpiTargets": {
+    "revenue2026Target": 1200000,
+    "marginTarget": 25,
+    "monthlyRevenueTarget": 100000
+  }
+}
