@@ -365,6 +365,11 @@ export default function AdvertisingPage() {
     }],
   };
 
+  // ROAS calculation (cross-referenced with strategic + optimization reports)
+  const roas = lt.spend > 0 ? lt.conversion_value / lt.spend : 0;
+  const roasColor = roas >= 2.0 ? DARK.green : roas >= 1.0 ? DARK.orange : DARK.red;
+  const roasLabel = roas >= 2.5 ? 'Excellent' : roas >= 2.0 ? 'Good' : roas >= 1.0 ? 'Breakeven' : 'Unprofitable';
+
   // KPI cards
   const kpis = [
     { label: 'Spend (30d)', value: fmtPLN(lt.spend), icon: DollarSign, color: DARK.blue, delta: prev ? lt.spend - prev.total.spend : null },
@@ -375,6 +380,8 @@ export default function AdvertisingPage() {
     { label: 'Avg CPC', value: `${lt.avg_cpc.toFixed(2)} PLN`, icon: DollarSign, color: DARK.orange, delta: prev ? lt.avg_cpc - prev.total.avg_cpc : null },
     { label: 'CPA', value: lt.cpa > 0 ? `${lt.cpa.toFixed(2)} PLN` : '—', icon: DollarSign, color: DARK.red, delta: prev && lt.cpa > 0 && prev.total.cpa > 0 ? lt.cpa - prev.total.cpa : null },
     { label: 'Conv. Value', value: fmtPLN(lt.conversion_value), icon: DollarSign, color: DARK.gold, delta: prev ? lt.conversion_value - prev.total.conversion_value : null },
+    { label: 'ROAS', value: `${roas.toFixed(2)}×`, icon: TrendingUp, color: roasColor, delta: prev && prev.total.conversion_value > 0 ? (prev.total.conversion_value / prev.total.spend) - roas : null },
+    { label: 'Status', value: roasLabel, icon: AlertTriangle, color: roasColor, delta: null },
   ];
 
   return (
@@ -421,7 +428,7 @@ export default function AdvertisingPage() {
         {tab === 'overview' && (
           <>
             {/* KPI cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
               {kpis.map(kpi => (
                 <div key={kpi.label} className="bg-mc-bg-secondary border border-mc-border rounded-lg p-3">
                   <div className="flex items-center gap-1.5 mb-1.5">
@@ -433,12 +440,58 @@ export default function AdvertisingPage() {
                     <div className="flex items-center gap-1 mt-1 text-[10px]">
                       {deltaIcon(lt.spend, prev?.total.spend ?? 0)}
                       <span className={kpi.delta > 0 ? 'text-green-400' : 'text-red-400'}>
-                        {kpi.delta > 0 ? '+' : ''}{kpi.delta.toFixed(0)}
+                        {kpi.delta > 0 ? '+' : ''}{typeof kpi.delta === 'number' ? kpi.delta.toFixed(2) : kpi.delta}
                       </span>
                     </div>
                   )}
                 </div>
               ))}
+            </div>
+
+            {/* Optimization Roadmap — from strategic + ads optimization reports */}
+            <div className="bg-mc-bg-secondary border border-mc-border rounded-lg p-4">
+              <h2 className="text-sm font-medium text-mc-text-secondary uppercase tracking-wider mb-3">
+                30-Day Optimization Roadmap
+                <span className="ml-2 text-[10px] normal-case text-mc-accent">Cross-referenced with Strategic & Ads Optimization Reports</span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="bg-mc-bg rounded-lg p-3 border border-green-500/20">
+                  <div className="text-[10px] uppercase tracking-wider text-green-400 mb-2">✅ Day 0 — Apr 18</div>
+                  <ul className="text-xs space-y-1.5 text-mc-text">
+                    <li>• Pause Terapia Indywidualna <span className="text-mc-text-secondary">(0 conv)</span></li>
+                    <li>• Add NFZ negative keywords</li>
+                    <li>• Confirm Brand exact-match only</li>
+                    <li className="text-green-400">→ ROAS: 0.99x → ~1.3x</li>
+                  </ul>
+                </div>
+                <div className="bg-mc-bg rounded-lg p-3 border border-blue-500/20">
+                  <div className="text-[10px] uppercase tracking-wider text-blue-400 mb-2">🔄 Day 7 — Apr 25</div>
+                  <ul className="text-xs space-y-1.5 text-mc-text">
+                    <li>• Fix Elbląg ad copy (A/B test)</li>
+                    <li>• Search term cleanup</li>
+                    <li>• Test Booknetic conversion tracking</li>
+                    <li className="text-blue-400">→ Target ROAS: 1.5x</li>
+                  </ul>
+                </div>
+                <div className="bg-mc-bg rounded-lg p-3 border border-purple-500/20">
+                  <div className="text-[10px] uppercase tracking-wider text-purple-400 mb-2">⚡ Day 14 — May 2</div>
+                  <ul className="text-xs space-y-1.5 text-mc-text">
+                    <li>• Match type rebalancing</li>
+                    <li>• Quality Score audit (625 w/o QS)</li>
+                    <li>• Ad schedule + device bid modifiers</li>
+                    <li className="text-purple-400">→ Target ROAS: 1.7x</li>
+                  </ul>
+                </div>
+                <div className="bg-mc-bg rounded-lg p-3 border border-mc-accent/30">
+                  <div className="text-[10px] uppercase tracking-wider text-mc-accent mb-2">🚀 Day 30 — May 18</div>
+                  <ul className="text-xs space-y-1.5 text-mc-text">
+                    <li>• Budget reallocation: Brand 2x</li>
+                    <li>• Ostróda expansion (+12 keywords)</li>
+                    <li>• Launch Online Therapy campaign</li>
+                    <li className="text-mc-accent">→ Target ROAS: 2.0x</li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             {/* Spend + Conversions over time */}
