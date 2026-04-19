@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus, ChevronRight, GripVertical, ArrowRightLeft, AlertTriangle, MessageSquare, CheckCheck, X, Check, Pencil } from 'lucide-react';
+import { Plus, ChevronRight, GripVertical, ArrowRightLeft, AlertTriangle, MessageSquare, CheckCheck, X, Check, Pencil, FileText, ExternalLink } from 'lucide-react';
 import { useMissionControl } from '@/lib/store';
 import { triggerAutoDispatch, shouldTriggerAutoDispatch } from '@/lib/auto-dispatch';
 import { getConfig } from '@/lib/config';
 import { useUnreadCounts } from '@/hooks/useUnreadCounts';
-import type { Task, TaskStatus } from '@/lib/types';
+import type { Task, TaskStatus, TaskDeliverable } from '@/lib/types';
 import { TaskModal } from './TaskModal';
 import { formatDistanceToNow, format } from 'date-fns';
 
@@ -462,6 +462,73 @@ function AssignedStatusBadge({ task, portraitMode }: { task: Task; portraitMode:
   );
 }
 
+function TaskCardDeliverables({ taskId }: { taskId: string }) {
+  const [deliverables, setDeliverables] = useState<TaskDeliverable[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/tasks/${taskId}/deliverables`)
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { if (!cancelled) setDeliverables(Array.isArray(data) ? data : []); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [taskId]);
+
+  if (deliverables.length === 0) return null;
+
+  const shown = deliverables.slice(0, 4);
+  const extra = deliverables.length - 4;
+
+  const handleClick = async (e: React.MouseEvent, d: TaskDeliverable) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (d.deliverable_type === 'url' && d.path) {
+      window.open(d.path, '_blank');
+    } else if (d.deliverable_type === 'file' && d.path?.endsWith('.html')) {
+      window.open(`/api/files/preview?path=${encodeURIComponent(d.path)}`, '_blank');
+    } else if (d.path) {
+      await fetch('/api/files/reveal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filePath: d.path }),
+      });
+    }
+  };
+
+  return (
+    <div className="mb-2 mt-1" onClick={e => e.stopPropagation()}>
+      <div className="text-[10px] uppercase tracking-wider text-mc-text-secondary/40 mb-1">Deliverables</div>
+      <div className="space-y-0.5">
+        {shown.map((d, i) => {
+          const isLatest = i === 0;
+          const isURL = d.deliverable_type === 'url';
+          return (
+            <div key={d.id} className="flex items-center gap-1.5 min-w-0">
+              {isURL
+                ? <ExternalLink className="w-3 h-3 flex-shrink-0 text-mc-text-secondary/40" />
+                : <FileText className="w-3 h-3 flex-shrink-0 text-mc-text-secondary/40" />
+              }
+              <button
+                onClick={e => handleClick(e, d)}
+                className={`text-xs truncate hover:underline text-left flex-1 min-w-0 ${isLatest ? 'text-mc-accent' : 'text-mc-text-secondary/60 hover:text-mc-text-secondary'}`}
+                title={d.path || d.title}
+              >
+                {d.title}
+              </button>
+              {isLatest && (
+                <span className="text-[9px] px-1 py-px bg-mc-accent/15 text-mc-accent rounded flex-shrink-0 leading-none">Latest</span>
+              )}
+            </div>
+          );
+        })}
+        {extra > 0 && (
+          <div className="text-[10px] text-mc-text-secondary/40 pl-[18px]">+{extra} more</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 interface TaskCardProps {
   task: Task;
   onDragStart: (e: React.DragEvent, task: Task) => void;
@@ -543,6 +610,8 @@ function TaskCard({ task, onDragStart, onClick, onEdit, onMoveStatus, onApprove,
             {task.description}
           </div>
         )}
+
+        <TaskCardDeliverables taskId={task.id} />
 
         {isPlanning && (
           <div className={`flex items-center gap-2 ${portraitMode ? 'mb-3 py-2 px-3' : 'mb-2 py-1.5 px-2.5'} bg-purple-500/10 rounded-md border border-purple-500/20`}>
