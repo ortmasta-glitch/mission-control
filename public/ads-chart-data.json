@@ -1,0 +1,5267 @@
+{
+  "time_series": [
+    {
+      "date": "2026-03-12",
+      "date_label": "03-12",
+      "source_file": "Thu Mar 12 2026 05:58:43 GMT-0400 (GMT-04:00)",
+      "total": {
+        "impressions": 15099.0,
+        "clicks": 1331.0,
+        "spend": 1168.8,
+        "conversions": 168.0,
+        "conversion_value": 862.15,
+        "ctr": 8.8152,
+        "avg_cpc": 0.88,
+        "cpa": 6.96
+      },
+      "by_campaign": {
+        "Elbląg Campaign": {
+          "impressions": 5771.0,
+          "clicks": 559.0,
+          "spend": 498.33,
+          "conversions": 81.0,
+          "ctr": 0.0969,
+          "avg_cpc": 0.89,
+          "conv_rate": 0.1449,
+          "cost_per_conv": 6.15,
+          "conv_value": 321.0,
+          "search_is": 0.1949,
+          "budget_lost_is": 0.0401,
+          "rank_lost_is": 0.765
+        },
+        "Ostróda Campaign": {
+          "impressions": 2675.0,
+          "clicks": 260.0,
+          "spend": 195.18,
+          "conversions": 22.0,
+          "ctr": 0.0972,
+          "avg_cpc": 0.75,
+          "conv_rate": 0.0846,
+          "cost_per_conv": 8.87,
+          "conv_value": 270.0,
+          "search_is": 0.1462,
+          "budget_lost_is": 0.1149,
+          "rank_lost_is": 0.7389
+        },
+        "Olsztyn Campaign": {
+          "impressions": 6616.0,
+          "clicks": 506.0,
+          "spend": 472.12,
+          "conversions": 65.0,
+          "ctr": 0.0765,
+          "avg_cpc": 0.93,
+          "conv_rate": 0.1161,
+          "cost_per_conv": 7.26,
+          "conv_value": 271.15,
+          "search_is": 0.1795,
+          "budget_lost_is": 0.0181,
+          "rank_lost_is": 0.8024
+        },
+        "[Search] Terapia Indywidualna": {
+          "impressions": 14.0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0,
+          "conv_rate": 0,
+          "cost_per_conv": 0,
+          "conv_value": 0,
+          "search_is": "< 10%",
+          "budget_lost_is": 0.2647,
+          "rank_lost_is": 0.6765
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii": {
+          "impressions": 23.0,
+          "clicks": 6.0,
+          "spend": 3.17,
+          "conversions": 0,
+          "ctr": 0.2609,
+          "avg_cpc": 0.53,
+          "conv_rate": 0,
+          "cost_per_conv": 0,
+          "conv_value": 0,
+          "search_is": 1.0,
+          "budget_lost_is": "--",
+          "rank_lost_is": "--"
+        }
+      },
+      "by_adgroup": {
+        "Elbląg Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 1539.0,
+          "clicks": 187.0,
+          "spend": 165.77,
+          "conversions": 28.0,
+          "ctr": 0.1215,
+          "avg_cpc": 0.89
+        },
+        "Elbląg Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 2443.0,
+          "clicks": 234.0,
+          "spend": 210.83,
+          "conversions": 36.0,
+          "ctr": 0.0958,
+          "avg_cpc": 0.9
+        },
+        "Elbląg Campaign > Psychoterapia grupowa": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "paused",
+          "impressions": 368.0,
+          "clicks": 27.0,
+          "spend": 16.46,
+          "conversions": 0,
+          "ctr": 0.0734,
+          "avg_cpc": 0.61
+        },
+        "Elbląg Campaign > Seksuolog": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 71.0,
+          "clicks": 7.0,
+          "spend": 8.35,
+          "conversions": 2.0,
+          "ctr": 0.0986,
+          "avg_cpc": 1.19
+        },
+        "Elbląg Campaign > Psychoterapia par": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 1348.0,
+          "clicks": 103.0,
+          "spend": 96.53,
+          "conversions": 15.0,
+          "ctr": 0.0764,
+          "avg_cpc": 0.94
+        },
+        "Ostróda Campaign > Psychoterapia par": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 238.0,
+          "clicks": 30.0,
+          "spend": 15.07,
+          "conversions": 4.0,
+          "ctr": 0.1261,
+          "avg_cpc": 0.5
+        },
+        "Ostróda Campaign > Psychoterapia grupowa": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "enabled",
+          "impressions": 159.0,
+          "clicks": 11.0,
+          "spend": 4.29,
+          "conversions": 1.0,
+          "ctr": 0.0692,
+          "avg_cpc": 0.39
+        },
+        "Ostróda Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 635.0,
+          "clicks": 66.0,
+          "spend": 43.78,
+          "conversions": 9.0,
+          "ctr": 0.1039,
+          "avg_cpc": 0.66
+        },
+        "Ostróda Campaign > Seksuolog": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 135.0,
+          "clicks": 9.0,
+          "spend": 10.07,
+          "conversions": 1.0,
+          "ctr": 0.0667,
+          "avg_cpc": 1.12
+        },
+        "Ostróda Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 1505.0,
+          "clicks": 144.0,
+          "spend": 121.97,
+          "conversions": 7.0,
+          "ctr": 0.0957,
+          "avg_cpc": 0.85
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii > Brand WCP": {
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii",
+          "ad_group": "Brand WCP",
+          "status": "enabled",
+          "impressions": 23.0,
+          "clicks": 6.0,
+          "spend": 3.17,
+          "conversions": 0,
+          "ctr": 0.2609,
+          "avg_cpc": 0.53
+        },
+        "[Search] Terapia Indywidualna > Psycholog / Psychoterapeuta": {
+          "campaign": "[Search] Terapia Indywidualna",
+          "ad_group": "Psycholog / Psychoterapeuta",
+          "status": "enabled",
+          "impressions": 14.0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        }
+      },
+      "by_conv_type": {
+        "Calls from Smart Campaign Ads": {
+          "conversions": 9.0,
+          "value": 0,
+          "category": "Phone Call Lead"
+        },
+        "Booking page": {
+          "conversions": 152.0,
+          "value": 352.7,
+          "category": "Book Appointment"
+        },
+        "Click to call (website link)": {
+          "conversions": 2.0,
+          "value": 500.0,
+          "category": "Book Appointment"
+        },
+        "Calls from ads": {
+          "conversions": 5.0,
+          "value": 9.45,
+          "category": "Phone Call Lead"
+        }
+      },
+      "keywords": {
+        "total": 459,
+        "enabled": 459,
+        "paused": 0,
+        "with_quality_score": [
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 1.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Elbląg",
+            "score": 1.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psycholog Elbląg",
+            "score": 1.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psycholog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia młodzieży",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog a psychoterapeuta",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia grupowa",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Olsztyn",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia Olsztyn",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla małżeństw",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog dla dzieci",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "poznawczo behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dziecięcy olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia Olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "elbląg psycholog",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg opinie",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia par Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapia olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia Olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla par elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psychoterapia gestalt",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog Olsztyn",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapia dla par",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "score": 7.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "score": 9.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 10.0,
+            "campaign": "Ostróda Campaign"
+          }
+        ],
+        "top_cost": [
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 83.29,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 58.76,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 51.6,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 38.44,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 28.51,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "cost": 26.65,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 25.99,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia dla par elbląg",
+            "cost": 25.53,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 21.96,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "cost": 20.54,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 18.71,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychiatra psycholog",
+            "cost": 17.03,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 15.74,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dziecięcy olsztyn",
+            "cost": 15.65,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 11.76,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 10.53,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "olsztyn psychiatra dziecięcy",
+            "cost": 10.45,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska elbląg",
+            "cost": 10.44,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "cost": 9.22,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "cost": 8.98,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "cost": 8.89,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "elbląg psycholog",
+            "cost": 8.54,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Trening Umiejętności Społecznych",
+            "cost": 8.29,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "cost": 6.95,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychiatra i psycholog",
+            "cost": 6.1,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 5.78,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog elbląg",
+            "cost": 5.69,
+            "campaign": "Elbląg Campaign"
+          }
+        ]
+      },
+      "search_terms_total": 1230
+    },
+    {
+      "date": "2026-03-15",
+      "date_label": "03-15",
+      "source_file": "Sun Mar 15 2026 07:24:21 GMT-0400 (GMT-04:00)",
+      "total": {
+        "impressions": 16082.0,
+        "clicks": 1369.0,
+        "spend": 1280.74,
+        "conversions": 154.0,
+        "conversion_value": 1047.2,
+        "ctr": 8.5126,
+        "avg_cpc": 0.94,
+        "cpa": 8.32
+      },
+      "by_campaign": {
+        "Elbląg Campaign": {
+          "impressions": 5808.0,
+          "clicks": 574.0,
+          "spend": 565.63,
+          "conversions": 78.0,
+          "ctr": 0.0988,
+          "avg_cpc": 0.99,
+          "conv_rate": 0.1359,
+          "cost_per_conv": 7.25,
+          "conv_value": 317.0,
+          "search_is": 0.2029,
+          "budget_lost_is": 0.0967,
+          "rank_lost_is": 0.7004
+        },
+        "Ostróda Campaign": {
+          "impressions": 3330.0,
+          "clicks": 305.0,
+          "spend": 229.69,
+          "conversions": 23.0,
+          "ctr": 0.0916,
+          "avg_cpc": 0.75,
+          "conv_rate": 0.0754,
+          "cost_per_conv": 9.99,
+          "conv_value": 520.0,
+          "search_is": 0.1621,
+          "budget_lost_is": 0.1224,
+          "rank_lost_is": 0.7155
+        },
+        "Olsztyn Campaign": {
+          "impressions": 6779.0,
+          "clicks": 472.0,
+          "spend": 475.95,
+          "conversions": 53.0,
+          "ctr": 0.0696,
+          "avg_cpc": 1.01,
+          "conv_rate": 0.0991,
+          "cost_per_conv": 8.98,
+          "conv_value": 210.2,
+          "search_is": 0.197,
+          "budget_lost_is": 0.0235,
+          "rank_lost_is": 0.7796
+        },
+        "[Search] Terapia Indywidualna": {
+          "impressions": 92.0,
+          "clicks": 5.0,
+          "spend": 2.79,
+          "conversions": 0,
+          "ctr": 0.0543,
+          "avg_cpc": 0.56,
+          "conv_rate": 0,
+          "cost_per_conv": 0,
+          "conv_value": 0,
+          "search_is": 0.2682,
+          "budget_lost_is": 0.1229,
+          "rank_lost_is": 0.6089
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii": {
+          "impressions": 73.0,
+          "clicks": 13.0,
+          "spend": 6.68,
+          "conversions": 0,
+          "ctr": 0.1781,
+          "avg_cpc": 0.51,
+          "conv_rate": 0,
+          "cost_per_conv": 0,
+          "conv_value": 0,
+          "search_is": 0.6458,
+          "budget_lost_is": "--",
+          "rank_lost_is": 0.3542
+        }
+      },
+      "by_adgroup": {
+        "Elbląg Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 1637.0,
+          "clicks": 206.0,
+          "spend": 199.3,
+          "conversions": 29.0,
+          "ctr": 0.1258,
+          "avg_cpc": 0.97
+        },
+        "Elbląg Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 2501.0,
+          "clicks": 237.0,
+          "spend": 242.74,
+          "conversions": 33.0,
+          "ctr": 0.0948,
+          "avg_cpc": 1.02
+        },
+        "Elbląg Campaign > Psychoterapia grupowa": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "paused",
+          "impressions": 304.0,
+          "clicks": 25.0,
+          "spend": 16.12,
+          "conversions": 0,
+          "ctr": 0.0822,
+          "avg_cpc": 0.64
+        },
+        "Elbląg Campaign > Seksuolog": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 68.0,
+          "clicks": 7.0,
+          "spend": 8.35,
+          "conversions": 2.0,
+          "ctr": 0.1029,
+          "avg_cpc": 1.19
+        },
+        "Elbląg Campaign > Psychoterapia par": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 1297.0,
+          "clicks": 99.0,
+          "spend": 99.12,
+          "conversions": 14.0,
+          "ctr": 0.0763,
+          "avg_cpc": 1.0
+        },
+        "Ostróda Campaign > Psychoterapia par": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 287.0,
+          "clicks": 35.0,
+          "spend": 20.69,
+          "conversions": 4.0,
+          "ctr": 0.122,
+          "avg_cpc": 0.59
+        },
+        "Ostróda Campaign > Psychoterapia grupowa": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "enabled",
+          "impressions": 238.0,
+          "clicks": 15.0,
+          "spend": 6.76,
+          "conversions": 1.0,
+          "ctr": 0.063,
+          "avg_cpc": 0.45
+        },
+        "Ostróda Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 750.0,
+          "clicks": 74.0,
+          "spend": 50.57,
+          "conversions": 10.0,
+          "ctr": 0.0987,
+          "avg_cpc": 0.68
+        },
+        "Ostróda Campaign > Seksuolog": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 196.0,
+          "clicks": 10.0,
+          "spend": 12.06,
+          "conversions": 1.0,
+          "ctr": 0.051,
+          "avg_cpc": 1.21
+        },
+        "Ostróda Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 1857.0,
+          "clicks": 171.0,
+          "spend": 139.61,
+          "conversions": 7.0,
+          "ctr": 0.0921,
+          "avg_cpc": 0.82
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii > Brand WCP": {
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii",
+          "ad_group": "Brand WCP",
+          "status": "enabled",
+          "impressions": 73.0,
+          "clicks": 13.0,
+          "spend": 6.68,
+          "conversions": 0,
+          "ctr": 0.1781,
+          "avg_cpc": 0.51
+        },
+        "[Search] Terapia Indywidualna > Psycholog / Psychoterapeuta": {
+          "campaign": "[Search] Terapia Indywidualna",
+          "ad_group": "Psycholog / Psychoterapeuta",
+          "status": "enabled",
+          "impressions": 92.0,
+          "clicks": 5.0,
+          "spend": 2.79,
+          "conversions": 0,
+          "ctr": 0.0543,
+          "avg_cpc": 0.56
+        }
+      },
+      "by_conv_type": {
+        "Calls from Smart Campaign Ads": {
+          "conversions": 10.0,
+          "value": 0,
+          "category": "Phone Call Lead"
+        },
+        "Booking page": {
+          "conversions": 137.0,
+          "value": 293.2,
+          "category": "Book Appointment"
+        },
+        "Click to call (website link)": {
+          "conversions": 3.0,
+          "value": 750.0,
+          "category": "Book Appointment"
+        },
+        "Calls from ads": {
+          "conversions": 4.0,
+          "value": 4.0,
+          "category": "Phone Call Lead"
+        },
+        "Rezerwacja zakończona (Booknetic)": {
+          "conversions": 0,
+          "value": 0,
+          "category": "Book Appointment"
+        }
+      },
+      "keywords": {
+        "total": 387,
+        "enabled": 387,
+        "paused": 0,
+        "with_quality_score": [
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 1.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 1.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Elbląg",
+            "score": 1.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psycholog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia młodzieży",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog a psychoterapeuta",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia Olsztyn",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla małżeństw",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog dla dzieci",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Terapia akceptacji i zaangażowania",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "dobry psycholog Olsztyn",
+            "score": 4.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "poznawczo behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dziecięcy olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia Olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "elbląg psycholog",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg opinie",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia par Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla par elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psychoterapia gestalt",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta Ostróda",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapia dla par",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "score": 7.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "score": 8.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 10.0,
+            "campaign": "Ostróda Campaign"
+          }
+        ],
+        "top_cost": [
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 86.66,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 65.49,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 57.17,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 38.18,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 34.46,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "cost": 33.51,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 32.77,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla par elbląg",
+            "cost": 31.13,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 29.32,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 25.27,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 22.57,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "cost": 22.36,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 17.22,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog dziecięcy olsztyn",
+            "cost": 12.37,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "olsztyn psychiatra dziecięcy",
+            "cost": 12.13,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 10.84,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska elbląg",
+            "cost": 10.12,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychiatra i psycholog",
+            "cost": 9.86,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "cost": 9.34,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "cost": 8.98,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "cost": 8.73,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Trening Umiejętności Społecznych",
+            "cost": 8.29,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "elbląg psycholog",
+            "cost": 7.38,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog elbląg",
+            "cost": 5.69,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 5.12,
+            "campaign": "Ostróda Campaign"
+          }
+        ]
+      },
+      "search_terms_total": 1381
+    },
+    {
+      "date": "2026-04-03",
+      "date_label": "04-03",
+      "source_file": "Thu Apr 02 2026 18:37:25 GMT-0400 (GMT-04:00)",
+      "total": {
+        "impressions": 23872.0,
+        "clicks": 1516.0,
+        "spend": 1563.3,
+        "conversions": 48.0,
+        "conversion_value": 2816.5,
+        "ctr": 6.3505,
+        "avg_cpc": 1.03,
+        "cpa": 32.57
+      },
+      "by_campaign": {
+        "Elbląg Campaign": {
+          "impressions": 3474.0,
+          "clicks": 296.0,
+          "spend": 403.2,
+          "conversions": 5.0,
+          "ctr": 0.0852,
+          "avg_cpc": 1.36,
+          "conv_rate": 0.0169,
+          "cost_per_conv": 80.64,
+          "conv_value": 250.0,
+          "search_is": 0.2536,
+          "budget_lost_is": 0.4734,
+          "rank_lost_is": 0.273
+        },
+        "Ostróda Campaign": {
+          "impressions": 3931.0,
+          "clicks": 355.0,
+          "spend": 302.3,
+          "conversions": 23.0,
+          "ctr": 0.0903,
+          "avg_cpc": 0.85,
+          "conv_rate": 0.0648,
+          "cost_per_conv": 13.14,
+          "conv_value": 767.0,
+          "search_is": 0.1721,
+          "budget_lost_is": 0.1786,
+          "rank_lost_is": 0.6493
+        },
+        "Olsztyn Campaign": {
+          "impressions": 14169.0,
+          "clicks": 699.0,
+          "spend": 710.76,
+          "conversions": 15.0,
+          "ctr": 0.0493,
+          "avg_cpc": 1.02,
+          "conv_rate": 0.0186,
+          "cost_per_conv": 47.38,
+          "conv_value": 549.5,
+          "search_is": 0.2529,
+          "budget_lost_is": 0.0748,
+          "rank_lost_is": 0.6722
+        },
+        "[Search] Terapia Indywidualna": {
+          "impressions": 472.0,
+          "clicks": 29.0,
+          "spend": 7.8,
+          "conversions": 1.0,
+          "ctr": 0.0614,
+          "avg_cpc": 0.27,
+          "conv_rate": 0.0345,
+          "cost_per_conv": 7.8,
+          "conv_value": 250.0,
+          "search_is": 0.4499,
+          "budget_lost_is": 0.0374,
+          "rank_lost_is": 0.5127
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii": {
+          "impressions": 1826.0,
+          "clicks": 137.0,
+          "spend": 139.24,
+          "conversions": 4.0,
+          "ctr": 0.075,
+          "avg_cpc": 1.02,
+          "conv_rate": 0.0292,
+          "cost_per_conv": 34.81,
+          "conv_value": 1000.0,
+          "search_is": 0.5007,
+          "budget_lost_is": 0.0047,
+          "rank_lost_is": 0.4946
+        }
+      },
+      "by_adgroup": {
+        "Elbląg Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 973.0,
+          "clicks": 119.0,
+          "spend": 161.33,
+          "conversions": 1.0,
+          "ctr": 0.1223,
+          "avg_cpc": 1.36
+        },
+        "Elbląg Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 1463.0,
+          "clicks": 133.0,
+          "spend": 192.79,
+          "conversions": 4.0,
+          "ctr": 0.0909,
+          "avg_cpc": 1.45
+        },
+        "Elbląg Campaign > Psychoterapia grupowa": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "paused",
+          "impressions": 25.0,
+          "clicks": 2.0,
+          "spend": 0.27,
+          "conversions": 0,
+          "ctr": 0.08,
+          "avg_cpc": 0.14
+        },
+        "Elbląg Campaign > Seksuolog": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 25.0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        },
+        "Elbląg Campaign > Psychoterapia par": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 988.0,
+          "clicks": 42.0,
+          "spend": 48.82,
+          "conversions": 0,
+          "ctr": 0.0425,
+          "avg_cpc": 1.16
+        },
+        "Ostróda Campaign > Psychoterapia par": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 452.0,
+          "clicks": 39.0,
+          "spend": 24.22,
+          "conversions": 2.0,
+          "ctr": 0.0863,
+          "avg_cpc": 0.62
+        },
+        "Ostróda Campaign > Psychoterapia grupowa": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "enabled",
+          "impressions": 215.0,
+          "clicks": 13.0,
+          "spend": 6.44,
+          "conversions": 1.0,
+          "ctr": 0.0605,
+          "avg_cpc": 0.5
+        },
+        "Ostróda Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 948.0,
+          "clicks": 88.0,
+          "spend": 76.63,
+          "conversions": 11.0,
+          "ctr": 0.0928,
+          "avg_cpc": 0.87
+        },
+        "Ostróda Campaign > Seksuolog": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 288.0,
+          "clicks": 22.0,
+          "spend": 27.43,
+          "conversions": 2.0,
+          "ctr": 0.0764,
+          "avg_cpc": 1.25
+        },
+        "Ostróda Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 2027.0,
+          "clicks": 193.0,
+          "spend": 167.59,
+          "conversions": 7.0,
+          "ctr": 0.0952,
+          "avg_cpc": 0.87
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii > Brand WCP": {
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii",
+          "ad_group": "Brand WCP",
+          "status": "enabled",
+          "impressions": 1826.0,
+          "clicks": 137.0,
+          "spend": 139.24,
+          "conversions": 4.0,
+          "ctr": 0.075,
+          "avg_cpc": 1.02
+        },
+        "[Search] Terapia Indywidualna > Psycholog / Psychoterapeuta": {
+          "campaign": "[Search] Terapia Indywidualna",
+          "ad_group": "Psycholog / Psychoterapeuta",
+          "status": "enabled",
+          "impressions": 472.0,
+          "clicks": 29.0,
+          "spend": 7.8,
+          "conversions": 1.0,
+          "ctr": 0.0614,
+          "avg_cpc": 0.27
+        }
+      },
+      "by_conv_type": {
+        "Calls from Smart Campaign Ads": {
+          "conversions": 14.0,
+          "value": 17.8,
+          "category": "Phone Call Lead"
+        },
+        "Click to call (website link)": {
+          "conversions": 3.0,
+          "value": 750.0,
+          "category": "Book Appointment"
+        },
+        "Calls from ads": {
+          "conversions": 10.0,
+          "value": 1757.45,
+          "category": "Phone Call Lead"
+        },
+        "Booking page": {
+          "conversions": 20.0,
+          "value": 41.25,
+          "category": "Book Appointment"
+        },
+        "Rezerwacja zakończona (Booknetic)": {
+          "conversions": 1.0,
+          "value": 250.0,
+          "category": "Book Appointment"
+        }
+      },
+      "keywords": {
+        "total": 388,
+        "enabled": 287,
+        "paused": 101,
+        "with_quality_score": [
+          {
+            "keyword": "trening tus dla dzieci",
+            "score": 1.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Terapia par",
+            "score": 2.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog a psychoterapeuta",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Olsztyn",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia Olsztyn",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla małżeństw",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Terapia akceptacji i zaangażowania",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog dla dzieci Ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psychoterapeuta Olsztyn",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psychoterapeuta Elbląg",
+            "score": 4.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "dobry psycholog Olsztyn",
+            "score": 4.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "poznawczo behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dziecięcy olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia Olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia młodzieży",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "elbląg psycholog",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg opinie",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia par Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "poradnia malzenska",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psychoterapia gestalt",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia par Ostróda",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta Ostróda",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla par elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapia dla par",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia Ostróda",
+            "score": 7.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "score": 7.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "score": 9.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 10.0,
+            "campaign": "Ostróda Campaign"
+          }
+        ],
+        "top_cost": [
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "cost": 107.61,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 62.26,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 61.46,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 50.75,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 48.77,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 41.12,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "cost": 38.03,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "cost": 33.68,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "cost": 27.09,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 25.95,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 24.66,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 23.85,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 21.21,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "cost": 19.83,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapia",
+            "cost": 19.55,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia dla par elbląg",
+            "cost": 18.02,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "cost": 17.61,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychiatra i psycholog",
+            "cost": 17.09,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 16.87,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Trening Umiejętności Społecznych",
+            "cost": 8.29,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "cost": 7.6,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 6.08,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychologiczno pedagogiczna poradnia",
+            "cost": 5.58,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog centrum",
+            "cost": 5.46,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "cost": 5.39,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "elbląg psycholog",
+            "cost": 5.28,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Olsztyn",
+            "cost": 5.26,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog Olsztyn",
+            "cost": 5.26,
+            "campaign": "[Search] Terapia Indywidualna"
+          }
+        ]
+      },
+      "search_terms_total": 1313
+    },
+    {
+      "date": "2026-04-07",
+      "date_label": "04-07",
+      "source_file": "Tue Apr 07 2026 02:29:57 GMT-0400 (GMT-04:00)",
+      "total": {
+        "impressions": 21732.0,
+        "clicks": 1338.0,
+        "spend": 1394.87,
+        "conversions": 29.5,
+        "conversion_value": 2776.75,
+        "ctr": 6.1568,
+        "avg_cpc": 1.04,
+        "cpa": 47.28
+      },
+      "by_campaign": {
+        "Elbląg Campaign": {
+          "impressions": 3474.0,
+          "clicks": 296.0,
+          "spend": 403.2,
+          "conversions": 5.0,
+          "ctr": 0.0852,
+          "avg_cpc": 1.36,
+          "conv_rate": 0.0169,
+          "cost_per_conv": 80.64,
+          "conv_value": 250.0,
+          "search_is": 0.2468,
+          "budget_lost_is": 0.4884,
+          "rank_lost_is": 0.2648
+        },
+        "Ostróda Campaign": {
+          "impressions": 3083.0,
+          "clicks": 271.0,
+          "spend": 239.6,
+          "conversions": 10.5,
+          "ctr": 0.0879,
+          "avg_cpc": 0.88,
+          "conv_rate": 0.0387,
+          "cost_per_conv": 22.82,
+          "conv_value": 754.5,
+          "search_is": 0.1909,
+          "budget_lost_is": 0.2512,
+          "rank_lost_is": 0.5579
+        },
+        "Olsztyn Campaign": {
+          "impressions": 12803.0,
+          "clicks": 600.0,
+          "spend": 601.37,
+          "conversions": 9.0,
+          "ctr": 0.0469,
+          "avg_cpc": 1.0,
+          "conv_rate": 0.0127,
+          "cost_per_conv": 66.82,
+          "conv_value": 522.25,
+          "search_is": 0.2541,
+          "budget_lost_is": 0.0861,
+          "rank_lost_is": 0.6598
+        },
+        "[Search] Terapia Indywidualna": {
+          "impressions": 472.0,
+          "clicks": 29.0,
+          "spend": 7.8,
+          "conversions": 1.0,
+          "ctr": 0.0614,
+          "avg_cpc": 0.27,
+          "conv_rate": 0.0345,
+          "cost_per_conv": 7.8,
+          "conv_value": 250.0,
+          "search_is": 0.4459,
+          "budget_lost_is": 0.037,
+          "rank_lost_is": 0.517
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii": {
+          "impressions": 1900.0,
+          "clicks": 142.0,
+          "spend": 142.9,
+          "conversions": 4.0,
+          "ctr": 0.0747,
+          "avg_cpc": 1.01,
+          "conv_rate": 0.0282,
+          "cost_per_conv": 35.73,
+          "conv_value": 1000.0,
+          "search_is": 0.487,
+          "budget_lost_is": 0.0043,
+          "rank_lost_is": 0.5087
+        }
+      },
+      "by_adgroup": {
+        "[Brand] Warmińskie Centrum Psychoterapii > Brand WCP": {
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii",
+          "ad_group": "Brand WCP",
+          "status": "enabled",
+          "impressions": 1900.0,
+          "clicks": 142.0,
+          "spend": 142.9,
+          "conversions": 4.0,
+          "ctr": 0.0747,
+          "avg_cpc": 1.01
+        }
+      },
+      "by_conv_type": {
+        "Calls from ads": {
+          "conversions": 4.0,
+          "value": 1000.0,
+          "category": "Phone Call Lead"
+        }
+      },
+      "keywords": {
+        "total": 6,
+        "enabled": 6,
+        "paused": 0,
+        "with_quality_score": [
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "score": 7.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "score": 9.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          }
+        ],
+        "top_cost": [
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "cost": 110.81,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "cost": 27.55,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          }
+        ]
+      },
+      "search_terms_total": 178
+    },
+    {
+      "date": "2026-04-10",
+      "date_label": "04-10",
+      "source_file": "Fri Apr 10 2026 17:49:38 GMT-0400 (GMT-04:00)",
+      "total": {
+        "impressions": 19290.0,
+        "clicks": 1185.0,
+        "spend": 1269.59,
+        "conversions": 25.0,
+        "conversion_value": 2773.25,
+        "ctr": 6.1431,
+        "avg_cpc": 1.07,
+        "cpa": 50.78
+      },
+      "by_campaign": {
+        "Elbląg Campaign": {
+          "impressions": 2407.0,
+          "clicks": 265.0,
+          "spend": 380.82,
+          "conversions": 4.0,
+          "ctr": 0.1101,
+          "avg_cpc": 1.44,
+          "conv_rate": 0.0151,
+          "cost_per_conv": 95.21,
+          "conv_value": 0,
+          "search_is": 0.2475,
+          "budget_lost_is": 0.5402,
+          "rank_lost_is": 0.2124
+        },
+        "Ostróda Campaign": {
+          "impressions": 2129.0,
+          "clicks": 181.0,
+          "spend": 166.53,
+          "conversions": 6.0,
+          "ctr": 0.085,
+          "avg_cpc": 0.92,
+          "conv_rate": 0.0331,
+          "cost_per_conv": 27.75,
+          "conv_value": 751.0,
+          "search_is": 0.1876,
+          "budget_lost_is": 0.2676,
+          "rank_lost_is": 0.5447
+        },
+        "Olsztyn Campaign": {
+          "impressions": 12189.0,
+          "clicks": 546.0,
+          "spend": 566.12,
+          "conversions": 9.0,
+          "ctr": 0.0448,
+          "avg_cpc": 1.04,
+          "conv_rate": 0.0138,
+          "cost_per_conv": 62.9,
+          "conv_value": 522.25,
+          "search_is": 0.2647,
+          "budget_lost_is": 0.0968,
+          "rank_lost_is": 0.6385
+        },
+        "[Search] Terapia Indywidualna": {
+          "impressions": 458.0,
+          "clicks": 29.0,
+          "spend": 7.8,
+          "conversions": 1.0,
+          "ctr": 0.0633,
+          "avg_cpc": 0.27,
+          "conv_rate": 0.0345,
+          "cost_per_conv": 7.8,
+          "conv_value": 250.0,
+          "search_is": 0.4752,
+          "budget_lost_is": 0.0112,
+          "rank_lost_is": 0.5136
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii": {
+          "impressions": 2107.0,
+          "clicks": 164.0,
+          "spend": 148.32,
+          "conversions": 5.0,
+          "ctr": 0.0778,
+          "avg_cpc": 0.9,
+          "conv_rate": 0.0305,
+          "cost_per_conv": 29.66,
+          "conv_value": 1250.0,
+          "search_is": 0.4859,
+          "budget_lost_is": 0.0039,
+          "rank_lost_is": 0.5102
+        }
+      },
+      "by_adgroup": {
+        "Elbląg Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 893.0,
+          "clicks": 115.0,
+          "spend": 157.93,
+          "conversions": 1.0,
+          "ctr": 0.1288,
+          "avg_cpc": 1.37
+        },
+        "Elbląg Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 1304.0,
+          "clicks": 122.0,
+          "spend": 182.76,
+          "conversions": 3.0,
+          "ctr": 0.0936,
+          "avg_cpc": 1.5
+        },
+        "Elbląg Campaign > Psychoterapia grupowa": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "paused",
+          "impressions": 0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        },
+        "Elbląg Campaign > Seksuolog": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 19.0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        },
+        "Elbląg Campaign > Psychoterapia par": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 191.0,
+          "clicks": 28.0,
+          "spend": 40.13,
+          "conversions": 0,
+          "ctr": 0.1466,
+          "avg_cpc": 1.43
+        },
+        "Ostróda Campaign > Psychoterapia par": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 298.0,
+          "clicks": 25.0,
+          "spend": 16.8,
+          "conversions": 0,
+          "ctr": 0.0839,
+          "avg_cpc": 0.67
+        },
+        "Ostróda Campaign > Psychoterapia grupowa": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "enabled",
+          "impressions": 125.0,
+          "clicks": 7.0,
+          "spend": 4.8,
+          "conversions": 0,
+          "ctr": 0.056,
+          "avg_cpc": 0.69
+        },
+        "Ostróda Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 521.0,
+          "clicks": 46.0,
+          "spend": 45.65,
+          "conversions": 2.0,
+          "ctr": 0.0883,
+          "avg_cpc": 0.99
+        },
+        "Ostróda Campaign > Seksuolog": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 202.0,
+          "clicks": 17.0,
+          "spend": 26.02,
+          "conversions": 2.0,
+          "ctr": 0.0842,
+          "avg_cpc": 1.53
+        },
+        "Ostróda Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 983.0,
+          "clicks": 86.0,
+          "spend": 73.27,
+          "conversions": 2.0,
+          "ctr": 0.0875,
+          "avg_cpc": 0.85
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii > Brand WCP": {
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii",
+          "ad_group": "Brand WCP",
+          "status": "enabled",
+          "impressions": 2107.0,
+          "clicks": 164.0,
+          "spend": 148.32,
+          "conversions": 5.0,
+          "ctr": 0.0778,
+          "avg_cpc": 0.9
+        }
+      },
+      "by_conv_type": {
+        "Calls from Smart Campaign Ads": {
+          "conversions": 6.0,
+          "value": 0,
+          "category": "Phone Call Lead"
+        },
+        "Calls from ads": {
+          "conversions": 5.0,
+          "value": 1001.0,
+          "category": "Phone Call Lead"
+        },
+        "Click to call (website link)": {
+          "conversions": 2.0,
+          "value": 500.0,
+          "category": "Book Appointment"
+        },
+        "Rezerwacja zakończona (Booknetic)": {
+          "conversions": 2.0,
+          "value": 500.0,
+          "category": "Book Appointment"
+        }
+      },
+      "keywords": {
+        "total": 671,
+        "enabled": 570,
+        "paused": 101,
+        "with_quality_score": [
+          {
+            "keyword": "trening tus dla dzieci",
+            "score": 1.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Terapia par",
+            "score": 2.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog a psychoterapeuta",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Olsztyn",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia Olsztyn",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla małżeństw",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Terapia akceptacji i zaangażowania",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog dla dzieci Ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "poznawczo behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dziecięcy olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia Olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia młodzieży",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "elbląg psycholog",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg opinie",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia par Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "poradnia malzenska",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska olsztyn",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psychoterapia gestalt",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia par Ostróda",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta Ostróda",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla par elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapia dla par",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia Ostróda",
+            "score": 7.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia Ostróda",
+            "score": 7.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "score": 7.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "score": 9.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 10.0,
+            "campaign": "Ostróda Campaign"
+          }
+        ],
+        "top_cost": [
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "cost": 115.57,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 59.18,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 42.23,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 41.12,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "cost": 37.51,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "cost": 33.35,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "cost": 31.36,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 29.65,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 25.95,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 23.88,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapia",
+            "cost": 19.55,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 19.04,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "cost": 18.42,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "cost": 17.61,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychiatra i psycholog",
+            "cost": 17.09,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla par elbląg",
+            "cost": 16.75,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 16.13,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 13.79,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 9.4,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "cost": 7.6,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 5.73,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychologiczno pedagogiczna poradnia",
+            "cost": 5.58,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog centrum",
+            "cost": 5.46,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "cost": 5.39,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "elbląg psycholog",
+            "cost": 5.28,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Olsztyn",
+            "cost": 5.26,
+            "campaign": "Elbląg Campaign"
+          }
+        ]
+      },
+      "search_terms_total": 960
+    },
+    {
+      "date": "2026-04-12",
+      "date_label": "04-12",
+      "source_file": "Sun Apr 12 2026 17:13:38 GMT-0400 (GMT-04:00)",
+      "total": {
+        "impressions": 17136.0,
+        "clicks": 997.0,
+        "spend": 1101.94,
+        "conversions": 22.0,
+        "conversion_value": 2522.25,
+        "ctr": 5.8182,
+        "avg_cpc": 1.11,
+        "cpa": 50.09
+      },
+      "by_campaign": {
+        "Elbląg Campaign": {
+          "impressions": 1496.0,
+          "clicks": 169.0,
+          "spend": 295.42,
+          "conversions": 3.0,
+          "ctr": 0.113,
+          "avg_cpc": 1.75,
+          "conv_rate": 0.0178,
+          "cost_per_conv": 98.47,
+          "conv_value": 0,
+          "search_is": 0.219,
+          "budget_lost_is": 0.689,
+          "rank_lost_is": 0.0921
+        },
+        "Ostróda Campaign": {
+          "impressions": 1527.0,
+          "clicks": 128.0,
+          "spend": 118.24,
+          "conversions": 4.0,
+          "ctr": 0.0838,
+          "avg_cpc": 0.92,
+          "conv_rate": 0.0313,
+          "cost_per_conv": 29.56,
+          "conv_value": 500.0,
+          "search_is": 0.1845,
+          "budget_lost_is": 0.1894,
+          "rank_lost_is": 0.6261
+        },
+        "Olsztyn Campaign": {
+          "impressions": 11529.0,
+          "clicks": 509.0,
+          "spend": 532.31,
+          "conversions": 9.0,
+          "ctr": 0.0441,
+          "avg_cpc": 1.05,
+          "conv_rate": 0.0147,
+          "cost_per_conv": 59.15,
+          "conv_value": 522.25,
+          "search_is": 0.2802,
+          "budget_lost_is": 0.11,
+          "rank_lost_is": 0.6098
+        },
+        "[Search] Terapia Indywidualna": {
+          "impressions": 434.0,
+          "clicks": 27.0,
+          "spend": 7.48,
+          "conversions": 1.0,
+          "ctr": 0.0622,
+          "avg_cpc": 0.28,
+          "conv_rate": 0.037,
+          "cost_per_conv": 7.48,
+          "conv_value": 250.0,
+          "search_is": 0.5035,
+          "budget_lost_is": 0.0053,
+          "rank_lost_is": 0.4912
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii": {
+          "impressions": 2150.0,
+          "clicks": 164.0,
+          "spend": 148.49,
+          "conversions": 5.0,
+          "ctr": 0.0763,
+          "avg_cpc": 0.91,
+          "conv_rate": 0.0305,
+          "cost_per_conv": 29.7,
+          "conv_value": 1250.0,
+          "search_is": 0.4846,
+          "budget_lost_is": 0.0038,
+          "rank_lost_is": 0.5117
+        }
+      },
+      "by_adgroup": {
+        "Elbląg Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 547.0,
+          "clicks": 74.0,
+          "spend": 119.96,
+          "conversions": 0,
+          "ctr": 0.1353,
+          "avg_cpc": 1.62
+        },
+        "Elbląg Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 831.0,
+          "clicks": 78.0,
+          "spend": 148.09,
+          "conversions": 3.0,
+          "ctr": 0.0939,
+          "avg_cpc": 1.9
+        },
+        "Elbląg Campaign > Psychoterapia grupowa": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "paused",
+          "impressions": 0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        },
+        "Elbląg Campaign > Seksuolog": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 9.0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        },
+        "Elbląg Campaign > Psychoterapia par": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 109.0,
+          "clicks": 17.0,
+          "spend": 27.37,
+          "conversions": 0,
+          "ctr": 0.156,
+          "avg_cpc": 1.61
+        },
+        "Ostróda Campaign > Psychoterapia par": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 258.0,
+          "clicks": 19.0,
+          "spend": 15.33,
+          "conversions": 0,
+          "ctr": 0.0736,
+          "avg_cpc": 0.81
+        },
+        "Ostróda Campaign > Psychoterapia grupowa": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "enabled",
+          "impressions": 57.0,
+          "clicks": 4.0,
+          "spend": 1.46,
+          "conversions": 0,
+          "ctr": 0.0702,
+          "avg_cpc": 0.37
+        },
+        "Ostróda Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 402.0,
+          "clicks": 40.0,
+          "spend": 39.61,
+          "conversions": 2.0,
+          "ctr": 0.0995,
+          "avg_cpc": 0.99
+        },
+        "Ostróda Campaign > Seksuolog": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 161.0,
+          "clicks": 13.0,
+          "spend": 15.77,
+          "conversions": 1.0,
+          "ctr": 0.0807,
+          "avg_cpc": 1.21
+        },
+        "Ostróda Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 649.0,
+          "clicks": 52.0,
+          "spend": 46.07,
+          "conversions": 1.0,
+          "ctr": 0.0801,
+          "avg_cpc": 0.89
+        },
+        "[Search] Terapia Indywidualna > Psycholog / Psychoterapeuta": {
+          "campaign": "[Search] Terapia Indywidualna",
+          "ad_group": "Psycholog / Psychoterapeuta",
+          "status": "enabled",
+          "impressions": 434.0,
+          "clicks": 27.0,
+          "spend": 7.48,
+          "conversions": 1.0,
+          "ctr": 0.0622,
+          "avg_cpc": 0.28
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii > Brand WCP": {
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii",
+          "ad_group": "Brand WCP",
+          "status": "enabled",
+          "impressions": 2150.0,
+          "clicks": 164.0,
+          "spend": 148.49,
+          "conversions": 5.0,
+          "ctr": 0.0763,
+          "avg_cpc": 0.91
+        }
+      },
+      "by_conv_type": {
+        "Calls from Smart Campaign Ads": {
+          "conversions": 12.0,
+          "value": 17.8,
+          "category": "Phone Call Lead"
+        },
+        "Click to call (website link)": {
+          "conversions": 1.0,
+          "value": 250.0,
+          "category": "Book Appointment"
+        },
+        "Rezerwacja zakończona (Booknetic)": {
+          "conversions": 2.0,
+          "value": 500.0,
+          "category": "Book Appointment"
+        },
+        "Calls from ads": {
+          "conversions": 7.0,
+          "value": 1754.45,
+          "category": "Phone Call Lead"
+        }
+      },
+      "keywords": {
+        "total": 677,
+        "enabled": 581,
+        "paused": 96,
+        "with_quality_score": [
+          {
+            "keyword": "trening tus dla dzieci",
+            "score": 1.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Terapia par",
+            "score": 2.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog a psychoterapeuta",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla małżeństw",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Terapia akceptacji i zaangażowania",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog dla dzieci Ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psychoterapeuta Olsztyn",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psychoterapeuta Elbląg",
+            "score": 4.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "dobry psycholog Olsztyn",
+            "score": 4.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "poznawczo behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia młodzieży",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia par Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "poradnia malzenska",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psychoterapia gestalt",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia par Ostróda",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta Ostróda",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapia dla par",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia Ostróda",
+            "score": 7.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia Ostróda",
+            "score": 7.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "score": 7.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "score": 9.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 10.0,
+            "campaign": "Ostróda Campaign"
+          }
+        ],
+        "top_cost": [
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "cost": 116.73,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 48.66,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 32.39,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "cost": 31.76,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 30.66,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 27.09,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 22.6,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "cost": 22.36,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 21.84,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapia",
+            "cost": 19.55,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 12.99,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 11.67,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "cost": 11.25,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 10.06,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychiatra i psycholog",
+            "cost": 9.42,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "cost": 5.39,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychologiczno pedagogiczna poradnia",
+            "cost": 5.18,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog Olsztyn",
+            "cost": 5.08,
+            "campaign": "[Search] Terapia Indywidualna"
+          }
+        ]
+      },
+      "search_terms_total": 828
+    },
+    {
+      "date": "2026-04-13",
+      "date_label": "04-13",
+      "source_file": "Mon Apr 13 2026 17:39:26 GMT-0400 (GMT-04:00)",
+      "total": {
+        "impressions": 16076.0,
+        "clicks": 915.0,
+        "spend": 1015.56,
+        "conversions": 21.0,
+        "conversion_value": 2272.25,
+        "ctr": 5.6917,
+        "avg_cpc": 1.11,
+        "cpa": 48.36
+      },
+      "by_campaign": {
+        "Elbląg Campaign": {
+          "impressions": 1433.0,
+          "clicks": 154.0,
+          "spend": 270.56,
+          "conversions": 3.0,
+          "ctr": 0.1075,
+          "avg_cpc": 1.76,
+          "conv_rate": 0.0195,
+          "cost_per_conv": 90.19,
+          "conv_value": 0,
+          "search_is": 0.2314,
+          "budget_lost_is": 0.6755,
+          "rank_lost_is": 0.093
+        },
+        "Ostróda Campaign": {
+          "impressions": 1154.0,
+          "clicks": 101.0,
+          "spend": 100.2,
+          "conversions": 3.0,
+          "ctr": 0.0875,
+          "avg_cpc": 0.99,
+          "conv_rate": 0.0297,
+          "cost_per_conv": 33.4,
+          "conv_value": 250.0,
+          "search_is": 0.1657,
+          "budget_lost_is": 0.2322,
+          "rank_lost_is": 0.6021
+        },
+        "Olsztyn Campaign": {
+          "impressions": 10945.0,
+          "clicks": 472.0,
+          "spend": 491.0,
+          "conversions": 9.0,
+          "ctr": 0.0431,
+          "avg_cpc": 1.04,
+          "conv_rate": 0.0157,
+          "cost_per_conv": 54.56,
+          "conv_value": 522.25,
+          "search_is": 0.2807,
+          "budget_lost_is": 0.119,
+          "rank_lost_is": 0.6003
+        },
+        "[Search] Terapia Indywidualna": {
+          "impressions": 383.0,
+          "clicks": 24.0,
+          "spend": 5.01,
+          "conversions": 1.0,
+          "ctr": 0.0627,
+          "avg_cpc": 0.21,
+          "conv_rate": 0.0417,
+          "cost_per_conv": 5.01,
+          "conv_value": 250.0,
+          "search_is": 0.509,
+          "budget_lost_is": 0.006,
+          "rank_lost_is": 0.485
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii": {
+          "impressions": 2161.0,
+          "clicks": 164.0,
+          "spend": 148.79,
+          "conversions": 5.0,
+          "ctr": 0.0759,
+          "avg_cpc": 0.91,
+          "conv_rate": 0.0305,
+          "cost_per_conv": 29.76,
+          "conv_value": 1250.0,
+          "search_is": 0.4812,
+          "budget_lost_is": 0.0037,
+          "rank_lost_is": 0.5151
+        }
+      },
+      "by_adgroup": {
+        "Elbląg Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 505.0,
+          "clicks": 64.0,
+          "spend": 104.27,
+          "conversions": 0,
+          "ctr": 0.1267,
+          "avg_cpc": 1.63
+        },
+        "Elbląg Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 811.0,
+          "clicks": 73.0,
+          "spend": 141.25,
+          "conversions": 3.0,
+          "ctr": 0.09,
+          "avg_cpc": 1.93
+        },
+        "Elbląg Campaign > Psychoterapia grupowa": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "paused",
+          "impressions": 0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        },
+        "Elbląg Campaign > Seksuolog": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 9.0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        },
+        "Elbląg Campaign > Psychoterapia par": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 108.0,
+          "clicks": 17.0,
+          "spend": 25.05,
+          "conversions": 0,
+          "ctr": 0.1574,
+          "avg_cpc": 1.47
+        },
+        "Ostróda Campaign > Psychoterapia par": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 226.0,
+          "clicks": 14.0,
+          "spend": 9.01,
+          "conversions": 0,
+          "ctr": 0.0619,
+          "avg_cpc": 0.64
+        },
+        "Ostróda Campaign > Psychoterapia grupowa": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "enabled",
+          "impressions": 12.0,
+          "clicks": 1.0,
+          "spend": 0.53,
+          "conversions": 0,
+          "ctr": 0.0833,
+          "avg_cpc": 0.53
+        },
+        "Ostróda Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 339.0,
+          "clicks": 33.0,
+          "spend": 35.86,
+          "conversions": 1.0,
+          "ctr": 0.0973,
+          "avg_cpc": 1.09
+        },
+        "Ostróda Campaign > Seksuolog": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 136.0,
+          "clicks": 13.0,
+          "spend": 15.77,
+          "conversions": 1.0,
+          "ctr": 0.0956,
+          "avg_cpc": 1.21
+        },
+        "Ostróda Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 441.0,
+          "clicks": 40.0,
+          "spend": 39.03,
+          "conversions": 1.0,
+          "ctr": 0.0907,
+          "avg_cpc": 0.98
+        },
+        "[Search] Terapia Indywidualna > Psycholog / Psychoterapeuta": {
+          "campaign": "[Search] Terapia Indywidualna",
+          "ad_group": "Psycholog / Psychoterapeuta",
+          "status": "enabled",
+          "impressions": 383.0,
+          "clicks": 24.0,
+          "spend": 5.01,
+          "conversions": 1.0,
+          "ctr": 0.0627,
+          "avg_cpc": 0.21
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii > Brand WCP": {
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii",
+          "ad_group": "Brand WCP",
+          "status": "enabled",
+          "impressions": 2161.0,
+          "clicks": 164.0,
+          "spend": 148.79,
+          "conversions": 5.0,
+          "ctr": 0.0759,
+          "avg_cpc": 0.91
+        }
+      },
+      "by_conv_type": {
+        "Calls from Smart Campaign Ads": {
+          "conversions": 12.0,
+          "value": 17.8,
+          "category": "Phone Call Lead"
+        },
+        "Rezerwacja zakończona (Booknetic)": {
+          "conversions": 2.0,
+          "value": 500.0,
+          "category": "Book Appointment"
+        },
+        "Calls from ads": {
+          "conversions": 7.0,
+          "value": 1754.45,
+          "category": "Phone Call Lead"
+        }
+      },
+      "keywords": {
+        "total": 676,
+        "enabled": 580,
+        "paused": 96,
+        "with_quality_score": [
+          {
+            "keyword": "trening tus dla dzieci",
+            "score": 1.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Terapia par",
+            "score": 2.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog a psychoterapeuta",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla małżeństw",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Terapia akceptacji i zaangażowania",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog dla dzieci Ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psychoterapeuta Olsztyn",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psychoterapeuta Elbląg",
+            "score": 4.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "dobry psycholog Olsztyn",
+            "score": 4.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "poznawczo behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia młodzieży",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia par Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "poradnia malzenska",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psychoterapia gestalt",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia par Ostróda",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta Ostróda",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapia dla par",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia Ostróda",
+            "score": 7.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "score": 7.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "score": 9.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 10.0,
+            "campaign": "Ostróda Campaign"
+          }
+        ],
+        "top_cost": [
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "cost": 117.02,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 45.08,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "cost": 31.77,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 29.86,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 25.42,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 23.9,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 22.6,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "cost": 21.98,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapia",
+            "cost": 19.55,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "cost": 11.25,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 10.58,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 10.06,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychiatra i psycholog",
+            "cost": 9.42,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 8.47,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 6.67,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "cost": 5.39,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychologiczno pedagogiczna poradnia",
+            "cost": 5.18,
+            "campaign": "Elbląg Campaign"
+          }
+        ]
+      },
+      "search_terms_total": 727
+    },
+    {
+      "date": "2026-04-17",
+      "date_label": "04-17",
+      "source_file": "Fri Apr 17 2026 09:53:36 GMT-0400 (GMT-04:00)",
+      "total": {
+        "impressions": 16749.0,
+        "clicks": 927.0,
+        "spend": 1042.57,
+        "conversions": 27.0,
+        "conversion_value": 53085.6,
+        "ctr": 5.5347,
+        "avg_cpc": 1.12,
+        "cpa": 38.61
+      },
+      "by_campaign": {
+        "Elbląg Campaign": {
+          "impressions": 1308.0,
+          "clicks": 129.0,
+          "spend": 205.48,
+          "conversions": 2.0,
+          "ctr": 0.0986,
+          "avg_cpc": 1.59,
+          "conv_rate": 0.0155,
+          "cost_per_conv": 102.74,
+          "conv_value": 0,
+          "search_is": 0.3371,
+          "budget_lost_is": 0.5616,
+          "rank_lost_is": 0.1013
+        },
+        "Ostróda Campaign": {
+          "impressions": 661.0,
+          "clicks": 57.0,
+          "spend": 70.04,
+          "conversions": 4.0,
+          "ctr": 0.0862,
+          "avg_cpc": 1.23,
+          "conv_rate": 0.0702,
+          "cost_per_conv": 17.51,
+          "conv_value": 250.0,
+          "search_is": 0.1707,
+          "budget_lost_is": 0.0086,
+          "rank_lost_is": 0.8207
+        },
+        "Olsztyn Campaign": {
+          "impressions": 12541.0,
+          "clicks": 575.0,
+          "spend": 679.2,
+          "conversions": 14.0,
+          "ctr": 0.0458,
+          "avg_cpc": 1.18,
+          "conv_rate": 0.021,
+          "cost_per_conv": 48.51,
+          "conv_value": 1235.6,
+          "search_is": 0.3362,
+          "budget_lost_is": 0.0594,
+          "rank_lost_is": 0.6044
+        },
+        "[Search] Terapia Indywidualna": {
+          "impressions": 560.0,
+          "clicks": 26.0,
+          "spend": 4.87,
+          "conversions": 0,
+          "ctr": 0.0464,
+          "avg_cpc": 0.19,
+          "conv_rate": 0,
+          "cost_per_conv": 0,
+          "conv_value": 0,
+          "search_is": 0.5776,
+          "budget_lost_is": 0.0048,
+          "rank_lost_is": 0.4176
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii": {
+          "impressions": 1679.0,
+          "clicks": 140.0,
+          "spend": 82.98,
+          "conversions": 7.0,
+          "ctr": 0.0834,
+          "avg_cpc": 0.59,
+          "conv_rate": 0.05,
+          "cost_per_conv": 11.85,
+          "conv_value": 51600.0,
+          "search_is": 0.4703,
+          "budget_lost_is": 0.0018,
+          "rank_lost_is": 0.5278
+        }
+      },
+      "by_adgroup": {
+        "Elbląg Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 437.0,
+          "clicks": 51.0,
+          "spend": 77.82,
+          "conversions": 0,
+          "ctr": 0.1167,
+          "avg_cpc": 1.53
+        },
+        "Elbląg Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 716.0,
+          "clicks": 66.0,
+          "spend": 113.37,
+          "conversions": 2.0,
+          "ctr": 0.0922,
+          "avg_cpc": 1.72
+        },
+        "Elbląg Campaign > Psychoterapia grupowa": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "paused",
+          "impressions": 0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        },
+        "Elbląg Campaign > Seksuolog": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 6.0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        },
+        "Elbląg Campaign > Psychoterapia par": {
+          "campaign": "Elbląg Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 149.0,
+          "clicks": 12.0,
+          "spend": 14.28,
+          "conversions": 0,
+          "ctr": 0.0805,
+          "avg_cpc": 1.19
+        },
+        "Ostróda Campaign > Psychoterapia par": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia par",
+          "status": "enabled",
+          "impressions": 111.0,
+          "clicks": 6.0,
+          "spend": 4.21,
+          "conversions": 0,
+          "ctr": 0.0541,
+          "avg_cpc": 0.7
+        },
+        "Ostróda Campaign > Psychoterapia grupowa": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia grupowa",
+          "status": "enabled",
+          "impressions": 0,
+          "clicks": 0,
+          "spend": 0,
+          "conversions": 0,
+          "ctr": 0,
+          "avg_cpc": 0
+        },
+        "Ostróda Campaign > Psychoterapia Dzieci i Młodzieży": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia Dzieci i Młodzieży",
+          "status": "enabled",
+          "impressions": 163.0,
+          "clicks": 19.0,
+          "spend": 18.66,
+          "conversions": 1.0,
+          "ctr": 0.1166,
+          "avg_cpc": 0.98
+        },
+        "Ostróda Campaign > Seksuolog": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Seksuolog",
+          "status": "enabled",
+          "impressions": 102.0,
+          "clicks": 6.0,
+          "spend": 4.73,
+          "conversions": 1.0,
+          "ctr": 0.0588,
+          "avg_cpc": 0.79
+        },
+        "Ostróda Campaign > Psychoterapia dla Dorosłych": {
+          "campaign": "Ostróda Campaign",
+          "ad_group": "Psychoterapia dla Dorosłych",
+          "status": "enabled",
+          "impressions": 285.0,
+          "clicks": 26.0,
+          "spend": 42.44,
+          "conversions": 2.0,
+          "ctr": 0.0912,
+          "avg_cpc": 1.63
+        },
+        "[Brand] Warmińskie Centrum Psychoterapii > Brand WCP": {
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii",
+          "ad_group": "Brand WCP",
+          "status": "enabled",
+          "impressions": 1679.0,
+          "clicks": 140.0,
+          "spend": 82.98,
+          "conversions": 7.0,
+          "ctr": 0.0834,
+          "avg_cpc": 0.59
+        },
+        "[Search] Terapia Indywidualna > Psycholog / Psychoterapeuta": {
+          "campaign": "[Search] Terapia Indywidualna",
+          "ad_group": "Psycholog / Psychoterapeuta",
+          "status": "enabled",
+          "impressions": 560.0,
+          "clicks": 26.0,
+          "spend": 4.87,
+          "conversions": 0,
+          "ctr": 0.0464,
+          "avg_cpc": 0.19
+        }
+      },
+      "by_conv_type": {
+        "Calls from Smart Campaign Ads": {
+          "conversions": 13.0,
+          "value": 22.25,
+          "category": "Phone Call Lead"
+        },
+        "Rezerwacja zakończona (Booknetic)": {
+          "conversions": 2.0,
+          "value": 500.0,
+          "category": "Book Appointment"
+        },
+        "Calls from ads": {
+          "conversions": 6.0,
+          "value": 1508.9,
+          "category": "Phone Call Lead"
+        },
+        "Kliknięcie w numer telefonu": {
+          "conversions": 5.0,
+          "value": 1054.45,
+          "category": "Contact"
+        },
+        "Rezerwacja zakończona (Booknetic) (1)": {
+          "conversions": 1.0,
+          "value": 50000.0,
+          "category": "Purchase"
+        }
+      },
+      "keywords": {
+        "total": 677,
+        "enabled": 581,
+        "paused": 96,
+        "with_quality_score": [
+          {
+            "keyword": "trening tus dla dzieci",
+            "score": 1.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 1.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Terapia par",
+            "score": 2.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog a psychoterapeuta",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 3.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla małżeństw",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Terapia akceptacji i zaangażowania",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "seksuolog",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapia",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog dla dzieci Ostróda",
+            "score": 3.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog Elbląg",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psychoterapeuta Olsztyn",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psychoterapeuta Ostróda",
+            "score": 3.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "psychoterapeuta Elbląg",
+            "score": 4.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "dobry psycholog Olsztyn",
+            "score": 4.0,
+            "campaign": "[Search] Terapia Indywidualna"
+          },
+          {
+            "keyword": "poznawczo behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia młodzieży",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia par Elbląg",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "poradnia malzenska",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapie dla par",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 5.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapia poznawczo-behawioralna",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psychoterapia gestalt",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia par Ostróda",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychoterapeuta Ostróda",
+            "score": 5.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psychoterapeuta Elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "seksuolog elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia małżeńska elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla par elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "terapia dla par elbląg",
+            "score": 6.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 6.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapia dla par",
+            "score": 7.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 7.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia Ostróda",
+            "score": 7.0,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "score": 7.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "centrum psychoterapii",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog dla par",
+            "score": 8.0,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "score": 9.0,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "score": 10.0,
+            "campaign": "Ostróda Campaign"
+          }
+        ],
+        "top_cost": [
+          {
+            "keyword": "centrum psychoterapii olsztyn",
+            "cost": 67.48,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 33.73,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog elbląg",
+            "cost": 25.65,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog terapeuta",
+            "cost": 22.6,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psychoterapia",
+            "cost": 18.01,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "warmińskie centrum psychoterapii",
+            "cost": 15.51,
+            "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+          },
+          {
+            "keyword": "psycholog",
+            "cost": 15.24,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "terapia psychologiczna",
+            "cost": 14.29,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "psycholog Ostróda",
+            "cost": 13.6,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 13.23,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog dziecięcy Elbląg",
+            "cost": 12.51,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 5.68,
+            "campaign": "Ostróda Campaign"
+          },
+          {
+            "keyword": "psychologiczno pedagogiczna poradnia",
+            "cost": 5.18,
+            "campaign": "Elbląg Campaign"
+          },
+          {
+            "keyword": "Psycholog online",
+            "cost": 5.12,
+            "campaign": "Elbląg Campaign"
+          }
+        ]
+      },
+      "search_terms_total": 577
+    }
+  ],
+  "latest_snapshot": {
+    "date": "2026-04-17",
+    "date_label": "04-17",
+    "source_file": "Fri Apr 17 2026 09:53:36 GMT-0400 (GMT-04:00)",
+    "total": {
+      "impressions": 16749.0,
+      "clicks": 927.0,
+      "spend": 1042.57,
+      "conversions": 27.0,
+      "conversion_value": 53085.6,
+      "ctr": 5.5347,
+      "avg_cpc": 1.12,
+      "cpa": 38.61
+    },
+    "by_campaign": {
+      "Elbląg Campaign": {
+        "impressions": 1308.0,
+        "clicks": 129.0,
+        "spend": 205.48,
+        "conversions": 2.0,
+        "ctr": 0.0986,
+        "avg_cpc": 1.59,
+        "conv_rate": 0.0155,
+        "cost_per_conv": 102.74,
+        "conv_value": 0,
+        "search_is": 0.3371,
+        "budget_lost_is": 0.5616,
+        "rank_lost_is": 0.1013
+      },
+      "Ostróda Campaign": {
+        "impressions": 661.0,
+        "clicks": 57.0,
+        "spend": 70.04,
+        "conversions": 4.0,
+        "ctr": 0.0862,
+        "avg_cpc": 1.23,
+        "conv_rate": 0.0702,
+        "cost_per_conv": 17.51,
+        "conv_value": 250.0,
+        "search_is": 0.1707,
+        "budget_lost_is": 0.0086,
+        "rank_lost_is": 0.8207
+      },
+      "Olsztyn Campaign": {
+        "impressions": 12541.0,
+        "clicks": 575.0,
+        "spend": 679.2,
+        "conversions": 14.0,
+        "ctr": 0.0458,
+        "avg_cpc": 1.18,
+        "conv_rate": 0.021,
+        "cost_per_conv": 48.51,
+        "conv_value": 1235.6,
+        "search_is": 0.3362,
+        "budget_lost_is": 0.0594,
+        "rank_lost_is": 0.6044
+      },
+      "[Search] Terapia Indywidualna": {
+        "impressions": 560.0,
+        "clicks": 26.0,
+        "spend": 4.87,
+        "conversions": 0,
+        "ctr": 0.0464,
+        "avg_cpc": 0.19,
+        "conv_rate": 0,
+        "cost_per_conv": 0,
+        "conv_value": 0,
+        "search_is": 0.5776,
+        "budget_lost_is": 0.0048,
+        "rank_lost_is": 0.4176
+      },
+      "[Brand] Warmińskie Centrum Psychoterapii": {
+        "impressions": 1679.0,
+        "clicks": 140.0,
+        "spend": 82.98,
+        "conversions": 7.0,
+        "ctr": 0.0834,
+        "avg_cpc": 0.59,
+        "conv_rate": 0.05,
+        "cost_per_conv": 11.85,
+        "conv_value": 51600.0,
+        "search_is": 0.4703,
+        "budget_lost_is": 0.0018,
+        "rank_lost_is": 0.5278
+      }
+    },
+    "by_adgroup": {
+      "Elbląg Campaign > Psychoterapia Dzieci i Młodzieży": {
+        "campaign": "Elbląg Campaign",
+        "ad_group": "Psychoterapia Dzieci i Młodzieży",
+        "status": "enabled",
+        "impressions": 437.0,
+        "clicks": 51.0,
+        "spend": 77.82,
+        "conversions": 0,
+        "ctr": 0.1167,
+        "avg_cpc": 1.53
+      },
+      "Elbląg Campaign > Psychoterapia dla Dorosłych": {
+        "campaign": "Elbląg Campaign",
+        "ad_group": "Psychoterapia dla Dorosłych",
+        "status": "enabled",
+        "impressions": 716.0,
+        "clicks": 66.0,
+        "spend": 113.37,
+        "conversions": 2.0,
+        "ctr": 0.0922,
+        "avg_cpc": 1.72
+      },
+      "Elbląg Campaign > Psychoterapia grupowa": {
+        "campaign": "Elbląg Campaign",
+        "ad_group": "Psychoterapia grupowa",
+        "status": "paused",
+        "impressions": 0,
+        "clicks": 0,
+        "spend": 0,
+        "conversions": 0,
+        "ctr": 0,
+        "avg_cpc": 0
+      },
+      "Elbląg Campaign > Seksuolog": {
+        "campaign": "Elbląg Campaign",
+        "ad_group": "Seksuolog",
+        "status": "enabled",
+        "impressions": 6.0,
+        "clicks": 0,
+        "spend": 0,
+        "conversions": 0,
+        "ctr": 0,
+        "avg_cpc": 0
+      },
+      "Elbląg Campaign > Psychoterapia par": {
+        "campaign": "Elbląg Campaign",
+        "ad_group": "Psychoterapia par",
+        "status": "enabled",
+        "impressions": 149.0,
+        "clicks": 12.0,
+        "spend": 14.28,
+        "conversions": 0,
+        "ctr": 0.0805,
+        "avg_cpc": 1.19
+      },
+      "Ostróda Campaign > Psychoterapia par": {
+        "campaign": "Ostróda Campaign",
+        "ad_group": "Psychoterapia par",
+        "status": "enabled",
+        "impressions": 111.0,
+        "clicks": 6.0,
+        "spend": 4.21,
+        "conversions": 0,
+        "ctr": 0.0541,
+        "avg_cpc": 0.7
+      },
+      "Ostróda Campaign > Psychoterapia grupowa": {
+        "campaign": "Ostróda Campaign",
+        "ad_group": "Psychoterapia grupowa",
+        "status": "enabled",
+        "impressions": 0,
+        "clicks": 0,
+        "spend": 0,
+        "conversions": 0,
+        "ctr": 0,
+        "avg_cpc": 0
+      },
+      "Ostróda Campaign > Psychoterapia Dzieci i Młodzieży": {
+        "campaign": "Ostróda Campaign",
+        "ad_group": "Psychoterapia Dzieci i Młodzieży",
+        "status": "enabled",
+        "impressions": 163.0,
+        "clicks": 19.0,
+        "spend": 18.66,
+        "conversions": 1.0,
+        "ctr": 0.1166,
+        "avg_cpc": 0.98
+      },
+      "Ostróda Campaign > Seksuolog": {
+        "campaign": "Ostróda Campaign",
+        "ad_group": "Seksuolog",
+        "status": "enabled",
+        "impressions": 102.0,
+        "clicks": 6.0,
+        "spend": 4.73,
+        "conversions": 1.0,
+        "ctr": 0.0588,
+        "avg_cpc": 0.79
+      },
+      "Ostróda Campaign > Psychoterapia dla Dorosłych": {
+        "campaign": "Ostróda Campaign",
+        "ad_group": "Psychoterapia dla Dorosłych",
+        "status": "enabled",
+        "impressions": 285.0,
+        "clicks": 26.0,
+        "spend": 42.44,
+        "conversions": 2.0,
+        "ctr": 0.0912,
+        "avg_cpc": 1.63
+      },
+      "[Brand] Warmińskie Centrum Psychoterapii > Brand WCP": {
+        "campaign": "[Brand] Warmińskie Centrum Psychoterapii",
+        "ad_group": "Brand WCP",
+        "status": "enabled",
+        "impressions": 1679.0,
+        "clicks": 140.0,
+        "spend": 82.98,
+        "conversions": 7.0,
+        "ctr": 0.0834,
+        "avg_cpc": 0.59
+      },
+      "[Search] Terapia Indywidualna > Psycholog / Psychoterapeuta": {
+        "campaign": "[Search] Terapia Indywidualna",
+        "ad_group": "Psycholog / Psychoterapeuta",
+        "status": "enabled",
+        "impressions": 560.0,
+        "clicks": 26.0,
+        "spend": 4.87,
+        "conversions": 0,
+        "ctr": 0.0464,
+        "avg_cpc": 0.19
+      }
+    },
+    "by_conv_type": {
+      "Calls from Smart Campaign Ads": {
+        "conversions": 13.0,
+        "value": 22.25,
+        "category": "Phone Call Lead"
+      },
+      "Rezerwacja zakończona (Booknetic)": {
+        "conversions": 2.0,
+        "value": 500.0,
+        "category": "Book Appointment"
+      },
+      "Calls from ads": {
+        "conversions": 6.0,
+        "value": 1508.9,
+        "category": "Phone Call Lead"
+      },
+      "Kliknięcie w numer telefonu": {
+        "conversions": 5.0,
+        "value": 1054.45,
+        "category": "Contact"
+      },
+      "Rezerwacja zakończona (Booknetic) (1)": {
+        "conversions": 1.0,
+        "value": 50000.0,
+        "category": "Purchase"
+      }
+    },
+    "keywords": {
+      "total": 677,
+      "enabled": 581,
+      "paused": 96,
+      "with_quality_score": [
+        {
+          "keyword": "trening tus dla dzieci",
+          "score": 1.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psycholog Elbląg",
+          "score": 1.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Terapia par",
+          "score": 2.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "psycholog",
+          "score": 3.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psychoterapia poznawczo-behawioralna",
+          "score": 3.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "psycholog a psychoterapeuta",
+          "score": 3.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psycholog online",
+          "score": 3.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "seksuolog",
+          "score": 3.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psycholog Elbląg",
+          "score": 3.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psychoterapeuta Elbląg",
+          "score": 3.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "terapia dla małżeństw",
+          "score": 3.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "Terapia akceptacji i zaangażowania",
+          "score": 3.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "seksuolog",
+          "score": 3.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "psycholog ostróda",
+          "score": 3.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "psychoterapia",
+          "score": 3.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "psycholog Ostróda",
+          "score": 3.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "psycholog dla dzieci Ostróda",
+          "score": 3.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "psycholog Elbląg",
+          "score": 3.0,
+          "campaign": "[Search] Terapia Indywidualna"
+        },
+        {
+          "keyword": "psycholog Ostróda",
+          "score": 3.0,
+          "campaign": "[Search] Terapia Indywidualna"
+        },
+        {
+          "keyword": "psychoterapeuta Olsztyn",
+          "score": 3.0,
+          "campaign": "[Search] Terapia Indywidualna"
+        },
+        {
+          "keyword": "psychoterapeuta Ostróda",
+          "score": 3.0,
+          "campaign": "[Search] Terapia Indywidualna"
+        },
+        {
+          "keyword": "psychoterapeuta Elbląg",
+          "score": 4.0,
+          "campaign": "[Search] Terapia Indywidualna"
+        },
+        {
+          "keyword": "dobry psycholog Olsztyn",
+          "score": 4.0,
+          "campaign": "[Search] Terapia Indywidualna"
+        },
+        {
+          "keyword": "poznawczo behawioralna",
+          "score": 5.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psychoterapia młodzieży",
+          "score": 5.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psychoterapeuta Elbląg",
+          "score": 5.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "terapia par Elbląg",
+          "score": 5.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "poradnia malzenska",
+          "score": 5.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "terapie dla par",
+          "score": 5.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psychoterapia poznawczo-behawioralna",
+          "score": 5.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psychoterapia poznawczo-behawioralna",
+          "score": 5.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "psychoterapeuta",
+          "score": 5.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "Psychoterapia gestalt",
+          "score": 5.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "terapia par Ostróda",
+          "score": 5.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "psychoterapeuta Ostróda",
+          "score": 5.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "Psycholog dziecięcy Elbląg",
+          "score": 6.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psychoterapeuta Elbląg",
+          "score": 6.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "seksuolog elbląg",
+          "score": 6.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "terapia małżeńska elbląg",
+          "score": 6.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "terapia dla par elbląg",
+          "score": 6.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "terapia dla par elbląg",
+          "score": 6.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "psycholog dla par",
+          "score": 6.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "psycholog terapeuta",
+          "score": 7.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "psycholog elbląg",
+          "score": 7.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "psycholog terapia dla par",
+          "score": 7.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "centrum psychoterapii",
+          "score": 7.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "terapia Ostróda",
+          "score": 7.0,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "centrum psychoterapii olsztyn",
+          "score": 7.0,
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+        },
+        {
+          "keyword": "centrum psychoterapii",
+          "score": 8.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "psycholog dla par",
+          "score": 8.0,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "warmińskie centrum psychoterapii",
+          "score": 9.0,
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+        },
+        {
+          "keyword": "psycholog terapeuta",
+          "score": 10.0,
+          "campaign": "Ostróda Campaign"
+        }
+      ],
+      "top_cost": [
+        {
+          "keyword": "centrum psychoterapii olsztyn",
+          "cost": 67.48,
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+        },
+        {
+          "keyword": "psycholog",
+          "cost": 33.73,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "psycholog elbląg",
+          "cost": 25.65,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "psycholog terapeuta",
+          "cost": 22.6,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "psychoterapia",
+          "cost": 18.01,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "warmińskie centrum psychoterapii",
+          "cost": 15.51,
+          "campaign": "[Brand] Warmińskie Centrum Psychoterapii"
+        },
+        {
+          "keyword": "psycholog",
+          "cost": 15.24,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "terapia psychologiczna",
+          "cost": 14.29,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "psycholog Ostróda",
+          "cost": 13.6,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "Psycholog online",
+          "cost": 13.23,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psycholog dziecięcy Elbląg",
+          "cost": 12.51,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psycholog online",
+          "cost": 5.68,
+          "campaign": "Ostróda Campaign"
+        },
+        {
+          "keyword": "psychologiczno pedagogiczna poradnia",
+          "cost": 5.18,
+          "campaign": "Elbląg Campaign"
+        },
+        {
+          "keyword": "Psycholog online",
+          "cost": 5.12,
+          "campaign": "Elbląg Campaign"
+        }
+      ]
+    },
+    "search_terms_total": 577
+  },
+  "latest_campaigns": {
+    "Elbląg Campaign": {
+      "impressions": 1308.0,
+      "clicks": 129.0,
+      "spend": 205.48,
+      "conversions": 2.0,
+      "ctr": 0.0986,
+      "avg_cpc": 1.59,
+      "conv_rate": 0.0155,
+      "cost_per_conv": 102.74,
+      "conv_value": 0,
+      "search_is": 0.3371,
+      "budget_lost_is": 0.5616,
+      "rank_lost_is": 0.1013
+    },
+    "Ostróda Campaign": {
+      "impressions": 661.0,
+      "clicks": 57.0,
+      "spend": 70.04,
+      "conversions": 4.0,
+      "ctr": 0.0862,
+      "avg_cpc": 1.23,
+      "conv_rate": 0.0702,
+      "cost_per_conv": 17.51,
+      "conv_value": 250.0,
+      "search_is": 0.1707,
+      "budget_lost_is": 0.0086,
+      "rank_lost_is": 0.8207
+    },
+    "Olsztyn Campaign": {
+      "impressions": 12541.0,
+      "clicks": 575.0,
+      "spend": 679.2,
+      "conversions": 14.0,
+      "ctr": 0.0458,
+      "avg_cpc": 1.18,
+      "conv_rate": 0.021,
+      "cost_per_conv": 48.51,
+      "conv_value": 1235.6,
+      "search_is": 0.3362,
+      "budget_lost_is": 0.0594,
+      "rank_lost_is": 0.6044
+    },
+    "[Search] Terapia Indywidualna": {
+      "impressions": 560.0,
+      "clicks": 26.0,
+      "spend": 4.87,
+      "conversions": 0,
+      "ctr": 0.0464,
+      "avg_cpc": 0.19,
+      "conv_rate": 0,
+      "cost_per_conv": 0,
+      "conv_value": 0,
+      "search_is": 0.5776,
+      "budget_lost_is": 0.0048,
+      "rank_lost_is": 0.4176
+    },
+    "[Brand] Warmińskie Centrum Psychoterapii": {
+      "impressions": 1679.0,
+      "clicks": 140.0,
+      "spend": 82.98,
+      "conversions": 7.0,
+      "ctr": 0.0834,
+      "avg_cpc": 0.59,
+      "conv_rate": 0.05,
+      "cost_per_conv": 11.85,
+      "conv_value": 51600.0,
+      "search_is": 0.4703,
+      "budget_lost_is": 0.0018,
+      "rank_lost_is": 0.5278
+    }
+  },
+  "latest_adgroups": {
+    "Elbląg Campaign > Psychoterapia Dzieci i Młodzieży": {
+      "campaign": "Elbląg Campaign",
+      "ad_group": "Psychoterapia Dzieci i Młodzieży",
+      "status": "enabled",
+      "impressions": 437.0,
+      "clicks": 51.0,
+      "spend": 77.82,
+      "conversions": 0,
+      "ctr": 0.1167,
+      "avg_cpc": 1.53
+    },
+    "Elbląg Campaign > Psychoterapia dla Dorosłych": {
+      "campaign": "Elbląg Campaign",
+      "ad_group": "Psychoterapia dla Dorosłych",
+      "status": "enabled",
+      "impressions": 716.0,
+      "clicks": 66.0,
+      "spend": 113.37,
+      "conversions": 2.0,
+      "ctr": 0.0922,
+      "avg_cpc": 1.72
+    },
+    "Elbląg Campaign > Psychoterapia grupowa": {
+      "campaign": "Elbląg Campaign",
+      "ad_group": "Psychoterapia grupowa",
+      "status": "paused",
+      "impressions": 0,
+      "clicks": 0,
+      "spend": 0,
+      "conversions": 0,
+      "ctr": 0,
+      "avg_cpc": 0
+    },
+    "Elbląg Campaign > Seksuolog": {
+      "campaign": "Elbląg Campaign",
+      "ad_group": "Seksuolog",
+      "status": "enabled",
+      "impressions": 6.0,
+      "clicks": 0,
+      "spend": 0,
+      "conversions": 0,
+      "ctr": 0,
+      "avg_cpc": 0
+    },
+    "Elbląg Campaign > Psychoterapia par": {
+      "campaign": "Elbląg Campaign",
+      "ad_group": "Psychoterapia par",
+      "status": "enabled",
+      "impressions": 149.0,
+      "clicks": 12.0,
+      "spend": 14.28,
+      "conversions": 0,
+      "ctr": 0.0805,
+      "avg_cpc": 1.19
+    },
+    "Ostróda Campaign > Psychoterapia par": {
+      "campaign": "Ostróda Campaign",
+      "ad_group": "Psychoterapia par",
+      "status": "enabled",
+      "impressions": 111.0,
+      "clicks": 6.0,
+      "spend": 4.21,
+      "conversions": 0,
+      "ctr": 0.0541,
+      "avg_cpc": 0.7
+    },
+    "Ostróda Campaign > Psychoterapia grupowa": {
+      "campaign": "Ostróda Campaign",
+      "ad_group": "Psychoterapia grupowa",
+      "status": "enabled",
+      "impressions": 0,
+      "clicks": 0,
+      "spend": 0,
+      "conversions": 0,
+      "ctr": 0,
+      "avg_cpc": 0
+    },
+    "Ostróda Campaign > Psychoterapia Dzieci i Młodzieży": {
+      "campaign": "Ostróda Campaign",
+      "ad_group": "Psychoterapia Dzieci i Młodzieży",
+      "status": "enabled",
+      "impressions": 163.0,
+      "clicks": 19.0,
+      "spend": 18.66,
+      "conversions": 1.0,
+      "ctr": 0.1166,
+      "avg_cpc": 0.98
+    },
+    "Ostróda Campaign > Seksuolog": {
+      "campaign": "Ostróda Campaign",
+      "ad_group": "Seksuolog",
+      "status": "enabled",
+      "impressions": 102.0,
+      "clicks": 6.0,
+      "spend": 4.73,
+      "conversions": 1.0,
+      "ctr": 0.0588,
+      "avg_cpc": 0.79
+    },
+    "Ostróda Campaign > Psychoterapia dla Dorosłych": {
+      "campaign": "Ostróda Campaign",
+      "ad_group": "Psychoterapia dla Dorosłych",
+      "status": "enabled",
+      "impressions": 285.0,
+      "clicks": 26.0,
+      "spend": 42.44,
+      "conversions": 2.0,
+      "ctr": 0.0912,
+      "avg_cpc": 1.63
+    },
+    "[Brand] Warmińskie Centrum Psychoterapii > Brand WCP": {
+      "campaign": "[Brand] Warmińskie Centrum Psychoterapii",
+      "ad_group": "Brand WCP",
+      "status": "enabled",
+      "impressions": 1679.0,
+      "clicks": 140.0,
+      "spend": 82.98,
+      "conversions": 7.0,
+      "ctr": 0.0834,
+      "avg_cpc": 0.59
+    },
+    "[Search] Terapia Indywidualna > Psycholog / Psychoterapeuta": {
+      "campaign": "[Search] Terapia Indywidualna",
+      "ad_group": "Psycholog / Psychoterapeuta",
+      "status": "enabled",
+      "impressions": 560.0,
+      "clicks": 26.0,
+      "spend": 4.87,
+      "conversions": 0,
+      "ctr": 0.0464,
+      "avg_cpc": 0.19
+    }
+  },
+  "latest_convs": {
+    "Calls from Smart Campaign Ads": {
+      "conversions": 13.0,
+      "value": 22.25,
+      "category": "Phone Call Lead"
+    },
+    "Rezerwacja zakończona (Booknetic)": {
+      "conversions": 2.0,
+      "value": 500.0,
+      "category": "Book Appointment"
+    },
+    "Calls from ads": {
+      "conversions": 6.0,
+      "value": 1508.9,
+      "category": "Phone Call Lead"
+    },
+    "Kliknięcie w numer telefonu": {
+      "conversions": 5.0,
+      "value": 1054.45,
+      "category": "Contact"
+    },
+    "Rezerwacja zakończona (Booknetic) (1)": {
+      "conversions": 1.0,
+      "value": 50000.0,
+      "category": "Purchase"
+    }
+  }
+}
