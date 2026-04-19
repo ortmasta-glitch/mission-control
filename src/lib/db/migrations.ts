@@ -2013,6 +2013,43 @@ const migrations: Migration[] = [
       console.log('[Migration 035] "paused" status added to tasks table');
     }
   }
+  },
+  {
+    id: '036',
+    name: 'add_ad_metrics_provenance_columns',
+    up: (db) => {
+      console.log('[Migration 036] Adding provenance columns to ad_metrics and financial_entries...');
+      const addColumnSafe = (table: string, column: string, type: string) => {
+        try {
+          db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${type}`);
+          console.log(`  + ${table}.${column}`);
+        } catch (e: any) {
+          if (e.message?.includes('duplicate column')) {
+            console.log(`  ${table}.${column} already exists, skipping`);
+          } else {
+            throw e;
+          }
+        }
+      };
+      // ad_metrics columns
+      addColumnSafe('ad_metrics', 'source_document_id', 'TEXT');
+      addColumnSafe('ad_metrics', 'parse_timestamp', 'TEXT');
+      addColumnSafe('ad_metrics', 'parser_version', 'TEXT');
+      addColumnSafe('ad_metrics', 'import_mode', 'TEXT');
+      addColumnSafe('ad_metrics', 'cpc', 'TEXT');
+      addColumnSafe('ad_metrics', 'cpa', 'TEXT');
+      addColumnSafe('ad_metrics', 'cvr', 'TEXT');
+      addColumnSafe('ad_metrics', 'raw_data', 'TEXT');
+      // financial_entries columns
+      addColumnSafe('financial_entries', 'parse_timestamp', 'TEXT');
+      addColumnSafe('financial_entries', 'parser_version', 'TEXT');
+      addColumnSafe('financial_entries', 'source_document_id', 'TEXT');
+      addColumnSafe('financial_entries', 'import_mode', 'TEXT');
+      addColumnSafe('financial_entries', 'raw_data', 'TEXT');
+      console.log('[Migration 036] Provenance columns added');
+    }
+  }
+
 ];
 
 /**
