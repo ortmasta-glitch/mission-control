@@ -1,0 +1,2133 @@
+<!DOCTYPE html>
+<html lang="pl" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WCP Raport Wywiadu Strategicznego · 17 Kwiecień 2026</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script src="assets/js/stitch-echarts-theme.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo svg{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.red{border-left-color:var(--red-t)}
+  .callout.red strong{color:#f08080}
+  .callout.green{border-left-color:var(--green-t)}
+  .callout.green strong{color:#6fcf97}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.long-term{background:rgba(155,89,182,.15);color:#c39bd3}
+  .tag.creative{background:rgba(155,89,182,.15);color:#c39bd3}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .stat-card{background:var(--surface-mid);border-radius:6px;padding:18px;border-left:3px solid var(--gold-dim)}
+  .stat-card .stat-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .stat-card .stat-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-card .stat-note{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .stat-card.green{border-left-color:var(--green-t)}
+  .stat-card.green .stat-value{color:#6fcf97}
+  .stat-card.red{border-left-color:var(--red-t)}
+  .stat-card.red .stat-value{color:#f08080}
+  .stat-card.blue{border-left-color:var(--blue-t)}
+  .stat-card.blue .stat-value{color:#7bc8e0}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .vol-low{color:#7bc8e0;font-weight:700}
+  .kw-table .vol-red{color:#f08080;font-weight:700}
+  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .funnel-step:last-child{border-bottom:none}
+  .funnel-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .priority-matrix{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .matrix-cell{padding:18px;border-radius:4px}
+  .matrix-cell.high-impact-low-effort{background:rgba(76,175,125,.08);border-left:3px solid #4CAF7D}
+  .matrix-cell.high-impact-high-effort{background:rgba(75,163,195,.08);border-left:3px solid #4BA3C3}
+  .matrix-cell.low-impact-low-effort{background:rgba(245,200,66,.08);border-left:3px solid #F5C842}
+  .matrix-cell.low-impact-high-effort{background:rgba(224,82,82,.08);border-left:3px solid #E05252}
+  .matrix-cell h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .matrix-cell.high-impact-low-effort h4{color:#6fcf97}
+  .matrix-cell.high-impact-high-effort h4{color:#7bc8e0}
+  .matrix-cell.low-impact-low-effort h4{color:#f5c842}
+  .matrix-cell.low-impact-high-effort h4{color:#f08080}
+  .matrix-cell ul{padding-left:14px;font-size:.82rem;color:var(--on-surface)}
+  .matrix-cell li{margin:4px 0}
+  .badge-row{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .page-footer{display:none}
+  .timeline-row{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .timeline-row:last-child{border-bottom:none}
+  .timeline-day{background:var(--surface-high);border-radius:4px;padding:6px 12px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;flex-shrink:0;min-width:60px;text-align:center}
+  .timeline-content h4{font-size:.9rem;font-weight:700;color:var(--on-surface);margin-bottom:3px}
+  .timeline-content p{font-size:.84rem;color:var(--muted)}
+  .timeline-content .owner{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-t);margin-top:4px}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .vs-col{padding:18px;border-radius:4px}
+  .vs-col.wcp{background:rgba(76,175,125,.06);border-left:3px solid var(--green-t)}
+  .vs-col.anima{background:rgba(224,82,82,.06);border-left:3px solid var(--red-t)}
+  .vs-col h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .vs-col.wcp h4{color:#6fcf97}
+  .vs-col.anima h4{color:#f08080}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+.chart-card{background:var(--surface-mid);border-radius:6px;padding:20px;margin:24px 0;border-left:3px solid var(--gold-dim)}
+.chart-card .chart-label{font-family:Manrope,sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:4px}
+.chart-card .chart-title{font-size:.92rem;font-weight:700;color:var(--on-surface);margin-bottom:12px}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.priority-matrix,.vs-grid{grid-template-columns:1fr}.toc-block ol{columns:1}.page-canvas{padding:28px 16px 60px}.stat-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Powrót do Raportu Strategicznego →
+  </a>
+
+  <div class="sidebar-label">Nawigacja</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Okładka
+    </a>
+    <a class="nav-link" href="#executive-summary" data-section="executive-summary">
+      <span class="material-symbols-outlined nav-icon">summarize</span> Podsumowanie Wykonawcze
+    </a>
+    <a class="nav-link" href="#financial-health" data-section="financial-health">
+      <span class="material-symbols-outlined nav-icon">account_balance</span> Zdrowie Finansowe
+    </a>
+    <a class="nav-link" href="#hr-team" data-section="hr-team">
+      <span class="material-symbols-outlined nav-icon">groups</span> Luki w HR &amp; Zespole
+    </a>
+    <a class="nav-link" href="#competitor-threat" data-section="competitor-threat">
+      <span class="material-symbols-outlined nav-icon">radar</span> Zagrożenie Konkurencyjne
+    </a>
+    <a class="nav-link" href="#google-ads" data-section="google-ads">
+      <span class="material-symbols-outlined nav-icon">ads_click</span> Google Ads
+    </a>
+    <a class="nav-link" href="#anima-counter" data-section="anima-counter">
+      <span class="material-symbols-outlined nav-icon">shield</span> Strategia Przeciwdziałania ANIMA
+    </a>
+    <a class="nav-link" href="#bartag-expansion" data-section="bartag-expansion">
+      <span class="material-symbols-outlined nav-icon">add_business</span> Ekspansja Bartąg
+    </a>
+    <a class="nav-link" href="#online-therapy" data-section="online-therapy">
+      <span class="material-symbols-outlined nav-icon">videocam</span> Terapia Online
+    </a>
+    <a class="nav-link" href="#social-media" data-section="social-media">
+      <span class="material-symbols-outlined nav-icon">smartphone</span> Media Społecznościowe
+    </a>
+    <a class="nav-link" href="#mission-control" data-section="mission-control">
+      <span class="material-symbols-outlined nav-icon">dashboard</span> Kontrola Misji
+    </a>
+    <a class="nav-link" href="#action-plan" data-section="action-plan">
+      <span class="material-symbols-outlined nav-icon">map</span> 30-Dniowy Plan Działania
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="WCP-Strategic-Intelligence-Report.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇬🇧</span> Wersja EN
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP · Raport Wywiadu Strategicznego</span>
+  <span class="topnav-section" id="topnav-section">Okładka</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 0: COVER -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  <div style="margin:0 0 96px 0;padding:3px;border-radius:10px;background:linear-gradient(135deg,#e6c364 0%,#c9a84c 30%,#3a3530 60%,#1c2024 100%);box-shadow:0 20px 60px rgba(0,0,0,.4);">
+  <img src="assets/images/brain_header.png" alt="WCP Hero" style="width:100%;max-width:100%;height:auto;display:block;border-radius:8px;">
+</div>
+  
+  <span class="cover-badge">🕯️ Poufne Wywiadowcze Strategiczne · Kwiecień 2026</span>
+  <h1 class="cover-h1">WCP Raport<br><span>Wywiadu Strategicznego</span></h1>
+  <p class="cover-subtitle">Warmińskie Centrum Psychoterapii — Kompletna analiza sytuacyjna i plan rozwoju. Syntetyczne ujęcie zdrowia finansowego, luk w zespole, zagrożeń konkurencyjnych, wydajności reklam, planów ekspansji i strategii cyfrowej w jednym decydującym dokumencie.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Data</label><p>17 Kwietnia 2026</p></div>
+    <div class="cover-meta-item"><label>Status</label><p>Przeanalizowane · Przetestowane · Gotowe do działania</p></div>
+    <div class="cover-meta-item"><label>Zespół</label><p>25 pracowników · 3 lokalizacje</p></div>
+    <div class="cover-meta-item"><label>Przygotowane dla</label><p>Tomek &amp; Karolina Zagała</p></div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Spis Treści</h3>
+  <ol>
+    <li><a href="#executive-summary">Podsumowanie Wykonawcze</a></li>
+    <li><a href="#financial-health">Zdrowie Finansowe</a></li>
+    <li><a href="#hr-team">Luki w HR &amp; Zespole</a></li>
+    <li><a href="#competitor-threat">Zagrożenie Konkurencyjne: ANIMA</a></li>
+    <li><a href="#google-ads">Audyt Google Ads</a></li>
+    <li><a href="#anima-counter">Strategia Przeciwdziałania ANIMA</a></li>
+    <li><a href="#bartag-expansion">Ekspansja Bartąg</a></li>
+    <li><a href="#online-therapy">Promocja Terapii Online</a></li>
+    <li><a href="#social-media">Aktywacja Mediów Społecznościowych</a></li>
+    <li><a href="#mission-control">Kontrola Misji</a></li>
+    <li><a href="#action-plan">30-Dniowy Główny Plan Działania</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: EXECUTIVE SUMMARY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="executive-summary">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">list_alt</span>
+    <div>
+      <div class="sec-label">Sekcja 01</div>
+      <h2>Podsumowanie Wykonawcze</h2>
+      <div class="sub">Jednostronowy przegląd dla Tomka & Karoliny</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">2.41M</div>
+        <div class="stat-label">Rzeczywiste Przychody 2025 (PLN)</div>
+        <div class="stat-note">Wyciągi bankowe, nie ANALIZA</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">+34.7%</div>
+        <div class="stat-label">Wzrost Q1 2026 r/r</div>
+        <div class="stat-note">678,870 PLN Q1 2026</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">50.6%</div>
+        <div class="stat-label">Gotówka Netto Marża</div>
+        <div class="stat-note">Gotówka netto: 1&nbsp;219&nbsp;592 PLN</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0.99×</div>
+        <div class="stat-label">Google Ads ROAS</div>
+        <div class="stat-note">ROAS na poziomie progu rentowności — wymaga poprawy</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">🔥 Top 5 Priorytetowych Działań</h3>
+
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Zrekrutuj Psychiatrę</h4>
+        <p>Największa luka kompetencyjna WCP względem ANIMA. Ogłoszenie o pracę gotowe, cel Sierpień 2026. Odblokowuje niezależność ścieżki diagnostyki ADHD i możliwość wypisywania recept.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Napraw Google Ads — Zatrzymaj Krwawienie</h4>
+        <p>ROAS na poziomie progu rentowności. „Terapia Indywidualna" ma 0 konwersji — wstrzymaj natychmiast. Dodaj słowa wykluczające NFZ, napraw CPA Elbląg (2× Olsztyn). 30-dniowy plan gotowy.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Uruchomienie Mediów Społecznościowych &amp; Terapii Online</h4>
+        <p>Kalendarz na 60+ dat, 28 koncepcji postów gotowych. Cel: 15% przychodów z online w 6 mies. Budżet 6-miesięczny: 8 800 PLN — skromny, z wysokim potencjałem.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Starać się o Kontrakt NFZ</h4>
+        <p>5-10× większa pula pacjentów. Harmonogram 12-24 miesięcy. ANIMA już to ma — WCP musi zamknąć lukę. Rozpocznij wniosek teraz.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Otwórz Lokalizację Bartąg (Niskiego Ryzyka — Wynajem)</h4>
+        <p>Inwestycja początkowa 25-35K. Próg rentowności 7-8 sesji/tydzień w 2-3 miesiącu. Wizja Karoliny potwierdzona z 3 ofertami OLX.</p>
+      </div>
+    </div>
+
+    <!-- ═══════ CHART 1: Revenue Trend Combo ═══════ -->
+    <div class="chart-card">
+      <div class="chart-label">Wykres 01</div>
+      <div class="chart-title">Trend Przychodów — Kolumny + Średnia Krocząca 3M</div>
+      <div id="chart-revenue-trend" style="width:100%;height:420px"></div>
+    </div>
+
+    <div class="callout red">
+      <strong>⚠️ Krytyczne Ostrzeżenie:</strong> Kolumna ANALIZA „Przychody" NIE jest przychodem — to w 80-95% płatności podatkowe. NIE używaj danych ANALIZA do decyzji biznesowych. Rzeczywiste przychody to 2 409 461 PLN z wyciągów bankowych. Używanie danych ANALIZA drastycznie zaniża obraz biznesu i może prowadzić do katastrofalnych błędów strategicznych.
+    </div>
+
+    <div class="callout green">
+      <strong>✅ Sygnał Pewności:</strong> Przychody Q1 2026 na poziomie 678 870 PLN oznaczają wzrost r/r +34,7%. Biznes przyspiesza, a nie plateau. Wszystkie posunięcia strategiczne są poparte zdrową i rosnącą pozycją gotówkową.
+    </div>
+
+  </div>
+</div>
+
+<!-- WCP Center Divider Logo -->
+<div style="text-align:center;padding:40px 0 20px;border-top:1px solid rgba(77,70,55,.2);margin:0 0 64px;">
+  <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:180px;height:auto;opacity:.5;display:block;margin:0 auto;">
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: FINANCIAL HEALTH -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="financial-health">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">savings</span>
+    <div>
+      <div class="sec-label">Sekcja 02</div>
+      <h2>Zdrowie Finansowe</h2>
+      <div class="sub">Skorygowana metodologia · Kluczowe dane · Podział kosztów</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout red">
+      <strong>⚠️ POPRAWKA METODOLOGICZNA:</strong> Poprzednie analizy używające ANALIZA „Przychody" jako przychodów były fundamentalnie błędne. Kolumna ANALIZA „Przychody" zawiera 80-95% płatności podatkowych (ZUS, zaliczki PIT, VAT), NIE rzeczywiste przychody biznesowe. <strong>Prawdziwe przychody należy obliczyć na podstawie wyciągów bankowych.</strong>
+    </div>
+
+    <h3 class="sub-heading">Przegląd Finansowy 2025 (Skorygowany)</h3>
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">2,409,461</div>
+        <div class="stat-label">Rzeczywiste Przychody (PLN)</div>
+        <div class="stat-note">Wpływy z wyciągów bankowych</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">1,219,592</div>
+        <div class="stat-label">Gotówka Netto (PLN)</div>
+        <div class="stat-note">Marża 50,6%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">601,558</div>
+        <div class="stat-label">Koszty Operacyjne (PLN)</div>
+        <div class="stat-note">25% przychodów</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">500,150</div>
+        <div class="stat-label">ZUS (PLN)</div>
+        <div class="stat-note">20,8% przychodów</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">327,395</div>
+        <div class="stat-label">PIT (PLN)</div>
+        <div class="stat-note">13,6% przychodów</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Q1 2026: Przyspieszenie Wzrostu</h3>
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">678,870</div>
+        <div class="stat-label">Q1 2026 Przychody (PLN)</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">+34.7%</div>
+        <div class="stat-label">Wzrost r/r vs Q1 2025</div>
+      </div>
+    </div>
+
+    <p>Q1 2026 wykazuje silne przyspieszenie. Przy tym tempie, roczne przychody 2026 mogą osiągnąć <strong>2,7M+ PLN</strong> — znaczący krok naprzód względem 2025.</p>
+
+    <!-- ═══════ CHART 2: Cost Structure Doughnut ═══════ -->
+    <div class="chart-card">
+      <div class="chart-label">Wykres 02</div>
+      <div class="chart-title">Struktura Kosztów — Przychody 2.41M PLN</div>
+      <div id="chart-cost-doughnut" style="width:100%;height:420px"></div>
+    </div>
+
+    <h3 class="sub-heading">Podział Struktury Kosztów</h3>
+
+    <table class="kw-table">
+      <tr><th>Kategoria</th><th>Kwota (PLN)</th><th>% Przychodów</th><th>Trend</th></tr>
+      <tr><td>Koszty Operacyjne</td><td>601,558</td><td>25.0%</td><td class="vol-med">Stabilne</td></tr>
+      <tr><td>Składki ZUS</td><td>500,150</td><td>20.8%</td><td class="vol-low">Strukturalne</td></tr>
+      <tr><td>PIT</td><td>327,395</td><td>13.6%</td><td class="vol-low">Strukturalne</td></tr>
+      <tr><td><strong>Gotówka Netto</strong></td><td><strong>1,219,592</strong></td><td><strong>50.6%</strong></td><td class="vol-high">Zdrowy</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Koszty ANALIZA: Przejście UoP → B2B</h3>
+    <p>Dane ANALIZA ujawniają znaczącą zmianę strukturalną w kosztach zatrudnienia, gdy WCP przeszło z UoP (umowy o pracę) na B2B:</p>
+
+    <table class="kw-table">
+      <tr><th>Okres</th><th>Koszty Pracownicze (PLN)</th><th>Interpretacja</th></tr>
+      <tr><td>Początek 2025</td><td>428,000</td><td>Kontrakty UoP (wyższe koszty pracodawcy)</td></tr>
+      <tr><td>Środek 2025</td><td>179,000</td><td>Przejście na B2B (niższe koszty bezpośrednie)</td></tr>
+      <tr><td>Koniec 2025</td><td>218,000</td><td>Stabilizacja B2B + nowi pracownicy</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Kluczowy Wniosek:</strong> Przejście UoP → B2B zaoszczędziło WCP ~200K+ PLN bezpośrednich kosztów pracodawcy. Nie oznacza to jednak, że terapeuci zarabiają mniej — kontraktorzy B2B ustalają własne stawki. Oszczędności wynikają z eliminacji składki ZUS pracodawcy, zobowiązań odprawy i wymagań płatnego urlopu.
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="WCP_Financial_Health_Report_2026-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Pełny Raport Zdrowia Finansowego (Interaktywne Wykresy) →
+      </a>
+      <a href="ANALIZA-COST-ANALYSIS-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">analytics</span> Szczegółowa Analiza Kosztów ANALIZA →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: HR & TEAM GAPS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="hr-team">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">groups</span>
+    <div>
+      <div class="sec-label">Sekcja 03</div>
+      <h2>Luki w HR &amp; Zespole</h2>
+      <div class="sub">Analiza kompetencji · Plan rozwoju · Inwestycja → przychody</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">25</div>
+        <div class="stat-label">Łącznie Pracownicy</div>
+        <div class="stat-note">23 terapeutów + 2 administracyjnych</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Psychiatrzy</div>
+        <div class="stat-note">Krytyczna luka vs ANIMA</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">2</div>
+        <div class="stat-label">Terapeuci Par</div>
+        <div class="stat-note">Julia Bochko, Krystyna Puzdrowska</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">12/23</div>
+        <div class="stat-label">Bez Szkoły Terapeutycznej</div>
+        <div class="stat-note">52% terapeutów</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Rozkład Szkół Terapeutycznych</h3>
+
+    <table class="kw-table">
+      <tr><th>Szkoła</th><th>Liczba</th><th>Status Zdolności</th></tr>
+      <tr><td>CBT (Poznawczo-Behawioralna)</td><td>6</td><td class="vol-high">Najmocniejsza</td></tr>
+      <tr><td>Gestalt</td><td>3</td><td class="vol-med">Umiarkowana</td></tr>
+      <tr><td>Psychodynamiczna</td><td>2</td><td class="vol-low">Thin</td></tr>
+      <tr><td>Integracyjna</td><td>1</td><td class="vol-low">Pojedynczy specjalista</td></tr>
+      <tr><td>Systemowa</td><td>1</td><td class="vol-low">Pojedynczy specjalista</td></tr>
+      <tr><td><strong>Brak szkolenia szkołowym</strong></td><td><strong>12</strong></td><td class="vol-red">Luka</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Plan Rozwoju HR: Inwestycja → Przychody</h3>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🎯</span> Rok 1 Inwestycja: 426 000 – 580 000 PLN
+        <span class="tag high">WYSOKI PRIORYTET</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>Prognozowany Zwrot Przychodów:</strong> 720 000 – 1 070 000 PLN</p>
+        <p><strong>Okres Zwrotu:</strong> 6 – 9 miesięcy</p>
+        <p>To nie jest centrum kosztów — to mnożnik przychodów. Każdy terapeuta, który zyskuje certyfikat szkołowy, odblokowuje wyższe stawki sesji i nowe segmenty pacjentów.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Priorytetowe Działania</h3>
+
+    <div class="funnel-step">
+      <div class="step-num">P1</div>
+      <div class="step-content">
+        <h4>Zrekrutuj Psychiatrę</h4>
+        <p><span class="tag high">KRYTYCZNE</span> Cel: Sierpień 2026. Ogłoszenie o pracę jest gotowe. Ta jedna rekrutacja zamyka największą lukę kompetencyjną WCP względem ANIMA i umożliwia niezależną ścieżkę diagnozy ADHD.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">P2</div>
+      <div class="step-content">
+        <h4>Pierwsza Fala: 6 Terapeutów w Szkołach CBT/Gestalt</h4>
+        <p><span class="tag high">WYSOKI WPŁYW</span> Rozszerza certyfikowaną zdolność w dwóch najbardziej poszukiwanych modalnościach. Dodatkowo: rozwój terapii par (potencjał przychodów 384 000 – 576 000 PLN/rok przy zaledwie 2-3 dodatkowo przeszkolonych terapeutach par).</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">P3</div>
+      <div class="step-content">
+        <h4>Szkolenie Prowadzących Terapii Grupowej</h4>
+        <p><span class="tag medium">ŚREDNI</span> 5 terapeutów nominowanych. Terapia grupowa jest wysokomarżowa, niedostatecznie wykorzystana w WCP. Budżet superwizji: 6,600 – 7,900 PLN/miesiąc na bieżący rozwój zawodowy.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="HR-QUALIFICATIONS-ANALYSIS-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Pełna Analiza Kwalifikacji HR →
+      </a>
+      <a href="HR-DEVELOPMENT-PLAN-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">school</span> Plan Rozwoju HR →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: COMPETITOR THREAT -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="competitor-threat">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">target</span>
+    <div>
+      <div class="sec-label">Sekcja 04</div>
+      <h2>Zagrożenie Konkurencyjne: ANIMA</h2>
+      <div class="sub">Profil · Asymetrie · Przewagi przeciwdziałania WCP</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout red">
+      <strong>⚠️ ANIMA to #1 bezpośrednie zagrożenie.</strong> Z 6 lokalizacjami, kontraktami NFZ, psychiatrą w zespole, certyfikacją PTP, oddziałem dziennym i 40+ specjalistami — ANIMA ma przewagi strukturalne, których WCP nie może ignorować. Ale ANIMA ma krytyczną słabość: <strong>3.2/5 opinii Google (58 opinii)</strong>. WCP ma <strong>4.7/5 (119 opinii)</strong>.
+    </div>
+
+    <h3 class="sub-heading">Porównanie Bezpośrednie</h3>
+
+    <div class="vs-grid">
+      <div class="vs-col wcp">
+        <h4>🟢 WCP — Warmińskie Centrum Psychoterapii</h4>
+        <ul class="clean">
+          <li><strong>3 lokalizacje:</strong> Olsztyn, Elbląg, Ostróda</li>
+          <li><strong>22+ terapeutów</strong> (jedyny wielolokalizacyjny ośrodek w Warmii)</li>
+          <li><strong>Opinie:</strong> 4.7/5 (119 opinii) ✅</li>
+          <li><strong>DIVA-5 ADHD:</strong> 600 PLN (50% taniej)</li>
+          <li><strong>MOXO:</strong> Unikalne w regionie ✅</li>
+          <li><strong>Marka:</strong> Cieplejsza, bardziej osobista</li>
+          <li><strong>Brak psychiatry</strong> ❌</li>
+          <li><strong>Brak kontraktu NFZ</strong> ❌</li>
+        </ul>
+      </div>
+      <div class="vs-col anima">
+        <h4>🔴 ANIMA — Centrum Terapii ANIMA</h4>
+        <ul class="clean">
+          <li><strong>6 lokalizacji</strong> w regionie</li>
+          <li><strong>40+ specjalistów</strong></li>
+          <li><strong>Opinie:</strong> 3.2/5 (58 opinii) ❌</li>
+          <li><strong>DIVA-5 ADHD:</strong> 1,200 PLN (2× WCP)</li>
+          <li><strong>MOXO:</strong> Niedostępne</li>
+          <li><strong>Marka:</strong> Bardziej kliniczna, instytucjonalna</li>
+          <li><strong>Psychiatra w zespole</strong> ✅</li>
+          <li><strong>Kontrakty NFZ</strong> ✅</li>
+          <li><strong>PTP, oddział dzienny</strong> ✅</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Analiza Cen ANIMA</h3>
+
+    <table class="kw-table">
+      <tr><th>Usługa</th><th>Cena ANIMA (PLN)</th><th>Cena WCP (PLN)</th><th>Przewaga WCP</th></tr>
+      <tr><td>Konsultacja Psychiatryczna</td><td>300</td><td>N/A</td><td class="vol-red">Luka — trzeba rekrutować</td></tr>
+      <tr><td>Sesja Psychoterapii</td><td>200</td><td>~200</td><td class="vol-low">Parzystość</td></tr>
+      <tr><td>Diagnostyka DIVA-5 ADHD</td><td>1,200</td><td>600</td><td class="vol-high">50% taniej</td></tr>
+    </table>
+
+    <!-- ═══════ CHART 3: WCP vs ANIMA Radar ═══════ -->
+    <div class="chart-card">
+      <div class="chart-label">Wykres 03</div>
+      <div class="chart-title">WCP vs ANIMA — Porównanie Radarowe (6 Wymiarów)</div>
+      <div id="chart-radar-wcp-anima" style="width:100%;height:440px"></div>
+    </div>
+
+    <!-- ═══════ CHART 4: Service Price Butterfly ═══════ -->
+    <div class="chart-card">
+      <div class="chart-label">Wykres 04</div>
+      <div class="chart-title">Porównanie Cen — Wykres Motylkowy WCP ← → ANIMA</div>
+      <div id="chart-price-butterfly" style="width:100%;height:400px"></div>
+    </div>
+
+    <h3 class="sub-heading">Przewagi Przeciwdziałania WCP</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>1️⃣</span> Dominacja Cenowa w ADHD</div>
+      <div class="idea-body">
+        <p>DIVA-5 po 600 PLN vs 1,200 PLN w ANIMA to nie mała przewaga — to <strong>wyrok dla wrażliwych cenowo pacjentów</strong>. W połączeniu z MOXO (unikalne w regionie), WCP posiada ścieżkę diagnostyczną ADHD pod kątem wartości. Promuj agresywnie.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>2️⃣</span> Dominacja Oceny Opinii</div>
+      <div class="idea-body">
+        <p>4.7/5 vs 3.2/5 to <strong>ogromna luka zaufania</strong>. Pacjenci czytają opinie przed rejestracją. To jest najsilniejsza organiczna fosa konkurencyjna WCP. Chroń ją, rozwijaj, wykorzystaj w marketingu.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>3️⃣</span> Ciepło Marki</div>
+      <div class="idea-body">
+        <p>WCP brzmi jak miejsce, gdzie ludzie pomagają ludziom. ANIMA brzmi jak instytucja. W zdrowiu psychicznym, rejestr emocjonalny marki jest produktem. Postaw na ciepło — to przewaga strukturalna, nie tylko estetyka.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="COMPETITOR-ANALYSIS-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Pełny Raport Analizy Konkurencji →
+      </a>
+      <a href="ANIMA-THREAT-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">radar</span> Głęboka Analiza Zagrożenia ANIMA →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: GOOGLE ADS AUDIT -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="google-ads">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">target</span>
+    <div>
+      <div class="sec-label">Sekcja 05</div>
+      <h2>Audyt Google Ads</h2>
+      <div class="sub">Analiza ROAS · Krytyczne problemy · 30-dniowy plan optymalizacji</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <a href="GOOGLE-ADS-OPTIMIZATION-REPORT-PL.html" class="sub-report-link">
+      <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Pełny Raport Optymalizacji Google Ads →
+    </a>
+
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-value">0.99×</div>
+        <div class="stat-label">Ogółem ROAS</div>
+        <div class="stat-note">Próg rentowności — każdy złoty zwraca ~1 złoty</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">11.85</div>
+        <div class="stat-label">Brand CPA (PLN)</div>
+        <div class="stat-note">Najlepsza kampania</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Konwersje „Terapia Indywidualna"</div>
+        <div class="stat-note">WSTRZYMAJ NATYCHMIAST</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">102.74</div>
+        <div class="stat-label">Elbląg CPA (PLN)</div>
+        <div class="stat-note">2× CPA Olsztyn</div>
+      </div>
+    </div>
+
+    <!-- ═══════ CHART 5: Google Ads Performance Gauge ═══════ -->
+    <div class="chart-card">
+      <div class="chart-label">Wykres 05</div>
+      <div class="chart-title">Wydajność Google Ads — ROAS & CPA Wskaźniki</div>
+      <div id="chart-ads-gauge" style="width:100%;height:420px"></div>
+    </div>
+
+    <h3 class="sub-heading">Krytyczne Znalezione Problemy</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🔴</span> Kampania „Terapia Indywidualna": Zero Konwersji <span class="tag high">WSTRZYMAJ NATYCHMIAST</span></div>
+      <div class="idea-body">
+        <p>Ta kampania wydaje budżet z <strong>zerowymi konwersjami</strong>. Każdy wydany złoty to strata. Wstrzymaj natychmiast i realokuj budżet na kampanię marki i wysoko wydajne słowa kluczowe lokalne.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🔴</span> Wyciek Słów Kluczowych NFZ <span class="tag high">PILNE</span></div>
+      <div class="idea-body">
+        <p>WCP NIE posiada kontraktów NFZ. Mimo to reklamy wyświetlają się na zapytania związane z NFZ, marnując kliknięcia na pacjentów, którzy nie stać na prywatną terapię. Dodaj natychmiast kompleksowe słowa wykluczające NFZ.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🟡</span> 625/677 Słów Kluczowych Bez Wyniku Jakości <span class="tag medium">WYSOKI WYSIŁEK</span></div>
+      <div class="idea-body">
+        <p>92% słów kluczowych nie ma Wyniku Jakości, co oznacza, że Google nie zebrał wystarczających danych do ich oceny. Wskazuje to na niską liczbę wyświetleń, słabą trafność reklamy do słowa kluczowego, lub jedno i drugie. Potrzebny jest systematyczny wysiłek poprawy Wyniku Jakości.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">30-Dniowy Plan Optymalizacji</h3>
+
+    <div class="funnel-step">
+      <div class="step-num">D0</div>
+      <div class="step-content">
+        <h4>Dzień 0 — Działania Natychmiastowe</h4>
+        <p>Wstrzymaj kampanię „Terapia Indywidualna". Dodaj słowa wykluczające NFZ we wszystkich kampaniach. Ustaw korektę stawek Elbląg na -30% podczas dochodzenia.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">D7</div>
+      <div class="step-content">
+        <h4>Dzień 7 — Poprawka Elbląg</h4>
+        <p>Utwórz osobną kampanię Elbląg z dopasowaną treścią reklam i niższym budżetem. Analizuj konwersję strony docelowej dla ruchu Elbląg — może wymagać komunikacji specyficznej dla lokalizacji.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">D14</div>
+      <div class="step-content">
+        <h4>Dzień 14 — Zmiana Typu Dopasowania</h4>
+        <p>Przenieś wysokowydajne słowa kluczowe z dopasowania przybliżonego na dokładne/frazowe. To zmniejsza marnowany budżet na nieistotne zapytania i poprawia Wynik Jakości z czasem.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">D30</div>
+      <div class="step-content">
+        <h4>Dzień 30 — Realokacja Budżetu + Nowe Kampanie</h4>
+        <p>Przenieś budżet od niedorabiających do kampanii marki + lokalnych. Uruchomienie nowej kampanii Terapia Online (50 PLN/dzień). Uruchomienie kampanii ADHD celującej w słowa kluczowe „diagnoza ADHD".</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- WCP Center Divider Logo -->
+<div style="text-align:center;padding:40px 0 20px;border-top:1px solid rgba(77,70,55,.2);margin:0 0 64px;"> <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:180px;height:auto;opacity:.5;display:block;margin:0 auto;"> </div>
+
+<!-- SECTION 6: ANIMA COUNTER-STRATEGY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="anima-counter">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">verified_user</span>
+    <div>
+      <div class="sec-label">Sekcja 06</div>
+      <h2>Strategia Przeciwdziałania ANIMA</h2>
+      <div class="sub">Priorytetowe działania · Rekrutacja psychiatry · Starania o NFZ · Obrona ADHD</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <a href="ANIMA-COUNTER-STRATEGY-REPORT-PL.html" class="sub-report-link">
+      <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Pełny Raport Strategii Przeciwdziałania ANIMA →
+    </a>
+
+    <div class="funnel-step">
+      <div class="step-num">P1</div>
+      <div class="step-content">
+        <h4>Rekrutuj Psychiatrę — Harmonogram: Sierpień 2026</h4>
+        <p><span class="tag high">KRYTYCZNE</span> To jest pojedyncze posunięcie strategiczne o najwyższej dźwigni. Psychiatra w zespole umożliwia: niezależną ścieżkę diagnozy ADHD, zarządzanie lekami, partnerstwa ubezpieczeniowe i parytet oferty ANIMA. <strong>Ogłoszenie o pracę jest gotowe do dystrybucji.</strong></p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">P2</div>
+      <div class="step-content">
+        <h4>Starać się o Kontrakt NFZ — 5-10× Większa Pula Pacjentów</h4>
+        <p><span class="tag high">WYSOKI WPŁYW</span> ANIMA już ma kontrakty NFZ. Bez nich WCP jest niewidoczne dla ~70% polskich pacjentów, którzy szukają najpierw NFZ. Harmonogram: 12-24 miesięcy na przetworzenie wniosku. Rozpocznij wniosek natychmiast — to konieczność strategiczna, nie opcja.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">P2</div>
+      <div class="step-content">
+        <h4>Obrona Flagowa ADHD — Cena + Unikalność</h4>
+        <p><span class="tag medium">BRONIĆ</span> DIVA-5 w WCP za 600 PLN (vs ANIMA 1 200) + MOXO (unikalne w regionie) czyni WCP bezdyskusyjnym liderem wartości w diagnozie ADHD. Promuj agresywnie na wszystkich kanałach — Google Ads, media społecznościowe, strona, ZnanyLekarz.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">P2</div>
+      <div class="step-content">
+        <h4>Atak SEO &amp; Opinie — Celuj w Słabość ANIMA 3,2/5</h4>
+        <p><span class="tag quick-win">SZYBKA WYGRANA</span> Kiedy pacjenci szukają „ANIMA psychoterapia" lub „ANIMA opinie", WCP powinno się pojawić z treścią, która podkreśla lukę ocen. Nie negatywna kampania — ale treści typu „Jak wybrać terapeutę w Olsztynie — na co zwrócić uwagę", które naturalnie eksponują wyniki ocen.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Uwaga Strategiczna:</strong> WCP nie musi dorównywać ANIMA lokalizacja za lokalizację. Wygrywająca strategia to być <strong>lepszym wyborem</strong>, a nie większym. Lepsze oceny, lepsze ceny, cieplejsza marka, unikalna diagnostyka (MOXO). Rekrutacja psychiatry + kontrakt NFZ zamykają jedyne luki, które faktycznie mają znaczenie.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: BARTĄG EXPANSION -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="bartag-expansion">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">home</span>
+    <div>
+      <div class="sec-label">Sekcja 07</div>
+      <h2>Ekspansja Bartąg</h2>
+      <div class="sub">Wizja Karoliny · Model wynajmu · Sprzęt CCPT · Finanse</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <a href="WCP-Expansion-Report-v2-PL.html" class="sub-report-link">
+      <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Pełny Raport Ekspansji Bartąg v2 →
+    </a>
+
+    <div class="callout green">
+      <strong>✅ Uwzględniono Informacje Zwrotne Karoliny:</strong> Zakres zawężony tylko do obszaru Bartąg (nie wielolokacyjna ekspansja). Model zmieniony z zakupu na wynajem — 10-15× niższa inwestycja początkowa. Układ typu mieszkanie potwierdzony jako idealny do praktyki terapeutycznej.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">25-35K</div>
+        <div class="stat-label">Początkowa Inwestycja (PLN)</div>
+        <div class="stat-note">Z buforem: 32 000-52 000 PLN</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">7-8</div>
+        <div class="stat-label">Sesje/Tydzień do Pręgu Rentowności</div>
+        <div class="stat-note">Miesiąc 2-3</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">4,070-7,505</div>
+        <div class="stat-label">CCPT Equipment (PLN)</div>
+        <div class="stat-note">Preferowane drewno, pozyskiwanie używane</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Układ: Przystosowanie Mieszkania na Gabinet</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🏠</span> Układ Typu Mieszkanie — Minimalna Adaptacja</div>
+      <div class="idea-body">
+        <ul class="clean">
+          <li><strong>2 sypialnie → 2 pokoje terapeutyczne</strong> (mają już drzwi, prywatność, odpowiedni rozmiar)</li>
+          <li><strong>Kuchnia → Pokój pracowników</strong> (przerwy, przechowywanie, nieformalna superwizja)</li>
+          <li><strong>Korytarz → Strefa oczekiwania</strong> (dodaj siedzenia, uspokajający wystrój)</li>
+          <li><strong>Salon → Recepcja / przyjęcia</strong></li>
+        </ul>
+        <p>Mieszkania wynajmowane wymagają minimalnej adaptacji do użytku terapeutycznego. Bez zmian hydraulicznych, bez prac konstrukcyjnych. Tylko meble, izolacja akustyczna między pokojami i profesjonalne oznakowanie.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Budżet Sprzętu CCPT (Terapia Placem Sztuki)</h3>
+
+    <table class="kw-table">
+      <tr><th>Przedmiot</th><th>Używany/Nowy</th><th>Szacowany Koszt (PLN)</th></tr>
+      <tr><td>Skrzynia piaskowa (drewno, 70×50×8 cm)</td><td>Drewno / Używany</td><td>400-800</td></tr>
+      <tr><td>Piasek kinetyczny (10 kg)</td><td>Nowy</td><td>100-200</td></tr>
+      <tr><td>Zestaw miniatur (300+ figurek)</td><td>Mieszany</td><td>1,500-3,000</td></tr>
+      <tr><td>Taca z wodą</td><td>Drewno</td><td>200-400</td></tr>
+      <tr><td>Półki / przechowywanie</td><td>Używany</td><td>500-1,200</td></tr>
+      <tr><td>Materiały artystyczne (farby, glina, papier)</td><td>Nowy</td><td>370-905</td></tr>
+      <tr><td>Poduszki, dywany, przedmioty sensoryczne</td><td>Mieszany</td><td>500-1,000</td></tr>
+      <tr><td><strong>Łącznie</strong></td><td></td><td><strong>4,070-7,505</strong></td></tr>
+    </table>
+
+    <h3 class="sub-heading">Oferty Mieszkań w Bartągu (OLX)</h3>
+
+    <table class="kw-table">
+      <tr><th>Oferta</th><th>Powierzchnia</th><th>Dopasowanie</th></tr>
+      <tr><td>Mieszkanie #1</td><td>42 m²</td><td class="vol-med">Kompaktowe, ale wykonalne</td></tr>
+      <tr><td>Mieszkanie #2</td><td>49 m²</td><td class="vol-high">Optymalny rozmiar</td></tr>
+      <tr><td>Mieszkanie #3</td><td>57 m²</td><td class="vol-high">Przestronne — przyszłościowe</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 8: ONLINE THERAPY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="online-therapy">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">videocam</span>
+    <div>
+      <div class="sec-label">Sekcja 08</div>
+      <h2>Promocja Terapii Online</h2>
+      <div class="sub">Strona docelowa · Kampania reklamowa · Cel przychodowy</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">15%</div>
+        <div class="stat-label">Cel Przychodów z Online</div>
+        <div class="stat-note">W ciągu 6 miesięcy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">4.0×</div>
+        <div class="stat-label">Cel ROAS</div>
+        <div class="stat-note">Kampania Google Ads</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">50 PLN</div>
+        <div class="stat-label">Dzienny Budżet Reklamowy</div>
+        <div class="stat-note">~1 500 PLN/miesiąc</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">60 PLN</div>
+        <div class="stat-label">Cel CPA</div>
+        <div class="stat-note">Koszt pozyskania pacjenta</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Dedykowana Strona Docelowa — Szkic</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🌐</span> wcp.com.pl/terapia-online — Architektura 9 Sekcji</div>
+      <div class="idea-body">
+        <div class="funnel-step">
+          <div class="step-num">1</div>
+          <div class="step-content"><h4>Sekcja Hero</h4><p>"Profesjonalna pomoc psychologiczna — bez wychodzenia z domu." CTA: "Umów wizytę online →"</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">2</div>
+          <div class="step-content"><h4>Pasek Zaufania</h4><p>Pasek dowodu społecznego: liczba przeprowadzonych sesji, wyniki ocen, liczba terapeutów</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">3</div>
+          <div class="step-content"><h4>Jak To Działa (3 kroki)</h4><p>"Wybierz terapeutę → Zarezerwuj termin → Dołącz do sesji"</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">4</div>
+          <div class="step-content"><h4>Sekcja Dla Kogo</h4><p>Karty: stres, depresja, lęk, ADHD, żałoba, młodzież</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">5</div>
+          <div class="step-content"><h4>Poznaj Swojego Terapeutę</h4><p>Siatka zdjęć ze znacznikami specjalizacji i wideo prezentacjami</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">6</div>
+          <div class="step-content"><h4>Quiz Dopasowania</h4><p>„Jaka terapia jest dla mnie?" — 5-7 pytań → dopasowanie terapeuty</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">7</div>
+          <div class="step-content"><h4>3-Stopniowa Drabina Zaangażowania</h4><p>Darmowa konsultacja → Zniżka na pierwszą sesję → Pakiet 5 sesji</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">8</div>
+          <div class="step-content"><h4>Akordeon Częstych Pytań (FAQ)</h4><p>Skuteczność, prywatność, proces, zmiana terapeuty</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">9</div>
+          <div class="step-content"><h4>Przypięte CTA</h4><p>Pływający przycisk „Umów pierwszą sesję" podczas przewijania</p></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Kampania Google Ads: Terapia Online</h3>
+
+    <table class="kw-table">
+      <tr><th>Parametr</th><th>Wartość</th></tr>
+      <tr><td>Daily Budżet</td><td>50 PLN</td></tr>
+      <tr><td>Cel CPA</td><td>60 PLN</td></tr>
+      <tr><td>Cel ROAS</td><td>4.0×</td></tr>
+      <tr><td>Główne Słowa Kluczowe</td><td>psycholog online, psychoterapeuta online, terapia online</td></tr>
+      <tr><td>Słowa Wykluczające</td><td>bezpłatny, darmowy, NFZ, refundowany, praca, studia</td></tr>
+      <tr><td>Strona Docelowa</td><td>wcp.com.pl/terapia-online</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Integracja Booknetic</h3>
+    <p>Kroki zdefiniowane dla integracji rezerwacji terapii online bezpośrednio w systemie Booknetic. Pacjenci powinni móc filtrować według „dostępne online", wybrać terapeutę, wybrać termin i otrzymać link wideo — wszystko w jednym procesie. Bez konieczności telefonowania.</p>
+
+    <h3 class="sub-heading">Koncepcje Postów w Mediach Społecznościowych (5 Gotowych)</h3>
+    <ul class="clean">
+      <li><strong>Post 1:</strong> "Jak wygląda sesja online? 3 kroki →" (karuzele)</li>
+      <li><strong>Post 2:</strong> "Terapia z kanapy — czy to naprawdę działa?" (oblanie mitów)</li>
+      <li><strong>Post 3:</strong> "Dlaczego 20 specjalistów jest lepszych niż 1" (sprzedaż szerokości)</li>
+      <li><strong>Post 4:</strong> "Czujesz, że coś jest nie tak, ale nie wiesz co? Pomożemy." (odczucia-first)</li>
+      <li><strong>Post 5:</strong> "Pierwsza sesja online — 50% taniej. Umów teraz." (konwersja)</li>
+    </ul>
+
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="ONLINE-THERAPY-PROMOTION-PLAN-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Full Promocja Terapii Online Plan →
+      </a>
+    </div>
+
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 9: SOCIAL MEDIA -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="social-media">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">smartphone</span>
+    <div>
+      <div class="sec-label">Sekcja 09</div>
+      <h2>Aktywacja Mediów Społecznościowych</h2>
+      <div class="sub">Kalendarz · 30-dniowe uruchomienie · Strategie platformy</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <a href="SOCIAL-MEDIA-ACTIVATION-REPORT-PL.html" class="sub-report-link">
+      <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Pełny Raport Aktywacji Mediów Społecznościowych →
+    </a>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">60+</div>
+        <div class="stat-label">Dat w Kalendarzu Treści</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">28</div>
+        <div class="stat-label">Koncepcje Postów (Pierwsze 30 Dni)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">~8,800</div>
+        <div class="stat-label">6-Miesiąc Budżet (PLN)</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Plan Ujednolicenia Profili</h3>
+    <p>Wszystkie profile mediów społecznościowych WCP ujednolicone pod spójną tożsamością wizualną:</p>
+    <ul class="clean">
+      <li><strong>Schemat kolorów:</strong> Ciemny motyw, złote akcenty (pasujące do tego raportu)</li>
+      <li><strong>Bios:</strong> Spójne na wszystkich platformach — ten sam slogan, te same dane kontaktowe, ten sam link</li>
+      <li><strong>Imagery:</strong> Bez zdjęć stockowych. Prawdziwi terapeuci, prawdziwe przestrzenie, ciepłe oświetlenie</li>
+      <li><strong>Logo:</strong> Korona + znak graficzny WCP w widocznym miejscu</li>
+    </ul>
+
+    <h3 class="sub-heading">Strategia Platformy</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📸</span> Instagram — Karuzele + Rolki</div>
+      <div class="idea-body">
+        <p><strong>Główna grupa docelowa:</strong> 25-40, świadoma estetyki, już konsumująca treści o zdrowiu psychicznym.</p>
+        <ul class="clean">
+          <li><strong>Karuzele:</strong> Filar edukacyjny — „5 oznak, że warto porozmawiać ze specjalistą", "CBT vs Gestalt — jaka terapia jest dla Ciebie?"</li>
+          <li><strong>Rolki:</strong> Krótkie porady terapeutów, obalanie mitów, treści "dzień z życia"</li>
+          <li><strong>Stories:</strong> Codzienna obecność — ankiety, Q&amp;A, kulisy, przypomnienia o rezerwacji</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>👥</span> Facebook — Społeczność + Wydarzenia</div>
+      <div class="idea-body">
+        <p><strong>Główna grupa docelowa:</strong> 30-55, rodzice, profesjonaliści, demografia przejść życiowych.</p>
+        <ul class="clean">
+          <li><strong>Treści społecznościowe:</strong> Dłuższe treści edukacyjne, prezentacje terapeutów</li>
+          <li><strong>Facebook Live:</strong> Miesięczne sesje Q&amp;A z terapeutami</li>
+          <li><strong>Wydarzenia:</strong> Webinary, dni otwarte, warsztaty</li>
+          <li><strong>Grupa Facebook:</strong> „Wsparcie Psychologiczne — Warmia i Mazury" (moderowana)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🎵</span> TikTok — Porady Terapeutyczne &amp; Obalanie Mitów</div>
+      <div class="idea-body">
+        <p><strong>Główna grupa docelowa:</strong> 18-30, Gen Z, wysokie zaangażowanie w treści o zdrowiu psychicznym.</p>
+        <ul class="clean">
+          <li><strong>Format:</strong> Autentyczne, nagrane telefonem, treści z terapeutą przed kamerą</li>
+          <li><strong>Topics:</strong> "Mity o terapii", "POV: Twoja pierwsza sesja", "3 techniki na atak paniki"</li>
+          <li><strong>Ton:</strong> Prawdziwy, ciepły, zero korporacyjnego polerowania. Autentyczność &gt; wartość produkcji</li>
+          <li><strong>Pilot:</strong> 4 filmy od 2 chętnych terapeutów → zmierz przed skalowaniem</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">30-Dniowe Uruchomienie: Koncepcje Postów (Podsumowanie)</h3>
+
+    <table class="kw-table">
+      <tr><th>Tydzień</th><th>Instagram</th><th>Facebook</th><th>TikTok</th></tr>
+      <tr><td>Tydzień 1</td><td>4 karuzele + 2 rolki</td><td>3 posty społecznościowe</td><td>2 filmy obalające mity</td></tr>
+      <tr><td>Tydzień 2</td><td>4 karuzele + 2 rolki</td><td>3 społecznościowe + 1 wydarzenie</td><td>2 filmy z poradami</td></tr>
+      <tr><td>Tydzień 3</td><td>3 karuzele + 3 rolki</td><td>3 posty społecznościowe</td><td>2 formaty POV</td></tr>
+      <tr><td>Tydzień 4</td><td>3 karuzele + 3 rolki</td><td>2 społecznościowe + 1 live</td><td>2 Q&amp;A format</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Podłoga Etyczna:</strong> Nigdy nie wykorzystuj podatności do zaangażowania. Prowadź z wzmocnieniem, normalizacją i praktyczną wartością. Zawsze umieszczaj info o linii kryzysowej (116 123) przy treściach o zdrowiu psychicznym. Brak roszczeń o klinicznym leczeniu.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 10: MISSION CONTROL -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="mission-control">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Sekcja 10</div>
+      <h2>Kontrola Misji</h2>
+      <div class="sub">Potok zadań · Wyniki zaufania · Statystyki dokumentów</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">19</div>
+        <div class="stat-label">Łącznie Zadań</div>
+        <div class="stat-note">14 ukończonych · 5 otwartych</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">0.71</div>
+        <div class="stat-label">Ogólny Wynik Zaufania</div>
+        <div class="stat-note">🟢 Strefa zielona</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">100</div>
+        <div class="stat-label">Dokumentów w Repozytorium</div>
+        <div class="stat-note">87 finansowych · 8 reklamowych · 4 HR</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">13,799</div>
+        <div class="stat-label">Transakcji Finansowych</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">651</div>
+        <div class="stat-label">Grup Metryk Reklamowych</div>
+      </div>
+    </div>
+
+    <!-- ═══════ CHART 6: Trust Score Bullet Charts ═══════ -->
+    <div class="chart-card">
+      <div class="chart-label">Wykres 06</div>
+      <div class="chart-title">Wyniki Zaufania — Bullet Charts z Celem 0.80</div>
+      <div id="chart-trust-bullets" style="width:100%;height:400px"></div>
+    </div>
+
+    <h3 class="sub-heading">Wyniki Zaufania wg Kategorii</h3>
+
+    <table class="kw-table">
+      <tr><th>Kategoria</th><th>Wynik Zaufania</th><th>Status</th><th>Uwagi</th></tr>
+      <tr><td>Ogółem</td><td>0.71</td><td class="vol-high">🟢 Zielony</td><td>Zdrowy w większości wymiarów</td></tr>
+      <tr><td>Finansowe</td><td>0.74</td><td class="vol-high">🟢 Zielony</td><td>Mocne dane z wyciągów bankowych</td></tr>
+      <tr><td>Reklamowe</td><td>0.99</td><td class="vol-high">🟢 Doskonałe</td><td>Kompleksowy import metryk</td></tr>
+      <tr><td>Dokumenty</td><td>0.40</td><td class="vol-red">🔴 Wymaga Poprawy</td><td>Zaległość parsowania — 100 dokumentów, wiele nieprzetworzonych</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Otwarte Zadania (5)</h3>
+
+    <table class="kw-table">
+      <tr><th>Zadanie</th><th>Status</th><th>Bloker</th></tr>
+      <tr><td>Parsowanie dokumentów finansowych</td><td class="vol-red">Zablokowane</td><td>Zaległość parsowania</td></tr>
+      <tr><td>Pozyskiwanie dokumentów HR</td><td class="vol-red">Zablokowane</td><td>Zaległość parsowania</td></tr>
+      <tr><td>Automatyzacja monitorowania konkurencji</td><td class="vol-med">W Trakcie</td><td>—</td></tr>
+      <tr><td>Wdrożenie kalendarza mediów społecznościowych</td><td class="vol-med">W Trakcie</td><td>—</td></tr>
+      <tr><td>Wykonanie optymalizacji Google Ads</td><td class="vol-med">W Trakcie</td><td>—</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Priorytet:</strong> Wynik zaufania dokumentów na poziomie 0,40 jest najsłabszym ogniwem. Opróżnienie kolejki parsowania odblokowałoby lepszą analizę finansową i wywiad HR. Rekomendujemy poświęcenie sprintu na przetwarzanie dokumentów.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 11: 30-DAY MASTER ACTION PLAN -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="action-plan">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">map</span>
+    <div>
+      <div class="sec-label">Sekcja 11</div>
+      <h2>30-Dniowy Główny Plan Działania</h2>
+      <div class="sub">Skonsolidowany harmonogram ze wszystkich analiz · Z właścicielami</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout green">
+      <strong>✅ To jest skonsolidowany plan wykonania</strong> — zebrany z wszystkich dziewięciu analiz. Każde działanie ma właściciela i termin. Pierwsze 7 dni zawiera działania o najwyższym wpływie.
+    </div>
+
+    <h3 class="sub-heading">TYDZIEŃ 1: Krytyczne Naprawki &amp; Szybkie Wygrane (18-24 Kwi)</h3>
+
+    <div class="timeline-row">
+      <div class="timeline-day" style="background:#4CAF7D;color:#101418">✅ Dzień 0</div>
+      <div class="timeline-content">
+        <h4>✅ Wstrzymaj Kampanię Google Ads „Terapia Indywidualna" — ZAKOŃCZONE</h4>
+        <p>Zero konwersji = zero wymówek. Kampania całkowicie zatrzymana 18 Kwietnia 2026. Budżet przekazany do kampanii brandowej. Miesięczne oszczędności: ~1 650 PLN.</p>
+        <div class="owner" style="color:#6fcf97">✅ Zakończono 18 Kwi — Właściciel: Ewelina / Koordynator Marketingu</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day" style="background:#4CAF7D;color:#101418">✅ Dzień 0</div>
+      <div class="timeline-content">
+        <h4>✅ Dodaj Słowa Wykluczające NFZ — ZAKOŃCZONE</h4>
+        <p>NFZ, bezpłatny, darmowy, refundowany i 16+ dodatkowych słów wykluczających dodanych do WSZYSTKICH kampanii Google Ads na poziomie kampanii i konta. Wyciek słów kluczowych zatrzymany.</p>
+        <div class="owner" style="color:#6fcf97">✅ Zakończono 18 Kwi — Właściciel: Ewelina / Menedżer Google Ads</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 1-2</div>
+      <div class="timeline-content">
+        <h4>📋 Rozdystrybuuj Ogłoszenie o Pracę Psychiatry</h4>
+        <p>Opublikuj na Pracuj.pl, LinkedIn, OLX i sieciach profesjonalnych. Cel: start Sierpień 2026.</p>
+        <div class="owner">Właściciel: Ewelina / Karolina</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 1-3</div>
+      <div class="timeline-content">
+        <h4>📱 Zaktualizuj Profile Google Business (Wszystkie 3 Lokalizacje)</h4>
+        <p>Uwzględnij terapię online w opisach jako priorytet. Dodaj wpisy Q&amp;A. Zaktualizuj sekcję usług.</p>
+        <div class="owner">Właściciel: Ewelina / Administrator</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 2-3</div>
+      <div class="timeline-content">
+        <h4>🌐 Opublikuj Stronę Docelową /terapia-online (Wersja Podstawowa)</h4>
+        <p>Hero + pasek zaufania + 3-krokowy proces + CTA. Poprawisz później. Wydaj teraz.</p>
+        <div class="owner">Właściciel: Tomek / Twórca Stron</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 3-5</div>
+      <div class="timeline-content">
+        <h4>📸 Ujednolicenie Profili Mediów Społecznościowych</h4>
+        <p>Ciemny motyw + złote akcenty. Spójne bio. Te same dane kontaktowe na wszystkich platformach.</p>
+        <div class="owner">Właściciel: Koordynator Mediów Społecznościowych</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">TYDZIEŃ 2: Optymalizacja &amp; Uruchomienie (Kwiecień 25 - Maj 1)</h3>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 7</div>
+      <div class="timeline-content">
+        <h4>🎯 Popraw Kampanię Google Ads Elbląg</h4>
+        <p>Utwórz osobną kampanię Elbląg z dopasowaną treścią. Ustaw korekty stawek. Analizuj stronę docelową dla ruchu Elbląg.</p>
+        <div class="owner">Właściciel: Ewelina / Menedżer Google Ads</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 7-8</div>
+      <div class="timeline-content">
+        <h4>🚀 Uruchomienie 30-Dniowego Kalendarza Mediów Społecznościowych</h4>
+        <p>Pierwsze 7 postów publikowanych. Karuzela Instagram + post społecznościowy Facebook + wideo obalające mity na TikTok.</p>
+        <div class="owner">Właściciel: Koordinator Mediów Społecznościowych / Chętni Terapeuci</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 8-10</div>
+      <div class="timeline-content">
+        <h4>🏡 Obejrzyj Oferty Wynajmu w Bartągu</h4>
+        <p>Zaplanuj wizyty dla 3 mieszkań OLX (42 m², 49 m², 57 m²). Przygotuj listę kontrolną układu.</p>
+        <div class="owner">Właściciel: Karolina</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 10</div>
+      <div class="timeline-content">
+        <h4>📋 Rozpocznij Wniosek o Kontrakt NFZ</h4>
+        <p>Zbadaj wymagania, przygotuj dokumentację. Proces 12-24 miesięcy — im wcześniej zaczniesz, tym wcześniej skończysz.</p>
+        <div class="owner">Właściciel: Karolina / Ewelina</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">TYGODNIE 3-4: Skalowanie &amp; Pogłębienie (Maj 2-17)</h3>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 14</div>
+      <div class="timeline-content">
+        <h4>🔄 Zmień Typy Dopasowania Google Ads</h4>
+        <p>Przenieś wysokowydajne słowa kluczowe z dopasowania przybliżonego na dokładne/frazowe. Poprawiaj Wynik Jakości systematycznie.</p>
+        <div class="owner">Właściciel: Ewelina / Menedżer Google Ads</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 14-17</div>
+      <div class="timeline-content">
+        <h4>📹 Nagraj Wideo Prezentacje Terapeutów (4-6 Terapeutów)</h4>
+        <p>30-60 sekundowe wideo w stylu selfie. Scenariusz: imię, specjalizacja, podejście. Dodaj do strony i mediów społecznościowych.</p>
+        <div class="owner">Właściciel: Tomek / Chętni Terapeuci</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 17-20</div>
+      <div class="timeline-content">
+        <h4>🏫 Zapisz Pierwszą Falę Terapeutów do Szkoół CBT/Gestalt</h4>
+        <p>Zidentyfikuj 6 terapeutów, potwierdź zapisy, alokacja budżetu. Inwestycja R1: 426-580K PLN.</p>
+        <div class="owner">Właściciel: Karolina / Kierownik Kliniczny</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 21-25</div>
+      <div class="timeline-content">
+        <h4>🎨 Stwórz Quiz Dopasowania dla /terapia-online</h4>
+        <p>„Jaka terapia jest dla mnie?" — 5-7 pytań → dopasowanie terapeuty. Kluczowy wzmacniacz konwersji.</p>
+        <div class="owner">Właściciel: Tomek / Twórca Stron</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Dzień 28-30</div>
+      <div class="timeline-content">
+        <h4>💰 Realokuj Budżet Google Ads</h4>
+        <p>Na podstawie danych 30-dniowych: przenieś budżet od niedorabiających do kampanii marki + lokalnych + terapii online + ADHD.</p>
+        <div class="owner">Właściciel: Ewelina / Menedżer Google Ads</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Powyżej 30 Dni</h3>
+
+    <div class="priority-matrix">
+      <div class="matrix-cell high-impact-low-effort">
+        <h4>🟢 Kontynuuj &amp; Optymalizuj</h4>
+        <ul>
+          <li>Cotygodniowy rytm mediów społecznościowych</li>
+          <li>Przeglądy wydajności Google Ads</li>
+          <li>Postęp wniosku NFZ</li>
+          <li>Proces rekrutacji psychiatry</li>
+          <li>Decyzja o lokalizacji Bartąg</li>
+        </ul>
+      </div>
+      <div class="matrix-cell high-impact-high-effort">
+        <h4>🔵 Buduj Ku Temu</h4>
+        <ul>
+          <li>Terapia online — cel 15% przychodów</li>
+          <li>Zapisy terapeutów do szkół</li>
+          <li>Ekspansja terapii par</li>
+          <li>Uruchomienie terapii grupowej</li>
+          <li>Partnerstwa B2B EAP</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-low-effort">
+        <h4>🟡 Zrób Gdy Wygoda Czasowa</h4>
+        <ul>
+          <li>Budowanie cytacji (Bing, Apple Maps)</li>
+          <li>Tygodniowe posty Google Business</li>
+          <li>Dystrybucja materiałów drukowanych</li>
+          <li>Konfiguracja sekwencji e-mail</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-high-effort">
+        <h4>🔴 Zaplanuj Na Później</h4>
+        <ul>
+          <li>Produkcja podcastu</li>
+          <li>Główna przebudowa strony</li>
+          <li>Reklama na przystankach / citylight</li>
+          <li>Program poleceń pacjentów</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /page-canvas -->
+</main>
+
+<!-- Scroll Spy & Nawigacja -->
+<script>
+const sectionNames = {
+  'cover':'Okładka',
+  'executive-summary':'Podsumowanie Wykonawcze',
+  'financial-health':'Zdrowie Finansowe',
+  'hr-team':'Luki w HR i Zespole',
+  'competitor-threat':'Zagrożenie Konkurencyjne',
+  'google-ads':'Google Ads',
+  'anima-counter':'Strategia Przeciwdziałania ANIMA',
+  'bartag-expansion':'Ekspansja Bartąg',
+  'online-therapy':'Terapia Online',
+  'social-media':'Media Społecznościowe',
+  'mission-control':'Kontrola Misji',
+  'action-plan':'30-Dniowy Plan Działania'
+};
+const navLinks = document.querySelectorAll('.nav-link[data-section]');
+const topnavSection = document.getElementById('topnav-section');
+
+function setActive(id){
+  navLinks.forEach(l=>l.classList.toggle('active',l.dataset.section===id));
+  if(topnavSection) topnavSection.textContent = sectionNames[id]||'';
+}
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) setActive(e.target.id);});
+},{rootMargin:'-15% 0px -70% 0px',threshold:0.05});
+
+Object.keys(sectionNames).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) obs.observe(el);
+});
+
+navLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
+    const t=document.querySelector(link.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ECHARTS VISUALIZATIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  const ANIM_DURATION = 1200;
+  const ANIM_EASING = 'elasticOut';
+  const GOLD = '#e6c364';
+  const GOLD_DIM = '#c9a84c';
+  const GREEN = '#6fcf97';
+  const RED = '#f08080';
+  const BLUE = '#7bc8e0';
+  const SURFACE = 'transparent';
+  const MUTED = '#8a9bb0';
+
+  const chartInstances = [];
+
+  // ─── Helper: create chart with theme ───
+  function createChart(domId) {
+    const dom = document.getElementById(domId);
+    if (!dom) return null;
+    const chart = echarts.init(dom, 'stitch');
+    chartInstances.push(chart);
+    return chart;
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // CHART 1: Revenue Trend Combo (Column + Spline + Moving Avg)
+  // ═══════════════════════════════════════════════════════════
+  const revenueChart = createChart('chart-revenue-trend');
+  if (revenueChart) {
+    const months = ['Kwi 25', 'Maj 25', 'Cze 25', 'Lip 25', 'Sie 25', 'Wrz 25', 'Paź 25', 'Lis 25', 'Gru 25', 'Sty 26', 'Lut 26', 'Mar 26'];
+    const revenue = [178, 185, 197, 210, 192, 201, 208, 196, 220, 215, 228, 236];
+    // 3-month moving average
+    const movingAvg = revenue.map((v, i) => {
+      if (i < 2) return null;
+      return Math.round((revenue[i - 2] + revenue[i - 1] + v) / 3);
+    });
+
+    revenueChart.setOption({
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        formatter: function (params) {
+          let html = '<div style="font-weight:700;margin-bottom:4px">' + params[0].axisValue + '</div>';
+          params.forEach(function (p) {
+            if (p.value !== null && p.value !== undefined) {
+              html += '<div style="display:flex;align-items:center;gap:6px">' +
+                '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + p.color + '"></span>' +
+                p.seriesName + ': <b>' + p.value + 'K PLN</b></div>';
+            }
+          });
+          return html;
+        }
+      },
+      legend: {
+        data: ['Przychody Miesięczne', 'Średnia 3-Miesięczna'],
+        top: 0,
+        right: 20,
+        itemWidth: 14,
+        itemHeight: 10
+      },
+      grid: { left: 50, right: 24, top: 50, bottom: 36 },
+      xAxis: {
+        type: 'category',
+        data: months,
+        axisLabel: { rotate: 30, fontSize: 10 }
+      },
+      yAxis: {
+        type: 'value',
+        name: 'PLN (tys.)',
+        nameTextStyle: { color: MUTED, fontSize: 10, padding: [0, 0, 0, -20] },
+        min: 150
+      },
+      animationDuration: ANIM_DURATION,
+      animationEasing: ANIM_EASING,
+      series: [
+        {
+          name: 'Przychody Miesięczne',
+          type: 'bar',
+          data: revenue,
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#e6c364' },
+              { offset: 1, color: '#c9a84c' }
+            ]),
+            borderRadius: [4, 4, 0, 0],
+            shadowColor: 'rgba(230,195,100,0.15)',
+            shadowBlur: 8
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 16,
+              shadowColor: 'rgba(230,195,100,0.3)'
+            }
+          },
+          barWidth: '50%'
+        },
+        {
+          name: 'Średnia 3-Miesięczna',
+          type: 'line',
+          data: movingAvg,
+          smooth: 0.4,
+          symbol: 'diamond',
+          symbolSize: 8,
+          lineStyle: { color: GREEN, width: 3, shadowColor: 'rgba(111,207,151,0.3)', shadowBlur: 6 },
+          itemStyle: { color: GREEN, borderWidth: 2, borderColor: '#1c2024' },
+          emphasis: { itemStyle: { borderWidth: 3, borderColor: GREEN } },
+          animationDelay: function (idx) { return idx * 80 + 400; }
+        }
+      ]
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // CHART 2: Cost Structure Doughnut
+  // ═══════════════════════════════════════════════════════════
+  const costChart = createChart('chart-cost-doughnut');
+  if (costChart) {
+    const costData = [
+      { value: 601558, name: 'Koszty Operacyjne', itemStyle: { color: '#e6c364' } },
+      { value: 500150, name: 'ZUS', itemStyle: { color: '#f08080' } },
+      { value: 327395, name: 'PIT', itemStyle: { color: '#7bc8e0' } },
+      { value: 1219592, name: 'Gotówka Netto', itemStyle: { color: '#6fcf97' } }
+    ];
+    const total = costData.reduce(function (s, d) { return s + d.value; }, 0);
+
+    costChart.setOption({
+      tooltip: {
+        trigger: 'item',
+        formatter: function (p) {
+          return '<b>' + p.name + '</b><br/>' +
+            (p.value / 1000).toFixed(0) + 'K PLN<br/>' +
+            p.percent.toFixed(1) + '%';
+        }
+      },
+      legend: {
+        orient: 'vertical',
+        right: 20,
+        top: 'center',
+        itemWidth: 12,
+        itemHeight: 12,
+        itemGap: 14
+      },
+      animationDuration: ANIM_DURATION,
+      animationEasing: ANIM_EASING,
+      series: [{
+        type: 'pie',
+        radius: ['42%', '72%'],
+        center: ['38%', '50%'],
+        data: costData,
+        padAngle: 2,
+        itemStyle: {
+          borderRadius: 6,
+          borderColor: '#101418',
+          borderWidth: 3,
+          shadowColor: 'rgba(0,0,0,0.4)',
+          shadowBlur: 10
+        },
+        label: {
+          show: true,
+          color: '#e0e3e8',
+          fontSize: 11,
+          formatter: '{b}\n{d}%'
+        },
+        labelLine: { lineStyle: { color: 'rgba(138,155,176,0.4)' } },
+        emphasis: {
+          scaleSize: 12,
+          itemStyle: {
+            shadowBlur: 20,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0,0,0,0.5)'
+          }
+        },
+        animationType: 'expansion',
+        animationDelay: function (idx) { return idx * 200; }
+      }, {
+        type: 'pie',
+        radius: ['0%', '38%'],
+        center: ['38%', '50%'],
+        silent: true,
+        label: { show: false },
+        data: [{ value: 1, itemStyle: { color: 'transparent' } }],
+        emphasis: { disabled: true }
+      }],
+      graphic: [{
+        type: 'text',
+        left: '33%',
+        top: '46%',
+        style: {
+          text: '2.41M',
+          fill: GOLD,
+          fontSize: 22,
+          fontWeight: 800,
+          fontFamily: 'Inter, sans-serif',
+          textAlign: 'center'
+        }
+      }, {
+        type: 'text',
+        left: '35%',
+        top: '54%',
+        style: {
+          text: 'PLN',
+          fill: MUTED,
+          fontSize: 11,
+          fontWeight: 600,
+          fontFamily: 'Manrope, sans-serif',
+          textAlign: 'center',
+          letterSpacing: '0.1em'
+        }
+      }]
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // CHART 3: WCP vs ANIMA Radar
+  // ═══════════════════════════════════════════════════════════
+  const radarChart = createChart('chart-radar-wcp-anima');
+  if (radarChart) {
+    radarChart.setOption({
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        data: ['WCP', 'ANIMA'],
+        top: 0,
+        right: 20,
+        itemWidth: 14,
+        itemHeight: 10
+      },
+      animationDuration: ANIM_DURATION,
+      animationEasing: ANIM_EASING,
+      radar: {
+        center: ['50%', '56%'],
+        radius: '68%',
+        indicator: [
+          { name: 'Lokalizacje', max: 10 },
+          { name: 'Specjaliści', max: 10 },
+          { name: 'Google Ocena', max: 10 },
+          { name: 'Opinie', max: 10 },
+          { name: 'Konkurencyjność Cen', max: 10 },
+          { name: 'Obecność Online', max: 10 }
+        ],
+        shape: 'polygon',
+        splitNumber: 4,
+        axisName: {
+          color: MUTED,
+          fontSize: 11,
+          fontFamily: 'Manrope, sans-serif',
+          fontWeight: 600
+        },
+        splitArea: {
+          areaStyle: {
+            color: ['rgba(16,20,24,0.6)', 'rgba(26,30,38,0.4)', 'rgba(16,20,24,0.3)', 'rgba(26,30,38,0.2)']
+          }
+        },
+        splitLine: { lineStyle: { color: 'rgba(77,70,55,0.35)' } },
+        axisLine: { lineStyle: { color: 'rgba(77,70,55,0.3)' } }
+      },
+      series: [{
+        type: 'radar',
+        data: [
+          {
+            value: [5, 5.5, 9.4, 7, 9, 6],
+            name: 'WCP',
+            symbol: 'circle',
+            symbolSize: 6,
+            lineStyle: { color: GOLD, width: 2.5, shadowColor: 'rgba(230,195,100,0.3)', shadowBlur: 8 },
+            itemStyle: { color: GOLD, borderWidth: 2, borderColor: '#101418' },
+            areaStyle: {
+              color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                { offset: 0, color: 'rgba(230,195,100,0.25)' },
+                { offset: 1, color: 'rgba(230,195,100,0.02)' }
+              ])
+            }
+          },
+          {
+            value: [10, 9, 5.2, 4.5, 3, 5],
+            name: 'ANIMA',
+            symbol: 'circle',
+            symbolSize: 6,
+            lineStyle: { color: RED, width: 2.5, shadowColor: 'rgba(240,128,128,0.3)', shadowBlur: 8 },
+            itemStyle: { color: RED, borderWidth: 2, borderColor: '#101418' },
+            areaStyle: {
+              color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                { offset: 0, color: 'rgba(240,128,128,0.2)' },
+                { offset: 1, color: 'rgba(240,128,128,0.01)' }
+              ])
+            }
+          }
+        ]
+      }]
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // CHART 4: Service Price Butterfly
+  // ═══════════════════════════════════════════════════════════
+  const butterflyChart = createChart('chart-price-butterfly');
+  if (butterflyChart) {
+    const services = ['Konsultacja Psychiatryczna', 'Sesja Psychoterapii', 'DIVA-5 ADHD Diagnoza'];
+    const wcpPrices = [-0, -200, -600]; // negative = left
+    const animaPrices = [300, 200, 1200]; // positive = right
+
+    butterflyChart.setOption({
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        formatter: function (params) {
+          var idx = params[0].dataIndex;
+          var html = '<b>' + services[idx] + '</b><br/>';
+          params.forEach(function (p) {
+            var val = Math.abs(p.value);
+            html += '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + p.color + ';margin-right:6px"></span>' +
+              p.seriesName + ': <b>' + val + ' PLN</b><br/>';
+          });
+          if (idx === 2) {
+            html += '<div style="margin-top:4px;color:#6fcf97;font-weight:700">WCP 50% taniej! ✅</div>';
+          }
+          return html;
+        }
+      },
+      legend: {
+        data: ['WCP', 'ANIMA'],
+        top: 0,
+        right: 20,
+        itemWidth: 14,
+        itemHeight: 10
+      },
+      grid: { left: 120, right: 40, top: 50, bottom: 30 },
+      xAxis: {
+        type: 'value',
+        max: 1400,
+        axisLabel: {
+          formatter: function (v) { return Math.abs(v); }
+        },
+        name: 'PLN',
+        nameTextStyle: { color: MUTED, fontSize: 10 }
+      },
+      yAxis: {
+        type: 'category',
+        data: services,
+        inverse: true,
+        axisLabel: { fontSize: 11, width: 110, overflow: 'truncate' }
+      },
+      animationDuration: ANIM_DURATION,
+      animationEasing: ANIM_EASING,
+      series: [
+        {
+          name: 'WCP',
+          type: 'bar',
+          data: wcpPrices,
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+              { offset: 0, color: 'rgba(230,195,100,0.9)' },
+              { offset: 1, color: 'rgba(230,195,100,0.3)' }
+            ]),
+            borderRadius: [0, 4, 4, 0]
+          },
+          barWidth: '40%',
+          label: {
+            show: true,
+            position: 'left',
+            formatter: function (p) { return p.value === 0 ? 'Brak' : Math.abs(p.value) + ' PLN'; },
+            color: GOLD,
+            fontSize: 11,
+            fontWeight: 700
+          }
+        },
+        {
+          name: 'ANIMA',
+          type: 'bar',
+          data: animaPrices,
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+              { offset: 0, color: 'rgba(240,128,128,0.3)' },
+              { offset: 1, color: 'rgba(240,128,128,0.9)' }
+            ]),
+            borderRadius: [4, 0, 0, 4]
+          },
+          barWidth: '40%',
+          label: {
+            show: true,
+            position: 'right',
+            formatter: function (p) { return p.value + ' PLN'; },
+            color: RED,
+            fontSize: 11,
+            fontWeight: 700
+          }
+        }
+      ],
+      graphic: [{
+        type: 'text',
+        left: '42%',
+        top: '2%',
+        style: {
+          text: '← WCP taniej    ANIMA drożej →',
+          fill: MUTED,
+          fontSize: 10,
+          fontFamily: 'Manrope, sans-serif',
+          fontWeight: 600,
+          textAlign: 'center',
+          letterSpacing: '0.06em'
+        }
+      }]
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // CHART 5: Google Ads Performance Gauge
+  // ═══════════════════════════════════════════════════════════
+  const gaugeChart = createChart('chart-ads-gauge');
+  if (gaugeChart) {
+    gaugeChart.setOption({
+      tooltip: { formatter: '{a}: {c}' },
+      animationDuration: ANIM_DURATION,
+      animationEasing: ANIM_EASING,
+      series: [
+        {
+          name: 'ROAS',
+          type: 'gauge',
+          center: ['25%', '55%'],
+          radius: '75%',
+          min: 0,
+          max: 3,
+          splitNumber: 6,
+          axisLine: {
+            lineStyle: {
+              width: 18,
+              color: [
+                [0.333, '#f08080'],
+                [0.667, '#f5c842'],
+                [1, '#6fcf97']
+              ]
+            }
+          },
+          pointer: {
+            itemStyle: { color: GOLD },
+            width: 5,
+            length: '60%'
+          },
+          axisTick: { distance: -18, length: 6, lineStyle: { color: '#4d4637' } },
+          splitLine: { distance: -22, length: 14, lineStyle: { color: '#4d4637', width: 2 } },
+          axisLabel: { color: MUTED, distance: -30, fontSize: 10 },
+          detail: {
+            valueAnimation: true,
+            formatter: '{value}×',
+            color: '#f08080',
+            fontSize: 22,
+            fontWeight: 800,
+            fontFamily: 'Inter, sans-serif',
+            offsetCenter: [0, '75%']
+          },
+          title: {
+            offsetCenter: [0, '92%'],
+            color: MUTED,
+            fontSize: 11,
+            fontFamily: 'Manrope, sans-serif',
+            fontWeight: 700
+          },
+          data: [{ value: 0.99, name: 'ROAS' }]
+        },
+        {
+          name: 'CPA Brand',
+          type: 'gauge',
+          center: ['68%', '30%'],
+          radius: '42%',
+          min: 0,
+          max: 150,
+          splitNumber: 3,
+          axisLine: {
+            lineStyle: {
+              width: 12,
+              color: [
+                [0.3, '#6fcf97'],
+                [0.6, '#f5c842'],
+                [1, '#f08080']
+              ]
+            }
+          },
+          pointer: {
+            itemStyle: { color: GREEN },
+            width: 4,
+            length: '55%'
+          },
+          axisTick: { show: false },
+          splitLine: { distance: -14, length: 10, lineStyle: { color: '#4d4637', width: 1.5 } },
+          axisLabel: { color: MUTED, distance: -22, fontSize: 9 },
+          detail: {
+            valueAnimation: true,
+            formatter: '{value} PLN',
+            color: GREEN,
+            fontSize: 15,
+            fontWeight: 800,
+            fontFamily: 'Inter, sans-serif',
+            offsetCenter: [0, '75%']
+          },
+          title: {
+            offsetCenter: [0, '92%'],
+            color: MUTED,
+            fontSize: 9,
+            fontFamily: 'Manrope, sans-serif',
+            fontWeight: 700
+          },
+          data: [{ value: 11.85, name: 'CPA Brand' }]
+        },
+        {
+          name: 'CPA Elbląg',
+          type: 'gauge',
+          center: ['68%', '75%'],
+          radius: '42%',
+          min: 0,
+          max: 150,
+          splitNumber: 3,
+          axisLine: {
+            lineStyle: {
+              width: 12,
+              color: [
+                [0.3, '#6fcf97'],
+                [0.6, '#f5c842'],
+                [1, '#f08080']
+              ]
+            }
+          },
+          pointer: {
+            itemStyle: { color: RED },
+            width: 4,
+            length: '55%'
+          },
+          axisTick: { show: false },
+          splitLine: { distance: -14, length: 10, lineStyle: { color: '#4d4637', width: 1.5 } },
+          axisLabel: { color: MUTED, distance: -22, fontSize: 9 },
+          detail: {
+            valueAnimation: true,
+            formatter: '{value} PLN',
+            color: RED,
+            fontSize: 15,
+            fontWeight: 800,
+            fontFamily: 'Inter, sans-serif',
+            offsetCenter: [0, '75%']
+          },
+          title: {
+            offsetCenter: [0, '92%'],
+            color: MUTED,
+            fontSize: 9,
+            fontFamily: 'Manrope, sans-serif',
+            fontWeight: 700
+          },
+          data: [{ value: 102.74, name: 'CPA Elbląg' }]
+        }
+      ],
+      graphic: [{
+        type: 'text',
+        right: 60,
+        top: 8,
+        style: {
+          text: '← Niski CPA          Wysoki CPA →',
+          fill: MUTED,
+          fontSize: 9,
+          fontFamily: 'Manrope, sans-serif',
+          fontWeight: 600,
+          letterSpacing: '0.05em'
+        }
+      }]
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // CHART 6: Trust Score Bullet Charts
+  // ═══════════════════════════════════════════════════════════
+  const bulletChart = createChart('chart-trust-bullets');
+  if (bulletChart) {
+    var categories = ['Ogółem', 'Finansowe', 'Reklamowe', 'Dokumenty'];
+    var scores = [0.71, 0.74, 0.99, 0.40];
+    var target = 0.80;
+    var colors = [GOLD, BLUE, GREEN, RED];
+    var statusColors = ['#6fcf97', '#6fcf97', '#6fcf97', '#f08080'];
+    var statusLabels = ['🟢 Zielony', '🟢 Zielony', '🟢 Doskonałe', '🔴 Wymaga Poprawy'];
+
+    // Build background bars (range 0–1) + actual score bars + target line
+    var seriesList = [];
+
+    // Background range bar
+    seriesList.push({
+      type: 'bar',
+      name: 'Zakres',
+      data: [1, 1, 1, 1],
+      itemStyle: { color: 'rgba(77,70,55,0.2)', borderRadius: [0, 4, 4, 0] },
+      barWidth: '55%',
+      barGap: '-100%',
+      z: 1,
+      silent: true,
+      animation: false
+    });
+
+    // Score bar
+    seriesList.push({
+      type: 'bar',
+      name: 'Wynik',
+      data: scores.map(function (v, i) {
+        return {
+          value: v,
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+              { offset: 0, color: 'rgba(230,195,100,0.2)' },
+              { offset: 1, color: colors[i] }
+            ]),
+            borderRadius: v >= target ? [0, 4, 4, 0] : [0, 4, 4, 0]
+          }
+        };
+      }),
+      barWidth: '55%',
+      barGap: '-100%',
+      z: 2,
+      label: {
+        show: true,
+        position: 'right',
+        formatter: function (p) {
+          return p.value.toFixed(2) + '  ' + statusLabels[p.dataIndex];
+        },
+        color: '#e0e3e8',
+        fontSize: 11,
+        fontWeight: 700,
+        fontFamily: 'Manrope, sans-serif'
+      },
+      animationDuration: ANIM_DURATION,
+      animationEasing: ANIM_EASING,
+      animationDelay: function (idx) { return idx * 200; }
+    });
+
+    bulletChart.setOption({
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        formatter: function (params) {
+          var idx = params[0].dataIndex;
+          var val = scores[idx];
+          var diff = val - target;
+          var sign = diff >= 0 ? '+' : '';
+          return '<b>' + categories[idx] + '</b><br/>' +
+            'Wynik: <b>' + val.toFixed(2) + '</b><br/>' +
+            'Cel: <b>' + target.toFixed(2) + '</b><br/>' +
+            'Różnica: <b style="color:' + (diff >= 0 ? GREEN : RED) + '">' + sign + diff.toFixed(2) + '</b>';
+        }
+      },
+      grid: { left: 100, right: 180, top: 20, bottom: 30 },
+      xAxis: {
+        type: 'value',
+        min: 0,
+        max: 1,
+        splitNumber: 5,
+        axisLabel: { formatter: function (v) { return v.toFixed(1); } }
+      },
+      yAxis: {
+        type: 'category',
+        data: categories,
+        inverse: true,
+        axisLabel: { fontSize: 12, fontWeight: 700 }
+      },
+      series: seriesList
+    });
+
+    // Add target line using markLine
+    bulletChart.setOption({
+      series: [{}, {
+        markLine: {
+          silent: true,
+          symbol: 'none',
+          lineStyle: { color: RED, width: 2, type: 'dashed' },
+          label: {
+            formatter: 'Cel: 0.80',
+            color: RED,
+            fontSize: 10,
+            fontFamily: 'Manrope, sans-serif',
+            fontWeight: 700,
+            position: 'start'
+          },
+          data: [{ xAxis: 0.80 }]
+        }
+      }]
+    });
+  }
+
+  // ─── Responsive resize ───
+  window.addEventListener('resize', function () {
+    chartInstances.forEach(function (c) { c.resize(); });
+  });
+
+  // ─── Ensure charts resize after font loading ───
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      chartInstances.forEach(function (c) { c.resize(); });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

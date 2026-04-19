@@ -28,7 +28,23 @@
         "taxes": 74200.0
       },
       "margin_pct": 17.5,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 32314.49,
+        "zus": 16505.39,
+        "pit": 3329.0,
+        "vat": 225.0,
+        "rent": 13389.85,
+        "utilities": 133.73,
+        "marketing": 0,
+        "loan": 0,
+        "card_expenses": 3288.58,
+        "bank_fees": 77.7,
+        "insurance": 0,
+        "transfers": 17815.35,
+        "other": 0.05
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-02",
@@ -47,7 +63,23 @@
         "taxes": 66100.0
       },
       "margin_pct": -5.8,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 35620.82,
+        "zus": 0,
+        "pit": 3045.0,
+        "vat": 140.0,
+        "rent": 13810.11,
+        "utilities": 194.65,
+        "marketing": 0,
+        "loan": 0,
+        "card_expenses": 4808.79,
+        "bank_fees": 89.1,
+        "insurance": 0,
+        "transfers": 19380.61,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-03",
@@ -66,7 +98,23 @@
         "taxes": 84325.0
       },
       "margin_pct": 4.9,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 32249.88,
+        "zus": 8866.56,
+        "pit": 5326.0,
+        "vat": 118.0,
+        "rent": 13189.79,
+        "utilities": 144.78,
+        "marketing": 0,
+        "loan": 0,
+        "card_expenses": 5321.4,
+        "bank_fees": 118.3,
+        "insurance": 0,
+        "transfers": 22170.48,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-04",
@@ -85,7 +133,23 @@
         "taxes": 77350.0
       },
       "margin_pct": -0.8,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 39605.37,
+        "zus": 7205.22,
+        "pit": 5268.0,
+        "vat": 55.0,
+        "rent": 10098.48,
+        "utilities": 831.05,
+        "marketing": 0,
+        "loan": 4127.69,
+        "card_expenses": 5182.77,
+        "bank_fees": 267.5,
+        "insurance": 0,
+        "transfers": 220249.02,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-05",
@@ -104,7 +168,23 @@
         "taxes": 80700.0
       },
       "margin_pct": -11.8,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 37267.28,
+        "zus": 6685.98,
+        "pit": 7937.0,
+        "vat": 66.0,
+        "rent": 9334.41,
+        "utilities": 135.07,
+        "marketing": 0,
+        "loan": 5637.33,
+        "card_expenses": 4205.36,
+        "bank_fees": 80.74,
+        "insurance": 0,
+        "transfers": 19711.59,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-06",
@@ -123,7 +203,23 @@
         "taxes": 0
       },
       "margin_pct": 2.5,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 39127.3,
+        "zus": 6025.06,
+        "pit": 1719.0,
+        "vat": 89.0,
+        "rent": 9383.04,
+        "utilities": 201.41,
+        "marketing": 0,
+        "loan": 5654.29,
+        "card_expenses": 2930.12,
+        "bank_fees": 54.3,
+        "insurance": 1512.0,
+        "transfers": 22598.01,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-07",
@@ -142,7 +238,23 @@
         "taxes": 61850.0
       },
       "margin_pct": -2.4,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 31738.28,
+        "zus": 6895.05,
+        "pit": 1443.0,
+        "vat": 171.0,
+        "rent": 10501.57,
+        "utilities": 167.43,
+        "marketing": 0,
+        "loan": 5670.13,
+        "card_expenses": 3327.23,
+        "bank_fees": 53.7,
+        "insurance": 0,
+        "transfers": 15063.38,
+        "other": 0.08
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-08",
@@ -161,7 +273,23 @@
         "taxes": 55000.0
       },
       "margin_pct": -14.1,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 33846.14,
+        "zus": 0,
+        "pit": 1228.0,
+        "vat": 88.0,
+        "rent": 8787.86,
+        "utilities": 208.49,
+        "marketing": 0,
+        "loan": 5561.2,
+        "card_expenses": 3517.35,
+        "bank_fees": 74.68,
+        "insurance": 0,
+        "transfers": 14044.94,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-09",
@@ -180,7 +308,23 @@
         "taxes": 0
       },
       "margin_pct": 10.5,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 32524.38,
+        "zus": 10293.61,
+        "pit": 1877.0,
+        "vat": 146.0,
+        "rent": 9180.1,
+        "utilities": 118.42,
+        "marketing": 0,
+        "loan": 5523.77,
+        "card_expenses": 3829.62,
+        "bank_fees": 114.46,
+        "insurance": 0,
+        "transfers": 17292.58,
+        "other": 1526.38
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-10",
@@ -199,7 +343,23 @@
         "taxes": 71950.0
       },
       "margin_pct": 16.6,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 38215.06,
+        "zus": 5328.66,
+        "pit": 2016.0,
+        "vat": 240.0,
+        "rent": 6370.1,
+        "utilities": 118.65,
+        "marketing": 0,
+        "loan": 5411.55,
+        "card_expenses": 5682.44,
+        "bank_fees": 77.29,
+        "insurance": 0,
+        "transfers": 15484.85,
+        "other": 108.29
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-11",
@@ -218,7 +378,23 @@
         "taxes": 80700.0
       },
       "margin_pct": -5.3,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 45311.01,
+        "zus": 10995.93,
+        "pit": 5286.0,
+        "vat": 185.0,
+        "rent": 9007.46,
+        "utilities": 143.95,
+        "marketing": 0,
+        "loan": 5287.5,
+        "card_expenses": 6888.96,
+        "bank_fees": 103.21,
+        "insurance": 0,
+        "transfers": 19953.24,
+        "other": 165.65
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2023-12",
@@ -237,7 +413,23 @@
         "taxes": 54500.0
       },
       "margin_pct": -31.1,
-      "yoy_revenue_growth": null
+      "yoy_revenue_growth": null,
+      "cost_breakdown_v2": {
+        "payroll": 43500.83,
+        "zus": 0,
+        "pit": 6768.0,
+        "vat": 222.0,
+        "rent": 8253.67,
+        "utilities": 93.05,
+        "marketing": 0,
+        "loan": 5206.3,
+        "card_expenses": 4144.1,
+        "bank_fees": 56.9,
+        "insurance": 0,
+        "transfers": 16006.08,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-01",
@@ -256,7 +448,23 @@
         "taxes": 70725.0
       },
       "margin_pct": -0.8,
-      "yoy_revenue_growth": -15.5
+      "yoy_revenue_growth": -15.5,
+      "cost_breakdown_v2": {
+        "payroll": 33437.41,
+        "zus": 12747.81,
+        "pit": 1780.0,
+        "vat": 142.0,
+        "rent": 6985.76,
+        "utilities": 94.94,
+        "marketing": 0,
+        "loan": 5333.27,
+        "card_expenses": 3730.94,
+        "bank_fees": 102.94,
+        "insurance": 0,
+        "transfers": 16052.64,
+        "other": 0.44
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-02",
@@ -275,7 +483,23 @@
         "taxes": 52780.0
       },
       "margin_pct": 12.5,
-      "yoy_revenue_growth": 0.9
+      "yoy_revenue_growth": 0.9,
+      "cost_breakdown_v2": {
+        "payroll": 38356.54,
+        "zus": 47.0,
+        "pit": 4902.0,
+        "vat": 0,
+        "rent": 3664.9,
+        "utilities": 148.1,
+        "marketing": 0,
+        "loan": 5193.36,
+        "card_expenses": 3578.74,
+        "bank_fees": 125.4,
+        "insurance": 0,
+        "transfers": 14539.18,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-03",
@@ -294,7 +518,23 @@
         "taxes": 44550.0
       },
       "margin_pct": -0.8,
-      "yoy_revenue_growth": -15.0
+      "yoy_revenue_growth": -15.0,
+      "cost_breakdown_v2": {
+        "payroll": 25603.11,
+        "zus": 12566.27,
+        "pit": 3436.0,
+        "vat": 323.0,
+        "rent": 14396.99,
+        "utilities": 89.3,
+        "marketing": 0,
+        "loan": 5070.72,
+        "card_expenses": 4834.44,
+        "bank_fees": 90.44,
+        "insurance": 0,
+        "transfers": 9559.89,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-04",
@@ -313,7 +553,23 @@
         "taxes": 67150.0
       },
       "margin_pct": 7.9,
-      "yoy_revenue_growth": -72.4
+      "yoy_revenue_growth": -72.4,
+      "cost_breakdown_v2": {
+        "payroll": 26967.41,
+        "zus": 5214.03,
+        "pit": 3384.0,
+        "vat": 70.0,
+        "rent": 8480.44,
+        "utilities": 109.74,
+        "marketing": 0,
+        "loan": 5226.01,
+        "card_expenses": 3872.15,
+        "bank_fees": 61.34,
+        "insurance": 0,
+        "transfers": 21345.4,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-05",
@@ -332,7 +588,23 @@
         "taxes": 61350.0
       },
       "margin_pct": -9.8,
-      "yoy_revenue_growth": -14.0
+      "yoy_revenue_growth": -14.0,
+      "cost_breakdown_v2": {
+        "payroll": 33334.88,
+        "zus": 5074.54,
+        "pit": 4702.0,
+        "vat": 0,
+        "rent": 6807.16,
+        "utilities": 81.18,
+        "marketing": 0,
+        "loan": 5050.23,
+        "card_expenses": 5892.77,
+        "bank_fees": 76.01,
+        "insurance": 0,
+        "transfers": 15950.79,
+        "other": 0.98
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-06",
@@ -351,7 +623,23 @@
         "taxes": 62180.0
       },
       "margin_pct": 10.6,
-      "yoy_revenue_growth": -0.7
+      "yoy_revenue_growth": -0.7,
+      "cost_breakdown_v2": {
+        "payroll": 30067.8,
+        "zus": 6419.87,
+        "pit": 1766.0,
+        "vat": 0,
+        "rent": 8895.71,
+        "utilities": 100.0,
+        "marketing": 0,
+        "loan": 5058.21,
+        "card_expenses": 5885.56,
+        "bank_fees": 61.13,
+        "insurance": 0,
+        "transfers": 22967.37,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-07",
@@ -370,7 +658,23 @@
         "taxes": 71250.0
       },
       "margin_pct": 6.7,
-      "yoy_revenue_growth": 11.8
+      "yoy_revenue_growth": 11.8,
+      "cost_breakdown_v2": {
+        "payroll": 29411.29,
+        "zus": 5880.79,
+        "pit": 4171.0,
+        "vat": 0,
+        "rent": 9817.6,
+        "utilities": 79.56,
+        "marketing": 0,
+        "loan": 5075.53,
+        "card_expenses": 4516.71,
+        "bank_fees": 67.72,
+        "insurance": 227.0,
+        "transfers": 16704.79,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-08",
@@ -389,7 +693,23 @@
         "taxes": 57350.0
       },
       "margin_pct": 1.9,
-      "yoy_revenue_growth": 28.9
+      "yoy_revenue_growth": 28.9,
+      "cost_breakdown_v2": {
+        "payroll": 33078.25,
+        "zus": 6443.44,
+        "pit": 3487.0,
+        "vat": 0,
+        "rent": 7978.11,
+        "utilities": 83.76,
+        "marketing": 0,
+        "loan": 4988.8,
+        "card_expenses": 4555.98,
+        "bank_fees": 68.78,
+        "insurance": 0,
+        "transfers": 14337.71,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-09",
@@ -408,7 +728,23 @@
         "taxes": 68225.0
       },
       "margin_pct": 2.3,
-      "yoy_revenue_growth": -12.9
+      "yoy_revenue_growth": -12.9,
+      "cost_breakdown_v2": {
+        "payroll": 27043.13,
+        "zus": 6779.67,
+        "pit": 4248.0,
+        "vat": 0,
+        "rent": 7669.3,
+        "utilities": 74.69,
+        "marketing": 0,
+        "loan": 4954.69,
+        "card_expenses": 6053.74,
+        "bank_fees": 102.32,
+        "insurance": 0,
+        "transfers": 21617.23,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-10",
@@ -427,7 +763,23 @@
         "taxes": 78250.0
       },
       "margin_pct": 10.7,
-      "yoy_revenue_growth": -2.4
+      "yoy_revenue_growth": -2.4,
+      "cost_breakdown_v2": {
+        "payroll": 33241.85,
+        "zus": 6423.32,
+        "pit": 1658.0,
+        "vat": 56.0,
+        "rent": 9279.58,
+        "utilities": 0,
+        "marketing": 0,
+        "loan": 4969.93,
+        "card_expenses": 5289.47,
+        "bank_fees": 78.93,
+        "insurance": 0,
+        "transfers": 22604.02,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-11",
@@ -446,7 +798,23 @@
         "taxes": 49600.0
       },
       "margin_pct": -10.9,
-      "yoy_revenue_growth": -10.2
+      "yoy_revenue_growth": -10.2,
+      "cost_breakdown_v2": {
+        "payroll": 39261.59,
+        "zus": 6591.35,
+        "pit": 6453.0,
+        "vat": 0,
+        "rent": 7329.94,
+        "utilities": 0,
+        "marketing": 0,
+        "loan": 4876.89,
+        "card_expenses": 9352.34,
+        "bank_fees": 52.05,
+        "insurance": 0,
+        "transfers": 22753.68,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2024-12",
@@ -465,7 +833,23 @@
         "taxes": 56100.0
       },
       "margin_pct": -16.3,
-      "yoy_revenue_growth": 57.8
+      "yoy_revenue_growth": 57.8,
+      "cost_breakdown_v2": {
+        "payroll": 32531.69,
+        "zus": 9928.09,
+        "pit": 2812.0,
+        "vat": 1306.0,
+        "rent": 8820.2,
+        "utilities": 0,
+        "marketing": 0,
+        "loan": 4793.24,
+        "card_expenses": 8856.25,
+        "bank_fees": 55.56,
+        "insurance": 1787.0,
+        "transfers": 45130.83,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-01",
@@ -484,7 +868,23 @@
         "taxes": 62850.0
       },
       "margin_pct": 11.6,
-      "yoy_revenue_growth": -1.2
+      "yoy_revenue_growth": -1.2,
+      "cost_breakdown_v2": {
+        "payroll": 27648.29,
+        "zus": 6151.51,
+        "pit": 2407.0,
+        "vat": 0,
+        "rent": 10159.72,
+        "utilities": 562.21,
+        "marketing": 0,
+        "loan": 3622.45,
+        "card_expenses": 7681.23,
+        "bank_fees": 56.27,
+        "insurance": 0,
+        "transfers": 11453.24,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-02",
@@ -503,7 +903,23 @@
         "taxes": 68500.0
       },
       "margin_pct": 2.4,
-      "yoy_revenue_growth": 6.4
+      "yoy_revenue_growth": 6.4,
+      "cost_breakdown_v2": {
+        "payroll": 37009.69,
+        "zus": 8266.94,
+        "pit": 1740.0,
+        "vat": 0,
+        "rent": 9232.53,
+        "utilities": 592.95,
+        "marketing": 0,
+        "loan": 3514.64,
+        "card_expenses": 4485.66,
+        "bank_fees": 59.28,
+        "insurance": 0,
+        "transfers": 20292.82,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-03",
@@ -522,7 +938,23 @@
         "taxes": 85350.0
       },
       "margin_pct": 5.3,
-      "yoy_revenue_growth": 24.3
+      "yoy_revenue_growth": 24.3,
+      "cost_breakdown_v2": {
+        "payroll": 37866.3,
+        "zus": 9324.21,
+        "pit": 2268.0,
+        "vat": 155.0,
+        "rent": 11043.38,
+        "utilities": 602.35,
+        "marketing": 0,
+        "loan": 3413.13,
+        "card_expenses": 5556.33,
+        "bank_fees": 63.72,
+        "insurance": 0,
+        "transfers": 19913.42,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-04",
@@ -541,7 +973,23 @@
         "taxes": 77150.0
       },
       "margin_pct": -11.3,
-      "yoy_revenue_growth": 11.7
+      "yoy_revenue_growth": 11.7,
+      "cost_breakdown_v2": {
+        "payroll": 46094.03,
+        "zus": 10245.93,
+        "pit": 4223.0,
+        "vat": 52.0,
+        "rent": 11310.56,
+        "utilities": 541.6,
+        "marketing": 0,
+        "loan": 3533.22,
+        "card_expenses": 4865.42,
+        "bank_fees": 66.8,
+        "insurance": 0,
+        "transfers": 18501.44,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-05",
@@ -560,7 +1008,23 @@
         "taxes": 79000.0
       },
       "margin_pct": 7.1,
-      "yoy_revenue_growth": 47.6
+      "yoy_revenue_growth": 47.6,
+      "cost_breakdown_v2": {
+        "payroll": 40952.34,
+        "zus": 12455.99,
+        "pit": 4221.0,
+        "vat": 38.0,
+        "rent": 8998.21,
+        "utilities": 922.91,
+        "marketing": 0,
+        "loan": 3423.97,
+        "card_expenses": 3873.67,
+        "bank_fees": 71.55,
+        "insurance": 0,
+        "transfers": 21159.16,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-06",
@@ -579,7 +1043,23 @@
         "taxes": 81150.0
       },
       "margin_pct": -0.1,
-      "yoy_revenue_growth": 12.0
+      "yoy_revenue_growth": 12.0,
+      "cost_breakdown_v2": {
+        "payroll": 42156.89,
+        "zus": 11103.19,
+        "pit": 8069.0,
+        "vat": 166.0,
+        "rent": 9893.92,
+        "utilities": 418.65,
+        "marketing": 0,
+        "loan": 3426.47,
+        "card_expenses": 9580.83,
+        "bank_fees": 83.2,
+        "insurance": 285.0,
+        "transfers": 16788.85,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-07",
@@ -598,7 +1078,23 @@
         "taxes": 50300.0
       },
       "margin_pct": -11.7,
-      "yoy_revenue_growth": 19.6
+      "yoy_revenue_growth": 19.6,
+      "cost_breakdown_v2": {
+        "payroll": 43048.92,
+        "zus": 12280.28,
+        "pit": 8845.0,
+        "vat": 174.0,
+        "rent": 11710.38,
+        "utilities": 324.63,
+        "marketing": 0,
+        "loan": 3390.81,
+        "card_expenses": 9740.21,
+        "bank_fees": 62.9,
+        "insurance": 59.0,
+        "transfers": 18621.7,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-08",
@@ -617,7 +1113,23 @@
         "taxes": 71901.0
       },
       "margin_pct": -6.9,
-      "yoy_revenue_growth": 15.6
+      "yoy_revenue_growth": 15.6,
+      "cost_breakdown_v2": {
+        "payroll": 44187.48,
+        "zus": 11593.13,
+        "pit": 2451.0,
+        "vat": 1035.0,
+        "rent": 12528.94,
+        "utilities": 536.83,
+        "marketing": 0,
+        "loan": 3336.76,
+        "card_expenses": 4792.12,
+        "bank_fees": 63.5,
+        "insurance": 0,
+        "transfers": 14336.81,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-09",
@@ -636,7 +1148,23 @@
         "taxes": 64245.0
       },
       "margin_pct": -4.0,
-      "yoy_revenue_growth": 20.0
+      "yoy_revenue_growth": 20.0,
+      "cost_breakdown_v2": {
+        "payroll": 45728.19,
+        "zus": 11022.2,
+        "pit": 4436.0,
+        "vat": 151.0,
+        "rent": 10628.21,
+        "utilities": 506.13,
+        "marketing": 0,
+        "loan": 3315.73,
+        "card_expenses": 5484.03,
+        "bank_fees": 68.2,
+        "insurance": 0,
+        "transfers": 18971.92,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-10",
@@ -655,7 +1183,23 @@
         "taxes": 83500.0
       },
       "margin_pct": 8.7,
-      "yoy_revenue_growth": 37.7
+      "yoy_revenue_growth": 37.7,
+      "cost_breakdown_v2": {
+        "payroll": 51195.46,
+        "zus": 7685.56,
+        "pit": 6855.0,
+        "vat": 141.0,
+        "rent": 12164.3,
+        "utilities": 323.55,
+        "marketing": 0,
+        "loan": 3292.1,
+        "card_expenses": 6287.45,
+        "bank_fees": 78.2,
+        "insurance": 0,
+        "transfers": 28285.98,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-11",
@@ -674,7 +1218,23 @@
         "taxes": 109575.0
       },
       "margin_pct": 5.1,
-      "yoy_revenue_growth": 37.0
+      "yoy_revenue_growth": 37.0,
+      "cost_breakdown_v2": {
+        "payroll": 56232.53,
+        "zus": 6205.62,
+        "pit": 8144.0,
+        "vat": 231.0,
+        "rent": 12882.3,
+        "utilities": 459.51,
+        "marketing": 0,
+        "loan": 3240.9,
+        "card_expenses": 6567.98,
+        "bank_fees": 78.5,
+        "insurance": 0,
+        "transfers": 20487.71,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2025-12",
@@ -693,7 +1253,23 @@
         "taxes": 80090.0
       },
       "margin_pct": 15.4,
-      "yoy_revenue_growth": 33.9
+      "yoy_revenue_growth": 33.9,
+      "cost_breakdown_v2": {
+        "payroll": 51724.82,
+        "zus": 9536.52,
+        "pit": 5802.0,
+        "vat": 249.0,
+        "rent": 11925.28,
+        "utilities": 1824.01,
+        "marketing": 0,
+        "loan": 3203.43,
+        "card_expenses": 7513.1,
+        "bank_fees": 77.0,
+        "insurance": 0,
+        "transfers": 22613.89,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2026-01",
@@ -712,7 +1288,23 @@
         "taxes": 0
       },
       "margin_pct": -6.4,
-      "yoy_revenue_growth": 47.6
+      "yoy_revenue_growth": 47.6,
+      "cost_breakdown_v2": {
+        "payroll": 51922.24,
+        "zus": 7621.67,
+        "pit": 8709.0,
+        "vat": 229.0,
+        "rent": 10228.21,
+        "utilities": 517.18,
+        "marketing": 0,
+        "loan": 3203.48,
+        "card_expenses": 5425.34,
+        "bank_fees": 90.5,
+        "insurance": 0,
+        "transfers": 34965.89,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2026-02",
@@ -731,7 +1323,23 @@
         "taxes": 0
       },
       "margin_pct": -6.2,
-      "yoy_revenue_growth": 11.3
+      "yoy_revenue_growth": 11.3,
+      "cost_breakdown_v2": {
+        "payroll": 41781.8,
+        "zus": 8550.74,
+        "pit": 3258.0,
+        "vat": 0,
+        "rent": 11854.98,
+        "utilities": 1188.46,
+        "marketing": 0,
+        "loan": 3140.51,
+        "card_expenses": 7710.09,
+        "bank_fees": 76.5,
+        "insurance": 0,
+        "transfers": 25262.05,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     },
     {
       "month": "2026-03",
@@ -750,7 +1358,23 @@
         "taxes": 0
       },
       "margin_pct": 8.3,
-      "yoy_revenue_growth": 32.2
+      "yoy_revenue_growth": 32.2,
+      "cost_breakdown_v2": {
+        "payroll": 52031.17,
+        "zus": 7367.67,
+        "pit": 4962.0,
+        "vat": 282.0,
+        "rent": 15273.21,
+        "utilities": 2328.84,
+        "marketing": 0,
+        "loan": 3079.07,
+        "card_expenses": 8223.03,
+        "bank_fees": 34.76,
+        "insurance": 0,
+        "transfers": 19981.61,
+        "other": 0
+      },
+      "methodology": "Revenue=bank credits (patient payments). Costs=bank debits (all outflows). ANALIZA \"Przychody\" column is tax payments, NOT revenue."
     }
   ],
   "yearlySummary": {

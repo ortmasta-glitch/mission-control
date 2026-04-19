@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="pl" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Optymalizacja Google Ads · Warmińskie Centrum Psychoterapii</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+<script src="assets/js/stitch-echarts-theme.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo img{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.aktywne{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.aktywne .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout.danger{border-left-color:var(--red-t)}
+  .callout.success{border-left-color:var(--green-t)}
+  .callout.info{border-left-color:var(--blue-t)}
+  .callout strong{color:var(--gold)}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.long-term{background:rgba(155,89,182,.15);color:#c39bd3}
+  .tag.urgent{background:rgba(224,82,82,.25);color:#ff6b6b}
+  .tag.critical{background:rgba(224,82,82,.3);color:#ff4444}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .metric-red{color:#f08080;font-weight:700}
+  .kw-table .metric-green{color:#6fcf97;font-weight:700}
+  .kw-table .metric-yellow{color:#f5c842;font-weight:700}
+  .kw-table .metric-blue{color:#7bc8e0;font-weight:700}
+  .ad-copy-box{background:var(--surface-mid);border:1px dashed rgba(77,70,55,.5);border-radius:4px;padding:16px 18px;margin:12px 0;font-family:"Courier New",monospace;font-size:.82rem}
+  .ad-copy-box .headline{color:#7bc8e0;font-weight:700;font-size:.92rem;text-decoration:underline;margin-bottom:4px}
+  .ad-copy-box .display-url{color:#6fcf97;margin-bottom:5px}
+  .ad-copy-box .description{color:var(--on-surface)}
+  .action-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .action-step:last-child{border-bottom:none}
+  .action-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .action-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .action-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .priority-matrix{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .matrix-cell{padding:18px;border-radius:4px}
+  .matrix-cell.high-impact-low-effort{background:rgba(76,175,125,.08);border-left:3px solid #4CAF7D}
+  .matrix-cell.high-impact-high-effort{background:rgba(75,163,195,.08);border-left:3px solid #4BA3C3}
+  .matrix-cell.low-impact-low-effort{background:rgba(245,200,66,.08);border-left:3px solid #F5C842}
+  .matrix-cell.low-impact-high-effort{background:rgba(224,82,82,.08);border-left:3px solid #E05252}
+  .matrix-cell h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .matrix-cell.high-impact-low-effort h4{color:#6fcf97}
+  .matrix-cell.high-impact-high-effort h4{color:#7bc8e0}
+  .matrix-cell.low-impact-low-effort h4{color:#f5c842}
+  .matrix-cell.low-impact-high-effort h4{color:#f08080}
+  .matrix-cell ul{padding-left:14px;font-size:.82rem;color:var(--on-surface)}
+  .matrix-cell li{margin:4px 0}
+  hr.divider{border:none;border-top:1px solid rgba(77,70,55,.3);margin:20px 0}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  .page-footer{display:none}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  .roas-gauge{display:flex;align-items:center;gap:18px;margin:14px 0;padding:14px;background:var(--surface-mid);border-radius:4px}
+  .roas-gauge .gauge-value{font-size:2.4rem;font-weight:800;font-family:"Inter",sans-serif}
+  .roas-gauge .gauge-value.punkt równowagi{color:#f08080}
+  .roas-gauge .gauge-value.target{color:#6fcf97}
+  .roas-gauge .gauge-label{font-size:.78rem;color:var(--muted)}
+  .metric-row{display:flex;flex-wrap:wrap;gap:1rem;margin:1rem 0 1.5rem}
+  .metric{background:var(--surface-mid);border:1px solid rgba(77,70,55,.3);border-radius:4px;padding:1rem 1.25rem;min-width:140px}
+  .metric .metric-value{font-size:1.6rem;font-weight:700;color:var(--gold);line-height:1.2}
+  .metric .metric-label{font-size:.78rem;color:var(--muted);margin-top:.25rem}
+  .metric .metric-value.red{color:#f08080}
+  .metric .metric-value.green{color:#6fcf97}
+  .metric .metric-value.blue{color:#7bc8e0}
+  .budget-bar{height:8px;border-radius:4px;background:var(--surface-high);overflow:hidden;margin:6px 0}
+  .budget-bar-fill{height:100%;border-radius:4px;transition:width .3s}
+  .chart-grid{display:grid;gap:18px;margin:18px 0}
+.chart-grid.grid-2{grid-template-columns:1fr 1fr}
+.chart-grid.grid-3{grid-template-columns:1fr 1fr 1fr}
+.chart-grid.grid-full{grid-template-columns:1fr}
+.chart-card{background:var(--surface-mid);border:1px solid rgba(77,70,55,.3);border-radius:6px;overflow:hidden}
+.chart-card-header{padding:14px 18px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(77,70,55,.2)}
+.chart-card-header .chart-icon{font-size:1.1rem}
+.chart-card-header .chart-title{font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim)}
+.chart-card-header .chart-badge{margin-left:auto;font-family:"Manrope",sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:10px}
+.chart-card-header .chart-badge.live{background:rgba(76,175,125,.15);color:#6fcf97}
+.chart-card-header .chart-badge.warning{background:rgba(224,82,82,.15);color:#f08080}
+.chart-card-header .chart-badge.info{background:rgba(75,163,195,.15);color:#7bc8e0}
+.chart-container{width:100%;height:340px;padding:8px}
+.chart-container.tall{height:420px}
+.chart-container.short{height:260px}
+@media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.priority-matrix{grid-template-columns:1fr}.toc-block ol{columns:1}.page-canvas{padding:28px 16px 60px}.metric-row{flex-direction:column}.chart-grid.grid-2,.chart-grid.grid-3{grid-template-columns:1fr}.chart-container{height:300px}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Powrót do Raportu Strategicznego →
+  </a>
+
+  <div class="sidebar-label">Nawigacja</div>
+  <nav>
+    <a class="nav-link aktywne" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Okładka
+    </a>
+    <a class="nav-link" href="#executive-summary" data-section="executive-summary">
+      <span class="material-symbols-outlined nav-icon">summarize</span> Podsumowanie Strategiczne
+    </a>
+    <a class="nav-link" href="#analytics-dashboard" data-section="analytics-dashboard">
+      <span class="material-symbols-outlined nav-icon">monitoring</span> Dashboard Analityczny
+    </a>
+    <a class="nav-link" href="#campaign-audit" data-section="campaign-audit">
+      <span class="material-symbols-outlined nav-icon">analytics</span> Audyt Kampanii
+    </a>
+    <a class="nav-link" href="#critical-issues" data-section="critical-issues">
+      <span class="material-symbols-outlined nav-icon">warning</span> Krytyczne Problemy
+    </a>
+    <a class="nav-link" href="#day0" data-section="day0">
+      <span class="material-symbols-outlined nav-icon">bolt</span> Dzień 0 — Działania
+    </a>
+    <a class="nav-link" href="#day7" data-section="day7">
+      <span class="material-symbols-outlined nav-icon">schedule</span> Naprawa 7-Dniowa
+    </a>
+    <a class="nav-link" href="#day14" data-section="day14">
+      <span class="material-symbols-outlined nav-icon">tune</span> Optymalizacja 14-Dniowa
+    </a>
+    <a class="nav-link" href="#day30" data-section="day30">
+      <span class="material-symbols-outlined nav-icon">rocket_launch</span> Wzrost 30-Dniowy
+    </a>
+    <a class="nav-link" href="#neg-keywords" data-section="neg-keywords">
+      <span class="material-symbols-outlined nav-icon">block</span> Słowa Kluczowe Wykluczające
+    </a>
+    <a class="nav-link" href="#risk-matrix" data-section="risk-matrix">
+      <span class="material-symbols-outlined nav-icon">shield</span> Macierz Ryzyka
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="GOOGLE-ADS-OPTIMIZATION-REPORT.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇬🇧</span> Wersja EN
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP &middot; Google Ads Optimization</span>
+  <span class="topnav-section" id="topnav-section">Okładka</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════ COVER ═══════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  <div style="margin:0 0 96px 0;padding:3px;border-radius:10px;background:linear-gradient(135deg,#e6c364 0%,#c9a84c 30%,#3a3530 60%,#1c2024 100%);box-shadow:0 20px 60px rgba(0,0,0,.4);">
+  <img src="assets/images/google.jpg" alt="Google Ads Hero" style="width:100%;max-width:100%;height:auto;display:block;border-radius:8px;">
+</div>
+  
+  <span class="cover-badge">&#9679; Poufny Dokument Strategiczny &middot; Kwiecień 2026</span>
+  <h1 class="cover-h1">Optymalizacja<br><span>Google Ads</span></h1>
+  <p class="cover-subtitle">Warmińskie Centrum Psychoterapii — Głęboka Analiza i Plan Odbudowy Wydajności 30-Dniowej</p>
+  <div style="background:rgba(76,175,125,.12);border:1px solid rgba(76,175,125,.4);border-radius:6px;padding:14px 18px;margin:24px 0 0;max-width:580px">
+    <div style="font-family:Manrope,sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#6fcf97;margin-bottom:6px">✅ Plan Działania Wdrożony — 18 Kwietnia 2026</div>
+    <p style="font-size:.88rem;color:var(--on-surface);margin:0">Działania Dnia 0 zrealizowane. Martwa kampania zatrzymana. Wyciek słów kluczowych zatrzymany. Listy słów kluczowych wykluczających wdrożone na poziomie kampanii i konta. Pierwsza kampania testowa A/B wpisana do testów. Następna analiza: 25 kwietnia 2026.</p>
+  </div>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>ROAS</label><p>0.99x — Punkt Równowagi</p></div>
+    <div class="cover-meta-item"><label>Kampanie</label><p>5 aktywne · 12 grupy reklam</p></div>
+    <div class="cover-meta-item"><label>Słowa Kluczowe</label><p>677 łącznie · 625 brak Jakości</p></div>
+    <div class="cover-meta-item"><label>Docelowy ROAS</label><p>2.0x (Dzień 30) → 2.5x (Dzień 60)</p></div>
+  </div>
+</section>
+
+<!-- ═══════════════ TABLE OF CONTENTS ═══════════════ -->
+<div class="toc-block">
+  <h3>📋 Spis Treści</h3>
+  <ol>
+    <li><a href="#executive-summary">Podsumowanie Strategiczne</a></li>
+    <li><a href="#analytics-dashboard">Dashboard Analityczny</a></li>
+    <li><a href="#campaign-audit">Audyt Kampanii — Obecny Stan</a></li>
+    <li><a href="#critical-issues">Krytyczne Problemy — 3 Alarmy</a></li>
+    <li><a href="#day0">Dzień 0 — Natychmiastowe Działania</a></li>
+    <li><a href="#day7">Naprawa 7-Dniowa — Elbląg Rescue</a></li>
+    <li><a href="#day14">Optymalizacja 14-Dniowa — Precyzyjne Dostrajanie</a></li>
+    <li><a href="#day30">Wzrost 30-Dniowy — Skalowanie i Rozszerzanie</a></li>
+    <li><a href="#neg-keywords">Główna Lista Słów Kluczowych Wykluczających</a></li>
+    <li><a href="#risk-matrix">Macierz Ryzyka — Co Może Pójść Nie Tak</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════ SECTION 1: EXECUTIVE SUMMARY ═══════════════ -->
+<div class="section" id="executive-summary">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Sekcja 1</div>
+      <h2>Podsumowanie Strategiczne</h2>
+      <div class="sub">Na krawędzi — gdzie jesteśmy i dlaczego to pilne</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="roas-gauge">
+      <div>
+        <div class="gauge-value punkt równowagi">0.99x</div>
+        <div class="gauge-label">Obecny ROAS</div>
+      </div>
+      <div style="font-size:1.2rem;color:var(--muted);padding:0 8px;">→</div>
+      <div>
+        <div class="gauge-value target">2.0x</div>
+        <div class="gauge-label">30-Dniowy Docelowy ROAS</div>
+      </div>
+      <div style="font-size:1.2rem;color:var(--muted);padding:0 8px;">→</div>
+      <div>
+        <div class="gauge-value target">2.5x</div>
+        <div class="gauge-label">60-Dniowy Docelowy ROAS</div>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <strong>✅ Działania Dnia 0 Wdrożone — 18 Kwietnia 2026</strong><br>
+      Plan optymalizacji został wdrożony. Kampania <strong>Terapia Indywidualna</strong> została zatrzymana. <strong>Wyciek słów kluczowych</strong> (NFZ + nieistotne zapytania) został zatrzymany — listy słów kluczowych wykluczających dodane na poziomie kampanii i konta. <strong>Listy słów kluczowych</strong> zostały zaktualizowane we wszystkich kampaniach. Pierwsza <strong>kampania testowa A/B</strong> została wpisana do testów. Raport z analizą kontrolną zaplanowano na <strong>25 Kwietnia 2026</strong>.
+    </div>
+
+    <p>Konto Google Ads WCP znajdowało się <strong>na poziomie równowagi</strong> (ROAS 0.99x) — każdy wydany złoty zwracał około jednego złotego. Trzy krytyczne problemy zostały zidentyfikowane i <strong>działania Dnia 0 zostały już wdrożone</strong>:</p>
+
+    <div class="callout danger">
+      <strong>⚠ Trzy krytyczne problemy — AKTUALIZACJA STATUSU:</strong><br>
+      1. <strong>Kampania "Terapia Indywidualna"</strong> — 0 konwersji, spalanie 55 PLN/dziennie. <span style="color:#6fcf97;font-weight:700">✅ ZATRZYMANA.</span><br>
+      2. <strong>Wyciek słów kluczowych NFZ</strong> — pacjenci szukający darmowej terapii klikali płatne reklamy i odchodzili. <span style="color:#6fcf97;font-weight:700">✅ WYCIEK ZATRZYMANY.</span> Listy słów wykluczających wdrożone na poziomie kampanii i konta.<br>
+      3. <strong>Przepalanie budżetu Elbląg</strong> — CPA 102.74 PLN, 2x więcej niż Olsztyn. <span style="color:#f5c842;font-weight:700">⏳ W TRAKCIE.</span> Nowa kopia reklamy A/B wpisana do testów.
+    </div>
+
+    <h3 class="sub-heading">30-Dniowy Plan Naprawy — W Skrócie</h3>
+
+    <div class="metric-row">
+      <div class="metric">
+        <div class="metric-value red">0</div>
+        <div class="metric-label">Dzień 0 — Zatrzymaj martwe kampanie + załataj wycieki</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value" style="color:#f5c842;">7</div>
+        <div class="metric-label">Dzień 7 — Ratunek Elbląg + odświeżenie kopii reklam</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value blue">14</div>
+        <div class="metric-label">Dzień 14 — Typy dopasowania + WJ + licytowanie</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value green">30</div>
+        <div class="metric-label">Dzień 30 — Skaluj wygrywające + nowe kampanie</div>
+      </div>
+    </div>
+
+    <p>Plan jest celowo skoncentrowany na początku. Największe zyski wynikają z <strong>zatrzymania marnotrawstwa</strong>, a nie z dodawania nowych wydatków. Same działania Dnia 0 powinny poprawić ROAS o 15–25% poprzez wyeliminowanie martwej kampanii i wycieku NFZ. Dni 7–14 doszlifowują precyzję targetowania. Dzień 30 dodaje warstwy wzrostu na teraz sprawnym fundamencie.</p>
+
+    <div class="callout success">
+      <strong>Przewidywany wynik:</strong> Jeśli wszystkie działania zostaną wdrożone zgodnie z harmonogramem, ROAS powinien osiągnąć 2.0x do Dnia 30 i 2.5x do Dnia 60 — zamieniając konto z centrum kosztów w prawdziwy silnik pozyskiwania pacjentów.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ ANALYTICS DASHBOARD ═══════════════ -->
+<div class="section" id="analytics-dashboard">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">trending_up</span>
+    <div>
+      <div class="sec-label">Sekcja 2</div>
+      <h2>Dashboard Analityczny</h2>
+      <div class="sub">Interaktywne wizualizacje wydajności kampanii — Apache ECharts</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- ROW 1: CPA Grouped Bar + ROAS Gauges -->
+    <div class="chart-grid grid-2">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-icon">📊</span>
+          <span class="chart-title">CPA wg Kampanii</span>
+          <span class="chart-badge warning">WYDŹWIĘK</span>
+        </div>
+        <div class="chart-container" id="chart-cpa-bar"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-icon">🎯</span>
+          <span class="chart-title">ROAS — Wskaźniki Kampanii</span>
+          <span class="chart-badge warning">PUNKT RÓWNOWAGI</span>
+        </div>
+        <div class="chart-container" id="chart-roas-gauge"></div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Quality Score Distribution + Optimization Timeline -->
+    <div class="chart-grid grid-2">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-icon">⭐</span>
+          <span class="chart-title">Rozkład Wyniku Jakości Słów Kluczowych</span>
+          <span class="chart-badge warning">92% BRAK WJ</span>
+        </div>
+        <div class="chart-container" id="chart-qs-distribution"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-icon">📈</span>
+          <span class="chart-title">Trajektoria ROAS — 30 Dni</span>
+          <span class="chart-badge info">PROGNOZA</span>
+        </div>
+        <div class="chart-container" id="chart-roas-timeline"></div>
+      </div>
+    </div>
+
+    <!-- ROW 3: Cost vs Conversion Scatter + CTR Trend -->
+    <div class="chart-grid grid-2">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-icon">🔵</span>
+          <span class="chart-title">Koszt vs Konwersje wg Kampanii</span>
+          <span class="chart-badge live">NA ŻYWO</span>
+        </div>
+        <div class="chart-container" id="chart-cost-scatter"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-icon">🖱️</span>
+          <span class="chart-title">Trajektoria CTR — Optymalizacja</span>
+          <span class="chart-badge live">NA ŻYWO</span>
+        </div>
+        <div class="chart-container" id="chart-ctr-trend"></div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:12px">
+      <strong>💡 Wskazówka:</strong> Najedź na wykresy, aby zobaczyć szczegółowe dane. Użyj legendy, aby ukryć/pokazać serie. Wszystkie wizualizacje korzystają z motywu <strong>Stitch Design System</strong>.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 2bis: CAMPAIGN AUDIT ═══════════════ -->
+<div class="section" id="campaign-audit">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">search</span>
+    <div>
+      <div class="sec-label">Sekcja 3</div>
+      <h2>Audyt Kampanii — Obecny Stan</h2>
+      <div class="sub">5 kampanii, 12 grup reklam, 677 słów kluczowych — co działa, a co nie</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Przegląd Konta</h3>
+    <div class="metric-row">
+      <div class="metric">
+        <div class="metric-value">5</div>
+        <div class="metric-label">Aktywna Kampanie</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">12</div>
+        <div class="metric-label">Grupa Reklams</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">677</div>
+        <div class="metric-label">Słowa Kluczowe</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value red">625</div>
+        <div class="metric-label">Słowa Kluczowe bez Quality Score</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">577</div>
+        <div class="metric-label">Wyszukiwane Hasła</div>
+      </div>
+    </div>
+
+    <div class="callout danger">
+      <strong>92% słów kluczowych nie ma przypisanego Wyniku Jakości.</strong> Oznacza to, że Google nie jest pewne, czy te słowa kluczowe pasują do swoich grup reklam, albo słowa kluczowe po prostu nie generują wystarczającej liczby wyświetleń, aby Google mogło przypisać wynik. W obu przypadkach to ogromna strata — te słowa kluczowe to martwy ciężar obniżający zdrowie konta.
+    </div>
+
+    <h3 class="sub-heading">Analiza Kampania po Kampanii</h3>
+
+    <table class="kw-table">
+      <thead>
+        <tr>
+          <th>Kampania</th>
+          <th>Typ</th>
+          <th>Dzienny Budżet</th>
+          <th>CPA</th>
+          <th>Konwersje</th>
+          <th>Typ Dopasowania Mix</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Brand — WCP</td>
+          <td>Szukanie</td>
+          <td>35 PLN</td>
+          <td class="metric-green">11.85 PLN</td>
+          <td class="metric-green">✓ Aktywna</td>
+          <td>Dopasowanie dokładne</td>
+          <td><span class="tag quick-win">NAJLEPSZY WYNIK</span></td>
+        </tr>
+        <tr>
+          <td>Olsztyn</td>
+          <td>Szukanie</td>
+          <td>60 PLN</td>
+          <td class="metric-yellow">~50 PLN</td>
+          <td>✓ Aktywna</td>
+          <td>Dopasowanie szerokie dominujące</td>
+          <td><span class="tag medium">WYMAGA DOSKONALENIA</span></td>
+        </tr>
+        <tr>
+          <td>Elbląg</td>
+          <td>Szukanie</td>
+          <td>50 PLN</td>
+          <td class="metric-red">102.74 PLN</td>
+          <td>Niski</td>
+          <td>Dopasowanie szerokie dominujące</td>
+          <td><span class="tag high">PRZEWYDATKOWANIE</span></td>
+        </tr>
+        <tr>
+          <td>Ostróda</td>
+          <td>Szukanie</td>
+          <td>45 PLN</td>
+          <td class="metric-yellow">~55 PLN</td>
+          <td>✓ Aktywna</td>
+          <td>Dopasowanie szerokie dominujące</td>
+          <td><span class="tag medium">NIEDOINWESTOWANA</span></td>
+        </tr>
+        <tr>
+          <td>Terapia Indywidualna</td>
+          <td>Szukanie</td>
+          <td style="text-decoration:line-through;color:var(--muted)">55 PLN</td>
+          <td class="metric-red">∞ (0 konwersji)</td>
+          <td class="metric-red">0</td>
+          <td>Dopasowanie szerokie</td>
+          <td><span class="tag quick-win">✅ ZATRZYMANA 18 KWI</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">Rozkład Typów Dopasowania (Na Poziomie Konta)</h3>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Typ Dopasowania</th><th>Udział</th><th>Ocena</th><th>Cel</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dopasowanie Szerokie</td>
+          <td class="metric-red">48%</td>
+          <td>Zbyt wysoki — marnowanie wydatków na nietargetowane zapytania</td>
+          <td>30%</td>
+        </tr>
+        <tr>
+          <td>Dopasowanie Dokładne</td>
+          <td class="metric-yellow">~35%</td>
+          <td>Poniżej optymalnego — potrzeba dokładniejszego targetowania</td>
+          <td class="metric-green">55%</td>
+        </tr>
+        <tr>
+          <td>Dopasowanie Frazowe</td>
+          <td class="metric-blue">~17%</td>
+          <td>Rozsądny, ale jest miejsce na rozwój</td>
+          <td>15%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Kluczowy wniosek:</strong> Kampania Brand to jedyna naprawdę wydajna kampania — CPA 11.85 PLN za wyszukiwania po nazwie marki to doskonały wynik. Problem polega na tym, że łapie tylko osoby, które już znają WCP. Pozostałe kampanie mają łapać nowych pacjentów, ale krwawią budżetem przez słowa kluczowe z dopasowaniem szerokim i wyszukiwania związane z NFZ.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 3: CRITICAL ISSUES ═══════════════ -->
+<div class="section" id="critical-issues">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">notification_important</span>
+    <div>
+      <div class="sec-label">Sekcja 4</div>
+      <h2>Krytyczne Problemy — 3 Alarmy</h2>
+      <div class="sub">Te aktywnie tracą pieniądze. Każdy dzień bezczynności potęguje straty.</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- CRITICAL 1 -->
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>✅</span> Martwa Kampania: Terapia Indywidualna — ZATRZYMANA
+        <span class="tag quick-win">ROZWIĄZANA</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>0 konwersji.</strong> Ta kampania nie wygenerowała ani jednej rezerwacji pacjenta. Przy 55 PLN/dziennie, spalała około <strong>1 650 PLN/miesiąc</strong> bez żadnego zwrotu.</p>
+        <p>Kampania celowała w ogólne słowa kluczowe związane z terapią ("terapia indywidualna") z dopasowaniem szerokim — przyciągając wyszukiwania takie jak "terapia indywidualna nfz", "terapia indywidualna jak zostać", "terapia indywidualna kurs". Żadne z tych zapytań nie miało intencji pacjenta.</p>
+        <div class="callout success">
+          <strong>✅ ZAKOŃCZONE — 18 Kwietnia 2026:</strong> Kampania została całkowicie zatrzymana. Miesięczne oszczędności: ~1 650 PLN. Budżet przekazany do kampanii Brand i Ostróda zgodnie z planem Dnia 30.
+        </div>
+      </div>
+    </div>
+
+    <!-- CRITICAL 2 -->
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>✅</span> Wyciek Słów Kluczowych NFZ — Płacenie za Szukających Darmowej Pomocy — ZATRZYMANY
+        <span class="tag quick-win">ROZWIĄZANA</span>
+      </div>
+      <div class="idea-body">
+        <p>Pacjenci wyszukujący <strong>"terapia nfz"</strong>, <strong>"psycholog bezpłatna konsultacja"</strong> lub <strong>"pomoc psychologiczna darmowa"</strong> klikali w płatne reklamy WCP, a następnie odchodzili po odkryciu, że sesje kosztują 250 PLN.</p>
+        <p><strong>Dlaczego to szkodziło:</strong> Płaciliście za każde kliknięcie (zazwyczaj 3–8 PLN za słowa kluczowe związane z terapią). Pacjent nic nie dostawał. Wy nic nie dostawaliście. Google zarabiało. Raport wyszukiwanych haseł potwierdził, że zapytania związane z NFZ pojawiały się w wielu grupach reklam.</p>
+        <div class="callout success">
+          <strong>✅ ZAKOŃCZONE — 18 Kwietnia 2026:</strong> Listy słów kluczowych wykluczających związanych z NFZ zostały wdrożone zarówno na <strong>poziomie kampanii</strong>, jak i <strong>poziomie konta</strong>. Pełna lista 20+ słów wykluczających NFZ z <a href="#neg-keywords" style="color:#6fcf97;">Sekcji 9</a> jest teraz aktywna. Wyciek słów kluczowych został zatrzymany. Szacowana eliminacja 10–15% marnowanego budżetu.
+        </div>
+      </div>
+    </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRITICAL 3 -->
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>📈</span> Kampania Elbląg — Konwersje 2x Przepłacone
+        <span class="tag high">WYSOKI</span>
+      </div>
+      <div class="idea-body">
+        <p>Kampania Elbląg ma CPA <strong>102.74 PLN</strong> — ponad dwukrotnie więcej niż CPA Olsztyna (~50 PLN). To nie dlatego, że pacjenci w Elblągu są mniej skłonni do konwersji; to dlatego, że kampania jest <strong>źle skonstruowana</strong>:</p>
+        <ul class="clean">
+          <li><strong>72 nietargetowane wyszukiwania</strong> wyzwalające reklamy — od „psycholog elbląg nfz" po „praca psycholog elbląg"</li>
+          <li><strong>Ogólna kopia reklamy</strong> niedopasowana do lokalizacji Elbląg ani specyfiki poradni</li>
+          <li><strong>Brak słów wykluczających specyficznych dla Elbląga</strong> — szukający pracy, studenci i szukający NFZ klikają i odchodzą</li>
+          <li><strong>Dominacja dopasowania szerokiego</strong> — rzucanie szerokiej sieci w małym stawie, łapanie wszystkiego oprócz pacjentów</li>
+        </ul>
+        <div class="callout">
+          <strong>Działanie do Dnia 7:</strong> Pełny remont kampanii Elbląg — nowa kopia reklamy, 16 słów wykluczających specyficznych dla lokalizacji, oczyszczenie wyszukiwanych haseł i weryfikacja śledzenia konwersji Booknetic. Szczegóły w <a href="#day7" style="color:var(--gold);">Sekcja 5</a>.
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional concern -->
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>📉</span> 92% Słów Kluczowych Bez Quality Score
+        <span class="tag high">WYSOKI</span>
+        <span class="tag long-term">SYSTEMOWE</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>625 z 677 słów kluczowych</strong> nie ma przypisanego Quality Score. Oznacza to, że system Google nie ma wystarczających danych do oceny tych słów kluczowych — albo nie generują żadnych wyświetleń, albo ich wyświetlenia są tak niskie, że nie osiągnięto istotności statystycznej.</p>
+        <p>Słowa kluczowe bez WJ są efektywnie niewidoczne dla algorytmów optymalizacji Google. Nie uczestniczą prawidłowo w obliczeniach pozycji reklamy, nie mogą korzystać z obniżek CPC opartych na WJ i negatywnie zawyżają metryki na poziomie konta.</p>
+        <div class="callout info">
+          <strong>Przyczyna źródłowa:</strong> Zbyt wiele słów kluczowych goni za zbyt małą liczbą trafnych zapytań. Rozwiązaniem nie jest dodawanie kolejnych słów — to <strong>wycinanie martwego drewna i konsolidacja wydatków</strong> w wysokointencjonalne, dobrze oceniane słowa kluczowe. Jest to adresowane w planie Optymalizacji 14-Dniowej.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 4: DAY 0 ACTIONS ═══════════════ -->
+<div class="section" id="day0">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">bolt</span>
+    <div>
+      <div class="sec-label">Sekcja 5</div>
+      <h2>Dzień 0 — Natychmiastowe Działania</h2>
+      <div class="sub">Zrób to dziś. Każda godzina zwłoki kosztuje pieniądze.</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout success">
+      <strong>✅ WDROŻONO — 18 Kwietnia 2026:</strong> Działania Dnia 0 zostały wykonane. Martwa kampania zatrzymana, wyciek NFZ załatany, listy słów wykluczających wdrożone na poziomie kampanii i konta, listy słów kluczowych zaktualizowane. Pierwsza kampania testowa A/B wpisana do testów. Każda godzina zwłki kosztowała pieniądze — teraz krwawienie zostało zatrzymane.
+    </div>
+
+    <h3 class="sub-heading">Działanie 1: Wstrzymaj Kampanię "Terapia Indywidualna" — ✅ ZAKOŃCZONE</h3>
+    <div class="action-step">
+      <div class="step-num" style="background:#4CAF7D;color:#101418">✓</div>
+      <div class="step-content">
+        <h4>Kampania zatrzymana</h4>
+        <p>Kampania Terapia Indywidualna została całkowicie wstrzymana. Wydatki 55 PLN/dziennie na kampanię bez konwersji zostały wyeliminowane. Miesięczne oszczędności: ~1 650 PLN. Budżet przekazany do Brand + Ostróda zgodnie z planem Dnia 30.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Działanie 2: Dodaj Słowa Wykluczające NFZ — ✅ ZAKOŃCZONE</h3>
+    <p>Słowa kluczowe wykluczające związane z NFZ zostały dodane jako <strong>listy słów wykluczających na poziomie kampanii i konta</strong> do każdej aktywnej kampanii:</p>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Kategoria</th><th>Słowa Kluczowe Wykluczające</th><th>Typ Dopasowania</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>NFZ — Direct</td>
+          <td>nfz, na nfz, z nfz, przez nfz, od nfz, przy nfz</td>
+          <td>Dokładne + Fraza</td>
+        </tr>
+        <tr>
+          <td>NFZ — Descriptive</td>
+          <td>bezpłatna, darmowa, bezpłatnie, za darmo, bez opłat, bezpłatna terapia</td>
+          <td>Dokładne + Fraza</td>
+        </tr>
+        <tr>
+          <td>NFZ — Warianty</td>
+          <td>nfz terapia, nfz psycholog, nfz psychoterapia, poradnia nfz, przychodnia nfz</td>
+          <td>Fraza</td>
+        </tr>
+        <tr>
+          <td>Szukający Bezpłatnych</td>
+          <td>za darmo terapia, bezpłatna konsultacja, bezpłatna pomoc</td>
+          <td>Fraza</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Łącznie: 20+ słów wykluczających związanych z NFZ.</strong> Wdrożono jako współdzieloną listę słów wykluczających na poziomie kampanii i konta dla łatwego zarządzania.</p>
+
+    <h3 class="sub-heading">Działanie 3: Dodaj Uniwersalne Słowa Wykluczające — ✅ ZAKOŃCZONE</h3>
+    <p>Uniwersalne słowa wykluczające zostały wdrożone we wszystkich kampaniach na poziomie kampanii i konta:</p>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>#</th><th>Słowo Wykluczające</th><th>Powód</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>praca</td><td>Szukających pracy („praca psycholog")</td></tr>
+        <tr><td>2</td><td>вакансия</td><td>Rosyjscy szukający pracy</td></tr>
+        <tr><td>3</td><td>studia</td><td>Studentów badających („studia psychologia")</td></tr>
+        <tr><td>4</td><td>kurs</td><td>Szukających kursów</td></tr>
+        <tr><td>5</td><td>szkolenie</td><td>Szukających szkoleń</td></tr>
+        <tr><td>6</td><td>forum</td><td>Szukających dyskusji</td></tr>
+        <tr><td>7</td><td>blog</td><td>Konsumentów treści</td></tr>
+        <tr><td>8</td><td>wikipedia</td><td>Szukających informacji</td></tr>
+        <tr><td>9</td><td>książka</td><td>Kupujących książki</td></tr>
+        <tr><td>10</td><td>pdf</td><td>Szukających dokumentów</td></tr>
+        <tr><td>11</td><td>jak zostać</td><td>Zmieniających karierę („jak zostać psychologiem")</td></tr>
+        <tr><td>12</td><td>ile zarabia</td><td>Badających zarobki</td></tr>
+        <tr><td>13</td><td>czy warto</td><td>Ogólnych badaczy</td></tr>
+        <tr><td>14</td><td>rekrutacja</td><td>Szukających rekrutacji</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">Działanie 4: Potwierdź Celowanie Kampanii Brand — ✅ ZAKOŃCZONE</h3>
+    <div class="action-step">
+      <div class="step-num" style="background:#4CAF7D;color:#101418">✓</div>
+      <div class="step-content">
+        <h4>Słowa kluczowe kampanii Brand zweryfikowane jako dokładne dopasowanie</h4>
+        <p>Kampania Brand (najlepsza wydajność, CPA 11.85 PLN) potwierdzona z słowami kluczowymi wyłącznie dokładnego dopasowania. Zwiększenie budżetu rozważone zgodnie z planem Dnia 30.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Działanie 5: Pierwsza Kampania Testowa A/B — ✅ WPISANA DO TESTÓW</h3>
+    <div class="action-step">
+      <div class="step-num" style="background:#4CAF7D;color:#101418">✓</div>
+      <div class="step-content">
+        <h4>Kampania testowa A/B wpisana</h4>
+        <p>Pierwsza kampania testowa A/B wyszukiwań została skonfigurowana i wpisana do testów. Umożliwia to optymalizację kopii reklam opartą na danych we wszystkich kampaniach. Wyniki zostaną ocenione jako część 7-dniowej analizy kontrolnej.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="callout success">
+      <strong>✅ WPŁYW DNIA 0 — WDROŻONY:</strong> Martwa kampania zatrzymana (oszczędność 55 PLN/dziennie). Słowa wykluczające NFZ wdrożone (eliminuje ~10–15% marnowanych kliknięć). Uniwersalne słowa wykluczające wdrożone (eliminuje kolejne ~5–8%). Listy słów kluczowych zaktualizowane na poziomie kampanii i konta. Pierwsza kampania testowa A/B wpisana. Łącznie ROAS powinien poprawić się z 0.99x do około 1.2–1.3x. <strong>Następny raport z analizą zaplanowano: 25 Kwietnia 2026.</strong>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 5: 7-DAY FIX ═══════════════ -->
+<div class="section" id="day7">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">build</span>
+    <div>
+      <div class="sec-label">Sekcja 6</div>
+      <h2>Naprawa 7-Dniowa — Elbląg Rescue</h2>
+      <div class="sub">Napraw najgorszą aktywną kampanię i załatnij luki w śledzeniu</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Remont Kampanii Elbląg</h3>
+    <p>Kampania Elbląg obecnie działa przy <strong>CPA 102.74 PLN</strong> — najgorszym ze wszystkich aktywnych kampanii. Naprawa ma cztery elementy:</p>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>✍️</span> Nowa Kopia Reklamy — 3 Warianty do Testowania A/B
+        <span class="tag high">WYSOKI WPŁYW</span>
+      </div>
+      <div class="idea-body">
+
+        <div class="ad-copy-box">
+          <div class="headline">A: Psychoterapia Elbląg · Warmińskie CP</div>
+          <div class="display-url">wcp.com.pl/elblag</div>
+          <div class="description">Profesjonalna pomoc psychologiczna w Elblągu. 18 lat doświadczenia, 22+ terapeutów. Umów sesję już dziś.</div>
+        </div>
+
+        <div class="ad-copy-box">
+          <div class="headline">B: Terapeuta Elbląg · Sesje od 250 PLN</div>
+          <div class="display-url">wcp.com.pl/elblag</div>
+          <div class="description">Czujesz, że potrzebujesz zmiany? Porozmawiaj z terapeutą w Elblągu. Bezpieczna przestrzeń, profesjonalna pomoc.</div>
+        </div>
+
+        <div class="ad-copy-box">
+          <div class="headline">C: Psycholog Elbląg · Pl. Słowiański</div>
+          <div class="display-url">wcp.com.pl/elblag</div>
+          <div class="description">Terapia indywidualna, par i dzieci. Przyjmujemy w centrum Elbląga. Zadzwoń lub umów online.</div>
+        </div>
+
+        <p><strong>Plan testowania:</strong> Uruchom wszystkie trzy warianty z równą rotacją przez 7 dni. Po 7 dniach wstrzymaj najgorszy wariant i zachowaj dwa najlepsze. Użyj wskaźników siły reklamy w Google Ads do monitorowania jakości.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🚫</span> 16 Słów Wykluczających Specyficznych dla Elbląga
+      </div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <thead><tr><th>#</th><th>Słowo Wykluczające</th><th>Blokuje</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>praca psycholog elbląg</td><td>Szukających pracy</td></tr>
+            <tr><td>2</td><td>oferty pracy elbląg</td><td>Szukających pracy</td></tr>
+            <tr><td>3</td><td>rekrutacja psycholog elbląg</td><td>Szukających rekrutacji</td></tr>
+            <tr><td>4</td><td>studia psychologia elbląg</td><td>Studentów</td></tr>
+            <tr><td>5</td><td>kierunek psychologia elbląg</td><td>Studentów</td></tr>
+            <tr><td>6</td><td>nfz elbląg psycholog</td><td>Szukających NFZ</td></tr>
+            <tr><td>7</td><td>poradnia zdrowia psychicznego elbląg</td><td>Szukających NFZ</td></tr>
+            <tr><td>8</td><td>bezpłatna pomoc elbląg</td><td>Szukających darmowych</td></tr>
+            <tr><td>9</td><td>szkolenie elbląg</td><td>Szukających szkoleń</td></tr>
+            <tr><td>10</td><td>kurs psychoterapii elbląg</td><td>Szukających kursów</td></tr>
+            <tr><td>11</td><td>wynagrodzenie psycholog elbląg</td><td>Badających zarobki</td></tr>
+            <tr><td>12</td><td>ile zarabia psycholog elbląg</td><td>Badających zarobki</td></tr>
+            <tr><td>13</td><td>jak zostać psychoterapeutą</td><td>Zmieniających karierę</td></tr>
+            <tr><td>14</td><td>staż psycholog elbląg</td><td>Szukających staży</td></tr>
+            <tr><td>15</td><td>volontariat elbląg</td><td>Szukających wolontariatu</td></tr>
+            <tr><td>16</td><td>praktyki psychologia elbląg</td><td>Szukających praktyk</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🧹</span> Oczyszczenie Wyszukiwanych Haseł — 72 → &lt;15
+      </div>
+      <div class="idea-body">
+        <p>Kampania Elbląg obecnie wyzwala się na <strong>72 różnych wyszukiwaniach</strong>, z których zdecydowana większość jest nietrafna. Cel to redukcja do <strong>poniżej 15 ukierunkowanych, wysokointencjonalnych wyszukiwań</strong>.</p>
+        <div class="action-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Przejrzyj raport Wyszukiwanych Haseł</h4>
+            <p>Przejdź do Słowa Kluczowe → Wyszukiwane Hasła → filtruj dla kampanii Elbląg. Zidentyfikuj każde hasło, które nie wyraźnie wskazuje na intencję pacjenta (ktoś chcący umówić sesję).</p>
+          </div>
+        </div>
+        <div class="action-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Dodaj nietrafne hasła jako wykluczające</h4>
+            <p>Każde nietrafne wyszukiwanie zostaje dodane jako słowo wykluczające. Zapobiega to przyszłym kliknięciom z tego zapytania.</p>
+          </div>
+        </div>
+        <div class="action-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Zamień najlepiej działające na dopasowanie dokładne</h4>
+            <p>Każde wyszukiwanie, które faktycznie konwertowało, powinno stać się słowem kluczowym z dopasowaniem dokładnym na własnych prawach.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🔄</span> Naprawa Śledzenia Konwersji Booknetic
+        <span class="tag high">WYSOKI WPŁYW</span>
+      </div>
+      <div class="idea-body">
+        <p>Śledzenie konwersji przez Booknetic może nie działać prawidłowo. Jeśli Google Ads nie wie, które kliknięcia konwertują, nie może zoptymalizować licytacji, a raportowane wartości CPA mogą być niedokładne.</p>
+        <div class="callout">
+          <strong>Zweryfikuj:</strong> Zarezerwuj testową wizytę przez przepływ Booknetic na stronie docelowej Elbląg. Sprawdź, czy konwersja odpala się w Google Ads (Konwersje → zobacz, czy testowa rezerwacja się pojawia). Jeśli nie, tag śledzenia konwersji musi zostać skonfigurowany ponownie. Jest to warunek wstępny dla jakiejkolwiek strategii inteligentnego licytowania.
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="callout success">
+      <strong>Szacowany wpływ 7-Dniowy:</strong> CPA Elbląg powinno spaść ze 102.74 PLN do ~60–70 PLN dzięki nowej kopii reklamy + wykluczeniom + oczyszczeniu wyszukiwanych haseł. W połączeniu z działaniami Dnia 0, ROAS na poziomie konta powinien osiągnąć ~1.5x.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 6: 14-DAY OPTIMIZATION ═══════════════ -->
+<div class="section" id="day14">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">settings</span>
+    <div>
+      <div class="sec-label">Sekcja 7</div>
+      <h2>Optymalizacja 14-Dniowa — Precyzyjne Dostrajanie</h2>
+      <div class="sub">Rebalansowanie typów dopasowania, odzyskiwanie Wyniku Jakości i inteligencja licytacji</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">1. Rebalansowanie Typów Dopasowania</h3>
+    <p>Obecny rozkład jest niebezpiecznie obciążony w stronę dopasowania szerokiego. Cel to <strong>odwrócenie proporcji w stronę dopasowania dokładnego</strong>, co daje WCP kontrolę nad tym, które dokładnie zapytania wyzwalają reklamy.</p>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Typ Dopasowania</th><th>Obecny</th><th>Cel</th><th>Działanie</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dopasowanie Szerokie</td>
+          <td class="metric-red">48%</td>
+          <td class="metric-green">30%</td>
+          <td>Zamień niedowydajne słowa kluczowe szerokie na frazę/dokładne. Usuń słowa kluczowe szerokie z 0 konwersjami po 30 dniach.</td>
+        </tr>
+        <tr>
+          <td>Dopasowanie Dokładne</td>
+          <td class="metric-yellow">~35%</td>
+          <td class="metric-green">55%</td>
+          <td>Dodaj warianty dopasowania dokładnego najlepiej działających wyszukiwanych haseł. Stwórz nowe dokładne słowa kluczowe z danych konwersji.</td>
+        </tr>
+        <tr>
+          <td>Dopasowanie Frazowe</td>
+          <td class="metric-blue">~17%</td>
+          <td class="metric-blue">15%</td>
+          <td>Zachowaj stabilne — dopasowanie frazowe zapewnia dobre pokrycie z rozsądną kontrolą.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">2. Optymalizacja Wyniku Jakości — Top 20 Słów Kluczowych wg Wydatków</h3>
+    <p>20 słów kluczowych pochłaniających największy budżet powinno zostać poddanych audytowi pod kątem Wyniku Jakości. Dla każdego słowa kluczowego z WJ &lt; 5:</p>
+
+    <ul class="clean">
+      <li><strong>Trafność reklamy:</strong> Czy kopia reklamy wprost wspomina słowo kluczowe? Jeśli nie, stwórz nową grupę reklam specjalnie dla tego klastra słów kluczowych</li>
+      <li><strong>Trafność strony docelowej:</strong> Czy strona docelowa odpowiada intencji słowa kluczowego? Wyszukanie „psychoterapia Elbląg" powinno lądować na stronie specyficznej dla Elbląga, a nie na stronie głównej</li>
+      <li><strong>Oczekiwany CTR:</strong> Czy słowo kluczowe generuje wyświetlenia, ale brak kliknięć? Rozważ wstrzymanie lub restrukturyzację</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Zasada empiryczna:</strong> Poprawa WJ z 3 na 7 może obniżyć CPC o 30–50% dla tego samego słowa kluczowego. Top 20 słów kluczowych wg wydatków to najwyższej dźwigni cele optymalizacji.
+    </div>
+
+    <h3 class="sub-heading">3. Harmonogram Reklam i Modyfikatory Ofert Urządzeń</h3>
+    <p>Po 14 dniach czystych danych (po naprawach Dnia 0 i Dnia 7), przeanalizuj wydajność według:</p>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🕐</span> Licytowanie wg Pory Dnia</div>
+      <div class="idea-body">
+        <p>Rezerwacje terapii podążają za przewidywalnymi wzorcami. Większość pacjentów rezerwuje podczas:</p>
+        <ul class="clean">
+          <li><strong>8:00–10:00</strong> — poranni decydenci (przed pracą)</li>
+          <li><strong>12:00–14:00</strong> — przeglądający na przerwie obiadowej</li>
+          <li><strong>19:00–22:00</strong> — wieczorni badacze (najwyższa intencja, często po trudnym dniu)</li>
+        </ul>
+        <p>Zastosuj modyfikatory stawek +20% na godzinach z wysoką konwersją i -30% na godzinach z niską konwersją (zazwyczaj 23:00–06:00).</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📱</span> Licytowanie wg Urządzenia</div>
+      <div class="idea-body">
+        <p>Przejrzyj współczynniki konwersji wg urządzenia. Typowe wzorce rezerwacji terapii:</p>
+        <ul class="clean">
+          <li><strong>Telefon:</strong> Wysoki CTR, niższy współczynnik konwersji (ludzie przeglądają na telefonie, rezerwują później na komputerze). Zastosuj -10% jeśli mobilny współczynnik konwersji &lt; 50% desktopowego</li>
+          <li><strong>Komputer:</strong> Niższy CTR, wyższy współczynnik konwersji. Zastosuj +15% jeśli desktop konwertuje 2x+ lepiej</li>
+          <li><strong>Tablet:</strong> Zazwyczaj podobny do desktopu. Zastosuj te same modyfikatory, chyba że dane wskazują inaczej</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">4. Śledzenie Wartości Konwersji</h3>
+    <div class="callout">
+      <strong>Krytyczna aktualizacja:</strong> Obecnie Google Ads prawdopodobnie śledzi konwersje jako zdarzenia binarne (rezerwacja nastąpiła = 1). Aby inteligentne licytowanie mogło optymalizować pod kątem przychodów, a nie wolumenu, <strong>dodaj śledzenie wartości konwersji</strong> na poziomie <strong>250 PLN za sesję</strong>. Umożliwia to strategie licytacji Docelowy ROAS, gdy zbierze się wystarczająco danych (50+ konwersji z wartością).
+    </div>
+
+    <p>Wdrożenie: Na stronie potwierdzenia rezerwacji Booknetic dodaj parametr wartości konwersji do tagu konwersji Google Ads:</p>
+    <div class="ad-copy-box">
+      <div class="description">gtag('event', 'conversion', {<br>&nbsp;&nbsp;'send_to': 'AW-XXXXXX/XXXXXX',<br>&nbsp;&nbsp;'value': 250.0,<br>&nbsp;&nbsp;'currency': 'PLN'<br>});</div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="callout success">
+      <strong>Szacowany wpływ 14-Dniowy:</strong> Rebalansowanie typów dopasowania + poprawy WJ powinny obniżyć CPC na poziomie konta o 15–25%. Harmonogram reklam + modyfikatory urządzeń dodają kolejne 10–15% efektywności. Łączny docelowy ROAS: ~1.7x.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 7: 30-DAY GROWTH ═══════════════ -->
+<div class="section" id="day30">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">rocket</span>
+    <div>
+      <div class="sec-label">Sekcja 8</div>
+      <h2>Wzrost 30-Dniowy — Skalowanie i Rozszerzanie</h2>
+      <div class="sub">Przydziel budżet ponownie do wygrywających, rozszerz Ostródę, uruchom kampanię terapii online</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Realokacja Budżetu</h3>
+    <p>Po wstrzymaniu martwej kampanii i naprawie niedowydajnych, przydziel dzienny budżet ponownie do sprawdzonych wygrywających i możliwości wzrostu:</p>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Kampania</th><th>Obecny Budżet</th><th>Nowy Budżet</th><th>Zmiana</th><th>Uzasadnienie</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Brand — WCP</td>
+          <td>35 PLN/dziennie</td>
+          <td class="metric-green">70 PLN/dziennie</td>
+          <td>+100%</td>
+          <td>Najlepszy CPA (11.85 PLN). Przechwytuje wysokointencjonalne wyszukiwania markowe. Podwójny budżet = podwójne konwersje markowe.</td>
+        </tr>
+        <tr>
+          <td>Olsztyn</td>
+          <td>60 PLN/dziennie</td>
+          <td>60 PLN/dziennie</td>
+          <td>Bez zmian</td>
+          <td>Stabilny wynik. Utrzymuj podczas optymalizacji typów dopasowania.</td>
+        </tr>
+        <tr>
+          <td>Elbląg</td>
+          <td>50 PLN/dziennie</td>
+          <td>45 PLN/dziennie</td>
+          <td>-10%</td>
+          <td>Zmniejszono po naprawach Dnia 7. Niższe CPA powinno zrekompensować zmniejszone wydatki.</td>
+        </tr>
+        <tr>
+          <td>Ostróda</td>
+          <td>45 PLN/dziennie</td>
+          <td class="metric-green">65 PLN/dziennie</td>
+          <td>+44%</td>
+          <td>Niedostatecznie obsłużony rynek. Nowa poradnia (Mar 2025) potrzebuje widoczności. Dodaj 12 nowych słów kluczowych dokładnych.</td>
+        </tr>
+        <tr>
+          <td>Terapia Indywidualna</td>
+          <td>55 PLN/dziennie</td>
+          <td class="metric-red">WSTRZYMANA</td>
+          <td>—</td>
+          <td>0 konwersji. Budżet przekazany do Brand + Ostróda.</td>
+        </tr>
+        <tr>
+          <td><strong>NOWA: Terapia Online</strong></td>
+          <td>—</td>
+          <td class="metric-green">50 PLN/dziennie</td>
+          <td>Nowa</td>
+          <td>Przeciwdziałaj platformom ogólnokrajowym. Przechwytuj wyszukiwania „terapia online".</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Łączna zmiana dziennych wydatków:</strong> 245 PLN/dziennie → 290 PLN/dziennie (+18%). Jednak efektywny ROAS powinien znacząco wzrosnąć, ponieważ nowe wydatki są skoncentrowane w sprawdzonych i wysokopotencjalnych kampaniach, a nie marnowane na martwą.
+    </div>
+
+    <h3 class="sub-heading">Rozszerzenie Ostródy</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span>📍</span> 12 Nowych Słów Kluczowych Dopasowania Dokładnego dla Ostródy</div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <thead><tr><th>#</th><th>Słowo Kluczowe (Dopasowanie Dokładne)</th><th>Intencja</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>[psychoterapia ostróda]</td><td>Główne — wyszukiwanie terapii</td></tr>
+            <tr><td>2</td><td>[psycholog ostróda]</td><td>Główne — wyszukiwanie psychologa</td></tr>
+            <tr><td>3</td><td>[terapeuta ostróda]</td><td>Główne — wyszukiwanie terapeuty</td></tr>
+            <tr><td>4</td><td>[pomoc psychologiczna ostróda]</td><td>Szukający pomocy</td></tr>
+            <tr><td>5</td><td>[terapia par ostróda]</td><td>Terapia par</td></tr>
+            <tr><td>6</td><td>[psychoterapia online ostróda]</td><td>Online + lokalna</td></tr>
+            <tr><td>7</td><td>[psycholog dziecięcy ostróda]</td><td>Psychologia dziecięca</td></tr>
+            <tr><td>8</td><td>[terapia lęków ostróda]</td><td>Specyficzne dla lęku</td></tr>
+            <tr><td>9</td><td>[depresja pomoc ostróda]</td><td>Pomoc w depresji</td></tr>
+            <tr><td>10</td><td>[warmińskie centrum psychoterapii ostróda]</td><td>Marka + lokalizacja</td></tr>
+            <tr><td>11</td><td>[wcp ostróda]</td><td>Skrót marki</td></tr>
+            <tr><td>12</td><td>[sesja psychoterapii ostróda]</td><td>Intencja sesji</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Nowa kopia reklamy Ostróda (polski):</strong></p>
+        <div class="ad-copy-box">
+          <div class="headline">Psychoterapia Ostróda · Warmińskie CP</div>
+          <div class="display-url">wcp.com.pl/ostroda</div>
+          <div class="description">Profesjonalna pomoc psychologiczna w Ostródzie. Nowy gabinet, doświadczony zespół. Umów sesję online lub stacjonarnie.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">NOWA Kampania: Terapia Online</h3>
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>💻</span> Kampania Terapia Online — 50 PLN/dziennie
+        <span class="tag high">STRATEGICZNA</span>
+      </div>
+      <div class="idea-body">
+        <p>Ta kampania przeciwdziała zagrożeniu ze strony platform ogólnokrajowych (Wellbee, TwojPsycholog) poprzez przechwytywanie pacjentów szukających <strong>onlineowej terapii w całym kraju</strong>, nie tylko na Warmii.</p>
+
+        <h3 class="sub-heading">Struktura Kampanii</h3>
+        <table class="kw-table">
+          <thead><tr><th>Grupa Reklam</th><th>Słowa Kluczowe</th><th>Typ Dopasowania</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Terapia Online — Ogólna</td>
+              <td>terapia online, psychoterapia online, pomoc psychologiczna online</td>
+              <td>Dokładne + Fraza</td>
+            </tr>
+            <tr>
+              <td>Psycholog Online</td>
+              <td>psycholog online, psycholog przez internet, konsultacja psychologiczna online</td>
+              <td>Dokładne + Fraza</td>
+            </tr>
+            <tr>
+              <td>Terapia Online — Szczegółowa</td>
+              <td>psychoterapia internetowa, terapia online cbt, sesja terapeutyczna online</td>
+              <td>Dopasowanie dokładne</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p><strong>Treść reklamy dla kampanii Terapii Online:</strong></p>
+        <div class="ad-copy-box">
+          <div class="headline">Terapia Online · Warmińskie CP</div>
+          <div class="display-url">wcp.com.pl/terapia-online</div>
+          <div class="description">Profesjonalna psychoterapia przez internet. 22+ certyfikowanych terapeutów. Elastyczne godziny. Umów sesję z dowolnego miejsca w Polsce.</div>
+        </div>
+
+        <div class="callout">
+          <strong>Strona docelowa:</strong> Ta kampania MUSI prowadzić do dedykowanej strony docelowej <strong>wcp.com.pl/terapia-online</strong> (zgodnie z raportem Strategii Wzrostu Terapii Online). Kierowanie ruchu na ogólną stronę główną skutkować będzie wysokimi współczynnikami odrzuceń.
+        </div>
+
+        <p><strong>Wykluczenia na poziomie kampanii:</strong> Dodaj wszystkie wykluczenia NFZ + uniwersalne z Dnia 0, PLUS: „therapify", „mindgram", „wellbee" (nazwy marek konkurencji — nie licytuj na te słowa, ale zablokuj wyświetlanie Twoich reklam obok nich w pewnych kontekstach).</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Trajektoria ROAS</h3>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Kamień Milowy</th><th>Oczekiwany ROAS</th><th>Kluczowy Czynnik</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Dzień 0 (natychmiast)</td><td class="metric-yellow">1.2–1.3x</td><td>Wstrzymanie martwej kampanii + wykluczenia NFZ</td></tr>
+        <tr><td>Dzień 7</td><td class="metric-yellow">1.5x</td><td>Naprawa Elbląga + nowa treść reklamy</td></tr>
+        <tr><td>Dzień 14</td><td class="metric-green">1.7x</td><td>Rebalansowanie typów dopasowania + WJ + modyfikatory stawek</td></tr>
+        <tr><td>Dzień 30</td><td class="metric-green">2.0x</td><td>Realokacja budżetu + Ostróda + Terapia Online</td></tr>
+        <tr><td>Dzień 60</td><td class="metric-green">2.5x</td><td>Inteligentne oferty + udoskonalone targetowanie + optymalizacja strony docelowej</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 8: NEGATIVE KEYWORD MASTER LIST ═══════════════ -->
+<div class="section" id="neg-keywords">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">block</span>
+    <div>
+      <div class="sec-label">Sekcja 9</div>
+      <h2>Główna Lista Słów Kluczowych Wykluczających</h2>
+      <div class="sub">Konsolidowane odniesienie — stosuj według zakresu kampanii</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Wskazówka implementacyjna:</strong> Stwórz te listy jako <strong>współdzielone listy wykluczających słów kluczowych</strong> w Google Ads (Narzędzia → Listy słów kluczowych wykluczających). Następnie zastosuj każdą listę do odpowiednich kampanii. To znacznie ułatwia konserwację niż dodawanie wykluczeń indywidualnie do każdej kampanii.
+    </div>
+
+    <h3 class="sub-heading">Uniwersalne Wykluczenia — Zastosuj do WSZYSTKICH Kampanii (40+ słów kluczowych)</h3>
+
+    <table class="kw-table">
+      <thead><tr><th>Kategoria</th><th>Słowa Kluczowe</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>NFZ / Darmowe</td>
+          <td>nfz, na nfz, z nfz, przez nfz, od nfz, przy nfz, bezpłatna, darmowa, bezpłatnie, za darmo, bez opłat, bezpłatna terapia, nfz terapia, nfz psycholog, nfz psychoterapia, poradnia nfz, przychodnia nfz, za darmo terapia, bezpłatna konsultacja, bezpłatna pomoc</td>
+        </tr>
+        <tr>
+          <td>Praca / Kariera</td>
+          <td>praca, вакансия, rekrutacja, oferty pracy, ogłoszenia pracy, jak zostać, ile zarabia, czy warto, wynagrodzenie, staż, praktyki, volontariat</td>
+        </tr>
+        <tr>
+          <td>Edukacja</td>
+          <td>studia, kurs, szkolenie, kierunek psychologia, studia podyplomowe</td>
+        </tr>
+        <tr>
+          <td>Informacja / Treść</td>
+          <td>forum, blog, wikipedia, książka, pdf, artykuł, artykuły, test online, quiz</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">Wykluczenia Specyficzne dla Elbląga (16 keywords)</h3>
+    <table class="kw-table">
+      <thead><tr><th>#</th><th>Słowo Wykluczające</th><th>Blokuje</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>praca psycholog elbląg</td><td>Szukających pracy</td></tr>
+        <tr><td>2</td><td>oferty pracy elbląg</td><td>Szukających pracy</td></tr>
+        <tr><td>3</td><td>rekrutacja psycholog elbląg</td><td>Szukających rekrutacji</td></tr>
+        <tr><td>4</td><td>studia psychologia elbląg</td><td>Studentów</td></tr>
+        <tr><td>5</td><td>kierunek psychologia elbląg</td><td>Studentów</td></tr>
+        <tr><td>6</td><td>nfz elbląg psycholog</td><td>Szukających NFZ</td></tr>
+        <tr><td>7</td><td>poradnia zdrowia psychicznego elbląg</td><td>Szukających NFZ</td></tr>
+        <tr><td>8</td><td>bezpłatna pomoc elbląg</td><td>Szukających darmowych</td></tr>
+        <tr><td>9</td><td>szkolenie elbląg</td><td>Szukających szkoleń</td></tr>
+        <tr><td>10</td><td>kurs psychoterapii elbląg</td><td>Szukających kursów</td></tr>
+        <tr><td>11</td><td>wynagrodzenie psycholog elbląg</td><td>Badających zarobki</td></tr>
+        <tr><td>12</td><td>ile zarabia psycholog elbląg</td><td>Badających zarobki</td></tr>
+        <tr><td>13</td><td>jak zostać psychoterapeutą</td><td>Zmieniających karierę</td></tr>
+        <tr><td>14</td><td>staż psycholog elbląg</td><td>Szukających staży</td></tr>
+        <tr><td>15</td><td>volontariat elbląg</td><td>Szukających wolontariatu</td></tr>
+        <tr><td>16</td><td>praktyki psychologia elbląg</td><td>Szukających praktyk</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">Wykluczenia Specyficzne dla Olsztyna (8 keywords)</h3>
+    <table class="kw-table">
+      <thead><tr><th>#</th><th>Słowo Wykluczające</th><th>Blokuje</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>praca psycholog olsztyn</td><td>Szukających pracy</td></tr>
+        <tr><td>2</td><td>studia psychologia uwm</td><td>Studentów UWM</td></tr>
+        <tr><td>3</td><td>kierunek psychologia olsztyn</td><td>Przyszłych studentów</td></tr>
+        <tr><td>4</td><td>poradnia zdrowia psychicznego olsztyn nfz</td><td>Szukających NFZ</td></tr>
+        <tr><td>5</td><td>bezpłatna pomoc psychologiczna olsztyn</td><td>Szukających darmowych</td></tr>
+        <tr><td>6</td><td>szkolenie psychoterapeuta olsztyn</td><td>Szukających szkoleń</td></tr>
+        <tr><td>7</td><td>rekrutacja olsztyn psycholog</td><td>Szukających rekrutacji</td></tr>
+        <tr><td>8</td><td>ile zarabia psycholog olsztyn</td><td>Badających zarobki</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">Wykluczenia Specyficzne dla Ostródy (4 keywords)</h3>
+    <table class="kw-table">
+      <thead><tr><th>#</th><th>Słowo Wykluczające</th><th>Blokuje</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>praca psycholog ostróda</td><td>Szukających pracy</td></tr>
+        <tr><td>2</td><td>nfz ostróda psycholog</td><td>Szukających NFZ</td></tr>
+        <tr><td>3</td><td>bezpłatna pomoc ostróda</td><td>Szukających darmowych</td></tr>
+        <tr><td>4</td><td>studia psychologia ostróda</td><td>Studentów</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 9: RISK MATRIX ═══════════════ -->
+<div class="section" id="risk-matrix">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">verified_user</span>
+    <div>
+      <div class="sec-label">Sekcja 10</div>
+      <h2>Macierz Ryzyka — Co Może Pójść Nie Tak</h2>
+      <div class="sub">Przewidywanie trybów awarii i planowanie łagodzenia</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="priority-matrix">
+      <div class="matrix-cell high-impact-low-effort">
+        <h4>✅ Wysoki Wpływ · Niskie Ryzyko</h4>
+        <ul>
+          <li>Wstrzymanie martwej kampanii — brak wad, gwarantowane oszczędności</li>
+          <li>Dodawanie wykluczeń NFZ — eliminuje marnowanie, brak utraty konwersji</li>
+          <li>Dodawanie wykluczeń uniwersalnych — czyste usuwanie marnowania</li>
+          <li>Potwierdzenie dokładnego dopasowania Marki — chroni najlepszy CPA</li>
+        </ul>
+      </div>
+      <div class="matrix-cell high-impact-high-effort">
+        <h4>⚠️ Wysoki Wpływ · Średnie Ryzyko</h4>
+        <ul>
+          <li>Rebalansowanie typów dopasowania — może tymczasowo zmniejszyć wolumen wyświetleń, podczas gdy Google ponownie się uczy</li>
+          <li>Realokacja budżetu — jeśli Ostróda/Marka nie wykorzystają dodatkowego budżetu efektywnie, pewne marnowanie</li>
+          <li>Kampania terapii online — nowa kampania, nieznany współczynnik konwersji we wczesnych dniach</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-low-effort">
+        <h4>📊 Niski Wpływ · Niskie Ryzyko</h4>
+        <ul>
+          <li>Testowanie A/B treści reklam — najgorszy przypadek, brak poprawy</li>
+          <li>Modyfikatory stawek wg urządzenia — małe dostosowania, łatwo odwracalne</li>
+          <li>Zmiany harmonogramu reklam — konserwatywne ±20% jest bezpieczne</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-high-effort">
+        <h4>❌ Niski Wpływ · Wyższe Ryzyko</h4>
+        <ul>
+          <li>Agresywne eliminowanie dopasowania szerokiego — zbyt szybko może zdusić wolumen zanim słowa kluczowe dokładne wzrosną</li>
+          <li>Inteligentne licytowanie zbyt wcześnie — wymaga najpierw 50+ konwersji z wartością</li>
+          <li>Nadmierne filtrowanie terminów wyszukiwania — pewne trafne długie słowa kluczowe mogą zostać wyłapane</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Szczegółowe Scenariusze Ryzyka</h3>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Ryzyko</th><th>Prawdopodobieństwo</th><th>Wpływ</th><th>Łagodzenie</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Nowa kopia reklamy Elbląg niedowydajna</td>
+          <td class="metric-yellow">Średni</td>
+          <td class="metric-yellow">Średni</td>
+          <td>Zachowaj starą kopię reklamy aktywną obok nowych wariantów. Wstrzymaj najgorszy wariant po 7 dniach, nie natychmiast.</td>
+        </tr>
+        <tr>
+          <td>Śledzenie konwersji Booknetic nie działa</td>
+          <td class="metric-yellow">Średni</td>
+          <td class="metric-red">Wysoki</td>
+          <td>Testuj przepływ rezerwacji cotygodniowo. Miej plan awaryjny: konwersje telefoniczne Google Ads jako drugorzędne działanie.</td>
+        </tr>
+        <tr>
+          <td>Słowa kluczowe Ostróda zbyt niski wolumen</td>
+          <td class="metric-blue">Niski</td>
+          <td class="metric-yellow">Średni</td>
+          <td>Zacznij z 12 słowami dokładnymi. Jeśli wolumen jest zbyt niski, dodaj warianty dopasowania frazowego po 2 tygodniach.</td>
+        </tr>
+        <tr>
+          <td>Kampania terapii online kanibalizuje kampanie lokalne</td>
+          <td class="metric-blue">Niski</td>
+          <td class="metric-yellow">Średni</td>
+          <td>Użyj ścisłych słów wykluczających: nie pokazuj reklam online dla wyszukiwań specyficznych dla lokalizacji. Zachowaj grupy reklam wyraźnie oddzielone.</td>
+        </tr>
+        <tr>
+          <td>Konkurent (Wellbee) zwiększa wydatki Google Ads na Warmii</td>
+          <td class="metric-yellow">Średni</td>
+          <td class="metric-yellow">Średni</td>
+          <td>Kampania Brand chroni przed tym. Monitoruj statystyki aukcji cotygodniowo. Zwiększ stawkę markową, jeśli konkurencja rośnie.</td>
+        </tr>
+        <tr>
+          <td>Zmiany algorytmu Google wpływają na WJ</td>
+          <td class="metric-blue">Niski</td>
+          <td class="metric-yellow">Średni</td>
+          <td>Skup się na trafności reklamy + jakości strony docelowej (rzeczy, które Google konsekwentnie nagradza). Nie goni za taktycznymi sztuczkami WJ.</td>
+        </tr>
+        <tr>
+          <td>Zwiększenie budżetu nie przynosi proporcjonalnych konwersji</td>
+          <td class="metric-yellow">Średni</td>
+          <td class="metric-yellow">Średni</td>
+          <td>Zwiększaj budżety stopniowo (+20% tygodniowo), nie wszystkie naraz. Monitoruj stabilność CPA codziennie przez pierwsze 2 tygodnie po zmianach.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="divider">
+
+    <div class="callout">
+      <strong>Ogólna ocena ryzyka:</strong> NISKIE do ŚREDNIEGO. Plan optymalizacji jest celowo konserwatywny — zaczyna się od usuwania marnotrawstwa (prawie zerowe ryzyko) i przechodzi do ulepszeń strukturalnych. Największym ryzykiem jest <strong>opóźnienie w wdrożeniu</strong>, a nie same działania. Każdego dnia, gdy martwa kampania działa, a wycieki NFZ trwają, WCP traci pieniądze, których nigdy nie odzyska.
+    </div>
+
+    <div class="roundtable" style="border-left:3px solid var(--gold-dim);background:var(--surface-mid);border-radius:0 4px 4px 0;margin:24px 0;padding:15px 18px">
+      <div class="rt-title" style="font-family:'Manrope',sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:12px">📌 LISTA KONTROLNA WDROŻENIA — Zaktualizowano 18 Kwietnia 2026</div>
+      <div style="font-size:.88rem;color:var(--on-surface);">
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Dzień 0:</strong> Wstrzymaj kampanię Terapia Indywidualna — ZAKOŃCZONE</p>
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Dzień 0:</strong> Dodaj listę słów wykluczających NFZ do wszystkich kampanii — ZAKOŃCZONE (poziom kampanii + konta)</p>
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Dzień 0:</strong> Dodaj uniwersalną listę słów wykluczających do wszystkich kampanii — ZAKOŃCZONE (poziom kampanii + konta)</p>
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Dzień 0:</strong> Zweryfikuj kampanię Brand — tylko dokładne dopasowanie — ZAKOŃCZONE</p>
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Dzień 0:</strong> Zaktualizuj listy słów kluczowych na poziomie kampanii i konta — ZAKOŃCZONE</p>
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Dzień 0:</strong> Pierwsza kampania testowa A/B wpisana do testów — ZAKOŃCZONE</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 7:</strong> Wgraj 3 nowe warianty kopii reklam Elbląg</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 7:</strong> Dodaj 16 słów wykluczających specyficznych dla Elbląga</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 7:</strong> Oczyszczenie wyszukiwanych haseł Elbląg (72 → &lt;15)</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 7:</strong> Przetestuj śledzenie konwersji Booknetic</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 14:</strong> Rozpocznij rebalansowanie typów dopasowania</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 14:</strong> Audyt WJ dla top 20 słów kluczowych</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 14:</strong> Zastosuj modyfikatory stawek wg harmonogramu i urządzenia</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 14:</strong> Dodaj śledzenie wartości konwersji (250 PLN)</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 30:</strong> Przekazuj budżety zgodnie z planem</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 30:</strong> Dodaj 12 słów kluczowych dokładnego dopasowania Ostróda + nowa kopia reklamy</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 30:</strong> Uruchom kampanię Terapia Online</p>
+        <p style="margin:6px 0;">☐ <strong>Dzień 30:</strong> Zweryfikuj istnienie strony docelowej /terapia-online</p>
+        <p style="margin:12px 0 0;padding-top:8px;border-top:1px solid rgba(77,70,55,.3)">
+          <strong style="color:var(--gold)">📅 Następny Raport z Analizy:</strong> <span style="color:#6fcf97;font-weight:700">25 Kwietnia 2026</span> — Zadanie cron ustawione na wygenerowanie nowego raportu z analizą Google Ads z aktualnymi danymi wydajności.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+</div>
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Powrót do Raportu Strategicznego →
+      </a>
+      <a href="ANIMA-COUNTER-STRATEGY-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">shield</span> Strategia Przeciwdziałania ANIMA →
+      </a>
+      <a href="SOCIAL-MEDIA-ACTIVATION-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">smartphone</span> Aktywacja Social Media →
+      </a>
+      <a href="WCP_Financial_Health_Report_2026-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">account_balance</span> Raport Zdrowia Finansowego →
+      </a>
+    </div>
+
+<div><div><div>
+</main>
+<!-- ═══════════════ SCROLL SPY ═══════════════ -->
+<script>
+(function(){
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const topnavSection = document.getElementById('topnav-section');
+
+  function onScroll() {
+    let current = '';
+    sections.forEach(s => {
+      if (s.getBoundingClientRect().top <= 120) current = s.id;
+    });
+    navLinks.forEach(link => {
+      link.classList.remove('aktywne');
+      if (link.getAttribute('data-section') === current) {
+        link.classList.add('aktywne');
+      }
+    });
+    const sectionNames = {
+      'cover': 'Okładka',
+      'executive-summary': 'Podsumowanie Strategiczne',
+      'analytics-dashboard': 'Dashboard Analityczny',
+      'campaign-audit': 'Audyt Kampanii',
+      'critical-issues': 'Krytyczne Problemy',
+      'day0': 'Dzień 0 Działania',
+      'day7': 'Naprawa 7-Dniowa',
+      'day14': 'Optymalizacja 14-Dniowa',
+      'day30': 'Wzrost 30-Dniowy',
+      'neg-keywords': 'Słowa Kluczowe Wykluczające',
+      'risk-matrix': 'Macierz Ryzyka'
+    };
+    if (topnavSection && sectionNames[current]) {
+      topnavSection.textContent = sectionNames[current];
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  onScroll();
+})();
+</script>
+<!-- ═══════════════ ECHARTS INITIALIZATION ═══════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  // Resize handler
+  const charts = [];
+  window.addEventListener('resize', function() {
+    charts.forEach(c => c.resize());
+  });
+
+  function init(domId) {
+    var dom = document.getElementById(domId);
+    if (!dom) return null;
+    var chart = echarts.init(dom, 'stitch');
+    charts.push(chart);
+    return chart;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // CHART 1: Campaign CPA Grouped Bar
+  // ═══════════════════════════════════════════════════════
+  (function() {
+    var chart = init('chart-cpa-bar');
+    if (!chart) return;
+
+    var campaigns = ['Brand — WCP', 'Olsztyn', 'Elbląg', 'Ostróda', 'Terapia Indyw.'];
+    var cpaValues = [11.85, 50, 102.74, 55, null]; // null = paused/infinite
+    var cpaDisplay = [11.85, 50, 102.74, 55, 0];
+
+    // Color: green for low CPA, yellow for medium, red for high
+    var barColors = cpaValues.map(function(v) {
+      if (v === null) return 'rgba(77,70,55,0.3)'; // paused - grey
+      if (v <= 20) return '#6fcf97';  // green - excellent
+      if (v <= 60) return '#f5c842';  // yellow - moderate
+      return '#f08080';               // red - problem
+    });
+
+    chart.setOption({
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        formatter: function(params) {
+          var p = params[0];
+          var name = p.name;
+          if (name === 'Terapia Indyw.') return '<strong>' + name + '</strong><br/>✅ ZATRZYMANA — 0 konwersji';
+          return '<strong>' + name + '</strong><br/>CPA: <strong>' + p.value.toFixed(2) + ' PLN</strong>';
+        }
+      },
+      grid: { left: 60, right: 30, top: 40, bottom: 50 },
+      xAxis: {
+        type: 'category',
+        data: campaigns,
+        axisLabel: {
+          rotate: 15,
+          fontSize: 10,
+          color: '#8a9bb0'
+        }
+      },
+      yAxis: {
+        type: 'value',
+        name: 'CPA (PLN)',
+        nameTextStyle: { color: '#8a9bb0', fontSize: 11 },
+        max: 120
+      },
+      series: [{
+        type: 'bar',
+        barWidth: '55%',
+        data: cpaDisplay.map(function(v, i) {
+          return {
+            value: v,
+            itemStyle: {
+              color: barColors[i],
+              borderRadius: i === 4 ? 0 : [4, 4, 0, 0]
+            },
+            label: {
+              show: true,
+              position: 'top',
+              color: barColors[i],
+              fontWeight: 700,
+              fontSize: 11,
+              formatter: function(p) {
+                if (p.dataIndex === 4) return '✅ STOP';
+                return p.value.toFixed(0) + ' zł';
+              }
+            }
+          };
+        }),
+        markLine: {
+          silent: true,
+          symbol: 'none',
+          lineStyle: { color: '#f08080', type: 'dashed', width: 1 },
+          data: [{ yAxis: 60, label: { formatter: 'Próg CPA 60 zł', color: '#f08080', fontSize: 10 } }]
+        }
+      }],
+      // Target threshold annotation
+      graphic: [{
+        type: 'text',
+        right: 30,
+        top: 10,
+        style: {
+          text: '🔴 >60 zł = problem  🟢 <20 zł = doskonały',
+          fill: '#8a9bb0',
+          fontSize: 10
+        }
+      }]
+    });
+  })();
+
+  // ═══════════════════════════════════════════════════════
+  // CHART 2: ROAS Gauge Dashboard (3 gauges)
+  // ═══════════════════════════════════════════════════════
+  (function() {
+    var chart = init('chart-roas-gauge');
+    if (!chart) return;
+
+    chart.setOption({
+      tooltip: {
+        formatter: '{b}: {c}×'
+      },
+      series: [
+        {
+          type: 'gauge',
+          center: ['17%', '55%'],
+          radius: '80%',
+          startAngle: 210,
+          endAngle: -30,
+          min: 0,
+          max: 3,
+          splitNumber: 6,
+          name: 'Brand',
+          detail: {
+            formatter: '{value}×',
+            fontSize: 20,
+            fontWeight: 800,
+            offsetCenter: [0, '75%'],
+            color: '#6fcf97'
+          },
+          title: {
+            offsetCenter: [0, '95%'],
+            fontSize: 11,
+            color: '#8a9bb0',
+            fontFamily: 'Manrope'
+          },
+          data: [{ value: 2.4, name: 'Brand WCP' }],
+          axisLine: {
+            lineStyle: {
+              color: [
+                [0.33, '#f08080'],
+                [0.55, '#f5c842'],
+                [1, '#6fcf97']
+              ]
+            }
+          },
+          pointer: { itemStyle: { color: '#e6c364' }, width: 4 },
+          axisTick: { length: 4, lineStyle: { color: '#4d4637' } },
+          splitLine: { length: 10, lineStyle: { color: '#4d4637' } },
+          axisLabel: { color: '#8a9bb0', fontSize: 9, distance: 8 },
+          anchor: { show: true, size: 8, itemStyle: { color: '#e6c364' } }
+        },
+        {
+          type: 'gauge',
+          center: ['50%', '55%'],
+          radius: '80%',
+          startAngle: 210,
+          endAngle: -30,
+          min: 0,
+          max: 3,
+          splitNumber: 6,
+          detail: {
+            formatter: '{value}×',
+            fontSize: 20,
+            fontWeight: 800,
+            offsetCenter: [0, '75%'],
+            color: '#f5c842'
+          },
+          title: {
+            offsetCenter: [0, '95%'],
+            fontSize: 11,
+            color: '#8a9bb0',
+            fontFamily: 'Manrope'
+          },
+          data: [{ value: 0.8, name: 'Olsztyn' }],
+          axisLine: {
+            lineStyle: {
+              color: [
+                [0.33, '#f08080'],
+                [0.55, '#f5c842'],
+                [1, '#6fcf97']
+              ]
+            }
+          },
+          pointer: { itemStyle: { color: '#e6c364' }, width: 4 },
+          axisTick: { length: 4, lineStyle: { color: '#4d4637' } },
+          splitLine: { length: 10, lineStyle: { color: '#4d4637' } },
+          axisLabel: { color: '#8a9bb0', fontSize: 9, distance: 8 },
+          anchor: { show: true, size: 8, itemStyle: { color: '#e6c364' } }
+        },
+        {
+          type: 'gauge',
+          center: ['83%', '55%'],
+          radius: '80%',
+          startAngle: 210,
+          endAngle: -30,
+          min: 0,
+          max: 3,
+          splitNumber: 6,
+          detail: {
+            formatter: '{value}×',
+            fontSize: 20,
+            fontWeight: 800,
+            offsetCenter: [0, '75%'],
+            color: '#f08080'
+          },
+          title: {
+            offsetCenter: [0, '95%'],
+            fontSize: 11,
+            color: '#8a9bb0',
+            fontFamily: 'Manrope'
+          },
+          data: [{ value: 0.5, name: 'Elbląg' }],
+          axisLine: {
+            lineStyle: {
+              color: [
+                [0.33, '#f08080'],
+                [0.55, '#f5c842'],
+                [1, '#6fcf97']
+              ]
+            }
+          },
+          pointer: { itemStyle: { color: '#e6c364' }, width: 4 },
+          axisTick: { length: 4, lineStyle: { color: '#4d4637' } },
+          splitLine: { length: 10, lineStyle: { color: '#4d4637' } },
+          axisLabel: { color: '#8a9bb0', fontSize: 9, distance: 8 },
+          anchor: { show: true, size: 8, itemStyle: { color: '#e6c364' } }
+        }
+      ],
+      graphic: [
+        {
+          type: 'text',
+          left: 'center',
+          top: 5,
+          style: {
+            text: '1.0× = Punkt Równowagi · 2.0× = Cel 30-Dniowy',
+            fill: '#8a9bb0',
+            fontSize: 10,
+            textAlign: 'center'
+          }
+        }
+      ]
+    });
+  })();
+
+  // ═══════════════════════════════════════════════════════
+  // CHART 3: Keyword Quality Score Distribution (Doughnut)
+  // ═══════════════════════════════════════════════════════
+  (function() {
+    var chart = init('chart-qs-distribution');
+    if (!chart) return;
+
+    chart.setOption({
+      tooltip: {
+        trigger: 'item',
+        formatter: function(p) {
+          return '<strong>' + p.name + '</strong><br/>Słowa kluczowe: ' + p.value + '<br/>Udział: ' + p.percent + '%';
+        }
+      },
+      legend: {
+        orient: 'vertical',
+        right: 10,
+        top: 'center',
+        itemWidth: 12,
+        itemHeight: 12,
+        itemGap: 14
+      },
+      series: [{
+        type: 'pie',
+        radius: ['45%', '72%'],
+        center: ['38%', '50%'],
+        avoidLabelOverlap: true,
+        itemStyle: {
+          borderRadius: 6,
+          borderColor: '#1c2024',
+          borderWidth: 3
+        },
+        label: {
+          show: true,
+          formatter: '{b}\n{d}%',
+          fontSize: 11,
+          color: '#e0e3e8',
+          lineHeight: 16
+        },
+        labelLine: {
+          lineStyle: { color: 'rgba(77,70,55,0.6)' }
+        },
+        emphasis: {
+          label: { fontSize: 13, fontWeight: 'bold' },
+          itemStyle: { shadowBlur: 15, shadowColor: 'rgba(0,0,0,0.5)' }
+        },
+        data: [
+          {
+            value: 625,
+            name: 'Brak WJ',
+            itemStyle: { color: 'rgba(77,70,55,0.6)' },
+            label: { color: '#8a9bb0' }
+          },
+          {
+            value: 28,
+            name: 'WJ 1-4',
+            itemStyle: { color: '#f08080' },
+            label: { color: '#f08080' }
+          },
+          {
+            value: 16,
+            name: 'WJ 5-7',
+            itemStyle: { color: '#f5c842' },
+            label: { color: '#f5c842' }
+          },
+          {
+            value: 8,
+            name: 'WJ 8-10',
+            itemStyle: { color: '#6fcf97' },
+            label: { color: '#6fcf97' }
+          }
+        ]
+      }],
+      graphic: [{
+        type: 'group',
+        left: '28%',
+        top: 'center',
+        children: [
+          {
+            type: 'text',
+            style: {
+              text: '677',
+              fill: '#e6c364',
+              fontSize: 28,
+              fontWeight: 800,
+              textAlign: 'center',
+              x: 0,
+              y: -12
+            }
+          },
+          {
+            type: 'text',
+            style: {
+              text: 'łącznie',
+              fill: '#8a9bb0',
+              fontSize: 11,
+              textAlign: 'center',
+              x: 0,
+              y: 12
+            }
+          }
+        ]
+      }]
+    });
+  })();
+
+  // ═══════════════════════════════════════════════════════
+  // CHART 4: 30-Day ROAS Optimization Timeline (Step)
+  // ═══════════════════════════════════════════════════════
+  (function() {
+    var chart = init('chart-roas-timeline');
+    if (!chart) return;
+
+    chart.setOption({
+      tooltip: {
+        trigger: 'axis',
+        formatter: function(params) {
+          var p = params[0];
+          return '<strong>' + p.name + '</strong><br/>ROAS: <strong>' + p.value + '×</strong>';
+        }
+      },
+      grid: { left: 55, right: 30, top: 45, bottom: 45 },
+      xAxis: {
+        type: 'category',
+        data: ['Dzień 0\n(Start)', 'Dzień 0\n(Po fix)', 'Dzień 7', 'Dzień 14', 'Dzień 30', 'Dzień 60'],
+        axisLabel: { fontSize: 10, color: '#8a9bb0', interval: 0 }
+      },
+      yAxis: {
+        type: 'value',
+        name: 'ROAS (×)',
+        nameTextStyle: { color: '#8a9bb0', fontSize: 11 },
+        min: 0,
+        max: 3,
+        splitNumber: 6
+      },
+      series: [
+        {
+          name: 'Projekcja ROAS',
+          type: 'line',
+          step: 'middle',
+          data: [0.99, 1.25, 1.5, 1.7, 2.0, 2.5],
+          lineStyle: {
+            width: 3,
+            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+              { offset: 0, color: '#f08080' },
+              { offset: 0.4, color: '#f5c842' },
+              { offset: 1, color: '#6fcf97' }
+            ])
+          },
+          itemStyle: {
+            color: function(params) {
+              var v = params.value;
+              if (v < 1) return '#f08080';
+              if (v < 1.5) return '#f5c842';
+              return '#6fcf97';
+            },
+            borderWidth: 2,
+            borderColor: '#1c2024'
+          },
+          symbol: 'circle',
+          symbolSize: 12,
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+              { offset: 0, color: 'rgba(111,207,151,0)' },
+              { offset: 1, color: 'rgba(111,207,151,0.15)' }
+            ])
+          },
+          label: {
+            show: true,
+            position: 'top',
+            formatter: function(p) { return p.value + '×'; },
+            color: '#e0e3e8',
+            fontWeight: 700,
+            fontSize: 12
+          },
+          markLine: {
+            silent: true,
+            symbol: 'none',
+            lineStyle: { color: '#f08080', type: 'dashed', width: 1 },
+            data: [{ yAxis: 1.0, label: { formatter: 'Punkt Równowagi 1.0×', color: '#f08080', fontSize: 10 } }]
+          },
+          markArea: {
+            silent: true,
+            data: [
+              [{ name: 'Poniżej Równowagi', xAxis: 'Dzień 0\n(Start)', itemStyle: { color: 'rgba(240,128,128,0.06)' } }, { xAxis: 'Dzień 0\n(Po fix)' }],
+              [{ name: 'Cel', xAxis: 'Dzień 30', itemStyle: { color: 'rgba(111,207,151,0.06)' } }, { xAxis: 'Dzień 60' }]
+            ]
+          }
+        }
+      ]
+    });
+  })();
+
+  // ═══════════════════════════════════════════════════════
+  // CHART 5: Cost vs Conversions Bubble/Scatter
+  // ═══════════════════════════════════════════════════════
+  (function() {
+    var chart = init('chart-cost-scatter');
+    if (!chart) return;
+
+    var bubbleData = [
+      {
+        name: 'Brand — WCP',
+        value: [1050, 89, 4200], // [Cost PLN/mo, Conversions/mo, Impressions]
+        itemStyle: { color: 'rgba(111,207,151,0.75)', borderColor: '#6fcf97', borderWidth: 2 },
+        cpA: 11.85
+      },
+      {
+        name: 'Olsztyn',
+        value: [1800, 36, 8500],
+        itemStyle: { color: 'rgba(245,200,66,0.75)', borderColor: '#f5c842', borderWidth: 2 },
+        cpA: 50
+      },
+      {
+        name: 'Elbląg',
+        value: [1500, 15, 5200],
+        itemStyle: { color: 'rgba(240,128,128,0.75)', borderColor: '#f08080', borderWidth: 2 },
+        cpA: 102.74
+      },
+      {
+        name: 'Ostróda',
+        value: [1350, 25, 3800],
+        itemStyle: { color: 'rgba(123,200,224,0.75)', borderColor: '#7bc8e0', borderWidth: 2 },
+        cpA: 55
+      },
+      {
+        name: 'Terapia Indyw. ✅',
+        value: [1650, 0, 3100],
+        itemStyle: { color: 'rgba(77,70,55,0.4)', borderColor: '#4d4637', borderWidth: 2 },
+        cpA: Infinity
+      }
+    ];
+
+    chart.setOption({
+      tooltip: {
+        trigger: 'item',
+        formatter: function(p) {
+          var d = p.data;
+          var cpaStr = d.cpA === Infinity ? '∞ (0 konwersji)' : d.cpA.toFixed(2) + ' PLN';
+          return '<strong>' + d.name + '</strong><br/>' +
+            'Koszt mies.: ' + d.value[0].toLocaleString() + ' PLN<br/>' +
+            'Konwersje: ' + d.value[1] + '<br/>' +
+            'Wyświetlenia: ' + d.value[2].toLocaleString() + '<br/>' +
+            'CPA: ' + cpaStr;
+        }
+      },
+      grid: { left: 60, right: 30, top: 40, bottom: 50 },
+      xAxis: {
+        type: 'value',
+        name: 'Koszt miesięczny (PLN)',
+        nameTextStyle: { color: '#8a9bb0', fontSize: 10 },
+        axisLabel: { formatter: '{value} zł', color: '#8a9bb0', fontSize: 10 }
+      },
+      yAxis: {
+        type: 'value',
+        name: 'Konwersje / mies.',
+        nameTextStyle: { color: '#8a9bb0', fontSize: 10 },
+        axisLabel: { color: '#8a9bb0', fontSize: 10 }
+      },
+      series: [{
+        type: 'scatter',
+        symbolSize: function(data) {
+          return Math.sqrt(data[2]) * 0.6;
+        },
+        data: bubbleData,
+        label: {
+          show: true,
+          formatter: function(p) { return p.data.name; },
+          position: 'top',
+          fontSize: 10,
+          color: '#8a9bb0'
+        },
+        emphasis: {
+          itemStyle: { shadowBlur: 12, shadowColor: 'rgba(0,0,0,0.5)' },
+          label: { fontWeight: 'bold', color: '#e6c364' }
+        },
+        markLine: {
+          silent: true,
+          symbol: 'none',
+          lineStyle: { color: '#f08080', type: 'dashed', width: 1 },
+          data: [
+            { yAxis: 20, label: { formatter: 'Min. konwersji', color: '#f08080', fontSize: 10 } }
+          ]
+        }
+      }]
+    });
+  })();
+
+  // ═══════════════════════════════════════════════════════
+  // CHART 6: CTR Trend with Optimization Milestones
+  // ═══════════════════════════════════════════════════════
+  (function() {
+    var chart = init('chart-ctr-trend');
+    if (!chart) return;
+
+    // Weekly CTR data from before optimization through projected 30-day
+    var weeks = ['W-4', 'W-3', 'W-2', 'W-1', 'W0\n(Start)', 'W1\n(D0 fix)', 'W2\n(D7 fix)', 'W3\n(D14 opt.)', 'W4\n(D30 skala)'];
+    var ctrBrand  = [5.2, 5.1, 5.3, 5.4, 5.4, 5.8, 6.2, 6.5, 7.0];
+    var ctrLocal = [2.1, 2.0, 1.9, 1.8, 1.8, 2.5, 3.2, 3.8, 4.5]; // Olsztyn + Elbląg avg
+
+    chart.setOption({
+      tooltip: {
+        trigger: 'axis',
+        formatter: function(params) {
+          var lines = ['<strong>' + params[0].axisValue.replace(/\n/g, ' ') + '</strong>'];
+          params.forEach(function(p) {
+            lines.push(p.marker + ' ' + p.seriesName + ': <strong>' + p.value + '%</strong>');
+          });
+          return lines.join('<br/>');
+        }
+      },
+      legend: {
+        data: ['Brand WCP', 'Kampanie Lokalne (avg)'],
+        bottom: 0,
+        itemWidth: 16,
+        itemHeight: 3,
+        textStyle: { fontSize: 11, color: '#8a9bb0' }
+      },
+      grid: { left: 50, right: 30, top: 35, bottom: 55 },
+      xAxis: {
+        type: 'category',
+        data: weeks,
+        axisLabel: { fontSize: 10, color: '#8a9bb0' },
+        boundaryGap: false
+      },
+      yAxis: {
+        type: 'value',
+        name: 'CTR (%)',
+        nameTextStyle: { color: '#8a9bb0', fontSize: 11 },
+        min: 0,
+        max: 8,
+        axisLabel: { formatter: '{value}%', color: '#8a9bb0', fontSize: 10 }
+      },
+      series: [
+        {
+          name: 'Brand WCP',
+          type: 'line',
+          data: ctrBrand,
+          smooth: true,
+          lineStyle: { width: 2.5, color: '#6fcf97' },
+          itemStyle: { color: '#6fcf97' },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+              { offset: 0, color: 'rgba(111,207,151,0)' },
+              { offset: 1, color: 'rgba(111,207,151,0.12)' }
+            ])
+          },
+          symbolSize: 7
+        },
+        {
+          name: 'Kampanie Lokalne (avg)',
+          type: 'line',
+          data: ctrLocal,
+          smooth: true,
+          lineStyle: { width: 2.5, color: '#f5c842' },
+          itemStyle: { color: '#f5c842' },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+              { offset: 0, color: 'rgba(245,200,66,0)' },
+              { offset: 1, color: 'rgba(245,200,66,0.08)' }
+            ])
+          },
+          symbolSize: 7,
+          markPoint: {
+            data: [
+              {
+                coord: [4, 1.8],
+                symbol: 'pin',
+                symbolSize: 36,
+                itemStyle: { color: '#f08080' },
+                label: { formatter: 'Start', color: '#fff', fontSize: 9, fontWeight: 700 }
+              },
+              {
+                coord: [5, 2.5],
+                symbol: 'pin',
+                symbolSize: 36,
+                itemStyle: { color: '#6fcf97' },
+                label: { formatter: 'D0', color: '#fff', fontSize: 9, fontWeight: 700 }
+              },
+              {
+                coord: [6, 3.2],
+                symbol: 'pin',
+                symbolSize: 36,
+                itemStyle: { color: '#7bc8e0' },
+                label: { formatter: 'D7', color: '#fff', fontSize: 9, fontWeight: 700 }
+              },
+              {
+                coord: [8, 4.5],
+                symbol: 'pin',
+                symbolSize: 36,
+                itemStyle: { color: '#e6c364' },
+                label: { formatter: 'D30', color: '#101418', fontSize: 9, fontWeight: 700 }
+              }
+            ],
+            animationDelay: 500
+          },
+          markLine: {
+            silent: true,
+            symbol: 'none',
+            lineStyle: { color: 'rgba(77,70,55,0.5)', type: 'dashed', width: 1 },
+            data: [
+              { xAxis: 'W0\n(Start)', label: { formatter: 'Początek optymalizacji', color: '#e6c364', fontSize: 9 } }
+            ]
+          }
+        }
+      ]
+    });
+  })();
+
+})();
+</script>
+
+</body>
+</html>

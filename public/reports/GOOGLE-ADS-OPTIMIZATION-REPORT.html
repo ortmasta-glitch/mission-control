@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Ads Optimization · Warmińskie Centrum Psychoterapii</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo img{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout.danger{border-left-color:var(--red-t)}
+  .callout.success{border-left-color:var(--green-t)}
+  .callout.info{border-left-color:var(--blue-t)}
+  .callout strong{color:var(--gold)}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.long-term{background:rgba(155,89,182,.15);color:#c39bd3}
+  .tag.urgent{background:rgba(224,82,82,.25);color:#ff6b6b}
+  .tag.critical{background:rgba(224,82,82,.3);color:#ff4444}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .metric-red{color:#f08080;font-weight:700}
+  .kw-table .metric-green{color:#6fcf97;font-weight:700}
+  .kw-table .metric-yellow{color:#f5c842;font-weight:700}
+  .kw-table .metric-blue{color:#7bc8e0;font-weight:700}
+  .ad-copy-box{background:var(--surface-mid);border:1px dashed rgba(77,70,55,.5);border-radius:4px;padding:16px 18px;margin:12px 0;font-family:"Courier New",monospace;font-size:.82rem}
+  .ad-copy-box .headline{color:#7bc8e0;font-weight:700;font-size:.92rem;text-decoration:underline;margin-bottom:4px}
+  .ad-copy-box .display-url{color:#6fcf97;margin-bottom:5px}
+  .ad-copy-box .description{color:var(--on-surface)}
+  .action-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .action-step:last-child{border-bottom:none}
+  .action-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .action-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .action-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .priority-matrix{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .matrix-cell{padding:18px;border-radius:4px}
+  .matrix-cell.high-impact-low-effort{background:rgba(76,175,125,.08);border-left:3px solid #4CAF7D}
+  .matrix-cell.high-impact-high-effort{background:rgba(75,163,195,.08);border-left:3px solid #4BA3C3}
+  .matrix-cell.low-impact-low-effort{background:rgba(245,200,66,.08);border-left:3px solid #F5C842}
+  .matrix-cell.low-impact-high-effort{background:rgba(224,82,82,.08);border-left:3px solid #E05252}
+  .matrix-cell h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .matrix-cell.high-impact-low-effort h4{color:#6fcf97}
+  .matrix-cell.high-impact-high-effort h4{color:#7bc8e0}
+  .matrix-cell.low-impact-low-effort h4{color:#f5c842}
+  .matrix-cell.low-impact-high-effort h4{color:#f08080}
+  .matrix-cell ul{padding-left:14px;font-size:.82rem;color:var(--on-surface)}
+  .matrix-cell li{margin:4px 0}
+  hr.divider{border:none;border-top:1px solid rgba(77,70,55,.3);margin:20px 0}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  .page-footer{display:none}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  .roas-gauge{display:flex;align-items:center;gap:18px;margin:14px 0;padding:14px;background:var(--surface-mid);border-radius:4px}
+  .roas-gauge .gauge-value{font-size:2.4rem;font-weight:800;font-family:"Inter",sans-serif}
+  .roas-gauge .gauge-value.breakeven{color:#f08080}
+  .roas-gauge .gauge-value.target{color:#6fcf97}
+  .roas-gauge .gauge-label{font-size:.78rem;color:var(--muted)}
+  .metric-row{display:flex;flex-wrap:wrap;gap:1rem;margin:1rem 0 1.5rem}
+  .metric{background:var(--surface-mid);border:1px solid rgba(77,70,55,.3);border-radius:4px;padding:1rem 1.25rem;min-width:140px}
+  .metric .metric-value{font-size:1.6rem;font-weight:700;color:var(--gold);line-height:1.2}
+  .metric .metric-label{font-size:.78rem;color:var(--muted);margin-top:.25rem}
+  .metric .metric-value.red{color:#f08080}
+  .metric .metric-value.green{color:#6fcf97}
+  .metric .metric-value.blue{color:#7bc8e0}
+  .budget-bar{height:8px;border-radius:4px;background:var(--surface-high);overflow:hidden;margin:6px 0}
+  .budget-bar-fill{height:100%;border-radius:4px;transition:width .3s}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.priority-matrix{grid-template-columns:1fr}.toc-block ol{columns:1}.page-canvas{padding:28px 16px 60px}.metric-row{flex-direction:column}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Return to Strategic Report →
+  </a>
+
+  <div class="sidebar-label">Navigation</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Cover
+    </a>
+    <a class="nav-link" href="#executive-summary" data-section="executive-summary">
+      <span class="material-symbols-outlined nav-icon">summarize</span> Executive Summary
+    </a>
+    <a class="nav-link" href="#campaign-audit" data-section="campaign-audit">
+      <span class="material-symbols-outlined nav-icon">analytics</span> Campaign Audit
+    </a>
+    <a class="nav-link" href="#critical-issues" data-section="critical-issues">
+      <span class="material-symbols-outlined nav-icon">warning</span> Critical Issues
+    </a>
+    <a class="nav-link" href="#day0" data-section="day0">
+      <span class="material-symbols-outlined nav-icon">bolt</span> Day 0 Actions
+    </a>
+    <a class="nav-link" href="#day7" data-section="day7">
+      <span class="material-symbols-outlined nav-icon">schedule</span> 7-Day Fix
+    </a>
+    <a class="nav-link" href="#day14" data-section="day14">
+      <span class="material-symbols-outlined nav-icon">tune</span> 14-Day Optimization
+    </a>
+    <a class="nav-link" href="#day30" data-section="day30">
+      <span class="material-symbols-outlined nav-icon">rocket_launch</span> 30-Day Growth
+    </a>
+    <a class="nav-link" href="#neg-keywords" data-section="neg-keywords">
+      <span class="material-symbols-outlined nav-icon">block</span> Negative Keywords
+    </a>
+    <a class="nav-link" href="#risk-matrix" data-section="risk-matrix">
+      <span class="material-symbols-outlined nav-icon">shield</span> Risk Matrix
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="GOOGLE-ADS-OPTIMIZATION-REPORT-PL.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇵🇱</span> PL Version
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP &middot; Google Ads Optimization</span>
+  <span class="topnav-section" id="topnav-section">Cover</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════ COVER ═══════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  <div style="margin:0 0 96px 0;padding:3px;border-radius:10px;background:linear-gradient(135deg,#e6c364 0%,#c9a84c 30%,#3a3530 60%,#1c2024 100%);box-shadow:0 20px 60px rgba(0,0,0,.4);">
+  <img src="assets/images/google.jpg" alt="Google Ads Hero" style="width:100%;max-width:100%;height:auto;display:block;border-radius:8px;">
+</div>
+  
+  <span class="cover-badge">&#9679; Confidential Strategy Document &middot; April 2026</span>
+  <h1 class="cover-h1">Google Ads<br><span>Optimization</span></h1>
+  <p class="cover-subtitle">Warmińskie Centrum Psychoterapii — Deep Analysis & 30-Day Performance Rescue Plan</p>
+  <div style="background:rgba(76,175,125,.12);border:1px solid rgba(76,175,125,.4);border-radius:6px;padding:14px 18px;margin:24px 0 0;max-width:580px">
+    <div style="font-family:Manrope,sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#6fcf97;margin-bottom:6px">✅ Action Plan Implemented — 18 April 2026</div>
+    <p style="font-size:.88rem;color:var(--on-surface);margin:0">Day 0 actions completed. Dead campaign stopped. Keyword bleed stopped. Negative keyword lists deployed at campaign &amp; account level. First A/B search campaign entered for testing. Next analysis: 25 April 2026.</p>
+  </div>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>ROAS</label><p>0.99x — Breakeven</p></div>
+    <div class="cover-meta-item"><label>Campaigns</label><p>5 active · 12 ad groups</p></div>
+    <div class="cover-meta-item"><label>Keywords</label><p>677 total · 625 no QS</p></div>
+    <div class="cover-meta-item"><label>Target ROAS</label><p>2.0x (Day 30) → 2.5x (Day 60)</p></div>
+  </div>
+</section>
+
+<!-- ═══════════════ TABLE OF CONTENTS ═══════════════ -->
+<div class="toc-block">
+  <h3>📋 Contents</h3>
+  <ol>
+    <li><a href="#executive-summary">Executive Summary</a></li>
+    <li><a href="#campaign-audit">Campaign Audit — Current State</a></li>
+    <li><a href="#critical-issues">Critical Issues — 3 Alarms</a></li>
+    <li><a href="#day0">Day 0 — Immediate Actions</a></li>
+    <li><a href="#day7">7-Day Fix — Elbląg Rescue</a></li>
+    <li><a href="#day14">14-Day Optimization — Precision Tuning</a></li>
+    <li><a href="#day30">30-Day Growth — Scale &amp; Expand</a></li>
+    <li><a href="#neg-keywords">Negative Keyword Master List</a></li>
+    <li><a href="#risk-matrix">Risk Matrix — What Could Go Wrong</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════ SECTION 1: EXECUTIVE SUMMARY ═══════════════ -->
+<div class="section" id="executive-summary">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Section 1</div>
+      <h2>Executive Summary</h2>
+      <div class="sub">The bleeding edge — where we are and why it's urgent</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="roas-gauge">
+      <div>
+        <div class="gauge-value breakeven">0.99x</div>
+        <div class="gauge-label">Pre-Optimization ROAS</div>
+      </div>
+      <div style="font-size:1.2rem;color:var(--muted);padding:0 8px;">→</div>
+      <div>
+        <div class="gauge-value" style="color:#6fcf97">~1.3x</div>
+        <div class="gauge-label">Post Day-0 ROAS (est.)</div>
+      </div>
+      <div style="font-size:1.2rem;color:var(--muted);padding:0 8px;">→</div>
+      <div>
+        <div class="gauge-value target">2.0x</div>
+        <div class="gauge-label">30-Day Target ROAS</div>
+      </div>
+      <div style="font-size:1.2rem;color:var(--muted);padding:0 8px;">→</div>
+      <div>
+        <div class="gauge-value target">2.5x</div>
+        <div class="gauge-label">60-Day Target ROAS</div>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <strong>✅ Day 0 Actions Implemented — 18 April 2026</strong><br>
+      The optimization action plan has been put into action. <strong>Terapia Indywidualna</strong> campaign is stopped. <strong>Keyword bleed</strong> (NFZ + irrelevant queries) has been stopped — negative keyword lists added at both campaign and account level. <strong>Keyword lists</strong> have been updated across all campaigns. The first <strong>A/B search ad campaign</strong> has been entered for testing. A follow-up analysis report is scheduled for <strong>25 April 2026</strong>.
+    </div>
+
+    <p>WCP's Google Ads account was <strong>at breakeven</strong> (ROAS 0.99x) — every zloty spent returned approximately one zloty in revenue. Three critical issues were identified and <strong>Day 0 actions have now been implemented</strong>:</p>
+
+    <div class="callout danger">
+      <strong>⚠ Three critical issues identified — STATUS UPDATE:</strong><br>
+      1. <strong>"Terapia Indywidualna" campaign</strong> — 0 conversions, burning 55 PLN/day. <span style="color:#6fcf97;font-weight:700">✅ STOPPED.</span><br>
+      2. <strong>NFZ keyword leak</strong> — patients searching for free therapy were clicking paid ads and bouncing. <span style="color:#6fcf97;font-weight:700">✅ BLEED STOPPED.</span> Negative keyword lists deployed at campaign &amp; account level.<br>
+      3. <strong>Elbląg campaign overspend</strong> — CPA of 102.74 PLN, 2x the Olsztyn CPA. <span style="color:#f5c842;font-weight:700">⏳ IN PROGRESS.</span> New ad copy A/B test entered.
+    </div>
+
+    <h3 class="sub-heading">The 30-Day Fix Plan — At a Glance</h3>
+
+    <div class="metric-row">
+      <div class="metric">
+        <div class="metric-value red">0</div>
+        <div class="metric-label">Day 0 — Kill dead campaigns + plug leaks</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value" style="color:#f5c842;">7</div>
+        <div class="metric-label">Day 7 — Elbląg rescue + ad copy refresh</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value blue">14</div>
+        <div class="metric-label">Day 14 — Match types + QS + bidding</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value green">30</div>
+        <div class="metric-label">Day 30 — Scale winners + new campaigns</div>
+      </div>
+    </div>
+
+    <p>The plan is deliberately front-loaded. The biggest gains come from <strong>stopping waste</strong>, not from adding new spend. Day 0 actions alone should improve ROAS by 15–25% by eliminating the dead campaign and NFZ leak. Days 7–14 refine targeting precision. Day 30 adds growth layers on a now-functional foundation.</p>
+
+    <div class="callout success">
+      <strong>Projected outcome:</strong> If all actions are implemented on schedule, ROAS should reach 2.0x by Day 30 and 2.5x by Day 60 — turning the account from a cost center into a genuine patient acquisition engine.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 2: CAMPAIGN AUDIT ═══════════════ -->
+<div class="section" id="campaign-audit">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">search</span>
+    <div>
+      <div class="sec-label">Section 2</div>
+      <h2>Campaign Audit — Current State</h2>
+      <div class="sub">5 campaigns, 12 ad groups, 677 keywords — here's what's working and what's not</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Account Overview</h3>
+    <div class="metric-row">
+      <div class="metric">
+        <div class="metric-value">5</div>
+        <div class="metric-label">Active Campaigns</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">12</div>
+        <div class="metric-label">Ad Groups</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">677</div>
+        <div class="metric-label">Keywords</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value red">625</div>
+        <div class="metric-label">Keywords w/o Quality Score</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">577</div>
+        <div class="metric-label">Search Terms</div>
+      </div>
+    </div>
+
+    <div class="callout danger">
+      <strong>92% of keywords have no Quality Score recorded.</strong> This means Google isn't confident these keywords match their ad groups, or the keywords simply aren't generating enough impressions for Google to assign a score. Either way, it's a massive waste — these keywords are dead weight dragging down account health.
+    </div>
+
+    <h3 class="sub-heading">Campaign-by-Campaign Breakdown</h3>
+
+    <table class="kw-table">
+      <thead>
+        <tr>
+          <th>Campaign</th>
+          <th>Type</th>
+          <th>Daily Budget</th>
+          <th>CPA</th>
+          <th>Conversions</th>
+          <th>Match Type Mix</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Brand — WCP</td>
+          <td>Search</td>
+          <td>35 PLN</td>
+          <td class="metric-green">11.85 PLN</td>
+          <td class="metric-green">✓ Active</td>
+          <td>Exact</td>
+          <td><span class="tag quick-win">BEST PERFORMER</span></td>
+        </tr>
+        <tr>
+          <td>Olsztyn</td>
+          <td>Search</td>
+          <td>60 PLN</td>
+          <td class="metric-yellow">~50 PLN</td>
+          <td>✓ Active</td>
+          <td>Broad-heavy</td>
+          <td><span class="tag medium">NEEDS REFINEMENT</span></td>
+        </tr>
+        <tr>
+          <td>Elbląg</td>
+          <td>Search</td>
+          <td>50 PLN</td>
+          <td class="metric-red">102.74 PLN</td>
+          <td>Low</td>
+          <td>Broad-heavy</td>
+          <td><span class="tag high">OVERSPENDING</span></td>
+        </tr>
+        <tr>
+          <td>Ostróda</td>
+          <td>Search</td>
+          <td>45 PLN</td>
+          <td class="metric-yellow">~55 PLN</td>
+          <td>✓ Active</td>
+          <td>Broad-heavy</td>
+          <td><span class="tag medium">UNDERINVESTED</span></td>
+        </tr>
+        <tr>
+          <td>Terapia Indywidualna</td>
+          <td>Search</td>
+          <td style="text-decoration:line-through;color:var(--muted)">55 PLN</td>
+          <td class="metric-red">∞ (0 conv.)</td>
+          <td class="metric-red">0</td>
+          <td>Broad</td>
+          <td><span class="tag quick-win">✅ STOPPED 18 APR</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">Match Type Distribution (Account-Wide)</h3>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Match Type</th><th>Share</th><th>Assessment</th><th>Target</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Broad Match</td>
+          <td class="metric-red">48%</td>
+          <td>Far too high — wasting spend on untargeted queries</td>
+          <td>30%</td>
+        </tr>
+        <tr>
+          <td>Exact Match</td>
+          <td class="metric-yellow">~35%</td>
+          <td>Below optimal — need more precise targeting</td>
+          <td class="metric-green">55%</td>
+        </tr>
+        <tr>
+          <td>Phrase Match</td>
+          <td class="metric-blue">~17%</td>
+          <td>Reasonable but room to grow</td>
+          <td>15%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Key insight:</strong> The Brand campaign is the only genuinely efficient campaign — 11.85 PLN CPA for brand-name searches is excellent. The problem is it only captures people who already know WCP. The other campaigns are supposed to capture new patients but are bleeding budget through broad match keywords and NFZ-related search terms.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 3: CRITICAL ISSUES ═══════════════ -->
+<div class="section" id="critical-issues">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">notification_important</span>
+    <div>
+      <div class="sec-label">Section 3</div>
+      <h2>Critical Issues — 3 Alarms</h2>
+      <div class="sub">These are actively losing money. Each day of inaction compounds the damage.</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- CRITICAL 1 -->
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>✅</span> Dead Campaign: Terapia Indywidualna — STOPPED
+        <span class="tag quick-win">RESOLVED</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>0 conversions.</strong> This campaign had not produced a single patient booking. At 55 PLN/day, it was burning approximately <strong>1,650 PLN/month</strong> with zero return.</p>
+        <p>The campaign targeted generic therapy keywords ("terapia indywidualna") with broad match — attracting searches like "terapia indywidualna nfz", "terapia indywidualna jak zostać", "terapia indywidualna kurs". None of these were patient-intent queries.</p>
+        <div class="callout success">
+          <strong>✅ COMPLETED — 18 April 2026:</strong> Campaign has been fully stopped. Monthly savings: ~1,650 PLN. Budget reallocated to Brand and Ostróda campaigns per the Day 30 plan.
+        </div>
+      </div>
+    </div>
+
+    <!-- CRITICAL 2 -->
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>✅</span> NFZ Keyword Leak — Paying for Free-Seekers — STOPPED
+        <span class="tag quick-win">RESOLVED</span>
+      </div>
+      <div class="idea-body">
+        <p>Patients searching <strong>"terapia nfz"</strong>, <strong>"psycholog bezpłatna konsultacja"</strong>, or <strong>"pomoc psychologiczna darmowa"</strong> were clicking on WCP's paid ads and then bouncing when they discovered sessions cost 250 PLN.</p>
+        <p><strong>Why this hurt:</strong> You paid for every click (typically 3–8 PLN for therapy keywords). The patient got nothing. You got nothing. Google got paid. The search term report confirmed NFZ-related queries appeared across multiple ad groups.</p>
+        <div class="callout success">
+          <strong>✅ COMPLETED — 18 April 2026:</strong> NFZ-related negative keyword lists have been deployed at both <strong>campaign level</strong> and <strong>account level</strong>. Full 20+ NFZ negatives from <a href="#neg-keywords" style="color:#6fcf97;">Section 9</a> are now active. Keyword bleed has been stopped. Estimated 10–15% waste elimination achieved.
+        </div>
+      </div>
+    </div>
+
+    <!-- CRITICAL 3 -->
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>📈</span> Elbląg Campaign — 2x Overpriced Conversions
+        <span class="tag high">HIGH</span>
+      </div>
+      <div class="idea-body">
+        <p>The Elbląg campaign's CPA is <strong>102.74 PLN</strong> — more than double the Olsztyn CPA of ~50 PLN. This isn't because Elbląg patients are less likely to convert; it's because the campaign is <strong>poorly structured</strong>:</p>
+        <ul class="clean">
+          <li><strong>72 untargeted search terms</strong> triggering ads — everything from "psycholog elbląg nfz" to "praca psycholog elbląg"</li>
+          <li><strong>Generic ad copy</strong> not tailored to the Elbląg location or clinic specifics</li>
+          <li><strong>No Elbląg-specific negative keywords</strong> — job seekers, students, and NFZ searchers all click and bounce</li>
+          <li><strong>Broad match dominance</strong> — casting a wide net in a small pond, catching everything except patients</li>
+        </ul>
+        <div class="callout">
+          <strong>Action by Day 7:</strong> Full Elbląg campaign overhaul — new ad copy, 16 location-specific negatives, search term cleanup, and Booknetic conversion tracking verification. Details in <a href="#day7" style="color:var(--gold);">Section 5</a>.
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional concern -->
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>📉</span> 92% Keywords Without Quality Score
+        <span class="tag high">HIGH</span>
+        <span class="tag long-term">SYSTEMIC</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>625 out of 677 keywords</strong> have no Quality Score assigned. This means Google's system doesn't have enough data to evaluate these keywords — they're either generating zero impressions or their impressions are so low that statistical significance hasn't been reached.</p>
+        <p>Keywords without QS are effectively invisible to Google's optimization algorithms. They don't participate in ad rank calculations properly, they can't benefit from QS-based CPC reductions, and they inflate account-level metrics negatively.</p>
+        <div class="callout info">
+          <strong>Root cause:</strong> Too many keywords chasing too few relevant queries. The fix isn't adding more keywords — it's <strong>pruning the dead wood and consolidating spend</strong> into high-intent, well-scored keywords. This is addressed in the 14-Day Optimization plan.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 4: DAY 0 ACTIONS ═══════════════ -->
+<div class="section" id="day0">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">bolt</span>
+    <div>
+      <div class="sec-label">Section 4</div>
+      <h2>Day 0 — Immediate Actions</h2>
+      <div class="sub">Do these today. Every hour of delay costs money.</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout success">
+      <strong>✅ IMPLEMENTED — 18 April 2026:</strong> Day 0 actions have been executed. The dead campaign is stopped, NFZ bleed is plugged, negative keyword lists are deployed at campaign and account level, and keyword lists have been updated. The first A/B search ad campaign has been entered for testing. Every hour of delay was costing money — now the bleeding has stopped.
+    </div>
+
+    <h3 class="sub-heading">Action 1: Pause "Terapia Indywidualna" Campaign — ✅ COMPLETED</h3>
+    <div class="action-step">
+      <div class="step-num" style="background:#4CAF7D;color:#101418">✓</div>
+      <div class="step-content">
+        <h4>Campaign stopped</h4>
+        <p>Terapia Indywidualna campaign has been fully paused. The 55 PLN/day spend on a campaign producing 0 conversions is now eliminated. Monthly savings: ~1,650 PLN. Budget reallocated to Brand + Ostróda per Day 30 plan.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Action 2: Add NFZ Negative Keywords — ✅ COMPLETED</h3>
+    <p>NFZ-related negative keywords have been added as <strong>campaign-level and account-level negative keyword lists</strong> to every active campaign:</p>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Category</th><th>Negative Keywords</th><th>Match Type</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>NFZ — Direct</td>
+          <td>nfz, na nfz, z nfz, przez nfz, od nfz, przy nfz</td>
+          <td>Exact + Phrase</td>
+        </tr>
+        <tr>
+          <td>NFZ — Descriptive</td>
+          <td>bezpłatna, darmowa, bezpłatnie, za darmo, bez opłat, bezpłatna terapia</td>
+          <td>Exact + Phrase</td>
+        </tr>
+        <tr>
+          <td>NFZ — Variants</td>
+          <td>nfz terapia, nfz psycholog, nfz psychoterapia, poradnia nfz, przychodnia nfz</td>
+          <td>Phrase</td>
+        </tr>
+        <tr>
+          <td>Free-Seeking</td>
+          <td>za darmo terapia, bezpłatna konsultacja, bezpłatna pomoc</td>
+          <td>Phrase</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Total: 20+ NFZ-related negative keywords.</strong> Deployed as shared negative keyword list at campaign and account level for easy management.</p>
+
+    <h3 class="sub-heading">Action 3: Add Universal Negative Keywords — ✅ COMPLETED</h3>
+    <p>Universal negatives have been deployed across all campaigns at campaign and account level:</p>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>#</th><th>Negative Keyword</th><th>Reason</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>praca</td><td>Job seekers ("praca psycholog")</td></tr>
+        <tr><td>2</td><td>вакансия</td><td>Russian job seekers</td></tr>
+        <tr><td>3</td><td>studia</td><td>Students researching ("studia psychologia")</td></tr>
+        <tr><td>4</td><td>kurs</td><td>Course seekers</td></tr>
+        <tr><td>5</td><td>szkolenie</td><td>Training seekers</td></tr>
+        <tr><td>6</td><td>forum</td><td>Discussion seekers</td></tr>
+        <tr><td>7</td><td>blog</td><td>Content consumers</td></tr>
+        <tr><td>8</td><td>wikipedia</td><td>Information seekers</td></tr>
+        <tr><td>9</td><td>książka</td><td>Book buyers</td></tr>
+        <tr><td>10</td><td>pdf</td><td>Document seekers</td></tr>
+        <tr><td>11</td><td>jak zostać</td><td>Career changers ("jak zostać psychologiem")</td></tr>
+        <tr><td>12</td><td>ile zarabia</td><td>Salary researchers</td></tr>
+        <tr><td>13</td><td>czy warto</td><td>General researchers</td></tr>
+        <tr><td>14</td><td>rekrutacja</td><td>Recruitment searchers</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">Action 4: Confirm Brand Campaign Targeting — ✅ COMPLETED</h3>
+    <div class="action-step">
+      <div class="step-num" style="background:#4CAF7D;color:#101418">✓</div>
+      <div class="step-content">
+        <h4>Brand campaign keywords verified as exact-match only</h4>
+        <p>The Brand campaign (best performer, CPA 11.85 PLN) confirmed with exact-match only keywords. Budget increase considered per Day 30 plan.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Action 5: First A/B Search Ad Campaign — ✅ ENTERED FOR TESTING</h3>
+    <div class="action-step">
+      <div class="step-num" style="background:#4CAF7D;color:#101418">✓</div>
+      <div class="step-content">
+        <h4>A/B search ad campaign entered</h4>
+        <p>The first A/B search ad campaign has been set up and entered for testing. This enables data-driven optimization of ad copy across campaigns. Results will be evaluated as part of the 7-day follow-up analysis.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="callout success">
+      <strong>✅ Day 0 IMPACT — IMPLEMENTED:</strong> Dead campaign stopped (saves 55 PLN/day). NFZ negatives deployed (eliminates ~10–15% of wasted clicks). Universal negatives deployed (eliminates another ~5–8%). Keyword lists updated at campaign and account level. First A/B test campaign entered. Combined, ROAS should improve from 0.99x to approximately 1.2–1.3x. <strong>Next analysis report scheduled: 25 April 2026.</strong>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 5: 7-DAY FIX ═══════════════ -->
+<div class="section" id="day7">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">build</span>
+    <div>
+      <div class="sec-label">Section 5</div>
+      <h2>7-Day Fix — Elbląg Rescue</h2>
+      <div class="sub">Fix the worst-performing active campaign and plug tracking gaps</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Elbląg Campaign Overhaul</h3>
+    <p>The Elbląg campaign currently operates at <strong>CPA 102.74 PLN</strong> — the worst of any active campaign. The fix has four components:</p>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>✍️</span> New Ad Copy — 3 Variants for A/B Testing
+        <span class="tag high">HIGH IMPACT</span>
+      </div>
+      <div class="idea-body">
+
+        <div class="ad-copy-box">
+          <div class="headline">A: Psychoterapia Elbląg · Warmińskie CP</div>
+          <div class="display-url">wcp.com.pl/elblag</div>
+          <div class="description">Profesjonalna pomoc psychologiczna w Elblągu. 18 lat doświadczenia, 22+ terapeutów. Umów sesję już dziś.</div>
+        </div>
+
+        <div class="ad-copy-box">
+          <div class="headline">B: Terapeuta Elbląg · Sesje od 250 PLN</div>
+          <div class="display-url">wcp.com.pl/elblag</div>
+          <div class="description">Czujesz, że potrzebujesz zmiany? Porozmawiaj z terapeutą w Elblągu. Bezpieczna przestrzeń, profesjonalna pomoc.</div>
+        </div>
+
+        <div class="ad-copy-box">
+          <div class="headline">C: Psycholog Elbląg · Pl. Słowiański</div>
+          <div class="display-url">wcp.com.pl/elblag</div>
+          <div class="description">Terapia indywidualna, par i dzieci. Przyjmujemy w centrum Elbląga. Zadzwoń lub umów online.</div>
+        </div>
+
+        <p><strong>Testing plan:</strong> Run all three variants with equal rotation for 7 days. After 7 days, pause the worst performer and keep the top two. Use ad strength indicators in Google Ads to monitor quality.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🚫</span> 16 Elbląg-Specific Negative Keywords
+      </div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <thead><tr><th>#</th><th>Negative Keyword</th><th>Blocks</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>praca psycholog elbląg</td><td>Job seekers</td></tr>
+            <tr><td>2</td><td>oferty pracy elbląg</td><td>Job seekers</td></tr>
+            <tr><td>3</td><td>rekrutacja psycholog elbląg</td><td>Recruitment</td></tr>
+            <tr><td>4</td><td>studia psychologia elbląg</td><td>Students</td></tr>
+            <tr><td>5</td><td>kierunek psychologia elbląg</td><td>Students</td></tr>
+            <tr><td>6</td><td>nfz elbląg psycholog</td><td>NFZ seekers</td></tr>
+            <tr><td>7</td><td>poradnia zdrowia psychicznego elbląg</td><td>NFZ seekers</td></tr>
+            <tr><td>8</td><td>bezpłatna pomoc elbląg</td><td>Free-seekers</td></tr>
+            <tr><td>9</td><td>szkolenie elbląg</td><td>Training seekers</td></tr>
+            <tr><td>10</td><td>kurs psychoterapii elbląg</td><td>Course seekers</td></tr>
+            <tr><td>11</td><td>wynagrodzenie psycholog elbląg</td><td>Salary researchers</td></tr>
+            <tr><td>12</td><td>ile zarabia psycholog elbląg</td><td>Salary researchers</td></tr>
+            <tr><td>13</td><td>jak zostać psychoterapeutą</td><td>Career changers</td></tr>
+            <tr><td>14</td><td>staż psycholog elbląg</td><td>Intern seekers</td></tr>
+            <tr><td>15</td><td>volontariat elbląg</td><td>Volunteer seekers</td></tr>
+            <tr><td>16</td><td>praktyki psychologia elbląg</td><td>Internship seekers</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🧹</span> Search Term Cleanup — 72 → &lt;15
+      </div>
+      <div class="idea-body">
+        <p>The Elbląg campaign currently triggers on <strong>72 distinct search terms</strong>, the vast majority of which are irrelevant. The target is to reduce this to <strong>fewer than 15 targeted, high-intent terms</strong>.</p>
+        <div class="action-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Review the Search Terms report</h4>
+            <p>Go to Keywords → Search Terms → filter for Elbląg campaign. Identify every term that is not clearly patient-intent (someone looking to book a session).</p>
+          </div>
+        </div>
+        <div class="action-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Add irrelevant terms as negatives</h4>
+            <p>Each irrelevant search term gets added as a negative keyword. This prevents future clicks from that query.</p>
+          </div>
+        </div>
+        <div class="action-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Convert high-performers to exact match</h4>
+            <p>Any search term that actually converted should become an exact-match keyword in its own right.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🔄</span> Booknetic Conversion Tracking Fix
+        <span class="tag high">HIGH IMPACT</span>
+      </div>
+      <div class="idea-body">
+        <p>Conversion tracking via Booknetic may not be firing correctly. If Google Ads doesn't know which clicks convert, it can't optimize bidding, and reported CPA figures may be inaccurate.</p>
+        <div class="callout">
+          <strong>Verify:</strong> Book a test appointment through the Booknetic flow on the Elbląg landing page. Check if the conversion fires in Google Ads (Conversions → see if the test booking appears). If not, the conversion tracking tag needs to be reconfigured. This is a prerequisite for any smart bidding strategy.
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="callout success">
+      <strong>Estimated 7-Day impact:</strong> Elbląg CPA should drop from 102.74 PLN to ~60–70 PLN with new ad copy + negatives + search term cleanup. Combined with Day 0 actions, account-level ROAS should reach ~1.5x.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 6: 14-DAY OPTIMIZATION ═══════════════ -->
+<div class="section" id="day14">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">settings</span>
+    <div>
+      <div class="sec-label">Section 6</div>
+      <h2>14-Day Optimization — Precision Tuning</h2>
+      <div class="sub">Match type rebalancing, Quality Score recovery, and bidding intelligence</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">1. Match Type Rebalancing</h3>
+    <p>Current distribution is dangerously broad-heavy. The goal is to <strong>flip the ratio toward exact match</strong>, which gives WCP control over exactly which queries trigger ads.</p>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Match Type</th><th>Current</th><th>Target</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Broad Match</td>
+          <td class="metric-red">48%</td>
+          <td class="metric-green">30%</td>
+          <td>Convert underperforming broad keywords to phrase/exact. Delete broad keywords with 0 conversions after 30 days.</td>
+        </tr>
+        <tr>
+          <td>Exact Match</td>
+          <td class="metric-yellow">~35%</td>
+          <td class="metric-green">55%</td>
+          <td>Add exact-match variants of top-performing search terms. Create new exact keywords from conversion data.</td>
+        </tr>
+        <tr>
+          <td>Phrase Match</td>
+          <td class="metric-blue">~17%</td>
+          <td class="metric-blue">15%</td>
+          <td>Keep stable — phrase match provides good coverage with reasonable control.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">2. Quality Score Optimization — Top 20 Keywords by Spend</h3>
+    <p>The 20 keywords consuming the most budget should be audited for Quality Score. For each keyword with QS &lt; 5:</p>
+
+    <ul class="clean">
+      <li><strong>Ad relevance:</strong> Does the ad copy explicitly mention the keyword? If not, create a new ad group specifically for that keyword cluster</li>
+      <li><strong>Landing page relevance:</strong> Does the landing page match the keyword intent? A search for "psychoterapia Elbląg" should land on the Elbląg-specific page, not the homepage</li>
+      <li><strong>Expected CTR:</strong> Is the keyword generating impressions but no clicks? Consider pausing or restructuring</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Rule of thumb:</strong> A QS improvement from 3 to 7 can reduce CPC by 30–50% for the same keyword. The top 20 keywords by spend represent the highest-leverage optimization targets.
+    </div>
+
+    <h3 class="sub-heading">3. Ad Schedule & Device Bid Modifiers</h3>
+    <p>After 14 days of clean data (post-Day 0 and Day 7 fixes), analyze performance by:</p>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🕐</span> Time-of-Day Bidding</div>
+      <div class="idea-body">
+        <p>Therapy bookings follow predictable patterns. Most patients book during:</p>
+        <ul class="clean">
+          <li><strong>8:00–10:00</strong> — morning decision-makers (before work)</li>
+          <li><strong>12:00–14:00</strong> — lunch break browsers</li>
+          <li><strong>19:00–22:00</strong> — evening researchers (highest intent, often after a difficult day)</li>
+        </ul>
+        <p>Apply +20% bid adjustments to high-conversion hours and -30% to low-conversion hours (typically 23:00–06:00).</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📱</span> Device Bidding</div>
+      <div class="idea-body">
+        <p>Review conversion rates by device. Typical therapy booking patterns:</p>
+        <ul class="clean">
+          <li><strong>Mobile:</strong> Higher CTR, lower conversion rate (people browse on phone, book later on desktop). Apply -10% if mobile conv. rate &lt; 50% of desktop</li>
+          <li><strong>Desktop:</strong> Lower CTR, higher conversion rate. Apply +15% if desktop converts 2x+ better</li>
+          <li><strong>Tablet:</strong> Usually similar to desktop. Apply same modifiers unless data shows otherwise</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">4. Conversion Value Tracking</h3>
+    <div class="callout">
+      <strong>Critical upgrade:</strong> Currently, Google Ads likely tracks conversions as binary events (booking happened = 1). For smart bidding to optimize for revenue rather than volume, <strong>add conversion value tracking</strong> at <strong>250 PLN per session</strong>. This enables Target ROAS bidding strategies once enough data accumulates (50+ conversions with value).
+    </div>
+
+    <p>Implementation: In the Booknetic booking confirmation page, add the conversion value parameter to the Google Ads conversion tag:</p>
+    <div class="ad-copy-box">
+      <div class="description">gtag('event', 'conversion', {<br>&nbsp;&nbsp;'send_to': 'AW-XXXXXX/XXXXXX',<br>&nbsp;&nbsp;'value': 250.0,<br>&nbsp;&nbsp;'currency': 'PLN'<br>});</div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="callout success">
+      <strong>Estimated 14-Day impact:</strong> Match type rebalancing + QS improvements should reduce account-wide CPC by 15–25%. Ad schedule + device modifiers add another 10–15% efficiency. Combined ROAS target: ~1.7x.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 7: 30-DAY GROWTH ═══════════════ -->
+<div class="section" id="day30">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">rocket</span>
+    <div>
+      <div class="sec-label">Section 7</div>
+      <h2>30-Day Growth — Scale &amp; Expand</h2>
+      <div class="sub">Reallocate budget to winners, expand Ostróda, launch online therapy campaign</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Budget Reallocation</h3>
+    <p>With the dead campaign paused and underperformers fixed, reallocate daily budget to proven winners and growth opportunities:</p>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Campaign</th><th>Current Budget</th><th>New Budget</th><th>Change</th><th>Rationale</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Brand — WCP</td>
+          <td>35 PLN/day</td>
+          <td class="metric-green">70 PLN/day</td>
+          <td>+100%</td>
+          <td>Best CPA (11.85 PLN). Captures high-intent brand searchers. Double budget = double brand conversions.</td>
+        </tr>
+        <tr>
+          <td>Olsztyn</td>
+          <td>60 PLN/day</td>
+          <td>60 PLN/day</td>
+          <td>No change</td>
+          <td>Stable performer. Maintain while optimizing match types.</td>
+        </tr>
+        <tr>
+          <td>Elbląg</td>
+          <td>50 PLN/day</td>
+          <td>45 PLN/day</td>
+          <td>-10%</td>
+          <td>Reduced after Day 7 fixes. Lower CPA should offset reduced spend.</td>
+        </tr>
+        <tr>
+          <td>Ostróda</td>
+          <td>45 PLN/day</td>
+          <td class="metric-green">65 PLN/day</td>
+          <td>+44%</td>
+          <td>Underserved market. New clinic (Mar 2025) needs visibility. Add 12 new exact keywords.</td>
+        </tr>
+        <tr>
+          <td>Terapia Indywidualna</td>
+          <td>55 PLN/day</td>
+          <td class="metric-red">PAUSED</td>
+          <td>—</td>
+          <td>0 conversions. Budget reallocated to Brand + Ostróda.</td>
+        </tr>
+        <tr>
+          <td><strong>NEW: Online Therapy</strong></td>
+          <td>—</td>
+          <td class="metric-green">50 PLN/day</td>
+          <td>New</td>
+          <td>Counter national platforms. Capture "terapia online" searches.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Total daily spend change:</strong> 245 PLN/day → 290 PLN/day (+18%). However, effective ROAS should increase significantly because the new spend is concentrated in proven and high-potential campaigns rather than wasted on a dead one.
+    </div>
+
+    <h3 class="sub-heading">Ostróda Expansion</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span>📍</span> 12 New Exact-Match Keywords for Ostróda</div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <thead><tr><th>#</th><th>Keyword (Exact Match)</th><th>Intent</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>[psychoterapia ostróda]</td><td>Core — therapy search</td></tr>
+            <tr><td>2</td><td>[psycholog ostróda]</td><td>Core — psychologist search</td></tr>
+            <tr><td>3</td><td>[terapeuta ostróda]</td><td>Core — therapist search</td></tr>
+            <tr><td>4</td><td>[pomoc psychologiczna ostróda]</td><td>Help-seeking</td></tr>
+            <tr><td>5</td><td>[terapia par ostróda]</td><td>Couples therapy</td></tr>
+            <tr><td>6</td><td>[psychoterapia online ostróda]</td><td>Online + local</td></tr>
+            <tr><td>7</td><td>[psycholog dziecięcy ostróda]</td><td>Child psychology</td></tr>
+            <tr><td>8</td><td>[terapia lęków ostróda]</td><td>Anxiety-specific</td></tr>
+            <tr><td>9</td><td>[depresja pomoc ostróda]</td><td>Depression help</td></tr>
+            <tr><td>10</td><td>[warmińskie centrum psychoterapii ostróda]</td><td>Brand + location</td></tr>
+            <tr><td>11</td><td>[wcp ostróda]</td><td>Brand short</td></tr>
+            <tr><td>12</td><td>[sesja psychoterapii ostróda]</td><td>Session-intent</td></tr>
+          </tbody>
+        </table>
+        <p><strong>New Ostróda ad copy (Polish):</strong></p>
+        <div class="ad-copy-box">
+          <div class="headline">Psychoterapia Ostróda · Warmińskie CP</div>
+          <div class="display-url">wcp.com.pl/ostroda</div>
+          <div class="description">Profesjonalna pomoc psychologiczna w Ostródzie. Nowy gabinet, doświadczony zespół. Umów sesję online lub stacjonarnie.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">NEW Campaign: Online Therapy</h3>
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>💻</span> Online Therapy Campaign — 50 PLN/day
+        <span class="tag high">STRATEGIC</span>
+      </div>
+      <div class="idea-body">
+        <p>This campaign counters the threat from national platforms (Wellbee, TwojPsycholog) by capturing patients searching for <strong>online therapy nationwide</strong>, not just in Warmia.</p>
+
+        <h3 class="sub-heading">Campaign Structure</h3>
+        <table class="kw-table">
+          <thead><tr><th>Ad Group</th><th>Keywords</th><th>Match Type</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Online Therapy — General</td>
+              <td>terapia online, psychoterapia online, pomoc psychologiczna online</td>
+              <td>Exact + Phrase</td>
+            </tr>
+            <tr>
+              <td>Online Psychologist</td>
+              <td>psycholog online, psycholog przez internet, konsultacja psychologiczna online</td>
+              <td>Exact + Phrase</td>
+            </tr>
+            <tr>
+              <td>Online Therapy — Specific</td>
+              <td>psychoterapia internetowa, terapia online cbt, sesja terapeutyczna online</td>
+              <td>Exact</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p><strong>Ad copy for Online Therapy campaign:</strong></p>
+        <div class="ad-copy-box">
+          <div class="headline">Terapia Online · Warmińskie CP</div>
+          <div class="display-url">wcp.com.pl/terapia-online</div>
+          <div class="description">Profesjonalna psychoterapia przez internet. 22+ certyfikowanych terapeutów. Elastyczne godziny. Umów sesję z dowolnego miejsca w Polsce.</div>
+        </div>
+
+        <div class="callout">
+          <strong>Landing page:</strong> This campaign MUST link to a dedicated <strong>wcp.com.pl/terapia-online</strong> landing page (per the Online Therapy Growth Strategy report). Sending traffic to the generic homepage will result in high bounce rates.
+        </div>
+
+        <p><strong>Campaign-level negatives:</strong> Add all NFZ + universal negatives from Day 0, PLUS: "therapify", "mindgram", "wellbee" (competitor brand names — don't bid on these, but block your ads from appearing alongside them in some contexts).</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">ROAS Trajectory</h3>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Milestone</th><th>Expected ROAS</th><th>Key Driver</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Day 0 (immediate)</td><td class="metric-yellow">1.2–1.3x</td><td>Dead campaign pause + NFZ negatives</td></tr>
+        <tr><td>Day 7</td><td class="metric-yellow">1.5x</td><td>Elbląg fix + new ad copy</td></tr>
+        <tr><td>Day 14</td><td class="metric-green">1.7x</td><td>Match type rebalancing + QS + bid modifiers</td></tr>
+        <tr><td>Day 30</td><td class="metric-green">2.0x</td><td>Budget reallocation + Ostróda + Online Therapy</td></tr>
+        <tr><td>Day 60</td><td class="metric-green">2.5x</td><td>Smart bidding + refined targeting + landing page optimization</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 8: NEGATIVE KEYWORD MASTER LIST ═══════════════ -->
+<div class="section" id="neg-keywords">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">block</span>
+    <div>
+      <div class="sec-label">Section 8</div>
+      <h2>Negative Keyword Master List</h2>
+      <div class="sub">Consolidated reference — apply by campaign scope</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Implementation tip:</strong> Create these as <strong>shared negative keyword lists</strong> in Google Ads (Tools → Negative keyword lists). Then apply each list to the relevant campaigns. This makes maintenance far easier than adding negatives individually to each campaign.
+    </div>
+
+    <h3 class="sub-heading">Universal Negatives — Apply to ALL Campaigns (40+ keywords)</h3>
+
+    <table class="kw-table">
+      <thead><tr><th>Category</th><th>Keywords</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>NFZ / Free</td>
+          <td>nfz, na nfz, z nfz, przez nfz, od nfz, przy nfz, bezpłatna, darmowa, bezpłatnie, za darmo, bez opłat, bezpłatna terapia, nfz terapia, nfz psycholog, nfz psychoterapia, poradnia nfz, przychodnia nfz, za darmo terapia, bezpłatna konsultacja, bezpłatna pomoc</td>
+        </tr>
+        <tr>
+          <td>Job / Career</td>
+          <td>praca, вакансия, rekrutacja, oferty pracy, ogłoszenia pracy, jak zostać, ile zarabia, czy warto, wynagrodzenie, staż, praktyki, volontariat</td>
+        </tr>
+        <tr>
+          <td>Education</td>
+          <td>studia, kurs, szkolenie, kierunek psychologia, studia podyplomowe</td>
+        </tr>
+        <tr>
+          <td>Information / Content</td>
+          <td>forum, blog, wikipedia, książka, pdf, artykuł, artykuły, test online, quiz</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">Elbląg-Specific Negatives (16 keywords)</h3>
+    <table class="kw-table">
+      <thead><tr><th>#</th><th>Negative Keyword</th><th>Blocks</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>praca psycholog elbląg</td><td>Job seekers</td></tr>
+        <tr><td>2</td><td>oferty pracy elbląg</td><td>Job seekers</td></tr>
+        <tr><td>3</td><td>rekrutacja psycholog elbląg</td><td>Recruitment</td></tr>
+        <tr><td>4</td><td>studia psychologia elbląg</td><td>Students</td></tr>
+        <tr><td>5</td><td>kierunek psychologia elbląg</td><td>Students</td></tr>
+        <tr><td>6</td><td>nfz elbląg psycholog</td><td>NFZ seekers</td></tr>
+        <tr><td>7</td><td>poradnia zdrowia psychicznego elbląg</td><td>NFZ seekers</td></tr>
+        <tr><td>8</td><td>bezpłatna pomoc elbląg</td><td>Free-seekers</td></tr>
+        <tr><td>9</td><td>szkolenie elbląg</td><td>Training seekers</td></tr>
+        <tr><td>10</td><td>kurs psychoterapii elbląg</td><td>Course seekers</td></tr>
+        <tr><td>11</td><td>wynagrodzenie psycholog elbląg</td><td>Salary researchers</td></tr>
+        <tr><td>12</td><td>ile zarabia psycholog elbląg</td><td>Salary researchers</td></tr>
+        <tr><td>13</td><td>jak zostać psychoterapeutą</td><td>Career changers</td></tr>
+        <tr><td>14</td><td>staż psycholog elbląg</td><td>Intern seekers</td></tr>
+        <tr><td>15</td><td>volontariat elbląg</td><td>Volunteer seekers</td></tr>
+        <tr><td>16</td><td>praktyki psychologia elbląg</td><td>Internship seekers</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">Olsztyn-Specific Negatives (8 keywords)</h3>
+    <table class="kw-table">
+      <thead><tr><th>#</th><th>Negative Keyword</th><th>Blocks</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>praca psycholog olsztyn</td><td>Job seekers</td></tr>
+        <tr><td>2</td><td>studia psychologia uwm</td><td>UWM students</td></tr>
+        <tr><td>3</td><td>kierunek psychologia olsztyn</td><td>Prospective students</td></tr>
+        <tr><td>4</td><td>poradnia zdrowia psychicznego olsztyn nfz</td><td>NFZ seekers</td></tr>
+        <tr><td>5</td><td>bezpłatna pomoc psychologiczna olsztyn</td><td>Free-seekers</td></tr>
+        <tr><td>6</td><td>szkolenie psychoterapeuta olsztyn</td><td>Training seekers</td></tr>
+        <tr><td>7</td><td>rekrutacja olsztyn psycholog</td><td>Recruitment</td></tr>
+        <tr><td>8</td><td>ile zarabia psycholog olsztyn</td><td>Salary researchers</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-heading">Ostróda-Specific Negatives (4 keywords)</h3>
+    <table class="kw-table">
+      <thead><tr><th>#</th><th>Negative Keyword</th><th>Blocks</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>praca psycholog ostróda</td><td>Job seekers</td></tr>
+        <tr><td>2</td><td>nfz ostróda psycholog</td><td>NFZ seekers</td></tr>
+        <tr><td>3</td><td>bezpłatna pomoc ostróda</td><td>Free-seekers</td></tr>
+        <tr><td>4</td><td>studia psychologia ostróda</td><td>Students</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════ SECTION 9: RISK MATRIX ═══════════════ -->
+<div class="section" id="risk-matrix">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">verified_user</span>
+    <div>
+      <div class="sec-label">Section 9</div>
+      <h2>Risk Matrix — What Could Go Wrong</h2>
+      <div class="sub">Anticipating failure modes and planning mitigations</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="priority-matrix">
+      <div class="matrix-cell high-impact-low-effort">
+        <h4>✅ High Impact · Low Risk</h4>
+        <ul>
+          <li>Pausing dead campaign — no downside, guaranteed savings</li>
+          <li>Adding NFZ negatives — eliminates waste, no conversion loss</li>
+          <li>Adding universal negatives — pure waste removal</li>
+          <li>Confirming Brand exact match — protects best CPA</li>
+        </ul>
+      </div>
+      <div class="matrix-cell high-impact-high-effort">
+        <h4>⚠️ High Impact · Medium Risk</h4>
+        <ul>
+          <li>Match type rebalancing — may temporarily reduce impression volume while Google relearns</li>
+          <li>Budget reallocation — if Ostróda/Brand don't absorb extra budget efficiently, some waste</li>
+          <li>Online therapy campaign — new campaign, unknown conversion rate in early days</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-low-effort">
+        <h4>📊 Low Impact · Low Risk</h4>
+        <ul>
+          <li>Ad copy A/B testing — worst case, no improvement</li>
+          <li>Device bid modifiers — small adjustments, easily reversible</li>
+          <li>Ad schedule changes — conservative ±20% is safe</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-high-effort">
+        <h4>❌ Low Impact · Higher Risk</h4>
+        <ul>
+          <li>Aggressive broad match elimination — too fast may choke volume before exact keywords ramp</li>
+          <li>Smart bidding too early — needs 50+ conversions with value first</li>
+          <li>Over-filtering search terms — some relevant long-tail terms may get caught</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Specific Risk Scenarios</h3>
+
+    <table class="kw-table">
+      <thead>
+        <tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Mitigation</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Elbląg new ad copy underperforms</td>
+          <td class="metric-yellow">Medium</td>
+          <td class="metric-yellow">Medium</td>
+          <td>Keep old ad copy active alongside new variants. Pause worst performer after 7 days, not immediately.</td>
+        </tr>
+        <tr>
+          <td>Booknetic conversion tracking doesn't fire</td>
+          <td class="metric-yellow">Medium</td>
+          <td class="metric-red">High</td>
+          <td>Test booking flow weekly. Have backup plan: Google Ads phone call conversions as secondary action.</td>
+        </tr>
+        <tr>
+          <td>Ostróda keywords too low volume</td>
+          <td class="metric-blue">Low</td>
+          <td class="metric-yellow">Medium</td>
+          <td>Start with 12 exact keywords. If volume is too low, add phrase match variants after 2 weeks.</td>
+        </tr>
+        <tr>
+          <td>Online therapy campaign cannibalizes location campaigns</td>
+          <td class="metric-blue">Low</td>
+          <td class="metric-yellow">Medium</td>
+          <td>Use strict negative keywords: don't show online ads for location-specific queries. Keep ad groups cleanly separated.</td>
+        </tr>
+        <tr>
+          <td>Competitor (Wellbee) increases Google Ads spend in Warmia</td>
+          <td class="metric-yellow">Medium</td>
+          <td class="metric-yellow">Medium</td>
+          <td>Brand campaign protects against this. Monitor auction insights weekly. Increase brand bid if competition rises.</td>
+        </tr>
+        <tr>
+          <td>Google algorithm changes affect QS</td>
+          <td class="metric-blue">Low</td>
+          <td class="metric-yellow">Medium</td>
+          <td>Focus on ad relevance + landing page quality (things Google consistently rewards). Don't chase tactical QS hacks.</td>
+        </tr>
+        <tr>
+          <td>Budget increase doesn't yield proportional conversions</td>
+          <td class="metric-yellow">Medium</td>
+          <td class="metric-yellow">Medium</td>
+          <td>Increase budgets incrementally (+20% per week), not all at once. Monitor CPA stability daily for first 2 weeks after changes.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="divider">
+
+    <div class="callout">
+      <strong>Overall risk assessment:</strong> LOW to MEDIUM. The optimization plan is deliberately conservative — it starts with waste removal (near-zero risk) and progresses to structural improvements. The biggest risk is <strong>implementation delay</strong>, not the actions themselves. Every day the dead campaign runs and NFZ leaks continue, WCP loses money it can never recover.
+    </div>
+
+    <div class="roundtable" style="border-left:3px solid var(--gold-dim);background:var(--surface-mid);border-radius:0 4px 4px 0;margin:24px 0;padding:15px 18px">
+      <div class="rt-title" style="font-family:'Manrope',sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:12px">📌 IMPLEMENTATION CHECKLIST — Updated 18 April 2026</div>
+      <div style="font-size:.88rem;color:var(--on-surface);">
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Day 0:</strong> Pause Terapia Indywidualna campaign — COMPLETED</p>
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Day 0:</strong> Add NFZ negative keyword list to all campaigns — COMPLETED (campaign + account level)</p>
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Day 0:</strong> Add universal negative keyword list to all campaigns — COMPLETED (campaign + account level)</p>
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Day 0:</strong> Verify Brand campaign exact-match only — COMPLETED</p>
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Day 0:</strong> Keyword lists updated at campaign and account level — COMPLETED</p>
+        <p style="margin:6px 0;color:#6fcf97">✅ <strong>Day 0:</strong> First A/B search ad campaign entered for testing — COMPLETED</p>
+        <p style="margin:6px 0;">☐ <strong>Day 7:</strong> Upload 3 new Elbląg ad copy variants</p>
+        <p style="margin:6px 0;">☐ <strong>Day 7:</strong> Add 16 Elbląg-specific negatives</p>
+        <p style="margin:6px 0;">☐ <strong>Day 7:</strong> Elbląg search term cleanup (72 → &lt;15)</p>
+        <p style="margin:6px 0;">☐ <strong>Day 7:</strong> Test Booknetic conversion tracking</p>
+        <p style="margin:6px 0;">☐ <strong>Day 14:</strong> Begin match type rebalancing</p>
+        <p style="margin:6px 0;">☐ <strong>Day 14:</strong> QS audit for top 20 keywords</p>
+        <p style="margin:6px 0;">☐ <strong>Day 14:</strong> Apply ad schedule + device bid modifiers</p>
+        <p style="margin:6px 0;">☐ <strong>Day 14:</strong> Add conversion value tracking (250 PLN)</p>
+        <p style="margin:6px 0;">☐ <strong>Day 30:</strong> Reallocate budgets per plan</p>
+        <p style="margin:6px 0;">☐ <strong>Day 30:</strong> Add 12 Ostróda exact keywords + new ad copy</p>
+        <p style="margin:6px 0;">☐ <strong>Day 30:</strong> Launch Online Therapy campaign</p>
+        <p style="margin:6px 0;">☐ <strong>Day 30:</strong> Verify /terapia-online landing page exists</p>
+        <p style="margin:12px 0 0;padding-top:8px;border-top:1px solid rgba(77,70,55,.3)">
+          <strong style="color:var(--gold)">📅 Next Analysis Report:</strong> <span style="color:#6fcf97;font-weight:700">25 April 2026</span> — Cron job set to generate new Google Ads analysis report with fresh performance data.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+</div>
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">dashboard</span> Strategic Intelligence Master Report →
+      </a>
+      <a href="ANIMA-COUNTER-STRATEGY-REPORT.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">shield</span> ANIMA Counter-Strategy →
+      </a>
+      <a href="SOCIAL-MEDIA-ACTIVATION-REPORT.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">smartphone</span> Social Media Activation →
+      </a>
+      <a href="WCP_Financial_Health_Report_2026.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">account_balance</span> Financial Health Report →
+      </a>
+    </div>
+
+</main>
+<!-- ═══════════════ SCROLL SPY ═══════════════ -->
+<script>
+(function(){
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const topnavSection = document.getElementById('topnav-section');
+
+  function onScroll() {
+    let current = '';
+    sections.forEach(s => {
+      if (s.getBoundingClientRect().top <= 120) current = s.id;
+    });
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('data-section') === current) {
+        link.classList.add('active');
+      }
+    });
+    const sectionNames = {
+      'cover': 'Cover',
+      'executive-summary': 'Executive Summary',
+      'campaign-audit': 'Campaign Audit',
+      'critical-issues': 'Critical Issues',
+      'day0': 'Day 0 Actions',
+      'day7': '7-Day Fix',
+      'day14': '14-Day Optimization',
+      'day30': '30-Day Growth',
+      'neg-keywords': 'Negative Keywords',
+      'risk-matrix': 'Risk Matrix'
+    };
+    if (topnavSection && sectionNames[current]) {
+      topnavSection.textContent = sectionNames[current];
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  onScroll();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Therapy Promotion Plan · 17 April 2026</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo svg{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.red{border-left-color:var(--red-t)}
+  .callout.red strong{color:#f08080}
+  .callout.green{border-left-color:var(--green-t)}
+  .callout.green strong{color:#6fcf97}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.long-term{background:rgba(155,89,182,.15);color:#c39bd3}
+  .tag.creative{background:rgba(155,89,182,.15);color:#c39bd3}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .stat-card{background:var(--surface-mid);border-radius:6px;padding:18px;border-left:3px solid var(--gold-dim)}
+  .stat-card .stat-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .stat-card .stat-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-card .stat-note{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .stat-card.green{border-left-color:var(--green-t)}
+  .stat-card.green .stat-value{color:#6fcf97}
+  .stat-card.red{border-left-color:var(--red-t)}
+  .stat-card.red .stat-value{color:#f08080}
+  .stat-card.blue{border-left-color:var(--blue-t)}
+  .stat-card.blue .stat-value{color:#7bc8e0}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .vol-low{color:#7bc8e0;font-weight:700}
+  .kw-table .vol-red{color:#f08080;font-weight:700}
+  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .funnel-step:last-child{border-bottom:none}
+  .funnel-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .priority-matrix{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .matrix-cell{padding:18px;border-radius:4px}
+  .matrix-cell.high-impact-low-effort{background:rgba(76,175,125,.08);border-left:3px solid #4CAF7D}
+  .matrix-cell.high-impact-high-effort{background:rgba(75,163,195,.08);border-left:3px solid #4BA3C3}
+  .matrix-cell.low-impact-low-effort{background:rgba(245,200,66,.08);border-left:3px solid #F5C842}
+  .matrix-cell.low-impact-high-effort{background:rgba(224,82,82,.08);border-left:3px solid #E05252}
+  .matrix-cell h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .matrix-cell.high-impact-low-effort h4{color:#6fcf97}
+  .matrix-cell.high-impact-high-effort h4{color:#7bc8e0}
+  .matrix-cell.low-impact-low-effort h4{color:#f5c842}
+  .matrix-cell.low-impact-high-effort h4{color:#f08080}
+  .matrix-cell ul{padding-left:14px;font-size:.82rem;color:var(--on-surface)}
+  .matrix-cell li{margin:4px 0}
+  .badge-row{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .page-footer{display:none}
+  .timeline-row{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .timeline-row:last-child{border-bottom:none}
+  .timeline-week{background:var(--surface-high);border-radius:4px;padding:6px 12px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;flex-shrink:0;min-width:80px;text-align:center}
+  .timeline-content h4{font-size:.9rem;font-weight:700;color:var(--on-surface);margin-bottom:3px}
+  .timeline-content p{font-size:.84rem;color:var(--muted)}
+  .timeline-content .owner{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-t);margin-top:4px}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .vs-col{padding:18px;border-radius:4px}
+  .vs-col.wcp{background:rgba(76,175,125,.06);border-left:3px solid var(--green-t)}
+  .vs-col.anima{background:rgba(224,82,82,.06);border-left:3px solid var(--red-t)}
+  .vs-col h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .vs-col.wcp h4{color:#6fcf97}
+  .vs-col.anima h4{color:#f08080}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  /* Animated bar charts */
+  .bar-chart{margin:24px 0}
+  .bar-row{display:flex;align-items:center;margin:8px 0;gap:12px}
+  .bar-label{min-width:120px;font-size:.82rem;color:var(--muted);text-align:right}
+  .bar-track{flex:1;height:24px;background:var(--surface-high);border-radius:4px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;border-radius:4px;width:0;transition:width 1.2s ease-out;position:relative}
+  .bar-fill.gold{background:linear-gradient(90deg,var(--gold),var(--gold-dim))}
+  .bar-fill.green{background:linear-gradient(90deg,var(--green-t),#3d8b63)}
+  .bar-fill.red{background:linear-gradient(90deg,var(--red-t),#b84040)}
+  .bar-value{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:.7rem;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+  .bar-fill.animate{width:var(--bar-width)}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.priority-matrix,.vs-grid{grid-template-columns:1fr}.toc-block ol{columns:1}.page-canvas{padding:28px 16px 60px}.stat-grid{grid-template-columns:1fr 1fr}.page-footer{display:none}.page-footer .footer-left,}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link"><span class="material-symbols-outlined" style="font-size:.9rem">description</span> Return to Strategic Report →</a>
+
+  <div class="sidebar-label">Navigation</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Cover
+    </a>
+    <a class="nav-link" href="#landing-page" data-section="landing-page">
+      <span class="material-symbols-outlined nav-icon">web</span> Landing Page
+    </a>
+    <a class="nav-link" href="#google-ads" data-section="google-ads">
+      <span class="material-symbols-outlined nav-icon">ads_click</span> Google Ads
+    </a>
+    <a class="nav-link" href="#social-media" data-section="social-media">
+      <span class="material-symbols-outlined nav-icon">share</span> Social Media
+    </a>
+    <a class="nav-link" href="#booknetic" data-section="booknetic">
+      <span class="material-symbols-outlined nav-icon">calendar_month</span> Booknetic
+    </a>
+    <a class="nav-link" href="#goals" data-section="goals">
+      <span class="material-symbols-outlined nav-icon">analytics</span> Goals & Metrics
+    </a>
+    <a class="nav-link" href="#timeline" data-section="timeline">
+      <span class="material-symbols-outlined nav-icon">schedule</span> Timeline
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="ONLINE-THERAPY-PROMOTION-PLAN-PL.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇵🇱</span> PL Version
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">Online Therapy Promotion</span>
+  <span class="topnav-section" id="topnav-section">Cover</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 0: COVER -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  
+  <span class="cover-badge">🕯️ WCP Strategic Promotion Plan · April 2026</span>
+  <h1 class="cover-h1">Online Therapy<br><span>Promotion Plan</span></h1>
+  <p class="cover-subtitle">Comprehensive online therapy promotion plan for Warmińskie Centrum Psychoterapii — landing page, Google Ads campaigns, social media, Booknetic integration, and measurable growth targets.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Data</label><p>17 April 2026</p></div>
+    <div class="cover-meta-item"><label>Agent</label><p>Der Alte</p></div>
+    <div class="cover-meta-item"><label>Source Copy</label><p>03-Online-Therapy-Copy.md</p></div>
+    <div class="cover-meta-item"><label>Classification</label><p>Internal Review Only</p></div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Contents</h3>
+  <ol>
+    <li><a href="#landing-page">Landing Page — Structure</a></li>
+    <li><a href="#google-ads">Google Ads Campaign</a></li>
+    <li><a href="#social-media">Social Media Campaign</a></li>
+    <li><a href="#booknetic">Booknetic Integration</a></li>
+    <li><a href="#goals">Goals & KPI Metrics</a></li>
+    <li><a href="#timeline">Timeline & Responsibilities</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: LANDING PAGE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="landing-page">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">web</span>
+    <div>
+      <div class="sec-label">Section 01</div>
+      <h2>Landing Page — Wireframe Structure</h2>
+      <div class="sub">URL: wcp.com.pl/terapia-online/ · Template: Dark editorial (Stitch)</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">9</div>
+        <div class="stat-label">Landing Page Sections</div>
+        <div class="stat-note">From Hero to Final CTA</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">44px</div>
+        <div class="stat-label">Min. Tap Target</div>
+        <div class="stat-note">Mobile-first design</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">9</div>
+        <div class="stat-label">Conversion Events</div>
+        <div class="stat-note">Tracking GA4</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Landing Page Sections</h3>
+
+    <table class="kw-table">
+      <tr><th>Section</th><th>Content</th><th>Component</th></tr>
+      <tr><td><strong>Hero</strong></td><td>"Professional psychological help — from the comfort of home" + Booknetic CTA</td><td>Full-width, obsidian bg</td></tr>
+      <tr><td><strong>Trust Bar</strong></td><td>"18 years of experience · 22+ therapists · 5,000+ online sessions"</td><td>Horizontal strip</td></tr>
+      <tr><td><strong>How It Works</strong></td><td>3 steps: Choose a therapist → Book a session → Join the session</td><td>Icon cards</td></tr>
+      <tr><td><strong>Who Is It For</strong></td><td>6 cards: Stress, Depression, Relationships, ADHD, Grief, Youth</td><td>Grid</td></tr>
+      <tr><td><strong>Interactive Quiz</strong></td><td>"Is online therapy right for me?" — 6 questions → therapist matching</td><td>JS component</td></tr>
+      <tr><td><strong>Meet Therapists</strong></td><td>Cards with specialty reveals + video intros</td><td>Carousel</td></tr>
+      <tr><td><strong>FAQ</strong></td><td>8-question accordion (effectiveness, tech requirements, pricing)</td><td>Expandable</td></tr>
+      <tr><td><strong>3-Tier Ladder</strong></td><td>Free consultation (20 min) → First session (250 PLN) → 5-session package (1,100 PLN)</td><td>Pricing cards</td></tr>
+      <tr><td><strong>Final CTA</strong></td><td>"Ready for the first step?" + phone + WhatsApp</td><td>Gold accent section</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Build Notes:</strong> Mobile-first, CTA above fold. Tap targets 44×44px minimum. Conversion tracking events defined (9 events in source copy). A/B test: Hero headline variants.
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="HR-DEVELOPMENT-PLAN.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> HR Development Plan →
+      </a>
+      <a href="ANALIZA-COST-ANALYSIS.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">analytics</span> Cost Analysis →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: GOOGLE ADS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="google-ads">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">ads_click</span>
+    <div>
+      <div class="sec-label">Section 02</div>
+      <h2>Google Ads Campaign — Online Therapy</h2>
+      <div class="sub">Exact match priority · CPC analysis · Budget targets</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Keywords (Exact Match Priority)</h3>
+
+    <div class="bar-chart" id="keywordChart">
+      <div class="bar-row">
+        <div class="bar-label">terapia online</div>
+        <div class="bar-track">
+          <div class="bar-fill gold" data-width="80%"><span class="bar-value">2,400</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">psycholog online</div>
+        <div class="bar-track">
+          <div class="bar-fill gold" data-width="60%"><span class="bar-value">1,800</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">psychoterapia internetowa</div>
+        <div class="bar-track">
+          <div class="bar-fill green" data-width="40%"><span class="bar-value">1,200</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">pomoc psychologiczna online</div>
+        <div class="bar-track">
+          <div class="bar-fill green" data-width="27%"><span class="bar-value">800</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">psychoterapeuta online</div>
+        <div class="bar-track">
+          <div class="bar-fill green" data-width="30%"><span class="bar-value">900</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">terapeuta online</div>
+        <div class="bar-track">
+          <div class="bar-fill green" data-width="20%"><span class="bar-value">600</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">terapia dzieci online</div>
+        <div class="bar-track">
+          <div class="bar-fill green" data-width="17%"><span class="bar-value">500</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">terapia dla par online</div>
+        <div class="bar-track">
+          <div class="bar-fill green" data-width="13%"><span class="bar-value">400</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">sesja terapeutyczna online</div>
+        <div class="bar-track">
+          <div class="bar-fill green" data-width="10%"><span class="bar-value">300</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">terapia online olsztyn</div>
+        <div class="bar-track">
+          <div class="bar-fill red" data-width="5%"><span class="bar-value">150</span></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="kw-table">
+      <tr><th>Keyword</th><th>Est. Monthly Volume</th><th>CPC (PLN)</th></tr>
+      <tr><td>terapia online</td><td class="vol-high">2,400</td><td>2.50</td></tr>
+      <tr><td>psychoterapia internetowa</td><td class="vol-med">1,200</td><td>2.20</td></tr>
+      <tr><td>psycholog online</td><td class="vol-high">1,800</td><td>2.80</td></tr>
+      <tr><td>terapia online olsztyn</td><td class="vol-low">150</td><td class="vol-low">1.50</td></tr>
+      <tr><td>pomoc psychologiczna online</td><td class="vol-med">800</td><td>2.10</td></tr>
+      <tr><td>terapeuta online</td><td class="vol-low">600</td><td>2.00</td></tr>
+      <tr><td>sesja terapeutyczna online</td><td class="vol-low">300</td><td class="vol-low">1.80</td></tr>
+      <tr><td>psychoterapeuta online</td><td class="vol-med">900</td><td>2.40</td></tr>
+      <tr><td>terapia dla par online</td><td class="vol-low">400</td><td>2.60</td></tr>
+      <tr><td>terapia dzieci online</td><td class="vol-low">500</td><td>2.30</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Ad Copy (Polish)</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📝</span> Headlines</div>
+      <div class="idea-body">
+        <p><strong>Option A:</strong> <code>Terapia Online — Warmińskie CP</code></p>
+        <p><strong>Option B:</strong> <code>Psycholog Online · 250 PLN/sesję</code></p>
+        <p><strong>Option C:</strong> <code>Pomoc Psychologiczna Online</code></p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>💬</span> Description</div>
+      <div class="idea-body">
+        <p><em>"Profesjonalna psychoterapia przez wideorozmowę. 22+ terapeutów, 5000+ sesji online. Bez dojazdów, bez kolejek. Umów się już dziś."</em></p>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <strong>Extensions:</strong> Sitelinks (How It Works, Pricing, Our Therapists, FAQ), Call extension (576 081 786)
+    </div>
+
+    <h3 class="sub-heading">Budget & Targets</h3>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">50 PLN</div>
+        <div class="stat-label">Daily Budget</div>
+        <div class="stat-note">1,500 PLN/month</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">60 PLN</div>
+        <div class="stat-label">Target CPA</div>
+        <div class="stat-note">Cost per acquisition</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">4.0×</div>
+        <div class="stat-label">Target ROAS</div>
+        <div class="stat-note">250 PLN / 60 PLN CPA</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-value">25</div>
+        <div class="stat-label">Expected Monthly Conversions</div>
+        <div class="stat-note">Bookings</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Negative Keywords</h3>
+    <p style="font-size:.9rem;color:var(--muted)">nfz, bezpłatna, darmowa, praca, вакансия, studia, kurs, szkolenie, forum, blog, wikipedia, książka, pdf</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: SOCIAL MEDIA -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="social-media">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">share</span>
+    <div>
+      <div class="sec-label">Section 03</div>
+      <h2>Social Media Campaign — 5 Post Concepts</h2>
+      <div class="sub">Instagram · Facebook · TikTok · Stories</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Post 1: Instagram/Facebook Carousel — "How Online Therapy Works"</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span>1️⃣</span> 5-Slide Carousel <span class="tag quick-win">Quick Win</span></div>
+      <div class="idea-body">
+        <ul class="clean">
+          <li><strong>Slide 1:</strong> "Myślisz o terapii, ale..." — osoba zestresowana</li>
+          <li><strong>Slide 2:</strong> "Dojazdy Cię powstrzymują?" — samochód/ruch uliczny</li>
+          <li><strong>Slide 3:</strong> "Terapia online = ten sam terapeuta, bez dojazdów" — laptop + uśmiechnięty terapeuta</li>
+          <li><strong>Slide 4:</strong> "3 steps: Choose → Book → Connect" — step icons</li>
+          <li><strong>Slide 5:</strong> "Umów sesję online → wcp.com.pl/terapia-online" — gold CTA</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Post 2: Instagram Reel — "50 Minutes That Change Everything"</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span>2️⃣</span> 30-sec Reel <span class="tag creative">Creative</span></div>
+      <div class="idea-body">
+        <p><strong>Visual:</strong> Person clicking link → video call starting → therapist greeting → smiling person</p>
+        <p><strong>Caption:</strong> "Twoja pierwsza sesja online w 3 krokach. Bez wychodzenia z domu. 🔗 wcp.com.pl/terapia-online"</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Post 3: Facebook Post — Social Proof</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span>3️⃣</span> Social Proof Post <span class="tag high">High Impact</span></div>
+      <div class="idea-body">
+        <p><em>"W tym miesiącu przeprowadziliśmy ponad 400 sesji online. Nasi pacjenci mówią: 'Nie spodziewałam się, że online może być tak osobiście.' — Anna, 34 lata. Spróbuj sama: wcp.com.pl/terapia-online 📞 576 081 786"</em></p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Post 4: Instagram Story — Quiz "Czy terapia online jest dla Ciebie?"</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span>4️⃣</span> Interactive Story Quiz</div>
+      <div class="idea-body">
+        <ul class="clean">
+          <li><strong>Slide 1:</strong> "Czy masz spokojne miejsce w domu?" — Tap: TAK / NIE</li>
+          <li><strong>Slide 2:</strong> "Wolisz rozmowę twarzą w twarz czy przez ekran?" — Poll</li>
+          <li><strong>Slide 3:</strong> "Wynik: Terapia online jest dla Ciebie! 👉 Link w bio"</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Post 5: TikTok — "3 Reasons Online Therapy Is Better Than You Think"</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span>5️⃣</span> TikTok Short <span class="tag creative">Creative</span></div>
+      <div class="idea-body">
+        <p><strong>Script:</strong> "Powód 1: Badania potwierdzają — tak samo skuteczna. Powód 2: Zero dojazdów, zero stresu przed wyjściem. Powód 3: Wybierasz terapeutę z całego zespołu, nie tylko z Twojego miasta. Link w bio 🔗"</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: BOOKNETIC INTEGRATION -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="booknetic">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">calendar_month</span>
+    <div>
+      <div class="sec-label">Section 04</div>
+      <h2>Booknetic Integration</h2>
+      <div class="sub">Configuration · Booking flow · Automation</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Configuration Steps</h3>
+
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Add "Online Session" service type</h4>
+        <p>In the Booknetic admin panel, add a new service type "Online Session"</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Set location = "Online"</h4>
+        <p>Virtual location — does not require a physical address</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Add "Online (Google Meet/Zoom)" as meeting type</h4>
+        <p>Auto-generate link in booking confirmation</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Display "Online" option prominently</h4>
+        <p>On the main booking page, above or alongside physical locations</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Confirmation email requirements</h4>
+        <p>Video call link, therapist name, preparation checklist</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <h4>Reminder SMS/email</h4>
+        <p>24h before session with video call link</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Booking Flow Optimization</h3>
+
+    <div class="callout green">
+      <strong>Optimizations:</strong>
+      <ul class="clean" style="margin-top:8px">
+        <li>Add "Online" badge for therapists available online</li>
+        <li>Filter: "Show online therapists only"</li>
+        <li>Mobile: sticky "Book online" CTA at bottom of page</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: GOALS & METRICS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="goals">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Section 05</div>
+      <h2>Goals & KPI Metrics</h2>
+      <div class="sub">Current · 3-Month Target · 6-Month Target</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">5-10</div>
+        <div class="stat-label">Online Bookings/Week (Current)</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">25-30</div>
+        <div class="stat-label">3-Month Target</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">50+</div>
+        <div class="stat-label">6-Month Target</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Revenue Targets</h3>
+
+    <div class="bar-chart" id="revenueChart">
+      <div class="bar-row">
+        <div class="bar-label">Current</div>
+        <div class="bar-track">
+          <div class="bar-fill red" data-width="8%"><span class="bar-value">12.5K PLN/mo</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">3-Month</div>
+        <div class="bar-track">
+          <div class="bar-fill gold" data-width="50%"><span class="bar-value">75K PLN/mo</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">6-Month</div>
+        <div class="bar-track">
+          <div class="bar-fill green" data-width="100%"><span class="bar-value">150K PLN/mo</span></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="kw-table">
+      <tr><th>KPI</th><th>Current (est.)</th><th>3-Month Target</th><th>6-Month Target</th></tr>
+      <tr><td>Online bookings/week</td><td class="vol-low">5-10</td><td class="vol-med">25-30</td><td class="vol-high">50+</td></tr>
+      <tr><td>Online revenue/month</td><td class="vol-low">12,500 PLN</td><td class="vol-med">75,000 PLN</td><td class="vol-high">150,000 PLN</td></tr>
+      <tr><td>Online as % of total revenue</td><td class="vol-low">~5%</td><td class="vol-med">10%</td><td class="vol-high">15%</td></tr>
+      <tr><td>Online therapy page conversion</td><td>N/A</td><td class="vol-med">3-5%</td><td class="vol-high">5-8%</td></tr>
+      <tr><td>Google Ads CPA (online)</td><td>N/A</td><td class="vol-med">60 PLN</td><td class="vol-low">45 PLN</td></tr>
+      <tr><td>Google Ads ROAS (online)</td><td>N/A</td><td class="vol-med">4.0×</td><td class="vol-high">5.5×</td></tr>
+      <tr><td>Quiz completion rate</td><td>N/A</td><td class="vol-med">40%</td><td class="vol-high">55%</td></tr>
+      <tr><td>Quiz → booking conversion</td><td>N/A</td><td class="vol-low">15%</td><td class="vol-med">25%</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Tracking Requirements</h3>
+
+    <div class="callout">
+      <ul class="clean">
+        <li>Google Analytics 4 events for all 9 conversion points (defined in source copy)</li>
+        <li>Booknetic booking source attribution (online vs in-person)</li>
+        <li>Google Ads conversion value = 250 PLN per booked session</li>
+        <li>Monthly review of online therapy metrics in Mission Control</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: TIMELINE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="timeline">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">schedule</span>
+    <div>
+      <div class="sec-label">Section 06</div>
+      <h2>Timeline & Responsibilities</h2>
+      <div class="sub">8-week execution plan · MC Task ID: 3409a0e3-6279-49e5-a162-7aeff4e953f2</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="timeline-row">
+      <div class="timeline-week">Week 1</div>
+      <div class="timeline-content">
+        <h4>Build landing page on Bricks, configure Booknetic</h4>
+        <p>Create the landing page in Bricks according to wireframe specification</p>
+        <div class="owner">Owner: Mostek</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 1</div>
+      <div class="timeline-content">
+        <h4>Launch Google Ads online therapy campaign</h4>
+        <p>Launch the ad campaign with a budget of 50 PLN/day</p>
+        <div class="owner">Owner: Echo</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 2</div>
+      <div class="timeline-content">
+        <h4>Publish first 5 social media posts</h4>
+        <p>Publish first series of posts on Instagram, Facebook, TikTok</p>
+        <div class="owner">Owner: Echo</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 2</div>
+      <div class="timeline-content">
+        <h4>Quiz development + testing</h4>
+        <p>Implement "Is online therapy right for me?" quiz</p>
+        <div class="owner">Owner: Mostek</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 3</div>
+      <div class="timeline-content">
+        <h4>Analyze first week data, optimize ads</h4>
+        <p>Analyze first campaign results, optimize CPC and ROAS</p>
+        <div class="owner">Owner: Echo</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 4</div>
+      <div class="timeline-content">
+        <h4>Full review, adjust CPA targets, expand keywords</h4>
+        <p>Monthly review, expand keywords, adjust targets</p>
+        <div class="owner">Owner: Kartograf</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 8</div>
+      <div class="timeline-content">
+        <h4>Quarterly review — assess 15% revenue target</h4>
+        <p>Quarterly assessment of 15% online therapy revenue target</p>
+        <div class="owner">Owner: Der Alte</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:24px">
+      <strong>MC Task ID:</strong> 3409a0e3-6279-49e5-a162-7aeff4e953f2
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="HR-DEVELOPMENT-PLAN.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> HR Development Plan →
+      </a>
+      <a href="ANALIZA-COST-ANALYSIS.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">analytics</span> Cost Analysis →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- WCP Center Divider Logo -->
+<div style="text-align:center;padding:40px 0 20px;border-top:1px solid rgba(77,70,55,.2);margin:0 0 64px;">
+  <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:180px;height:auto;opacity:.5;display:block;margin:0 auto;">
+  </div>
+
+<!-- PAGE FOOTER -->
+
+</div>
+</main>
+
+<script>
+// Animated bar charts with IntersectionObserver
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const bars = entry.target.querySelectorAll('.bar-fill');
+      bars.forEach((bar, index) => {
+        setTimeout(() => {
+          bar.style.setProperty('--bar-width', bar.dataset.width);
+          bar.classList.add('animate');
+        }, index * 100);
+      });
+      barObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.bar-chart').forEach(chart => {
+  barObserver.observe(chart);
+});
+
+// Active nav link highlighting
+const sections = document.querySelectorAll('.section, #cover');
+const navLinks = document.querySelectorAll('.nav-link');
+const topnavSection = document.getElementById('topnav-section');
+
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.section === id) {
+          link.classList.add('active');
+          const sectionName = link.textContent.trim().replace(/^\S+\s*/, '');
+          if (topnavSection) topnavSection.textContent = sectionName;
+        }
+      });
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-100px 0px -50% 0px' });
+
+sections.forEach(section => {
+  sectionObserver.observe(section);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="pl" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ocena Zagrożeń ANIMA · Raport Strategiczny WCP</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+// Animate bar charts on scroll
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const bars = entry.target.querySelectorAll('.bar-animated');
+      if (bars.length > 0) {
+        bars.forEach((bar, index) => {
+          setTimeout(() => {
+            bar.classList.remove('bar-animated');
+            bar.style.width = bar.dataset.width;
+          }, index * 150);
+        });
+        barObserver.unobserve(entry.target);
+      }
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.bar-chart').forEach(chart => {
+  barObserver.observe(chart);
+});
+
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="assets/js/stitch-echarts-theme.js"></script>
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo svg{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-glow-red{position:absolute;bottom:-40px;left:-40px;width:300px;height:300px;background:rgba(224,82,82,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--red-t);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--red-t);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.red{border-left-color:var(--red-t);background:var(--surface-mid)}
+  .callout.red strong{color:#f08080}
+  .callout.green{border-left-color:var(--green-t)}
+  .callout.green strong{color:#6fcf97}
+  .callout.gold{border-left-color:var(--gold)}
+  .callout.gold strong{color:var(--gold)}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .stat-card{background:var(--surface-mid);border-radius:6px;padding:18px;border-left:3px solid var(--gold-dim)}
+  .stat-card .stat-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .stat-card .stat-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-card .stat-note{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .stat-card.green{border-left-color:var(--green-t)}
+  .stat-card.green .stat-value{color:#6fcf97}
+  .stat-card.red{border-left-color:var(--red-t)}
+  .stat-card.red .stat-value{color:#f08080}
+  .stat-card.blue{border-left-color:var(--blue-t)}
+  .stat-card.blue .stat-value{color:#7bc8e0}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .vol-low{color:#7bc8e0;font-weight:700}
+  .kw-table .vol-red{color:#f08080;font-weight:700}
+  .kw-table .center{text-align:center}
+  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .funnel-step:last-child{border-bottom:none}
+  .funnel-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .funnel-step .step-num.red{background:linear-gradient(135deg,var(--red-t),#c44444);color:#fff}
+  .funnel-step .step-num.green{background:linear-gradient(135deg,var(--green-t),#3d8f66);color:#fff}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .priority-matrix{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .matrix-cell{padding:18px;border-radius:4px}
+  .matrix-cell.high-impact-low-effort{background:rgba(76,175,125,.08);border-left:3px solid #4CAF7D}
+  .matrix-cell.high-impact-high-effort{background:rgba(75,163,195,.08);border-left:3px solid #4BA3C3}
+  .matrix-cell.low-impact-low-effort{background:rgba(245,200,66,.08);border-left:3px solid #F5C842}
+  .matrix-cell.low-impact-high-effort{background:rgba(224,82,82,.08);border-left:3px solid #E05252}
+  .matrix-cell h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .matrix-cell.high-impact-low-effort h4{color:#6fcf97}
+  .matrix-cell.high-impact-high-effort h4{color:#7bc8e0}
+  .matrix-cell.low-impact-low-effort h4{color:#f5c842}
+  .matrix-cell.low-impact-high-effort h4{color:#f08080}
+  .matrix-cell ul{padding-left:14px;font-size:.82rem;color:var(--on-surface)}
+  .matrix-cell li{margin:4px 0}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .vs-col{padding:18px;border-radius:4px}
+  .vs-col.wcp{background:rgba(76,175,125,.06);border-left:3px solid var(--green-t)}
+  .vs-col.anima{background:rgba(224,82,82,.06);border-left:3px solid var(--red-t)}
+  .vs-col h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .vs-col.wcp h4{color:#6fcf97}
+  .vs-col.anima h4{color:#f08080}
+  .vs-col ul{padding-left:16px;font-size:.86rem;color:var(--on-surface)}
+  .vs-col li{margin:6px 0}
+  .vs-col .adv{color:var(--green-t);font-weight:600}
+  .vs-col .dis{color:var(--red-t);font-weight:600}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .page-footer{display:none}
+.echarts-container{width:100%;height:380px;margin:18px 0;border-radius:6px;background:var(--surface-mid);overflow:hidden}
+.echarts-container.tall{height:440px}
+.echarts-container.short{height:300px}
+.echarts-container.funnel-chart{height:420px}
+.chart-title-bar{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--surface-high);border-bottom:1px solid rgba(77,70,55,.2)}
+.chart-title-bar h4{font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0}
+.chart-title-bar .chart-subtitle{font-size:.75rem;color:var(--muted);font-weight:400}
+  .threat-bar{height:8px;border-radius:4px;background:var(--surface-mid);overflow:hidden;margin:8px 0}
+  .threat-fill{height:100%;border-radius:4px;background:var(--red-t);transition:width 1s ease}
+  .threat-fill.green{background:var(--green-t)}
+  .threat-fill.yellow{background:#f5c842}
+  .threat-label{display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:4px}
+  .threat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:18px 0}
+  .threat-item{background:var(--surface-mid);border-radius:6px;padding:14px}
+  .threat-item .label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .threat-item .value{font-size:.95rem;font-weight:700;color:var(--on-surface)}
+  .bar-chart{height:32px;background:var(--surface-mid);border-radius:4px;overflow:hidden;position:relative;margin:8px 0}
+  .bar-fill{height:100%;border-radius:4px;transition:width 1s ease-out}
+  .bar-label{display:flex;justify-content:space-between;align-items:center;font-size:.8rem}
+  .bar-label span:first-child{color:var(--on-surface)}
+  .bar-label span:last-child{color:var(--muted)}
+  .animated-bar{transform-origin:left;animation:barGrow 1s ease-out forwards}
+  @keyframes barGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.critical{background:rgba(224,82,82,.2);color:#ff6b6b}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .action-table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.83rem}
+  .action-table th{background:var(--surface-high);color:var(--gold);padding:10px 12px;text-align:left;font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .action-table td{padding:10px 12px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface);vertical-align:top}
+  .action-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .action-table .num{width:24px;height:24px;border-radius:50%;background:var(--red-t);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;font-family:"Manrope",sans-serif}
+  .action-table .owner{font-size:.75rem;color:var(--blue-t);font-weight:600}
+  .action-table .impact-high{color:#6fcf97;font-weight:700}
+  .action-table .impact-med{color:#f5c842;font-weight:600}
+  .action-table .impact-crit{color:#ff6b6b;font-weight:700}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.priority-matrix,.vs-grid,.toc-block ol{grid-template-columns:1fr}.page-canvas{padding:28px 16px 60px}.stat-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Powrót do Raportu Strategicznego →
+  </a>
+
+  <div class="sidebar-label">Nawigacja</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Okładka
+    </a>
+    <a class="nav-link" href="#executive-summary" data-section="executive-summary">
+      <span class="material-symbols-outlined nav-icon">summarize</span> Podsumowanie
+    </a>
+    <a class="nav-link" href="#anima-profile" data-section="anima-profile">
+      <span class="material-symbols-outlined nav-icon">business</span> Profil ANIMA
+    </a>
+    <a class="nav-link" href="#head-to-head" data-section="head-to-head">
+      <span class="material-symbols-outlined nav-icon">compare_arrows</span> WCP vs ANIMA
+    </a>
+    <a class="nav-link" href="#anima-advantages" data-section="anima-advantages">
+      <span class="material-symbols-outlined nav-icon">warning</span> Przewagi ANIMA
+    </a>
+    <a class="nav-link" href="#wcp-advantages" data-section="wcp-advantages">
+      <span class="material-symbols-outlined nav-icon">shield</span> Przewagi WCP
+    </a>
+    <a class="nav-link" href="#threat-assessment" data-section="threat-assessment">
+      <span class="material-symbols-outlined nav-icon">radar</span> Ocena Zagrożeń
+    </a>
+    <a class="nav-link" href="#recommendations" data-section="recommendations">
+      <span class="material-symbols-outlined nav-icon">lightbulb</span> Rekomendacje
+    </a>
+    <a class="nav-link" href="#urgent-actions" data-section="urgent-actions">
+      <span class="material-symbols-outlined nav-icon">bolt</span> Pilne Działania
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="ANIMA-THREAT-REPORT.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇬🇧</span> Wersja EN
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP · Ocena Zagrożeń ANIMA</span>
+  <span class="topnav-section" id="topnav-section">Okładka</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 0: COVER -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  <div class="cover-glow-red"></div>
+  
+  <span class="cover-badge">🔴 Raport Strategiczny · Konkurencja · Kwiecień 2026</span>
+  <h1 class="cover-h1">Ocena Zagrożeń<br><span>ANIMA</span></h1>
+  <p class="cover-subtitle">Centrum Psychiatrii ANIMA jako najpoważniejsze strategiczne zagrożenie dla WCP. Analiza strukturalnych asymetrii, mapa zagrożeń oraz plan działania kontr-strategicznego.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Data</label><p>17 Kwietnia 2026</p></div>
+    <div class="cover-meta-item"><label>Autor</label><p>Echo (Signals Officer)</div>
+    <div class="cover-meta-item"><label>Klasyfikacja</label><p>CONFIDENTIAL · Strategic</p></div>
+    <div class="cover-meta-item"><label>Ocena Zagrożenia</label><p>🔴 9/10 NFZ · 🔴 8/10 Psychiatria</p></div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Spis Treści</h3>
+  <ol>
+    <li><a href="#executive-summary">Podsumowanie Strategiczne</a></li>
+    <li><a href="#anima-profile">Profil ANIMA</a></li>
+    <li><a href="#head-to-head">WCP vs ANIMA — Porównanie</a></li>
+    <li><a href="#anima-advantages">Strukturalne Przewagi ANIMA</a></li>
+    <li><a href="#wcp-advantages">Przewagi WCP</a></li>
+    <li><a href="#threat-assessment">Ocena Zagrożeń</a></li>
+    <li><a href="#recommendations">Rekomendacje Strategiczne</a></li>
+    <li><a href="#urgent-actions">Pilne Działania (0-30 dni)</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: EXECUTIVE SUMMARY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="executive-summary">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">list_alt</span>
+    <div>
+      <div class="sec-label">Sekcja 01</div>
+      <h2>Podsumowanie Strategiczne</h2>
+      <div class="sub">Najważniejsze wnioski dla Tomek & Karolina</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout red">
+      <strong>🔴 Centrum Psychiatrii ANIMA to największe bezpośrednie zagrożenie konkurencyjne dla WCP.</strong> To nie odległy konkurent — Anima to strukturalnie lepsza organizacja, która aktywnie ekspanduje na kluczowe rynki WCP z przewagami, których WCP nie może łatwo replikować.
+    </div>
+
+    <p>Zagrożenie definiują trzy krytyczne asymetrie:</p>
+
+    <div class="funnel-step">
+      <div class="step-num red">1</div>
+      <div class="step-content">
+        <h4>Dostęp do NFZ</h4>
+        <p>Anima leczy pacjentów refundowanych przez NFZ. WCP nie ma tej możliwości. To daje Animie dostęp do puli pacjentów szacowanej na 5-10× większą niż rynek prywatny, na którym operuje WCP.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num red">2</div>
+      <div class="step-content">
+        <h4>Psychiatra na Etacie</h4>
+        <p>Anima ma psychiatrę od 300 PLN. WCP nie ma psychiatry, zmuszając pacjentów do szukania farmakoterapii gdzie indziej — to tworzy tarcie i wyciek w ścieżce opieki.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num red">3</div>
+      <div class="step-content">
+        <h4>Skala Geograficzna</h4>
+        <p>Anima operuje w 6 lokalizacjach (w tym nowy oddział w Iławie otwarty w marcu 2026) vs 3 lokalizacje WCP. Są fizycznie obecni w większej liczbie centrów populacyjnych regionu i aktywnie się rozwijają.</p>
+      </div>
+    </div>
+
+    <div class="callout gold">
+      <strong>🟡 Bottom Line:</strong> Anima nie tylko konkurruje z WCP o tych samych pacjentów — Anima konkuruje na polu, na którym WCP nawet nie gra (NFZ), oferując usługę, której WCP nie ma (psychiatria), w większej liczbie miejsc niż WCP. Zagrożenie jest realne, rosnące i strukturalne.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: ANIMA PROFILE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="anima-profile">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">apartment</span>
+    <div>
+      <div class="sec-label">Sekcja 02</div>
+      <h2>Profil ANIMA</h2>
+      <div class="sub">Dane podstawowe · Lokalizacje · Usługi · Zespół</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Informacje Podstawowe</h3>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">ANIMA</div>
+        <div class="stat-label">Centrum Psychiatrii ANIMA</div>
+        <div class="stat-note">Pełna nazwa</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">Iwona Trzonkowska-Żyśko</div>
+        <div class="stat-label">Właściciel/Dyrektor</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">✅ PTP</div>
+        <div class="stat-label">Akredytacja PTP</div>
+        <div class="stat-note">Polskie Towarzystwo Psychiatriczne</div>
+      </div>
+    </div>
+
+    <table class="kw-table">
+      <tr><th>Pole</th><th>Wartość</th></tr>
+      <tr><td>Pełna Nazwa</td><td>Centrum Psychiatrii ANIMA</td></tr>
+      <tr><td>Dyrektor</td><td>Iwona Trzonkowska-Żyśko</td></tr>
+      <tr><td>Strona WWW</td><td>anima.olsztyn.pl</td></tr>
+      <tr><td>Centrum Medyczne</td><td>animaolsztyn.pl</td></tr>
+      <tr><td>Akredytacja PTP</td><td class="vol-high">✅ Oficjalna akredytacja</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Lokalizacje (6 Oddziałów)</h3>
+    <table class="kw-table">
+      <tr><th>#</th><th>Lokalizacja</th><th>Adres</th><th>Typ</th></tr>
+      <tr><td class="center">1</td><td><strong>Olsztyn — Centrala</strong></td><td>ul. Jarocka 86</td><td>Dorośli — NFZ + Komercyjne</td></tr>
+      <tr><td class="center">2</td><td><strong>Olsztyn — Dzieci/Młodzież</strong></td><td>ul. Żołnierska 19A</td><td>Dedykowane centrum dzieci/młodzież — NFZ</td></tr>
+      <tr><td class="center">3</td><td><strong>Szczytno</strong></td><td>Poradnia Szczytno</td><td>Ambulatoryjna NFZ</td></tr>
+      <tr><td class="center">4</td><td><strong>Biskupiec</strong></td><td>Ośrodek Biskupiec</td><td>Placówka NFZ</td></tr>
+      <tr><td class="center">5</td><td><strong>Iława 🆕</strong></td><td>ul. Andersa 2C/3</td><td class="vol-red"><strong>NOWY — Marzec 2026 — Komercyjny</strong></td></tr>
+      <tr><td class="center">6</td><td><strong>Węgorzewo</strong></td><td>Ośrodek Węgorzewo</td><td>Placówka NFZ</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Usługi — NFZ (Publiczne)</h3>
+    <ul class="clean">
+      <li>Opieka psychiatryczna, psychologiczna i psychoterapeutyczna dla dorosłych</li>
+      <li>Oddział dzienny leczenia nerwic (w pełni refundowany NFZ)</li>
+      <li>Opieka psychiatryczna, psychologiczna i psychoterapeutyczna dla dzieci i młodzieży</li>
+    </ul>
+
+    <h3 class="sub-heading">Usługi — Komercyjne (Prywatne)</h3>
+    <table class="kw-table">
+      <tr><th>Usługa</th><th>Cena</th></tr>
+      <tr><td>Konsultacja psychiatryczna</td><td class="vol-med">od 300 PLN</td></tr>
+      <tr><td>Sesja psychoterapii</td><td class="vol-med">200 PLN</td></tr>
+      <tr><td>Konsultacja psychologiczna</td><td class="vol-med">od 200 PLN</td></tr>
+      <tr><td>Diagnoza DIVA-5 ADHD</td><td class="vol-red">1,200 PLN</td></tr>
+      <tr><td>Orzecznicze (RKL)</td><td>250 PLN</td></tr>
+      <tr><td>Terapia grupowa, par, indywidualna</td><td>—</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Wielkość Zespołu</h3>
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-value">26+</div>
+        <div class="stat-label">Pracowników Olsztyn Dzieci</div>
+        <div class="stat-note">9 psychoterapeuta, 6 psycholog, 5 terapeuta środowiskowy, 1 superwizor</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">40+</div>
+        <div class="stat-label">Specjalistów Łącznie</div>
+        <div class="stat-note">W tym psychiatrzy</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Obecność Online</h3>
+    <table class="kw-table">
+      <tr><th>Platforma</th><th>Metryka</th></tr>
+      <tr><td>Google Reviews</td><td class="vol-red">3.2/5 gwiazdek, 58 opinii</td></tr>
+      <tr><td>Facebook</td><td>2,200+ obserwujących</td></tr>
+    </table>
+
+    <!-- CHART 5: Patient Conversion Risk Funnel -->
+    <div class="chart-title-bar" style="margin-top:24px">
+      <span class="material-symbols-outlined" style="color:var(--red-t);font-size:1.1rem">filter_alt</span>
+      <h4>Lejek Konwersji Pacjenta — Ryzyko Utraty</h4>
+      <span class="chart-subtitle">Ścieżka: ZnanyLekarz → Konsultacja → Pierwsza Sesja → Stała Opieka</span>
+    </div>
+    <div id="chart-funnel" class="echarts-container funnel-chart"></div>
+
+    <div class="callout green">
+      <strong>✅ Słaby punkt ANIMA:</strong> Ocena 3.2/5 na Google to poważna luka w zaufaniu. Pacjenci czytają opinie przed rezerwacją. WCP z 4.7/5 (119 opinii) ma ogromną przewagę w zakresie reputacji.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: HEAD-TO-HEAD COMPARISON -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="head-to-head">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">swords</span>
+    <div>
+      <div class="sec-label">Sekcja 03</div>
+      <h2>WCP vs ANIMA — Bezpośrednie Porównanie</h2>
+      <div class="sub">Wymiar po wymiarze — kto ma przewagę</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="kw-table">
+      <tr><th>Wymiar</th><th>WCP</th><th>ANIMA</th><th>Przewaga</th></tr>
+      <tr><td>Lokalizacje</td><td>3</td><td class="vol-red"><strong>6</strong></td><td class="vol-red">🔴 ANIMA</td></tr>
+      <tr><td>Wielkość Zespołu</td><td>22 terapeuci</td><td class="vol-red"><strong>40+ specjalistów</strong></td><td class="vol-red">🔴 ANIMA</td></tr>
+      <tr><td>Psychiatra</td><td class="vol-red">❌ Brak</td><td class="vol-high">✅ Na etacie</td><td class="vol-red">🔴 ANIMA</td></tr>
+      <tr><td>Kontrakt NFZ</td><td class="vol-red">❌ Tylko prywatni</td><td class="vol-high">✅ NFZ + Komercyjne</td><td class="vol-red">🔴🔴 ANIMA</td></tr>
+      <tr><td>Oddział Dzienny</td><td class="vol-red">❌ Brak</td><td class="vol-high">✅ Refundowany NFZ</td><td class="vol-red">🔴 ANIMA</td></tr>
+      <tr><td>Akredytacja PTP</td><td class="vol-red">❌</td><td class="vol-high">✅</td><td class="vol-red">🔴 ANIMA</td></tr>
+      <tr><td>Centrum Dzieci/Młodzież</td><td class="vol-red">❌</td><td class="vol-high">✅ Dedykowane centrum</td><td class="vol-red">🔴 ANIMA</td></tr>
+      <tr><td>Cena Terapii Indywidualnej</td><td>250 PLN</td><td class="vol-high">200 PLN</td><td class="vol-red">🔴 ANIMA</td></tr>
+      <tr><td>Cena DIVA-5 ADHD</td><td class="vol-high">600 PLN</td><td class="vol-red">1,200 PLN</td><td class="vol-high">🟢 WCP (50% taniej)</td></tr>
+      <tr><td>Test MOXO ADHD</td><td class="vol-high">300 PLN</td><td class="vol-red">Nie oferowany</td><td class="vol-high">🟢 WCP (unikalny)</td></tr>
+      <tr><td>Google Reviews</td><td class="vol-high">119 (ZnanyLekarz)</td><td class="vol-red">58, 3.2/5</td><td class="vol-high">🟢 WCP</td></tr>
+      <tr><td>Ciepło Marki</td><td class="vol-high">Silna, ciepła, nowoczesna</td><td class="vol-med">Kliniczna/instytucjonalna</td><td class="vol-high">🟢 WCP</td></tr>
+      <tr><td>Strona WWW</td><td class="vol-high">Nowoczesna</td><td class="vol-med">Podzielona, starszy design</td><td class="vol-high">🟢 WCP</td></tr>
+      <tr><td>Rezerwacja Online</td><td class="vol-high">Booknetic</td><td class="vol-med">Prawdopodobnie telefoniczna</td><td class="vol-high">🟢 WCP</td></tr>
+    </table>
+
+    <!-- CHART 2: WCP vs ANIMA Capability Radar -->
+    <div class="chart-title-bar" style="margin-top:24px">
+      <span class="material-symbols-outlined" style="color:var(--gold);font-size:1.1rem">radar</span>
+      <h4>Porównanie Zdolności — Radar Strategiczny</h4>
+      <span class="chart-subtitle">Obecne vs Prognozowane WCP (6 mies.) vs ANIMA</span>
+    </div>
+    <div id="chart-radar" class="echarts-container tall"></div>
+
+    <div class="vs-grid">
+      <div class="vs-col wcp">
+        <h4>🟢 WCP — Warmińskie Centrum Psychoterapii</h4>
+        <ul>
+          <li><strong>3 lokalizacje:</strong> Olsztyn, Elbląg, Ostróda</li>
+          <li><strong>22+ terapeuci</strong> (jedyne wielolokalizacyjne centrum na Warmii)</li>
+          <li><strong>Opinie:</strong> 4.7/5 (119 opinii) ✅</li>
+          <li><strong>DIVA-5 ADHD:</strong> 600 PLN (50% taniej)</li>
+          <li><strong>MOXO:</strong> Unikalny w regionie ✅</li>
+          <li><strong>Marka:</strong> Cieplejsza, bardziej osobista</li>
+          <li class="dis"><strong>Brak psychiatry</strong> ❌</li>
+          <li class="dis"><strong>Brak kontraktu NFZ</strong> ❌</li>
+        </ul>
+      </div>
+      <div class="vs-col anima">
+        <h4>🔴 ANIMA — Centrum Terapii ANIMA</h4>
+        <ul>
+          <li><strong>6 lokalizacji</strong> w regionie</li>
+          <li><strong>40+ specjalistów</strong></li>
+          <li><strong>Opinie:</strong> 3.2/5 (58 opinii) ❌</li>
+          <li><strong>DIVA-5 ADHD:</strong> 1,200 PLN (2× WCP)</li>
+          <li><strong>MOXO:</strong> Niedostępny</li>
+          <li><strong>Marka:</strong> Bardziej kliniczna, instytucjonalna</li>
+          <li class="adv"><strong>Psychiatra na etacie</strong> ✅</li>
+          <li class="adv"><strong>Kontrakty NFZ</strong> ✅</li>
+          <li class="adv"><strong>PTP, oddział dzienny</strong> ✅</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: ANIMA'S STRUCTURAL ADVANTAGES -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="anima-advantages">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">warning</span>
+    <div>
+      <div class="sec-label">Sekcja 04</div>
+      <h2>Strukturalne Przewagi ANIMA</h2>
+      <div class="sub">Cztery kluczowe asymetrie strategiczne</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">4.1 Dostęp do NFZ — Przewaga Decydująca</h3>
+    <div class="callout red">
+      <strong>🔴 Największa strukturalna przewaga ANIMA:</strong> Dostęp do NFZ to nie tylko dodatkowa opcja — to zmiana zasad gry.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-value">5-10×</div>
+        <div class="stat-label">Większa Pula Pacjentów</div>
+        <div class="stat-note">NFZ vs rynek prywatny</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">~0 zł</div>
+        <div class="stat-label">Koszt Pozyskania NFZ</div>
+        <div class="stat-note">Pacjenci NFZ szukają aktywnie</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">Upsell</div>
+        <div class="stat-label">Ścieżka Konwersji</div>
+        <div class="stat-note">NFZ → Usługi komercyjne</div>
+      </div>
+    </div>
+
+    <ul class="clean">
+      <li><strong>Wielkość rynku:</strong> Pula pacjentów NFZ jest szacowana na 5-10× większą niż rynek prywatny</li>
+      <li><strong>Koszt pozyskania pacjenta:</strong> Bliski zeru dla pacjentów NFZ</li>
+      <li><strong>Ścieżka upsell:</strong> Pacjenci NFZ mogą być konwertowani na usługi komercyjne</li>
+      <li><strong>Iława (marzec 2026):</strong> Celowo komercyjny — strategia NFZ→komercyjne</li>
+    </ul>
+
+    <!-- CHART 3: Market Share Doughnut -->
+    <div class="chart-title-bar" style="margin-top:24px">
+      <span class="material-symbols-outlined" style="color:var(--blue-t);font-size:1.1rem">donut_large</span>
+      <h4>Szacunkowy Podział Rynku — Region Olsztyn</h4>
+      <span class="chart-subtitle">Psychiatria + Psychoterapia prywatna i NFZ</span>
+    </div>
+    <div id="chart-market-share" class="echarts-container"></div>
+
+    <h3 class="sub-heading">4.2 Psychiatra na Etacie</h3>
+    <div class="vs-grid">
+      <div class="vs-col anima">
+        <h4>🔴 ANIMA — Ścieżka Zintegrowana</h4>
+        <p><strong>Pacjent → Psychiatra → Psychoterapeuta</strong> (jeden dach)</p>
+        <p>Brak wycieku. Pełna ciągłość opieki. Możliwość farmakoterapii bez wychodzenia z placówki.</p>
+      </div>
+      <div class="vs-col wcp">
+        <h4>🟢 WCP — Ścieżka Rozproszona</h4>
+        <p><strong>Pacjent → Zewnętrzny psychiatra → WCP psychoterapeuta</strong></p>
+        <p class="dis">Wyciek na każdym przejściu. Zwiększone tarcie. Ryzyko utraty pacjenta w drodze.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">4.3 Sześć Lokalizacji vs Trzy</h3>
+    <ul class="clean">
+      <li><strong>Dwa Olsztyn</strong> vs jeden WCP</li>
+      <li><strong>Przechwytywanie miasteczek:</strong> Szczytno, Biskupiec, Węgorzewo</li>
+      <li><strong>Iława</strong> zagraża rynkowi ostródzkiemu WCP</li>
+    </ul>
+
+    <h3 class="sub-heading">4.4 Oddział Dzienny + Akredytacja PTP + Centrum Dzieci</h3>
+    <div class="funnel-step">
+      <div class="step-num red">1</div>
+      <div class="step-content">
+        <h4>Oddział Dzienny</h4>
+        <p>Usługa na poziomie szpitalnym, którą WCP nie może oferować. Pełne leczenie stacjonarne w formie dziennej, refundowane NFZ.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num red">2</div>
+      <div class="step-content">
+        <h4>Akredytacja PTP</h4>
+        <p>Instytucjonalna wiarygodność. Często wymagana przez placówki partnerskie i kontrakty ubezpieczeniowe.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num red">3</div>
+      <div class="step-content">
+        <h4>Dedykowane Centrum Dzieci/Młodzież</h4>
+        <p>26 pracowników tylko w jednym oddziale. Specjalizacja, której WCP nie ma.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: WCP'S STRUCTURAL ADVANTAGES -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="wcp-advantages">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">verified_user</span>
+    <div>
+      <div class="sec-label">Sekcja 05</div>
+      <h2>Przewagi WCP</h2>
+      <div class="sub">Cztery obszary, gdzie WCP prowadzi</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">5.1 Tożsamość Therapy-First</h3>
+    <div class="callout green">
+      <strong>🟢 WCP = Centrum Psychoterapii. Anima = Centrum Psychiatriaczne.</strong>
+    </div>
+    <p>Pacjenci, którzy specyficznie szukają terapii, preferują pozycjonowanie WCP. To nie jest tylko marketing — to realna różnica w modelu opieki.</p>
+
+    <h3 class="sub-heading">5.2 Ceny — Kluczowe Zwycięstwa</h3>
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">50%</div>
+        <div class="stat-label">Taniej DIVA-5</div>
+        <div class="stat-note">600 vs 1,200 PLN</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">MOXO</div>
+        <div class="stat-label">Unikalny w Regionie</div>
+        <div class="stat-note">300 PLN — Anima nie ma</div>
+      </div>
+    </div>
+    <!-- CHART 4: Price Gap Analysis -->
+    <div class="chart-title-bar" style="margin-top:24px">
+      <span class="material-symbols-outlined" style="color:var(--green-t);font-size:1.1rem">payments</span>
+      <h4>Analiza Luki Cenowej — WCP vs ANIMA</h4>
+      <span class="chart-subtitle">Porównanie cen usług (PLN)</span>
+    </div>
+    <div id="chart-price-gap" class="echarts-container"></div>
+
+    <div class="callout">
+      <strong>Uwaga:</strong> Anima ma niższą cenę terapii indywidualnej (200 vs 250 PLN). WCP musi konkurować wartością, nie ceną.
+    </div>
+
+    <h3 class="sub-heading">5.3 Marka i Digital</h3>
+    <ul class="clean">
+      <li><strong>Nowoczesna strona WWW:</strong> Lepsza UX niż podzielona strona Anima</li>
+      <li><strong>Ciepła marka:</strong> Więcej emocjonalnego rezonansu</li>
+      <li><strong>Booknetic:</strong> Pełna rezerwacja online</li>
+      <li><strong>3.2/5 Anima:</strong> To poważna słabość reputacyjna</li>
+    </ul>
+
+    <h3 class="sub-heading">5.4 Zwinność</h3>
+    <ul class="clean">
+      <li>Młodsza, bardziej przedsiębiorcza organizacja</li>
+      <li>Szybsze decyzje w digital i content</li>
+      <li>Zdolność do testowania nowych kanałów (online, social)</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: THREAT ASSESSMENT -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="threat-assessment">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Sekcja 06</div>
+      <h2>Ocena Zagrożeń</h2>
+      <div class="sub">Wymiar po wymiarze — poziom ryzyka</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- CHART 1: Threat Level Horizontal Bar Chart -->
+    <div class="chart-title-bar">
+      <span class="material-symbols-outlined" style="color:var(--red-t);font-size:1.1rem">crisis_alert</span>
+      <h4>Poziom Zagrożenia — Mapa Ryzyk ANIMA</h4>
+      <span class="chart-subtitle">10 = krytyczne, 1 = minimalne</span>
+    </div>
+    <div id="chart-threat-bars" class="echarts-container tall"></div>
+
+    <div class="callout gold" style="margin-top:24px">
+      <strong>🟡 Podsumowanie:</strong> Dwa najwyższe zagrożenia (NFZ i Psychiatria) to strukturalne luki, które WCP musi zamknąć strategicznie, nie taktycznie. Pozostałe są zarądzalne lub nawet korzystne dla WCP.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: STRATEGIC RECOMMENDATIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="recommendations">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">lightbulb</span>
+    <div>
+      <div class="sec-label">Sekcja 07</div>
+      <h2>Rekomendacje Strategiczne</h2>
+      <div class="sub">Osiem kluczowych działań kontr-strategicznych</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="funnel-step">
+      <div class="step-num green">1</div>
+      <div class="step-content">
+        <h4>Zatrudnij Psychiatrę <span class="tag critical">P1</span></h4>
+        <p>Zamyka największą lukę, umożliwia zintegrowaną opiekę, kwalifikuje do PTP i jest warunkiem koniecznym do NFZ.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num green">2</div>
+      <div class="step-content">
+        <h4>Pozyskaj Kontrakt NFZ <span class="tag high">P2</span></h4>
+        <p>Rozszerzenie puli pacjentów 5-10×. Oś czasu: 12-24 miesiące. Rozpocznij planowanie teraz.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num green">3</div>
+      <div class="step-content">
+        <h4>Podwoj ADHD <span class="tag high">P2</span></h4>
+        <p>Usługa flagowa, 50% przewaga cenowa, MOXO unikalny. To obszar, gdzie WCP może dominować.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num green">4</div>
+      <div class="step-content">
+        <h4>Rozszerz Terapię Online <span class="tag medium">P3</span></h4>
+        <p>Wyrównywacz geograficzny, gra do siły marki WCP. Cel: 15% przychodów w 6 miesięcy.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num green">5</div>
+      <div class="step-content">
+        <h4>Atakuj Słabość Opinii <span class="tag high">P2</span></h4>
+        <p>SEO dla zapytań porównawczych, maksymalizacja opinii WCP. Nie negatywna kampania — pokazuj różnice faktami.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num green">6</div>
+      <div class="step-content">
+        <h4>Buduj Markę Therapy-First <span class="tag medium">P3</span></h4>
+        <p>Postaw na ciepło, specjalizację, społeczność. To strategiczna przewaga, nie tylko estetyka.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num green">7</div>
+      <div class="step-content">
+        <h4>Optymalizuj Ścieżkę Opieki <span class="tag high">P2</span></h4>
+        <p>Sformalizuj partnerstwa z psychiatrami, zmniejsz wyciek. Tymczasowe rozwiązanie przed zatrudnieniem własnego.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num green">8</div>
+      <div class="step-content">
+        <h4>Program Dzieci/Młodzież <span class="tag medium">P3</span></h4>
+        <p>Przechwyć rodziców gotowych płacić za krótsze oczekiwanie niż w NFZ.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="ANIMA-COUNTER-STRATEGY-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Pełny Raport Kontr-Strategii →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 8: URGENT ACTIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="urgent-actions">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">bolt</span>
+    <div>
+      <div class="sec-label">Sekcja 08</div>
+      <h2>Pilne Działania (0-30 dni)</h2>
+      <div class="sub">Konkretne zadania z właścicielami i terminami</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="action-table">
+      <tr>
+        <th>#</th>
+        <th>Działanie</th>
+        <th>Właściciel</th>
+        <th>Deadline</th>
+        <th>Wpływ</th>
+      </tr>
+      <tr>
+        <td><div class="num">1</div></td>
+        <td><strong>Rozpocznij rekrutację psychiatry</strong><br>Przygotuj ogłoszenie, opublikuj na Pracuj.pl, LinkedIn, OLX</td>
+        <td class="owner">Tomek / Karolina</td>
+        <td>30 Kwietnia</td>
+        <td class="impact-crit">Krytyczny</td>
+      </tr>
+      <tr>
+        <td><div class="num">2</div></td>
+        <td><strong>Audyt widoczności usług ADHD na stronie</strong><br>Upewnij się, że DIVA-5 i MOXO są promowane</td>
+        <td class="owner">Tomek / Marketing</td>
+        <td>25 Kwietnia</td>
+        <td class="impact-high">Wysoki</td>
+      </tr>
+      <tr>
+        <td><div class="num">3</div></td>
+        <td><strong>Stworzenie landing page ADHD z cenami</strong><br>Wyeksponuj przewagę cenową 50%</td>
+        <td class="owner">Marketing</td>
+        <td>5 Maja</td>
+        <td class="impact-high">Wysoki</td>
+      </tr>
+      <tr>
+        <td><div class="num">4</div></td>
+        <td><strong>Kampania zbierania opinii (20+ nowych)</strong><br>Aktywnie proś zadowolonych pacjentów o opinie</td>
+        <td class="owner">Ewelina / Recepcja</td>
+        <td>15 Maja</td>
+        <td class="impact-med">Średni</td>
+      </tr>
+      <tr>
+        <td><div class="num">5</div></td>
+        <td><strong>Zbadaj wymagania kontraktu NFZ</strong><br>Przygotuj dokumentację, rozpocznij aplikację</td>
+        <td class="owner">Tomek</td>
+        <td>15 Maja</td>
+        <td class="impact-med">Strategiczny</td>
+      </tr>
+      <tr>
+        <td><div class="num">6</div></td>
+        <td><strong>Nawiąż partnerstwa z psychiatrami</strong><br>Sformalizuj ścieżki skierowań, zmniejsz wyciek</td>
+        <td class="owner">Karolina / Klinika</td>
+        <td>5 Maja</td>
+        <td class="impact-high">Wysoki</td>
+      </tr>
+      <tr>
+        <td><div class="num">7</div></td>
+        <td><strong>Monitoruj aktywność Anima Iława</strong><br>Śledź rozwój nowej lokalizacji konkurenta</td>
+        <td class="owner">Tomek / Echo</td>
+        <td>Ciągłe</td>
+        <td class="impact-med">Intel</td>
+      </tr>
+      <tr>
+        <td><div class="num">8</div></td>
+        <td><strong>SEO audit konkurencyjny</strong><br>Analiza zapytań porównawczych "Anima vs WCP"</td>
+        <td class="owner">Marketing</td>
+        <td>10 Maja</td>
+        <td class="impact-med">Średni</td>
+      </tr>
+    </table>
+
+    <div class="callout green">
+      <strong>✅ Kluczowe Wnioski:</strong> Zatrudnienie psychiatry i kontrakt NFZ to jedyne dwa działania, które mogą zrównać strukturalne przewagi Anima. Reszta to taktyka wzmacniająca naturalne przewagi WCP (ceny ADHD, marka, opinie).
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="COMPETITOR-ANALYSIS-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Pełna Analiza Konkurencji →
+      </a>
+      <a href="GOOGLE-ADS-OPTIMIZATION-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">ads_click</span> Raport Optymalizacji Google Ads →
+      </a>
+      <a href="ANIMA-COUNTER-STRATEGY-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">shield</span> Raport Kontr-Strategii →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /page-canvas -->
+</main>
+
+<!-- Scroll Spy & Navigation -->
+<script>
+const sectionNames = {
+  'cover':'Okładka',
+  'executive-summary':'Podsumowanie',
+  'anima-profile':'Profil ANIMA',
+  'head-to-head':'WCP vs ANIMA',
+  'anima-advantages':'Przewagi ANIMA',
+  'wcp-advantages':'Przewagi WCP',
+  'threat-assessment':'Ocena Zagrożeń',
+  'recommendations':'Rekomendacje',
+  'urgent-actions':'Pilne Działania'
+};
+const navLinks = document.querySelectorAll('.nav-link[data-section]');
+const topnavSection = document.getElementById('topnav-section');
+
+function setActive(id){
+  navLinks.forEach(l=>l.classList.toggle('active',l.dataset.section===id));
+  if(topnavSection) topnavSection.textContent = sectionNames[id]||'';
+}
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) setActive(e.target.id);});
+},{rootMargin:'-15% 0px -70% 0px',threshold:0.05});
+
+Object.keys(sectionNames).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) obs.observe(el);
+});
+
+navLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
+    const t=document.querySelector(link.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+
+<script>
+// ─── ECharts Initialization ─────────────────────────────────────────
+function initAllCharts() {
+  // ─── CHART 1: Threat Level Horizontal Bar Chart ───
+  var chart1 = echarts.init(document.getElementById('chart-threat-bars'), 'stitch');
+  chart1.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    grid: { left: 140, right: 50, top: 20, bottom: 40 },
+    xAxis: { type: 'value', max: 10, axisLabel: { formatter: '{value}' }, name: 'Poziom zagrożenia (0-10)', nameLocation: 'center', nameGap: 28 },
+    yAxis: { type: 'category', data: ['Oddział Dzienny', 'Marka i Opinie', 'Dzieci i Młodzież', 'Konkurencja Cenowa', 'Ekspansja Geograficzna', 'Psychiatria', 'Dostęp do NFZ'], inverse: true },
+    series: [{
+      type: 'bar',
+      data: [
+        { value: 4, itemStyle: { color: '#4CAF7D' } },  // Oddział Dzienny - green
+        { value: 3, itemStyle: { color: '#4CAF7D' } },  // Marka - green
+        { value: 6, itemStyle: { color: '#f5c842' } },  // Dzieci - yellow
+        { value: 6, itemStyle: { color: '#f5c842' } },  // Cenowa - yellow
+        { value: 7, itemStyle: { color: '#E05252' } },  // Geograficzna - red
+        { value: 8, itemStyle: { color: '#E05252' } },  // Psychiatria - red
+        { value: 9, itemStyle: { color: '#E05252' } }   // NFZ - red
+      ],
+      barWidth: '55%',
+      label: {
+        show: true, position: 'right',
+        formatter: function(p) {
+          var labels = ['🟢 Niski', '🟢 Niski', '🟡 Średni', '🟡 Średni', '🔴 Wysoki', '🔴 Bardzo Wysoki', '🔴 Krytyczny'];
+          return p.value + '/10  ' + labels[p.dataIndex];
+        },
+        color: '#e0e3e8', fontFamily: 'Inter, Manrope, sans-serif', fontSize: 11
+      },
+      itemStyle: { borderRadius: [0, 4, 4, 0] },
+      animationDuration: 1500,
+      animationDelay: function(idx) { return idx * 200; }
+    }]
+  });
+
+  // ─── CHART 2: WCP vs ANIMA Capability Radar ───
+  var chart2 = echarts.init(document.getElementById('chart-radar'), 'stitch');
+  chart2.setOption({
+    tooltip: {},
+    legend: { data: ['WCP (obecne)', 'WCP (6 mies.)', 'ANIMA'], bottom: 5, textStyle: { color: '#8a9bb0', fontFamily: 'Manrope, Inter, sans-serif', fontSize: 11 } },
+    radar: {
+      center: ['50%', '50%'],
+      radius: '60%',
+      indicator: [
+        { name: 'Lokalizacje', max: 10 },
+        { name: 'Wielkość Zespołu', max: 10 },
+        { name: 'Psychiatria', max: 10 },
+        { name: 'NFZ', max: 10 },
+        { name: 'Marka/Opinie', max: 10 },
+        { name: 'Cena ADHD', max: 10 },
+        { name: 'Digital', max: 10 },
+        { name: 'Dzieci/Młodzież', max: 10 }
+      ],
+      nameGap: 8,
+      splitNumber: 4,
+      axisName: { color: '#8a9bb0', fontFamily: 'Manrope, sans-serif', fontSize: 10 }
+    },
+    series: [{
+      type: 'radar',
+      animationDuration: 1800,
+      data: [
+        {
+          value: [3, 5, 0, 0, 8, 9, 8, 3],
+          name: 'WCP (obecne)',
+          lineStyle: { color: '#e6c364', width: 2 },
+          areaStyle: { color: 'rgba(230,195,100,0.12)' },
+          itemStyle: { color: '#e6c364' },
+          symbol: 'circle', symbolSize: 6
+        },
+        {
+          value: [4, 7, 5, 3, 9, 9, 9, 5],
+          name: 'WCP (6 mies.)',
+          lineStyle: { color: '#6fcf97', width: 2, type: 'dashed' },
+          areaStyle: { color: 'rgba(111,207,151,0.08)' },
+          itemStyle: { color: '#6fcf97' },
+          symbol: 'diamond', symbolSize: 6
+        },
+        {
+          value: [7, 9, 9, 9, 3, 4, 4, 7],
+          name: 'ANIMA',
+          lineStyle: { color: '#f08080', width: 2 },
+          areaStyle: { color: 'rgba(240,128,128,0.10)' },
+          itemStyle: { color: '#f08080' },
+          symbol: 'triangle', symbolSize: 6
+        }
+      ]
+    }]
+  });
+
+  // ─── CHART 3: Market Share Doughnut ───
+  var chart3 = echarts.init(document.getElementById('chart-market-share'), 'stitch');
+  chart3.setOption({
+    tooltip: { trigger: 'item', formatter: '{b}: {d}%' },
+    legend: { orient: 'vertical', right: 20, top: 'center', textStyle: { color: '#8a9bb0', fontFamily: 'Inter, sans-serif', fontSize: 11 } },
+    series: [{
+      type: 'pie',
+      radius: ['42%', '72%'],
+      center: ['35%', '50%'],
+      avoidLabelOverlap: true,
+      label: {
+        show: true,
+        formatter: '{b}\n{d}%',
+        color: '#e0e3e8',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: 11,
+        lineHeight: 16
+      },
+      labelLine: { lineStyle: { color: 'rgba(230,195,100,0.4)' } },
+      emphasis: {
+        label: { fontSize: 14, fontWeight: 'bold' },
+        itemStyle: { shadowBlur: 20, shadowColor: 'rgba(0,0,0,0.5)' }
+      },
+      animationDuration: 1500,
+      animationEasing: 'cubicOut',
+      data: [
+        { value: 35, name: 'ANIMA', itemStyle: { color: '#f08080' } },
+        { value: 25, name: 'WCP', itemStyle: { color: '#e6c364' } },
+        { value: 15, name: 'Indywidualni', itemStyle: { color: '#7bc8e0' } },
+        { value: 12, name: 'NZOZ/Inne', itemStyle: { color: '#c39bd3' } },
+        { value: 13, name: 'NFZ (pozostałe)', itemStyle: { color: '#5d6d7e' } }
+      ]
+    }],
+    graphic: [{
+      type: 'text',
+      left: '28%',
+      top: '44%',
+      style: {
+        text: 'Olsztyn\nRynek',
+        textAlign: 'center',
+        fill: '#e6c364',
+        fontSize: 13,
+        fontWeight: 700,
+        fontFamily: 'Manrope, sans-serif',
+        lineHeight: 18
+      }
+    }]
+  });
+
+  // ─── CHART 4: Price Gap Grouped Bar ───
+  var chart4 = echarts.init(document.getElementById('chart-price-gap'), 'stitch');
+  chart4.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    legend: { data: ['WCP', 'ANIMA'], bottom: 5, textStyle: { color: '#8a9bb0', fontFamily: 'Manrope, Inter, sans-serif', fontSize: 11 } },
+    grid: { left: 110, right: 30, top: 30, bottom: 50 },
+    xAxis: { type: 'value', name: 'PLN', nameLocation: 'center', nameGap: 28 },
+    yAxis: { type: 'category', data: ['Terapia Pary', 'Terapia Indywid.', 'Konsultacja Psych.', 'Diagnoza DIVA-5 ADHD'], inverse: true },
+    series: [
+      {
+        name: 'WCP',
+        type: 'bar',
+        barWidth: '30%',
+        data: [200, 250, 280, 600],
+        itemStyle: { color: '#e6c364', borderRadius: [0, 3, 3, 0] },
+        label: { show: true, position: 'right', formatter: '{c} PLN', color: '#e6c364', fontFamily: 'Inter', fontSize: 10 },
+        animationDuration: 1500,
+        animationDelay: function(idx) { return idx * 150; }
+      },
+      {
+        name: 'ANIMA',
+        type: 'bar',
+        barWidth: '30%',
+        data: [200, 200, 300, 1200],
+        itemStyle: { color: '#f08080', borderRadius: [0, 3, 3, 0] },
+        label: { show: true, position: 'right', formatter: '{c} PLN', color: '#f08080', fontFamily: 'Inter', fontSize: 10 },
+        animationDuration: 1500,
+        animationDelay: function(idx) { return idx * 150 + 100; }
+      }
+    ]
+  });
+
+  // ─── CHART 5: Patient Conversion Risk Funnel ───
+  var chart5 = echarts.init(document.getElementById('chart-funnel'), 'stitch');
+  chart5.setOption({
+    tooltip: { trigger: 'item', formatter: function(p) { return p.name + ': ' + p.value + ' pacjentów'; } },
+    legend: { show: false },
+    series: [{
+      type: 'funnel',
+      left: '10%',
+      top: 30,
+      bottom: 30,
+      width: '80%',
+      min: 0,
+      max: 1000,
+      minSize: '0%',
+      maxSize: '100%',
+      sort: 'descending',
+      gap: 4,
+      label: {
+        show: true,
+        position: 'inside',
+        formatter: function(p) { return '{name|' + p.name + '}\n{val|' + p.value + ' pacjentów — ' + (p.value / 10).toFixed(0) + '%}'; },
+        rich: {
+          name: { fontSize: 13, fontWeight: 'bold', color: '#fff', fontFamily: 'Manrope, sans-serif', lineHeight: 22 },
+          val: { fontSize: 11, color: 'rgba(255,255,255,0.75)', fontFamily: 'Inter, sans-serif', lineHeight: 18 }
+        }
+      },
+      labelLine: { show: false },
+      emphasis: {
+        label: { fontSize: 14 }
+      },
+      animationDuration: 1800,
+      animationEasing: 'cubicOut',
+      data: [
+        { value: 1000, name: 'ZnanyLekarz / Google', itemStyle: { color: '#7bc8e0' } },
+        { value: 420, name: 'Konsultacja', itemStyle: { color: '#f5c842' } },
+        { value: 250, name: 'Pierwsza Sesja', itemStyle: { color: '#e6c364' } },
+        { value: 150, name: 'Stała Opieka', itemStyle: { color: '#6fcf97' } }
+      ]
+    }]
+  });
+
+  // ─── Resize handler ───
+  var charts = [chart1, chart2, chart3, chart4, chart5];
+  window.addEventListener('resize', function() {
+    charts.forEach(function(c) { c.resize(); });
+  });
+}
+
+// Initialize on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAllCharts);
+} else {
+  initAllCharts();
+}
+</script>
+
+</body>
+</html>

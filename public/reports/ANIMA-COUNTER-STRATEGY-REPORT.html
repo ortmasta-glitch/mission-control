@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANIMA Counter-Strategy · Warmińskie Centrum Psychoterapii</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo img{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.danger{border-left-color:var(--red-t)}
+  .callout.danger strong{color:#f08080}
+  .callout.success{border-left-color:var(--green-t)}
+  .callout.success strong{color:#6fcf97}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.p1{background:rgba(224,82,82,.2);color:#f08080}
+  .tag.p2{background:rgba(245,200,66,.18);color:#f5c842}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.long-term{background:rgba(155,89,182,.15);color:#c39bd3}
+  .threat-card{background:var(--surface-mid);border-left:4px solid var(--red-t);border-radius:0 4px 4px 0;padding:18px 20px;margin:14px 0}
+  .threat-card.severity-critical{border-left-color:#ff4444}
+  .threat-card.severity-high{border-left-color:var(--red-t)}
+  .threat-card.severity-medium{border-left-color:#f5c842}
+  .threat-card h4{font-size:.95rem;font-weight:700;color:var(--on-surface);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .threat-card .severity-badge{font-family:"Manrope",sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:12px}
+  .threat-card .severity-badge.critical{background:rgba(255,68,68,.2);color:#ff6666}
+  .threat-card .severity-badge.high{background:rgba(224,82,82,.18);color:#f08080}
+  .threat-card .severity-badge.medium{background:rgba(245,200,66,.18);color:#f5c842}
+  .threat-card p{font-size:.88rem;color:var(--muted);margin:0}
+  .advantage-card{background:var(--surface-mid);border-left:4px solid var(--green-t);border-radius:0 4px 4px 0;padding:18px 20px;margin:14px 0}
+  .advantage-card h4{font-size:.95rem;font-weight:700;color:var(--on-surface);margin-bottom:6px}
+  .advantage-card p{font-size:.88rem;color:var(--muted);margin:0}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .funnel-step:last-child{border-bottom:none}
+  .funnel-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .timeline-row{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .timeline-row:last-child{border-bottom:none}
+  .timeline-week{background:var(--surface-high);border-radius:6px;padding:6px 14px;flex-shrink:0;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);min-width:90px;text-align:center}
+  .timeline-body h4{font-size:.9rem;font-weight:700;color:var(--on-surface);margin-bottom:4px}
+  .timeline-body p{font-size:.85rem;color:var(--muted);margin:0}
+  .job-box{background:var(--surface-mid);border:1px solid rgba(230,195,100,.25);border-radius:6px;padding:24px;margin:16px 0;position:relative}
+  .job-box .job-label{position:absolute;top:-10px;left:14px;background:var(--gold-dim);color:#101418;padding:2px 11px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .job-box h3{font-size:1rem;font-weight:700;color:var(--gold);margin:12px 0 8px}
+  .job-box p{font-size:.88rem;color:var(--on-surface);margin:6px 0}
+  .job-box ul{padding-left:18px;margin:6px 0}
+  .job-box li{font-size:.86rem;color:var(--on-surface);margin:4px 0}
+  .price-comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .price-cell{padding:18px;border-radius:6px;text-align:center}
+  .price-cell.wcp{background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.3)}
+  .price-cell.anima{background:rgba(224,82,82,.06);border:1px solid rgba(224,82,82,.25)}
+  .price-cell .price-label{font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+  .price-cell.wcp .price-label{color:#6fcf97}
+  .price-cell.anima .price-label{color:#f08080}
+  .price-cell .price-value{font-size:2rem;font-weight:800}
+  .price-cell.wcp .price-value{color:#6fcf97}
+  .price-cell.anima .price-value{color:#f08080}
+  .price-cell .price-unit{font-size:.78rem;color:var(--muted)}
+  .risk-card{background:var(--surface-mid);border-radius:6px;padding:20px;margin:14px 0;border:1px solid rgba(77,70,55,.3)}
+  .risk-card h4{font-size:.92rem;font-weight:700;color:var(--on-surface);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .risk-card p{font-size:.87rem;color:var(--muted);margin:4px 0}
+  .risk-card .mitigation{background:rgba(76,175,125,.06);border-left:3px solid var(--green-t);border-radius:0 4px 4px 0;padding:10px 14px;margin:10px 0 0}
+  .risk-card .mitigation strong{color:#6fcf97}
+  .badge-row{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  hr.divider{border:none;border-top:1px solid rgba(77,70,55,.3);margin:20px 0}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .page-footer{display:none}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+  .stat-box{background:var(--surface-mid);border-radius:6px;padding:16px;text-align:center}
+  .stat-box .stat-val{font-size:1.8rem;font-weight:800;color:var(--gold);line-height:1.1}
+  .stat-box .stat-desc{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.price-comparison,.stat-grid{grid-template-columns:1fr}.toc-block ol{columns:1}.page-canvas{padding:28px 16px 60px}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Return to Strategic Report →
+  </a>
+
+  <div class="sidebar-label">Navigation</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">shield</span> Overview
+    </a>
+    <a class="nav-link" href="#intel" data-section="intel">
+      <span class="material-symbols-outlined nav-icon">search</span> Intelligence Summary
+    </a>
+    <a class="nav-link" href="#asymmetries" data-section="asymmetries">
+      <span class="material-symbols-outlined nav-icon">warning</span> Critical Asymmetries
+    </a>
+    <a class="nav-link" href="#advantages" data-section="advantages">
+      <span class="material-symbols-outlined nav-icon">verified</span> WCP Advantages
+    </a>
+    <a class="nav-link" href="#psychiatrist" data-section="psychiatrist">
+      <span class="material-symbols-outlined nav-icon">person_add</span> P1: Psychiatrist
+    </a>
+    <a class="nav-link" href="#nfz" data-section="nfz">
+      <span class="material-symbols-outlined nav-icon">health_and_safety</span> P2: NFZ Contract
+    </a>
+    <a class="nav-link" href="#adhd" data-section="adhd">
+      <span class="material-symbols-outlined nav-icon">neurology</span> P2: ADHD Flagship
+    </a>
+    <a class="nav-link" href="#seo" data-section="seo">
+      <span class="material-symbols-outlined nav-icon">trending_up</span> P2: SEO &amp; Reviews
+    </a>
+    <a class="nav-link" href="#action-plan" data-section="action-plan">
+      <span class="material-symbols-outlined nav-icon">calendar_month</span> 30-Day Plan
+    </a>
+    <a class="nav-link" href="#risks" data-section="risks">
+      <span class="material-symbols-outlined nav-icon">crisis_alert</span> Risk Assessment
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="ANIMA-COUNTER-STRATEGY-REPORT-PL.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇵🇱</span> PL Version
+    </a>
+  </div>
+</aside>
+
+<header class="topnav"><span class="topnav-title">WCP &middot; ANIMA Counter-Strategy</span><span class="topnav-section" id="topnav-section">Overview</span></header>
+
+<main class="main-content"><div class="page-canvas">
+
+<!-- ========== COVER ========== -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  
+  <span class="cover-badge">&#9679; Confidential Strategy Document &middot; April 2026</span>
+  <h1 class="cover-h1">ANIMA<br><span>Counter-Strategy</span></h1>
+  <p class="cover-subtitle">Warmińskie Centrum Psychoterapii — Strategic response to primary direct competitor threat</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Classification</label><p>Confidential &middot; Internal Strategy</p></div>
+    <div class="cover-meta-item"><label>Prepared by</label><p>Nina (XO) &middot; WCP Agent Crew</p></div>
+    <div class="cover-meta-item"><label>Threat Level</label><p>🔴 Critical — Structural</p></div>
+    <div class="cover-meta-item"><label>Review Date</label><p>May 17, 2026</p></div>
+  </div>
+</section>
+
+<!-- ========== TABLE OF CONTENTS ========== -->
+<div class="toc-block">
+  <h3>📋 Contents</h3>
+  <ol>
+    <li><a href="#intel">Intelligence Summary</a></li>
+    <li><a href="#asymmetries">Critical Asymmetries</a></li>
+    <li><a href="#advantages">WCP Counter-Advantages</a></li>
+    <li><a href="#psychiatrist">P1: Psychiatrist Recruitment</a></li>
+    <li><a href="#nfz">P2: NFZ Contract Pursuit</a></li>
+    <li><a href="#adhd">P2: ADHD Flagship Defense</a></li>
+    <li><a href="#seo">P2: SEO &amp; Review Attack</a></li>
+    <li><a href="#action-plan">30-Day Action Plan</a></li>
+    <li><a href="#risks">Risk Assessment</a></li>
+  </ol>
+</div>
+
+<!-- ========== SECTION 1: INTELLIGENCE SUMMARY ========== -->
+<div class="section" id="intel">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">search</span>
+    <div>
+      <div class="sec-label">Section 01</div>
+      <h2>Intelligence Summary</h2>
+      <div class="sub">Who is ANIMA, what they have, what we don't</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p><strong>Centrum Psychiatrii ANIMA</strong> is WCP's single greatest competitive threat. They are not a distant second — they are a structurally superior competitor actively expanding into WCP's core market with advantages that WCP cannot easily replicate.</p>
+
+    <div class="callout danger">
+      <strong>Bottom line:</strong> Anima is competing on a playing field WCP isn't even on (NFZ), with a service WCP doesn't offer (psychiatry), in more places than WCP operates. The threat is real, growing, and structural.
+    </div>
+
+    <h3 class="sub-heading">Anima Profile</h3>
+
+    <table class="kw-table">
+      <tr><th style="width:35%">Field</th><th>Detail</th></tr>
+      <tr><td>Full Name</td><td>Centrum Psychiatrii ANIMA</td></tr>
+      <tr><td>Owner / Director</td><td>Iwona Trzonkowska-Żyśko</td></tr>
+      <tr><td>Website</td><td>anima.olsztyn.pl · animaolsztyn.pl</td></tr>
+      <tr><td>PTP Accreditation</td><td>✅ Polish Psychiatric Association</td></tr>
+      <tr><td>Total Locations</td><td>6 (incl. Iława opened March 2026)</td></tr>
+      <tr><td>Team Size</td><td>40+ specialists (incl. psychiatrists)</td></tr>
+      <tr><td>Google Reviews</td><td>3.2/5 — 58 reviews</td></tr>
+      <tr><td>Facebook</td><td>2,200+ followers</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Locations (6 Total)</h3>
+    <table class="kw-table">
+      <tr><th>#</th><th>Location</th><th>Address</th><th>Type</th></tr>
+      <tr><td>1</td><td>Olsztyn — HQ</td><td>ul. Jarocka 86</td><td>Adults — NFZ + Commercial</td></tr>
+      <tr><td>2</td><td>Olsztyn — Children/Youth</td><td>ul. Żołnierska 19A</td><td>Dedicated children/youth — NFZ + Commercial</td></tr>
+      <tr><td>3</td><td>Szczytno</td><td>Poradnia Szczytno</td><td>NFZ outpatient</td></tr>
+      <tr><td>4</td><td>Biskupiec</td><td>Ośrodek Biskupiec</td><td>NFZ facility</td></tr>
+      <tr><td>5</td><td>Iława 🆕</td><td>ul. Andersa 2C/3</td><td><strong>NEW — March 2026 — Commercial</strong></td></tr>
+      <tr><td>6</td><td>Węgorzewo</td><td>Ośrodek Węgorzewo</td><td>NFZ facility</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Anima Pricing (Commercial)</h3>
+    <table class="kw-table">
+      <tr><th>Service</th><th>Anima Price</th><th>WCP Price</th><th>Advantage</th></tr>
+      <tr><td>Psychiatrist consultation</td><td>300 PLN</td><td>❌ Not offered</td><td>🔴 Anima</td></tr>
+      <tr><td>Psychotherapy session</td><td>200 PLN</td><td>250 PLN</td><td>🔴 Anima</td></tr>
+      <tr><td>Psychologist consultation</td><td>200 PLN</td><td>—</td><td>—</td></tr>
+      <tr><td>DIVA-5 ADHD assessment</td><td>1,200 PLN</td><td>600 PLN</td><td>🟢 WCP (50% cheaper)</td></tr>
+      <tr><td>MOXO ADHD test</td><td>❌ Not offered</td><td>300 PLN</td><td>🟢 WCP (unique)</td></tr>
+    </table>
+
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="stat-val">6</div>
+        <div class="stat-desc">Anima Locations</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val">40+</div>
+        <div class="stat-desc">Anima Specialists</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val">3.2/5</div>
+        <div class="stat-desc">Anima Google Rating</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 2: CRITICAL ASYMMETRIES ========== -->
+<div class="section" id="asymmetries">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">warning</span>
+    <div>
+      <div class="sec-label">Section 02</div>
+      <h2>Critical Asymmetries</h2>
+      <div class="sub">Three structural threats that define the competitive gap</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p>ANIMA holds three structural advantages that WCP cannot quickly replicate. These are not incremental differences — they are fundamental asymmetries in market access, service completeness, and geographic reach.</p>
+
+    <div class="threat-card severity-critical">
+      <h4>🔴 NFZ Access <span class="severity-badge critical">SEVERITY 9/10</span></h4>
+      <p>Anima treats patients funded by public health insurance (NFZ). WCP operates private-only. This gives Anima access to a patient pool <strong>5–10× larger</strong> than WCP's addressable market. NFZ patients come at near-zero acquisition cost and can be upsold to commercial services. Anima's new Iława office (March 2026) is specifically commercial — a deliberate NFZ-to-commercial pipeline strategy.</p>
+    </div>
+
+    <div class="threat-card severity-critical">
+      <h4>🔴 Psychiatrist on Staff <span class="severity-badge critical">SEVERITY 8/10</span></h4>
+      <p>Anima: Patient → Psychiatrist → Psychotherapist (one roof, zero leakage).<br>WCP: Patient → External psychiatrist → WCP psychotherapist (leakage at every transition). This creates care fragmentation, patient frustration, and lost referrals. It also blocks WCP's ADHD pathway — medication management requires a psychiatrist. Without one, WCP cannot offer integrated care.</p>
+    </div>
+
+    <div class="threat-card severity-high">
+      <h4>🟠 Geographic Scale <span class="severity-badge high">SEVERITY 7/10</span></h4>
+      <p>Six locations vs three. Two Olsztyn locations vs WCP's one. A small-town capture pipeline (Szczytno, Biskupiec, Węgorzewo) feeding into the main centers. And critically: Iława (new, March 2026) encroaches directly on WCP's Ostróda market — it's only 35 km away. Anima is physically present in more of the region's population centers and is actively expanding.</p>
+    </div>
+
+    <h3 class="sub-heading">Additional Asymmetries</h3>
+
+    <div class="threat-card severity-medium">
+      <h4>🟡 Day Ward + PTP Accreditation + Children's Center <span class="severity-badge medium">SEVERITY 5/10</span></h4>
+      <p>Day ward = hospital-level service WCP cannot offer. PTP accreditation = institutional credibility. Dedicated children/youth center with 26 staff. These are structural moats, but they serve a segment outside WCP's core therapy-first model.</p>
+    </div>
+
+    <div class="threat-card severity-medium">
+      <h4>🟡 Individual Therapy Price Gap <span class="severity-badge medium">SEVERITY 6/10</span></h4>
+      <p>Anima undercuts WCP on individual therapy: 200 PLN vs 250 PLN. For price-sensitive NFZ-to-commercial converts, this 50 PLN gap matters. However, WCP more than compensates with its ADHD pricing advantage (600 vs 1,200 PLN).</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 3: WCP ADVANTAGES ========== -->
+<div class="section" id="advantages">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">check_circle</span>
+    <div>
+      <div class="sec-label">Section 03</div>
+      <h2>WCP Counter-Advantages</h2>
+      <div class="sub">Where WCP wins — and how to weaponise it</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p>Despite Anima's structural advantages, WCP holds meaningful competitive edges that can be amplified into defensive and offensive positions. These are not theoretical — they are real, observable, and exploitable today.</p>
+
+    <div class="advantage-card">
+      <h4>💰 Pricing Dominance in ADHD Diagnostics</h4>
+      <p>WCP's DIVA-5 assessment costs 600 PLN vs Anima's 1,200 PLN — that's <strong>50% cheaper</strong>. Combined with the unique MOXO offering (300 PLN, which Anima doesn't have at all), WCP owns the ADHD diagnostics space in the region. This is a flagship advantage that should be the centrepiece of marketing.</p>
+    </div>
+
+    <div class="advantage-card">
+      <h4>⭐ Brand & Review Superiority</h4>
+      <p>WCP: 4.7/5 stars (119 reviews). Anima: 3.2/5 (58 reviews). This is a <strong>massive trust gap</strong>. Patients compare reviews before booking. A 1.5-star difference is the difference between "I trust them" and "I'm not sure." Anima's 3.2/5 is a genuine vulnerability — and it's publicly visible.</p>
+    </div>
+
+    <div class="advantage-card">
+      <h4>🧠 Therapy-First Identity</h4>
+      <p>WCP = psychotherapy centre. Anima = psychiatry centre. Patients who specifically want therapy prefer WCP's positioning. The therapy-first identity means WCP is perceived as warmer, more human, less clinical. This is a brand moat that Anima's institutional positioning cannot easily replicate.</p>
+    </div>
+
+    <div class="advantage-card">
+      <h4>🚀 Agility & Digital Superiority</h4>
+      <p>Modern website with Booknetic online booking. Warm, contemporary brand. Younger, more entrepreneurial organisation. Anima's website is split across two domains with older design. WCP can move faster on digital, content, community, and patient experience — and it shows.</p>
+    </div>
+
+    <div class="callout success">
+      <strong>Strategic insight:</strong> WCP's advantages are real but currently under-weaponised. The ADHD pricing gap should be front and centre in all marketing. The 4.7 vs 3.2 review difference should be in every comparison query result. The therapy-first identity should define every patient touchpoint. These advantages only work if patients know about them.
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 4: P1 — PSYCHIATRIST RECRUITMENT ========== -->
+<div class="section" id="psychiatrist">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">stethoscope</span>
+    <div>
+      <div class="sec-label">Priority 1 — Critical</div>
+      <h2>Psychiatrist Recruitment</h2>
+      <div class="sub">Close the biggest gap, enable integrated care, unlock NFZ pathway</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout danger">
+      <strong>Why this is P1:</strong> Without a psychiatrist, WCP cannot offer integrated care (patient → psychiatrist → therapist on one roof). Anima has this. WCP doesn't. Every day without a psychiatrist, WCP leaks ADHD patients, medication management referrals, and care pathway continuity. This is the single highest-impact hire WCP can make.
+    </div>
+
+    <h3 class="sub-heading">What a Psychiatrist Unlocks</h3>
+    <ul class="clean">
+      <li><strong>Integrated care pathway:</strong> Patient → Psychiatrist → Psychotherapist under one roof (zero leakage)</li>
+      <li><strong>ADHD medication management:</strong> DIVA-5 diagnosis → Psychiatrist prescription → Therapist support — full cycle at WCP</li>
+      <li><strong>PTP accreditation eligibility:</strong> Polish Psychiatric Association accreditation requires a psychiatrist on staff</li>
+      <li><strong>NFZ contract prerequisite:</strong> NFZ contracts for psychiatric care require a psychiatrist — this is the gateway to 5–10× patient pool</li>
+      <li><strong>New revenue stream:</strong> Psychiatrist consultations at 300 PLN/session (matching Anima pricing)</li>
+    </ul>
+
+    <h3 class="sub-heading">Salary Benchmarks — Warmia-Mazury Region</h3>
+    <table class="kw-table">
+      <tr><th>Model</th><th>Monthly Range</th><th>Notes</th></tr>
+      <tr><td>Full-time employed</td><td>18,000–25,000 PLN brutto</td><td>NFZ + commercial combined; competitive vs hospital salary</td></tr>
+      <tr><td>Part-time (½ etat)</td><td>10,000–14,000 PLN brutto</td><td>2–3 days/week; good for semi-retired psychiatrists</td></tr>
+      <tr><td>Revenue share / B2B</td><td>60–70% of consultation revenue</td><td>Low fixed cost; aligns incentives; common model in private practice</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Draft Job Posting</h3>
+    <div class="job-box">
+      <div class="job-label">DRAFT — For Publication</div>
+      <h3>Psychiatrist — Warmińskie Centrum Psychoterapii</h3>
+      <p><strong>Location:</strong> Olsztyn (headquarters), with option to work online</p>
+      <p><strong>Employment type:</strong> Employment contract / B2B — to be determined</p>
+      <p><strong>Salary:</strong> 18,000–25,000 PLN gross (full-time) or flat-rate model</p>
+      <p style="margin-top:14px"><strong>About us:</strong> Warmińskie Centrum Psychoterapii is the largest psychotherapy centre in the Warmia and Mazury region, with a team of over 22 therapists and three locations (Olsztyn, Elbląg, Ostróda). We offer a modern approach, a warm atmosphere, and full administrative support.</p>
+      <p style="margin-top:10px"><strong>Your responsibilities:</strong></p>
+      <ul>
+        <li>Psychiatric consultations for adult and adolescent patients</li>
+        <li>Pharmacological diagnosis and treatment (including ADHD)</li>
+        <li>Collaboration with the psychotherapy team within integrated care</li>
+        <li>Option to conduct online sessions</li>
+      </ul>
+      <p style="margin-top:10px"><strong>Requirements:</strong></p>
+      <ul>
+        <li>Medical licence to practise as a psychiatrist</li>
+        <li>Specialisation in psychiatry</li>
+        <li>Minimum 2 years of clinical experience</li>
+        <li>Empathy, openness to collaboration with psychotherapists</li>
+      </ul>
+      <p style="margin-top:10px"><strong>We offer:</strong></p>
+      <ul>
+        <li>Steady patient flow (marketing and administration on our side)</li>
+        <li>Flexible working hours</li>
+        <li>Modern clinics with full facilities</li>
+        <li>Friendly, supportive team</li>
+        <li>Opportunity to develop in ADHD diagnostics</li>
+      </ul>
+    </div>
+
+    <h3 class="sub-heading">Recruitment Timeline</h3>
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><h4>Week 1–2: Preparation</h4><p>Finalise job posting. Set up listings on Pracuj.pl, Lekarze.pl, OLX, Facebook groups (Lekarze Psychiatrzy). Contact Warmia-Mazury medical chamber. Direct outreach to known psychiatrists in the region.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><h4>Week 3–6: Active Recruitment</h4><p>Screening calls. In-person interviews. Evaluate clinical approach, ADHD willingness, cultural fit. Target: 3–5 candidates shortlisted. Offer within 6 weeks.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><h4>Week 7–8: Onboarding</h4><p>Contract signed. Admin setup: NFZ credentials (if applicable), Booknetic integration, introduction to therapy team. First patient appointments within 2 weeks of start date.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content"><h4>Week 9–12: Integration</h4><p>Full operational integration. Joint case consultations with therapists. ADHD pathway live: DIVA-5 → Psychiatrist → Therapist. Marketing push announcing psychiatrist on staff.</p></div>
+    </div>
+
+    <h3 class="sub-heading">Onboarding Checklist</h3>
+    <ul class="clean">
+      <li>Booknetic profile created with online booking enabled</li>
+      <li>ZnanyLekarz profile created with photo, bio, specialisations</li>
+      <li>Google Business Profile updated: "Psychiatra na miejscu"</li>
+      <li>Website updated: psychiatry service page, integrated ADHD pathway</li>
+      <li>Introduction email to all existing WCP patients: "New psychiatrist on our team"</li>
+      <li>Internal referral protocol: therapists can now refer to in-house psychiatrist</li>
+      <li>Social media announcement: "We have a psychiatrist! Integrated care under one roof"</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 5: P2 — NFZ CONTRACT ========== -->
+<div class="section" id="nfz">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">local_hospital</span>
+    <div>
+      <div class="sec-label">Priority 2 — Strategic</div>
+      <h2>NFZ Contract Pursuit</h2>
+      <div class="sub">5–10× larger patient pool access — the long-game advantage</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Why this matters:</strong> NFZ access isn't just about free patient care — it's about market access. Anima's NFZ contracts give them a patient funnel that is 5–10× larger than WCP's private-only market. NFZ patients come at near-zero acquisition cost, and many convert to commercial services. This is the single biggest structural asymmetry. Closing it requires a psychiatrist first (P1) and then a 12–24 month NFZ application process.
+    </div>
+
+    <h3 class="sub-heading">NFZ Contract Requirements</h3>
+    <ul class="clean">
+      <li><strong>Psychiatrist on staff:</strong> Non-negotiable. NFZ psychiatric care contracts require a specialist with PTP-recognised credentials. → This is why psychiatrist recruitment is P1.</li>
+      <li><strong>Facility requirements:</strong> Minimum medical facility standards (consultation rooms, emergency protocols, pharmacy access within reasonable distance)</li>
+      <li><strong>Accreditation:</strong> PTP accreditation strengthens the application significantly</li>
+      <li><strong>Geographic coverage:</strong> NFZ awards contracts by region. WCP's Olsztyn location is eligible for the Olsztyn powiat contract.</li>
+      <li><strong>Financial stability:</strong> Demonstrated ability to sustain operations during NFZ payment cycles (60–90 day delays)</li>
+    </ul>
+
+    <h3 class="sub-heading">Timeline & Milestones</h3>
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><h4>Month 1–3: Foundation</h4><p>Recruit psychiatrist (P1). Begin PTP accreditation application. Review facility compliance with NFZ requirements. Identify gaps and remediation costs.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><h4>Month 3–6: Application Preparation</h4><p>Complete PTP accreditation. Prepare NFZ application documentation. Engage legal/admin consultant experienced in NFZ contracts (budget: 5,000–10,000 PLN). Contact NFZ Warmia-Mazury branch for upcoming contract announcements.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><h4>Month 6–12: Application & Negotiation</h4><p>Submit NFZ application for psychiatric outpatient care (Olsztyn). Negotiate contract terms. Expect 3–6 month review process. Parallel: apply for psychotherapy NFZ contract if eligible.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content"><h4>Month 12–24: Activation</h4><p>NFZ contract active. Begin accepting NFZ patients. Establish NFZ-to-commercial conversion pathway. Upsell private services (ADHD diagnostics, online therapy) to NFZ patients.</p></div>
+    </div>
+
+    <h3 class="sub-heading">Impact Projection</h3>
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="stat-val">5–10×</div>
+        <div class="stat-desc">Patient Pool Increase</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val">~0 PLN</div>
+        <div class="stat-desc">Patient Acquisition Cost (NFZ)</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val">30–40%</div>
+        <div class="stat-desc">Typical NFZ→Commercial Conversion</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">First Steps (This Month)</h3>
+    <ul class="clean">
+      <li>Recruit psychiatrist (P1 — this is the gate)</li>
+      <li>Research PTP accreditation requirements and application process</li>
+      <li>Contact NFZ Warmia-Mazury branch: request info on upcoming psychiatric outpatient contract competitions</li>
+      <li>Budget: allocate 15,000–25,000 PLN for NFZ application process (legal, admin, compliance)</li>
+      <li>Identify a consultant or law firm experienced in NFZ contracts in the Warmia-Mazury region</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 6: P2 — ADHD FLAGSHIP ========== -->
+<div class="section" id="adhd">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">psychology</span>
+    <div>
+      <div class="sec-label">Priority 2 — Defensive & Offensive</div>
+      <h2>ADHD Flagship Defense</h2>
+      <div class="sub">50% cheaper diagnostics + unique MOXO offering — own the niche</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout success">
+      <strong>WCP's strongest competitive position:</strong> ADHD diagnostics is where WCP holds a decisive advantage. DIVA-5 at 600 PLN vs Anima's 1,200 PLN. MOXO at 300 PLN — Anima doesn't even offer it. Combined: the DIVA-5 + MOXO package at WCP costs 800 PLN vs Anima's 1,200 PLN for DIVA-5 alone. This is the flagship. This is where WCP dominates.
+    </div>
+
+    <h3 class="sub-heading">Pricing Advantage — Visual</h3>
+
+    <div class="price-comparison">
+      <div class="price-cell wcp">
+        <div class="price-label">WCP — DIVA-5</div>
+        <div class="price-value">600</div>
+        <div class="price-unit">PLN</div>
+      </div>
+      <div class="price-cell anima">
+        <div class="price-label">Anima — DIVA-5</div>
+        <div class="price-value">1,200</div>
+        <div class="price-unit">PLN</div>
+      </div>
+    </div>
+
+    <div class="price-comparison">
+      <div class="price-cell wcp">
+        <div class="price-label">WCP — MOXO Test</div>
+        <div class="price-value">300</div>
+        <div class="price-unit">PLN (unique offering)</div>
+      </div>
+      <div class="price-cell anima">
+        <div class="price-label">Anima — MOXO Test</div>
+        <div class="price-value" style="font-size:1.4rem">❌</div>
+        <div class="price-unit">Not offered</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Full ADHD Package Comparison</h3>
+    <table class="kw-table">
+      <tr><th>Component</th><th>WCP</th><th>Anima</th></tr>
+      <tr><td>DIVA-5 Assessment</td><td>600 PLN</td><td>1,200 PLN</td></tr>
+      <tr><td>MOXO Objective Test</td><td>300 PLN</td><td>❌ Not available</td></tr>
+      <tr><td>Psychiatrist Consultation</td><td>🔄 Coming with P1</td><td>300 PLN</td></tr>
+      <tr><td><strong>Total Diagnostics</strong></td><td><strong>800 PLN</strong></td><td><strong>1,200 PLN (DIVA only)</strong></td></tr>
+      <tr><td>Objective Testing</td><td>✅ MOXO</td><td>❌ None</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Marketing Plan — ADHD Flagship</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🌐</span> Dedicated ADHD Landing Page <span class="tag quick-win">QUICK WIN</span><span class="tag high">HIGH IMPACT</span></div>
+      <div class="idea-body">
+        <p>Create wcp.com.pl/adhd — a standalone landing page that positions WCP as the regional ADHD diagnostics centre. Must include:</p>
+        <ul class="clean">
+          <li>Clear pricing: "ADHD diagnosis from 600 PLN — 50% cheaper than the competition"</li>
+          <li>What is DIVA-5 + MOXO — explained in patient-friendly language</li>
+          <li>"Why choose WCP?" — price advantage, unique MOXO, faster booking, warmer experience</li>
+          <li>Online booking CTA: "Book ADHD diagnosis online →"</li>
+          <li>FAQ: "How long does diagnosis take?" "Is MOXO reliable?" "Do I need a referral?"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📢</span> Google Ads Campaign — ADHD Keywords <span class="tag medium">MEDIUM EFFORT</span></div>
+      <div class="idea-body">
+        <p>Target high-intent ADHD search queries in the Warmia-Mazury region:</p>
+        <ul class="clean">
+          <li>"diagnoza ADHD Olsztyn" / "badanie ADHD Olsztyn"</li>
+          <li>"DIVA-5 Olsztyn" / "test ADHD dorosłych Olsztyn"</li>
+          <li>"psychiatra ADHD Warmia" / "where to get diagnosed for ADHD"</li>
+          <li>Ad copy: "ADHD diagnosis from 600 PLN · DIVA-5 + MOXO test · Olsztyn · Book online"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📱</span> Social Content — ADHD Awareness <span class="tag quick-win">QUICK WIN</span></div>
+      <div class="idea-body">
+        <p>Series of educational posts that position WCP as ADHD experts:</p>
+        <ul class="clean">
+          <li>"5 signs it might be ADHD in adults" (carousel)</li>
+          <li>"DIVA-5 vs MOXO — what's the difference between diagnosis methods?" (infographic)</li>
+          <li>"Why does ADHD diagnosis at WCP cost half the price?" (transparency post — builds trust)</li>
+          <li>Patient testimonials (anonymised): "After years of uncertainty, I finally have an answer"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🤝</span> Referral Partnerships — GPs & Schools <span class="tag long-term">LONG-TERM</span></div>
+      <div class="idea-body">
+        <p>Build referral channels from general practitioners and school psychologists who encounter suspected ADHD cases:</p>
+        <ul class="clean">
+          <li>Prepare a one-page referral card for GPs: "Refer to WCP — ADHD diagnosis from 600 PLN, results in 2 weeks"</li>
+          <li>Offer free informational session for school psychologists in Olsztyn, Elbląg, Ostróda</li>
+          <li>Create a simple referral form on the website: "For doctors — refer a patient"</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 7: P2 — SEO & REVIEW ATTACK ========== -->
+<div class="section" id="seo">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">trending_up</span>
+    <div>
+      <div class="sec-label">Priority 2 — Offensive</div>
+      <h2>SEO &amp; Review Attack</h2>
+      <div class="sub">Target Anima's 3.2/5 weakness. Maximise WCP's 4.7/5 strength.</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>The opportunity:</strong> Anima's Google rating of 3.2/5 with only 58 reviews is a genuine vulnerability. Patients in Poland increasingly check Google Reviews before booking medical appointments. A 1.5-star gap (WCP 4.7 vs Anima 3.2) is the difference between "trusted" and "questionable." This is a publicly visible weakness that WCP can exploit through comparison SEO, review generation, and targeted content.
+    </div>
+
+    <h3 class="sub-heading">SEO Strategy — Own the Comparison Queries</h3>
+
+    <p>When patients search for therapy in Olsztyn, many Google comparison queries. WCP needs to appear in — and ideally own — these search results.</p>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🔍</span> Target Comparison Keywords <span class="tag high">HIGH IMPACT</span></div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <tr><th>Keyword</th><th>Intent</th><th>Action</th></tr>
+          <tr><td>"anima olsztyn opinie"</td><td>Patient checking Anima reviews</td><td>Blog post: "Psychotherapy Centre Olsztyn — How to Choose? Comparison"</td></tr>
+          <tr><td>"centrum psychiatrii olsztyn"</td><td>Generic search, not brand-loyal</td><td>SEO landing page with WCP advantages highlighted</td></tr>
+          <tr><td>"psychiatra Olsztyn"</td><td>High-intent, currently Anima wins</td><td>Once P1 complete: WCP psychiatry page + Google Ads</td></tr>
+          <tr><td>"diagnoza ADHD Olsztyn"</td><td>High-intent, WCP wins on price</td><td>Dedicated ADHD landing page + Google Ads</td></tr>
+          <tr><td>"psychoterapia Olsztyn opinie"</td><td>Review comparison search</td><td>WCP reviews page, ZnanyLekarz integration, GBP optimisation</td></tr>
+          <tr><td>"najlepszy psychoterapeuta Olsztyn"</td><td>Best-of search</td><td>Content: "Best Psychotherapy Centre in Olsztyn — Ranking 2026"</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📝</span> Comparison Blog Content <span class="tag medium">MEDIUM EFFORT</span></div>
+      <div class="idea-body">
+        <p>Create SEO-optimized comparison content that subtly highlights WCP's advantages without directly attacking Anima by name (maintains professionalism):</p>
+        <ul class="clean">
+          <li><strong>"How to Choose a Psychotherapy Centre in Olsztyn?"</strong> — Criteria: reviews, pricing, specialisations, booking convenience. WCP naturally wins on reviews (4.7 vs regional average), ADHD pricing, online booking.</li>
+          <li><strong>"ADHD Diagnosis — How Much Does It Cost and Where to Get One?"</strong> — Price comparison table. WCP at 600 PLN (with MOXO) vs regional average 1,000–1,200 PLN.</li>
+          <li><strong>"Psychoterapia czy psychiatria — co jest dla mnie lepsze?"</strong> — Positions therapy-first (WCP) vs psychiatry-first (Anima) as a choice, subtly favouring therapy for most patients.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Google Reviews Strategy — WCP</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>⭐</span> Systematic Review Generation <span class="tag high">HIGH IMPACT</span></div>
+      <div class="idea-body">
+        <p>WCP has 119 reviews at 4.7/5. Target: 200+ reviews by end of Q3 2026. More reviews = more trust = higher local ranking.</p>
+        <ul class="clean">
+          <li><strong>Post-session email/SMS:</strong> Automated 48h after session: "If you feel therapy is helping you, a Google review really helps us reach others who need support. Link: [one-click review URL]. No pressure at all."</li>
+          <li><strong>Therapist mention:</strong> After session 3–5 (trust established): "If this therapy is helping you, a Google review helps others find help."</li>
+          <li><strong>Review response protocol:</strong> Respond to ALL reviews within 24h. Thoughtful, empathetic responses — especially to negative ones. A well-handled negative review builds more trust than 10 generic positive ones.</li>
+          <li><strong>Target per location:</strong> Olsztyn: 100+ reviews, Elbląg: 50+ reviews, Ostróda: 50+ reviews</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📍</span> Google Business Profile — Full Optimisation <span class="tag quick-win">QUICK WIN</span></div>
+      <div class="idea-body">
+        <p>Ensure all three WCP locations have fully optimised Google Business Profiles:</p>
+        <ul class="clean">
+          <li>Update descriptions: lead with ADHD diagnostics, online therapy, psychiatrist (once recruited)</li>
+          <li>Photos: 15–20 per location (interior, team, therapy rooms, "terapia online" visual)</li>
+          <li>Weekly Google Posts: offers, events, new therapist announcements, educational content</li>
+          <li>Q&A: Pre-populate with ADHD, pricing, online therapy questions</li>
+          <li>Filename images with keywords: "psychoterapeuta-olsztyn-terapia-online.jpg"</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Subtle Attack on Anima's Review Weakness</h3>
+
+    <div class="callout">
+      <strong>Ethical boundary:</strong> Never post fake negative reviews about Anima. Never directly name Anima in negative terms. Instead, let the data speak: WCP's 4.7/5 vs the regional average naturally raises the question. Own the comparison queries. When patients search "anima olsztyn opinie," WCP's content should appear alongside, quietly showcasing a better alternative.
+    </div>
+
+    <ul class="clean">
+      <li>Own comparison keywords with objective, data-driven content</li>
+      <li>Showcase WCP's review score prominently on website, ads, social</li>
+      <li>In advertising: "Rated 4.7/5 — the highest-rated psychotherapy centre in Warmia and Mazury"</li>
+      <li>Let patients draw their own conclusions when they see the numbers</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 8: 30-DAY ACTION PLAN ========== -->
+<div class="section" id="action-plan">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">calendar_today</span>
+    <div>
+      <div class="sec-label">Section 08</div>
+      <h2>30-Day Action Plan</h2>
+      <div class="sub">Concrete weekly milestones — April 17 to May 17, 2026</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p>Every priority translated into concrete, time-bound actions. Each item has an owner and a deliverable.</p>
+
+    <h3 class="sub-heading">Week 1: April 17–23 — Launch</h3>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 1</div>
+      <div class="timeline-body">
+        <h4>🔴 P1: Psychiatrist Recruitment</h4>
+        <p>Finalise job posting. Publish on Pracuj.pl, Lekarze.pl, OLX, Facebook groups. Direct outreach to 5+ psychiatrists in the Warmia-Mazury region. Owner: Tomek / Karolina.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 1</div>
+      <div class="timeline-body">
+        <h4>🟢 P2: ADHD Audit</h4>
+        <p>Audit ADHD service visibility on wcp.com.pl. Identify gaps. Create brief for ADHD landing page. Owner: Marketing / Tomek.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 1</div>
+      <div class="timeline-body">
+        <h4>🔵 P2: Review Baseline</h4>
+        <p>Record current review counts per location. Set up automated post-session review request (email/SMS). Draft review response templates. Owner: Ewelina / Front desk.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Week 2: April 24–30 — Build</h3>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 2</div>
+      <div class="timeline-body">
+        <h4>🔴 P1: Psychiatrist Recruitment</h4>
+        <p>Screen applications. Schedule first interviews. Follow up on direct outreach. Owner: Tomek / Karolina.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 2</div>
+      <div class="timeline-body">
+        <h4>🟢 P2: ADHD Landing Page</h4>
+        <p>ADHD landing page live on wcp.com.pl/adhd. Pricing, MOXO info, booking CTA, FAQ. Owner: Marketing.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 2</div>
+      <div class="timeline-body">
+        <h4>🔵 P2: Google Business Profiles</h4>
+        <p>Update all three GBP descriptions. Add 10+ photos per location. Pre-populate Q&A sections. Owner: Marketing.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 2</div>
+      <div class="timeline-body">
+        <h4>🟡 P2: NFZ Research</h4>
+        <p>Contact NFZ Warmia-Mazury branch. Request contract competition info for psychiatric outpatient care. Owner: Tomek.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Week 3: May 1–7 — Accelerate</h3>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 3</div>
+      <div class="timeline-body">
+        <h4>🔴 P1: Psychiatrist Interviews</h4>
+        <p>Conduct interviews. Evaluate clinical fit, ADHD willingness, cultural alignment. Target: 2–3 candidates shortlisted. Owner: Karolina / Clinical lead.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 3</div>
+      <div class="timeline-body">
+        <h4>🟢 P2: ADHD Google Ads</h4>
+        <p>Launch Google Ads campaign for ADHD keywords. Budget: 2,000–3,000 PLN/month. Track conversions to Booknetic. Owner: Marketing / Ads manager.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 3</div>
+      <div class="timeline-body">
+        <h4>🔵 P2: Psychiatrist Referral Partnerships</h4>
+        <p>Contact 3–5 external psychiatrists for referral partnerships (stopgap while recruiting). Formalise referral protocol. Owner: Karolina / Clinical.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 3</div>
+      <div class="timeline-body">
+        <h4>🟡 P2: SEO Content</h4>
+        <p>Publish first comparison blog post: "How to Choose a Psychotherapy Centre in Olsztyn?" Owner: Marketing / Content.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Week 4: May 8–17 — Consolidate</h3>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 4</div>
+      <div class="timeline-body">
+        <h4>🔴 P1: Psychiatrist Offer</h4>
+        <p>Extend offer to top candidate. Negotiate terms. Target: contract signed by May 17. If no suitable candidate: expand search radius, consider remote/online psychiatrist, increase compensation. Owner: Tomek / Karolina.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 4</div>
+      <div class="timeline-body">
+        <h4>🟢 P2: ADHD Social Push</h4>
+        <p>Launch ADHD awareness social media series (Instagram, Facebook). First 4 posts scheduled. Owner: Marketing.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 4</div>
+      <div class="timeline-body">
+        <h4>🔵 P2: Review Progress Check</h4>
+        <p>Count new reviews generated. Evaluate response rate. Adjust review request timing if needed. Target: 15–20 new reviews by end of month. Owner: Ewelina.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-week">Week 4</div>
+      <div class="timeline-body">
+        <h4>🟡 P2: Anima Iława Monitor</h4>
+        <p>Report on Anima Iława activity: patient volume indicators, marketing, staff changes, any NFZ plans. Owner: Echo / Intelligence.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">30-Day Summary Targets</h3>
+    <table class="kw-table">
+      <tr><th>Priority</th><th>Target</th><th>Status Check</th></tr>
+      <tr><td>🔴 P1: Psychiatrist</td><td>Offer extended to top candidate</td><td>Contract signed or expanded search</td></tr>
+      <tr><td>🟢 P2: ADHD Flagship</td><td>Landing page live + Google Ads running</td><td>Track CTR, conversion to booking</td></tr>
+      <tr><td>🔵 P2: Reviews & SEO</td><td>15–20 new reviews, 3 GBP profiles updated, 1 blog post published</td><td>Review count per location, keyword rankings</td></tr>
+      <tr><td>🟡 P2: NFZ</td><td>Requirements researched, first contact made with NFZ branch</td><td>Application timeline mapped</td></tr>
+      <tr><td>⚪ Ongoing: Intelligence</td><td>Anima Iława activity monitored</td><td>Monthly intelligence brief</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 9: RISK ASSESSMENT ========== -->
+<div class="section" id="risks">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">verified_user</span>
+    <div>
+      <div class="sec-label">Section 09</div>
+      <h2>Risk Assessment</h2>
+      <div class="sub">What if things go wrong? Contingency planning.</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p>Every strategy must account for failure modes. Below: key risks, probability, impact, and mitigation.</p>
+
+    <div class="risk-card">
+      <h4>🔴 Risk 1: WCP Cannot Recruit a Psychiatrist</h4>
+      <p>Psychiatrist shortages in Poland are severe, especially outside major cities. If WCP cannot recruit within 90 days, the entire integrated care pathway and NFZ strategy stalls.</p>
+      <div class="mitigation">
+        <strong>Mitigation:</strong>
+        <ul class="clean" style="margin:6px 0 0">
+          <li><strong>Expand search radius:</strong> Remote/online psychiatrist working 1–2 days/week from another city. Telepsychiatry is legal in Poland and growing.</li>
+          <li><strong>Financial incentives:</strong> Revenue share model (60–70%) removes fixed cost risk and aligns incentives. Higher earning potential than NFZ hospital positions.</li>
+          <li><strong>Semi-retired psychiatrists:</strong> Target doctors approaching retirement who want flexible hours, fewer administrative burdens, and a pleasant work environment.</li>
+          <li><strong>Partnership stopgap:</strong> Formalise referral partnerships with 2–3 external psychiatrists. Not integrated care, but reduces leakage vs current ad-hoc referrals.</li>
+          <li><strong>Medical students:</strong> Contact Medical University of Białystok (closest medical school) — residents in psychiatry may seek part-time positions.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="risk-card">
+      <h4>🔴 Risk 2: Anima Expands Further into WCP Territory</h4>
+      <p>Anima opened Iława (35 km from Ostróda) in March 2026. If they open in Elbląg or directly in Ostróda, WCP's geographic position weakens significantly.</p>
+      <div class="mitigation">
+        <strong>Mitigation:</strong>
+        <ul class="clean" style="margin:6px 0 0">
+          <li><strong>Deepen local roots:</strong> Community events, workshops, school partnerships in Ostróda and Elbląg. Anima's model is institutional; WCP's is relational.</li>
+          <li><strong>Online therapy as geographic equaliser:</strong> Aggressively market online therapy in towns where Anima has physical presence but WCP doesn't.</li>
+          <li><strong>Monitor Anima expansion signals:</strong> Job postings, real estate listings, business registrations. Monthly intelligence briefs from Echo.</li>
+          <li><strong>Preemptive lease/options:</strong> If considering expansion, secure locations in key towns before Anima does.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="risk-card">
+      <h4>🟡 Risk 3: NFZ Application Is Rejected or Delayed</h4>
+      <p>NFZ contract competitions are competitive. Applications can be rejected on technicalities. The process can take 12–24 months.</p>
+      <div class="mitigation">
+        <strong>Mitigation:</strong>
+        <ul class="clean" style="margin:6px 0 0">
+          <li><strong>Hire experienced NFZ consultant:</strong> 5,000–10,000 PLN for guidance is cheap vs the value of a successful contract.</li>
+          <li><strong>Apply for multiple contract types:</strong> Don't put all eggs in one basket — psychiatric outpatient, psychotherapy, children/youth.</li>
+          <li><strong>Build the private business while waiting:</strong> NFZ is a long-game play. The 12–24 month wait is time to strengthen the commercial business, ADHD flagship, and brand.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="risk-card">
+      <h4>🟡 Risk 4: Anima Improves Its Reviews</h4>
+      <p>If Anima addresses its 3.2/5 rating (responding to negative reviews, soliciting positive ones), WCP's review advantage narrows.</p>
+      <div class="mitigation">
+        <strong>Mitigation:</strong>
+        <ul class="clean" style="margin:6px 0 0">
+          <li><strong>Outpace them:</strong> WCP should be generating 2–3× more reviews than Anima. Volume + quality = durable advantage.</li>
+          <li><strong>Diversify platforms:</strong> Don't rely on Google Reviews alone. ZnanyLekarz, Facebook recommendations, website testimonials.</li>
+          <li><strong>Quality of reviews:</strong> Detailed, specific reviews ("My therapist Ms. X helped me with anxiety after 6 sessions") are more valuable than generic 5-star ratings. Coach patients subtly through the kind of detail that helps others.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="risk-card">
+      <h4>🟢 Risk 5: Price War on ADHD</h4>
+      <p>If Anima drops its DIVA-5 price from 1,200 PLN to compete with WCP's 600 PLN, the pricing advantage evaporates.</p>
+      <div class="mitigation">
+        <strong>Mitigation:</strong>
+        <ul class="clean" style="margin:6px 0 0">
+          <li><strong>MOXO remains unique:</strong> Even if Anima matches DIVA-5 pricing, WCP has MOXO (300 PLN) which Anima doesn't offer. Total package advantage holds.</li>
+          <li><strong>Brand advantage:</strong> WCP's 4.7/5 reviews + warmer brand means patients choose WCP even at equal pricing.</li>
+          <li><strong>Volume play:</strong> If Anima halves its DIVA-5 price, their revenue per assessment drops significantly. WCP is already profitable at 600 PLN. Anima may not be sustainable at that price.</li>
+          <li><strong>Add value, not discount further:</strong> Instead of racing to the bottom, add value — package deals (DIVA-5 + MOXO + first therapy session), free follow-up consultation, guaranteed wait times.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Risk Priority Matrix</h3>
+    <table class="kw-table">
+      <tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Priority</th></tr>
+      <tr><td>Cannot recruit psychiatrist</td><td>Medium (40%)</td><td>Critical</td><td>🔴 Highest</td></tr>
+      <tr><td>Anima expands further</td><td>Medium-High (55%)</td><td>High</td><td>🔴 High</td></tr>
+      <tr><td>NFZ application fails/delays</td><td>Medium (35%)</td><td>High</td><td>🟡 Medium</td></tr>
+      <tr><td>Anima improves reviews</td><td>Low-Medium (25%)</td><td>Medium</td><td>🟡 Medium</td></tr>
+      <tr><td>ADHD price war</td><td>Low (15%)</td><td>Medium</td><td>🟢 Lower</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ========== CLOSING ========== -->
+<div style="background:var(--surface-low);border-radius:6px;padding:32px;margin-bottom:40px;border:1px solid rgba(77,70,55,.25)">
+  <p style="font-family:'Manrope',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Summary</p>
+  <p style="font-size:1rem;color:var(--on-surface);margin-bottom:14px"><strong>ANIMA is a formidable structural competitor.</strong> NFZ access, psychiatry, and geographic scale give them advantages WCP cannot quickly replicate. But WCP holds real, exploitable advantages: ADHD pricing dominance, brand warmth, review superiority, and agility.</p>
+  <p style="font-size:.95rem;color:var(--muted);margin-bottom:0">The counter-strategy is clear: <strong style="color:var(--gold)">close the psychiatrist gap</strong> (P1), <strong style="color:var(--gold)">pursue NFZ</strong> (P2, long game), <strong style="color:var(--gold)">dominate ADHD</strong> (P2, immediate), and <strong style="color:var(--gold)">weaponise reviews</strong> (P2, ongoing). Execute with urgency. Review in 30 days.</p>
+</div>
+
+</div>
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">dashboard</span> Strategic Intelligence Master Report →
+      </a>
+      <a href="GOOGLE-ADS-OPTIMIZATION-REPORT.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">ads_click</span> Google Ads Optimization →
+      </a>
+      <a href="ANIMA-THREAT-REPORT.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">radar</span> ANIMA Threat Assessment →
+      </a>
+      <a href="WCP-Expansion-Report-v2.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">add_business</span> Bartąg Expansion Report →
+      </a>
+    </div>
+
+</main>
+<script>
+// Sidebar navigation active state
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', function(e) {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+    const section = this.getAttribute('data-section');
+    document.getElementById('topnav-section').textContent = this.textContent.trim();
+  });
+});
+
+// Scroll spy for sidebar
+const sections = document.querySelectorAll('.section, .cover-section');
+const navLinks = document.querySelectorAll('.nav-link');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-section') === id);
+        if (link.getAttribute('data-section') === id) {
+          document.getElementById('topnav-section').textContent = link.textContent.trim();
+        }
+      });
+    }
+  });
+}, { threshold: 0.2, rootMargin: '-80px 0px -60% 0px' });
+sections.forEach(section => observer.observe(section));
+</script>
+</body>
+</html>

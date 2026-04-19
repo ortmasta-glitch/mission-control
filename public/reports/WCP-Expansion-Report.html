@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WCP Expansion — Children's Play Therapy &amp; Diagnostics Clinic</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo img{width:100%;height:auto;max-height:78px;object-fit:contain}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.long-term{background:rgba(155,89,182,.15);color:#c39bd3}
+  .tag.creative{background:rgba(155,89,182,.15);color:#c39bd3}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .highlight{color:var(--gold);font-weight:700}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  .page-footer{background:var(--surface-lowest);color:rgba(138,155,176,.45);text-align:center;padding:28px;font-size:.78rem;margin-top:40px;font-family:"Manrope",sans-serif;letter-spacing:.05em}
+  .page-footer strong{color:var(--muted)}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .funnel-step:last-child{border-bottom:none}
+  .funnel-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+  .kpi-card{background:var(--surface-high);border-radius:4px;padding:18px;text-align:center}
+  .kpi-card .kpi-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .kpi-card .kpi-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.kpi-row{grid-template-columns:1fr 1fr}.toc-block ol{columns:1}.page-canvas{padding:28px 16px 60px}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link"><span class="material-symbols-outlined" style="font-size:.9rem">description</span> Return to Strategic Report →</a>
+
+  <div class="sidebar-label">Navigation</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Overview
+    </a>
+    <a class="nav-link" href="#location" data-section="location">
+      <span class="material-symbols-outlined nav-icon">location_on</span> Location Intelligence
+    </a>
+    <a class="nav-link" href="#rental" data-section="rental">
+      <span class="material-symbols-outlined nav-icon">real_estate_agent</span> Rental Market
+    </a>
+    <a class="nav-link" href="#service-design" data-section="service-design">
+      <span class="material-symbols-outlined nav-icon">architecture</span> Service Design
+    </a>
+    <a class="nav-link" href="#diagnostics" data-section="diagnostics">
+      <span class="material-symbols-outlined nav-icon">biotech</span> ADHD Diagnostics
+    </a>
+    <a class="nav-link" href="#financials" data-section="financials">
+      <span class="material-symbols-outlined nav-icon">trending_up</span> Financial Projection
+    </a>
+    <a class="nav-link" href="#staffing" data-section="staffing">
+      <span class="material-symbols-outlined nav-icon">groups</span> Staffing Plan
+    </a>
+    <a class="nav-link" href="#investment" data-section="investment">
+      <span class="material-symbols-outlined nav-icon">savings</span> Investment Summary
+    </a>
+    <a class="nav-link" href="#funding" data-section="funding">
+      <span class="material-symbols-outlined nav-icon">account_balance</span> EU Funding
+    </a>
+    <a class="nav-link" href="#next-steps" data-section="next-steps">
+      <span class="material-symbols-outlined nav-icon">flag</span> Next Steps
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="WCP-Expansion-Report-v2-PL.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇵🇱</span> PL Version
+    </a>
+  </div>
+</aside>
+
+<header class="topnav"><span class="topnav-title">WCP &middot; Clinic Expansion Report</span><span class="topnav-section" id="topnav-section">Overview</span></header>
+
+<main class="main-content"><div class="page-canvas">
+
+<!-- ========== COVER ========== -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  
+  <span class="cover-badge">&#9679; Strategic Expansion Report &middot; April 2026</span>
+  <h1 class="cover-h1">New Clinic:<br><span>Play Therapy & ADHD Diagnostics</span></h1>
+  <p class="cover-subtitle">Warmińskie Centrum Psychoterapii — Comprehensive expansion analysis: Bartąg/Stawiguda area, service design, financial projection &amp; investment roadmap.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Target Area</label><p>Bartąg / Stawiguda / Olsztyn South</p></div>
+    <div class="cover-meta-item"><label>Focus</label><p>Play Therapy &middot; ADHD Diagnostics &middot; Therapy</p></div>
+    <div class="cover-meta-item"><label>Investment</label><p>180,000–280,000 PLN initial</p></div>
+    <div class="cover-meta-item"><label>Payback</label><p>Month 20–22</p></div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Contents</h3>
+  <ol>
+    <li><a href="#location">Location &amp; Competitor Intelligence</a></li>
+    <li><a href="#rental">Rental Market &amp; Cost Analysis</a></li>
+    <li><a href="#service-design">Service Design: Clinic Layout &amp; Rooms</a></li>
+    <li><a href="#diagnostics">ADHD Diagnostics Suite (DIVA-5, Conners-3, MOXO)</a></li>
+    <li><a href="#financials">Financial Projection &amp; Break-Even</a></li>
+    <li><a href="#staffing">Staffing Plan</a></li>
+    <li><a href="#investment">Investment Summary</a></li>
+    <li><a href="#funding">EU &amp; Regional Funding Opportunities</a></li>
+    <li><a href="#next-steps">Recommended Next Steps</a></li>
+  </ol>
+</div>
+
+<!-- ========== SECTION 1: LOCATION INTELLIGENCE ========== -->
+<div class="section" id="location">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">location_on</span>
+    <div>
+      <div class="sec-label">Section 1</div>
+      <h2>Location &amp; Competitor Intelligence</h2>
+      <div class="sub">Bartąg / Stawiguda / Olsztyn South — geographic &amp; competitive analysis</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Key finding:</strong> WCP would be <strong>first-to-market</strong> for comprehensive children's mental health services (play therapy + ADHD diagnostics) in the Bartąg/Stawiguda area. No dedicated children's mental health clinic exists within Gmina Stawiguda.
+    </div>
+
+    <h3 class="sub-heading">Gmina Stawiguda Profile</h3>
+    <table class="kw-table">
+      <tr><th>Attribute</th><th>Data</th></tr>
+      <tr><td>Total Area</td><td class="highlight">223.22 km²</td></tr>
+      <tr><td>Population</td><td class="highlight">13,319</td></tr>
+      <tr><td>Distance to Olsztyn Centre</td><td>8–12 km</td></tr>
+      <tr><td>Key Villages</td><td>Bartąg, Stawiguda, Bartążek, Gągławki, Tomaszkowo</td></tr>
+      <tr><td>Character</td><td>Rapidly suburbanizing, family-friendly, semi-rural</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Infrastructure &amp; Accessibility</h3>
+    <ul class="clean">
+      <li><strong>Gminna Komunikacja Publiczna:</strong> Active bus service connecting all villages, resumed after Jan 2026 weather suspension</li>
+      <li><strong>MZK Olsztyn:</strong> Direct bus lines from Bartąg/Stawiguda to Olsztyn city centre</li>
+      <li><strong>PKP Stawiguda:</strong> Regional rail connections — suitable for patients from distant areas</li>
+      <li><strong>Road infrastructure:</strong> ul. Olsztyńska (main artery), recent investments from Fundusz Dróg Samorządowych</li>
+      <li><strong>Medical proximity:</strong> Access to Provincial Hospital, University Hospital, and private clinics in Olsztyn</li>
+    </ul>
+
+    <h3 class="sub-heading">Educational Institutions (Referral Sources)</h3>
+    <ul class="clean">
+      <li><strong>Zespół Szkolno-Przedszkolny im. Olimpijczyków Polskich w Stawigudzie</strong> — combined primary + preschool, recently modernised sports hall (EU-funded)</li>
+      <li>Schools serving Bartąg/Bartążek communities along ul. Kwiatowa</li>
+      <li>Distributed educational facilities across Gągławki, Pluski, Tomaszkowo</li>
+      <li><strong>No dedicated school psychological services with diagnostic capabilities identified</strong></li>
+    </ul>
+
+    <h3 class="sub-heading">Competitive Landscape</h3>
+    <table class="kw-table">
+      <tr><th>Factor</th><th>WCP Position</th><th>Market Gap</th></tr>
+      <tr><td>Children's play therapy</td><td class="vol-high">Strong — specialisation</td><td>Underserved</td></tr>
+      <tr><td>ADHD diagnostics (DIVA-5, Conners-3, MOXO)</td><td class="vol-high">Unique offering</td><td>No local competition</td></tr>
+      <tr><td>Comprehensive service model</td><td class="vol-high">Differentiated</td><td>Fragmented market</td></tr>
+      <tr><td>Ground-floor accessibility</td><td class="vol-med">Planned</td><td>Competitors in office buildings</td></tr>
+      <tr><td>Suburban location + parking</td><td class="vol-high">Advantage</td><td>City-centre competitors lack this</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Top 5 Recommended Locations</h3>
+
+    <div class="idea-card">
+      <div class="idea-title">⭐ #1 — Bartąg, ul. Kwiatowa / Residential Development Area</div>
+      <div class="idea-body">
+        <p>Closest to schools, new residential developments with young families, growing population. Bus connection to Olsztyn. Ground-floor commercial in new development.</p>
+        <p><strong>Estimated rent:</strong> 4,000–6,000 PLN/month &middot; <strong>Potential:</strong> ★★★★★</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">⭐ #2 — Stawiguda, ul. Olsztyńska (Near Urząd Gminy)</div>
+      <div class="idea-body">
+        <p>Administrative centre, PKP train station, multiple bus connections, excellent visibility. Commercial building ground floor.</p>
+        <p><strong>Estimated rent:</strong> 5,000–7,000 PLN/month &middot; <strong>Potential:</strong> ★★★★★</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">#3 — Tomaszkowo, Stawiguda (81m², 4 rooms, HIGH STANDARD)</div>
+      <div class="idea-body">
+        <p><strong>Live listing — still available.</strong> 4-room layout matches requirements exactly. High-standard finish, parking space/garage included. Near Stawiguda.</p>
+        <p><strong>Price:</strong> 6,000 PLN/month &middot; <strong>Link:</strong> <a href="https://www.otodom.pl/pl/oferta/wynajme-nowy-lokal-w-wysokim-standardzie-ID4AyIi" style="color:var(--gold)">otodom.pl listing</a></p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">#4 — Bartąg, Main Road (ul. Olsztyńska/Bartąska)</div>
+      <div class="idea-body">
+        <p>High visibility, direct bus line to Olsztyn, established area. Converted residential with commercial zoning.</p>
+        <p><strong>Estimated rent:</strong> 3,500–5,500 PLN/month &middot; <strong>Potential:</strong> ★★★★☆</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">#5 — Stawiguda, Near Zespół Szkolno-Przedszkolny</div>
+      <div class="idea-body">
+        <p>Adjacent to school/preschool — natural family traffic and referral pipeline. Community-accessible commercial.</p>
+        <p><strong>Estimated rent:</strong> 3,500–5,000 PLN/month &middot; <strong>Potential:</strong> ★★★★☆</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 2: RENTAL MARKET ========== -->
+<div class="section" id="rental">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">apartment</span>
+    <div>
+      <div class="sec-label">Section 2</div>
+      <h2>Rental Market &amp; Cost Analysis</h2>
+      <div class="sub">Commercial space availability &amp; occupancy cost modelling</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Rental Rate Benchmarks (April 2026)</h3>
+    <table class="kw-table">
+      <tr><th>Area</th><th>Type</th><th>PLN/m²/month</th><th>Typical Monthly</th></tr>
+      <tr><td>Olsztyn Centre</td><td>Service/Retail</td><td>60–120</td><td>5,000–15,000</td></tr>
+      <tr><td>Jaroty District</td><td>Service/Retail</td><td>40–80</td><td>3,500–8,000</td></tr>
+      <tr><td class="highlight">Bartąg Area</td><td>Mixed-use</td><td class="highlight">35–65</td><td class="highlight">2,500–6,500</td></tr>
+      <tr><td class="highlight">Stawiguda</td><td>Suburban</td><td class="highlight">30–55</td><td class="highlight">2,000–5,000</td></tr>
+      <tr><td>Dajtki</td><td>Service/Retail</td><td>40–75</td><td>3,000–7,000</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Top 3 Available Listings (Live)</h3>
+
+    <div class="idea-card">
+      <div class="idea-title">🥇 92m², ul. 1 Maja 5A, Olsztyn Centre — Ground Floor</div>
+      <div class="idea-body">
+        <p>Large display windows, air conditioning, elevator. 3–4 rooms + waiting area. Excellent transport.</p>
+        <p><strong>Price:</strong> 870,000 PLN (purchase) or ~7,500 PLN/month rent &middot; <a href="https://www.otodom.pl/pl/oferta/lokal-92-07-m-w-centrum-1-maja-5a-witryna-ID4vWXz" style="color:var(--gold)">View listing</a></p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">🥈 81m², Tomaszkowo, Stawiguda — 4 Rooms, High Standard</div>
+      <div class="idea-body">
+        <p><strong>Located in target area.</strong> 4-room layout matches WCP requirements exactly. Includes parking/garage. Premium finish suitable for children's therapy.</p>
+        <p><strong>Price:</strong> 6,000 PLN/month &middot; <a href="https://www.otodom.pl/pl/oferta/wynajme-nowy-lokal-w-wysokim-standardzie-ID4AyIi" style="color:var(--gold)">View listing</a></p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">🥉 84m², ul. Wilczyńskiego, Jaroty — Near Lidl, Ground Floor</div>
+      <div class="idea-body">
+        <p>High-traffic family-oriented area near shopping. Large windows, divisible. Air conditioning, heating.</p>
+        <p><strong>Price:</strong> 714,000 PLN (purchase) or ~5,500 PLN/month rent &middot; <a href="https://www.otodom.pl/pl/oferta/atrakcyjny-lokal-przy-lidlu-na-jarotach-z-witryna-ID4zJQz" style="color:var(--gold)">View listing</a></p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Monthly Operating Costs (80–120m² Space)</h3>
+    <table class="kw-table">
+      <tr><th>Category</th><th>Monthly (PLN)</th><th>Notes</th></tr>
+      <tr><td>Base Rent</td><td class="highlight">5,000–7,000</td><td>120m² ground floor, target area</td></tr>
+      <tr><td>Utilities</td><td>400–800</td><td>Electric, water, climate control</td></tr>
+      <tr><td>Heating (Winter)</td><td>300–600</td><td>Gas or district heating</td></tr>
+      <tr><td>Internet/Telecom</td><td>150–300</td><td>Business-grade connection</td></tr>
+      <tr><td>Insurance</td><td>200–400</td><td>Liability + property</td></tr>
+      <tr><td>Maintenance/HOA</td><td>300–600</td><td>Building-dependent</td></tr>
+      <tr><td>Waste/Cleaning</td><td>200–400</td><td>Commercial rates</td></tr>
+      <tr><td class="highlight">TOTAL MONTHLY</td><td class="highlight">6,550–10,100</td><td>Before fit-out amortisation</td></tr>
+    </table>
+
+    <h3 class="sub-heading">One-Time Fit-Out Costs (120m² Therapy Clinic)</h3>
+    <table class="kw-table">
+      <tr><th>Category</th><th>Cost (PLN)</th></tr>
+      <tr><td>Soundproofing (4 rooms, professional)</td><td>32,000–60,000</td></tr>
+      <tr><td>Room Division &amp; Partitions</td><td>8,000–15,000</td></tr>
+      <tr><td>Flooring (child-friendly, easy clean)</td><td>10,000–20,000</td></tr>
+      <tr><td>Lighting (therapeutic ambiance)</td><td>5,000–10,000</td></tr>
+      <tr><td>Waiting Area Furniture</td><td>8,000–15,000</td></tr>
+      <tr><td>Play Therapy Equipment &amp; Toys</td><td>12,000–18,000</td></tr>
+      <tr><td>Diagnostic Equipment (MOXO setup)</td><td>15,300–27,700</td></tr>
+      <tr><td>Bathroom/Kitchenette</td><td>5,000–12,000</td></tr>
+      <tr><td>Security/Access System</td><td>3,000–6,000</td></tr>
+      <tr><td>External Signage</td><td>2,000–5,000</td></tr>
+      <tr><td class="highlight">TOTAL FIT-OUT</td><td class="highlight">100,300–188,700</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 3: SERVICE DESIGN ========== -->
+<div class="section" id="service-design">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">construction</span>
+    <div>
+      <div class="sec-label">Section 3</div>
+      <h2>Service Design: Clinic Layout &amp; Rooms</h2>
+      <div class="sub">4-room configuration for 120m² ground floor</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Recommended Space Configuration</h3>
+    <table class="kw-table">
+      <tr><th>Area</th><th>Size</th><th>Purpose</th></tr>
+      <tr><td>Reception</td><td>10 m²</td><td>Check-in, admin, payment</td></tr>
+      <tr><td>Waiting Area</td><td>15 m²</td><td>6–8 people, children's corner</td></tr>
+      <tr><td class="highlight">Play Therapy Room</td><td class="highlight">25 m²</td><td>Dedicated children's space (4 zones)</td></tr>
+      <tr><td class="highlight">Diagnostic Room</td><td class="highlight">15 m²</td><td>MOXO + DIVA-5 + Conners-3</td></tr>
+      <tr><td>Therapy Room 1</td><td>14 m²</td><td>Individual therapy (50 min)</td></tr>
+      <tr><td>Therapy Room 2</td><td>14 m²</td><td>Individual / couples therapy</td></tr>
+      <tr><td>Staff/Storage</td><td>10 m²</td><td>Break room, supplies</td></tr>
+      <tr><td>Restroom</td><td>6 m²</td><td>Client + staff</td></tr>
+      <tr><td>Hallways/Circulation</td><td>11 m²</td><td>Movement space</td></tr>
+      <tr><td class="highlight">TOTAL</td><td class="highlight">120 m²</td><td></td></tr>
+    </table>
+
+    <h3 class="sub-heading">Play Therapy Room (25m²) — 4 Zones</h3>
+    <div class="idea-card">
+      <div class="idea-title">🎨 Zone 1: Creative Expression (30%)</div>
+      <div class="idea-body"><p>Art supplies, easel, craft table, display wall for children's work.</p></div>
+    </div>
+    <div class="idea-card">
+      <div class="idea-title">🎭 Zone 2: Imaginative Play (30%)</div>
+      <div class="idea-body"><p>Sand tray station, puppet theater, dress-up corner, dollhouse/play kitchen.</p></div>
+    </div>
+    <div class="idea-card">
+      <div class="idea-title">🌿 Zone 3: Calm/Regulation (20%)</div>
+      <div class="idea-body"><p>Book nook, soft seating, sensory tools, breathing/visualization aids.</p></div>
+    </div>
+    <div class="idea-card">
+      <div class="idea-title">⚡ Zone 4: Active Play (20%)</div>
+      <div class="idea-body"><p>Movement space, building area, floor activities.</p></div>
+    </div>
+
+    <div class="callout">
+      <strong>Play therapy equipment budget:</strong> PLN 12,000–18,000 for toys, sand tray miniatures, art supplies, puppets, sensory tools. One dedicated play therapy room serves 30–40 weekly slots (6–8 children/day, 5 days/week).
+    </div>
+
+    <h3 class="sub-heading">Safety Requirements (Mandatory)</h3>
+    <ul class="clean">
+      <li>Corner guards on all furniture and architectural corners</li>
+      <li>Anti-tip brackets for shelving and storage</li>
+      <li>Cordless window coverings — no blind cords</li>
+      <li>Tamper-resistant outlets with safety covers</li>
+      <li>Non-slip flooring throughout</li>
+      <li>HEPA filtration, sanitisation station at entrance</li>
+      <li>Secure locked storage for hazardous materials</li>
+    </ul>
+
+    <h3 class="sub-heading">Therapy Room Specifications</h3>
+    <div class="idea-card">
+      <div class="idea-title">Individual Therapy (12–15m²)</div>
+      <div class="idea-body">
+        <p>2 ergonomic chairs + optional small couch. Dimmable lighting. Professional soundproofing (STC 50+): acoustic panels, solid-core doors with seals, dropped ceiling.</p>
+        <p><strong>Soundproofing cost:</strong> 8,000–15,000 PLN per room (professional)</p>
+      </div>
+    </div>
+    <div class="idea-card">
+      <div class="idea-title">Couples Therapy (18–22m²)</div>
+      <div class="idea-body">
+        <p>Circular/triangular seating — no power positions. Movable furniture. Extra space for movement exercises. Neutral decor, balanced visual weight.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Weekly Capacity (4 Rooms)</h3>
+    <table class="kw-table">
+      <tr><th>Service</th><th>Rooms</th><th>Sessions/Day</th><th>Weekly Slots</th></tr>
+      <tr><td>Individual Therapy</td><td>2</td><td>8–10 each</td><td class="vol-high">80–100</td></tr>
+      <tr><td>Couples Therapy</td><td>1</td><td>4–5</td><td class="vol-med">20–25</td></tr>
+      <tr><td>Play Therapy</td><td>1</td><td>6–8</td><td class="vol-high">30–40</td></tr>
+      <tr><td>Diagnostics</td><td>1 (shared)</td><td>4–6</td><td class="vol-med">20–30</td></tr>
+      <tr><td class="highlight">TOTAL</td><td class="highlight">4</td><td></td><td class="highlight">150–195</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 4: ADHD DIAGNOSTICS ========== -->
+<div class="section" id="diagnostics">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">biotech</span>
+    <div>
+      <div class="sec-label">Section 4</div>
+      <h2>ADHD Diagnostics Suite</h2>
+      <div class="sub">DIVA-5, Conners-3, MOXO — confirmed pricing from wcp.com.pl</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>All pricing confirmed by Karolina — live on wcp.com.pl/cennik-rodzaj-terapi/</strong>
+    </div>
+
+    <h3 class="sub-heading">Diagnostic Services &amp; Pricing</h3>
+    <table class="kw-table">
+      <tr><th>Service</th><th>Duration</th><th>Price</th><th>Age Range</th></tr>
+      <tr><td>Test MOXO</td><td>30–50 min</td><td class="highlight">300 PLN</td><td>age 6+</td></tr>
+      <tr><td>Test DIVA-5</td><td>1.5–2.5h</td><td class="highlight">600 PLN</td><td>age 18+</td></tr>
+      <tr><td>Test Conners 3</td><td>Multi-rater</td><td class="highlight">800 PLN</td><td>6–18 years</td></tr>
+      <tr><td class="highlight">DIVA-5 + MOXO (Package)</td><td></td><td class="highlight">800 PLN</td><td>Adults</td></tr>
+      <tr><td class="highlight">Conners 3 + MOXO (Package)</td><td></td><td class="highlight">1,000 PLN</td><td>Children/Youth</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Room Requirements per Test</h3>
+
+    <div class="idea-card">
+      <div class="idea-title">🧪 MOXO — Dedicated Space Required</div>
+      <div class="idea-body">
+        <p><strong>Critical:</strong> Isolated, distraction-free room. No windows or covered windows. No visible clocks. Away from external noise.</p>
+        <ul class="clean">
+          <li>Dedicated Windows computer, noise-canceling headphones, response device</li>
+          <li>Stable internet for cloud scoring, UPS backup</li>
+          <li>MOXO software license: 8,000–15,000 PLN/year</li>
+        </ul>
+        <p><strong>Total MOXO setup cost: 15,300–27,700 PLN</strong></p>
+        <p><strong>Schedule:</strong> Morning preferred (quietest), 20–25 min per test</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">📋 DIVA-5 — Can Share with Therapy Room</div>
+      <div class="idea-body">
+        <p>Quiet environment, 12–15m². Comfortable seating for clinician + patient (+ optional parent). 90–120 min sessions.</p>
+        <p>Computer/tablet for digital scoring, printed forms, timer.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">📝 Conners-3 — Most Flexible</div>
+      <div class="idea-body">
+        <p>Portable, minimal space requirements. Parent/teacher/self-report questionnaires + clinician interpretation. Can be done in any quiet space — even a waiting area if private.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Space Sharing Strategy</h3>
+    <table class="kw-table">
+      <tr><th>Scenario</th><th>Feasibility</th></tr>
+      <tr><td>DIVA-5 + Standard Therapy</td><td class="vol-high">✅ Good — schedule coordination</td></tr>
+      <tr><td>Conners-3 + Any Use</td><td class="vol-high">✅ Good — portable, minimal</td></tr>
+      <tr><td>MOXO + Any Other Use</td><td class="vol-med">⚠️ Challenging — needs absolute quiet</td></tr>
+      <tr><td>All diagnostics in one room</td><td class="vol-high">✅ Recommended — multi-purpose assessment</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 5: FINANCIALS ========== -->
+<div class="section" id="financials">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">trending_up</span>
+    <div>
+      <div class="sec-label">Section 5</div>
+      <h2>Financial Projection &amp; Break-Even</h2>
+      <div class="sub">Conservative growth model with confirmed pricing</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-value">800 PLN</div>
+        <div class="kpi-label">DIVA-5 + MOXO Package</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">1,000 PLN</div>
+        <div class="kpi-label">Conners-3 + MOXO Package</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">Month 8–10</div>
+        <div class="kpi-label">Break-Even Point</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">Month 20–22</div>
+        <div class="kpi-label">Full Payback</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Confirmed Service Pricing (wcp.com.pl)</h3>
+    <table class="kw-table">
+      <tr><th>Service</th><th>Duration</th><th>Price (PLN)</th></tr>
+      <tr><td>Individual Therapy</td><td>50 min</td><td>250</td></tr>
+      <tr><td>Children/Adolescent Consultation</td><td>50 min</td><td>250</td></tr>
+      <tr><td>Couples Therapy</td><td>90 min</td><td class="highlight">500</td></tr>
+      <tr><td>Parent Consultation</td><td>50 min</td><td>250</td></tr>
+      <tr><td>MOXO Test</td><td>30–50 min</td><td class="highlight">300</td></tr>
+      <tr><td>DIVA-5 Assessment</td><td>90–150 min</td><td class="highlight">600</td></tr>
+      <tr><td>Conners-3 Assessment</td><td>Multi-rater</td><td class="highlight">800</td></tr>
+      <tr><td>DIVA-5 + MOXO Package</td><td>—</td><td class="highlight">800</td></tr>
+      <tr><td>Conners-3 + MOXO Package</td><td>—</td><td class="highlight">1,000</td></tr>
+      <tr><td>Group Therapy</td><td>90 min</td><td>150 / person</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Capacity Scenarios (Monthly)</h3>
+    <table class="kw-table">
+      <tr><th>Scenario</th><th>Utilisation</th><th>Revenue</th><th>Therapist Costs</th><th>Gross Margin</th></tr>
+      <tr><td>Startup (25%)</td><td>35 rm-hrs/wk</td><td>35,000 PLN</td><td>19,250 PLN</td><td>15,750 PLN</td></tr>
+      <tr><td class="highlight">Conservative (50%)</td><td class="highlight">70 rm-hrs/wk</td><td class="highlight">70,000 PLN</td><td>38,500 PLN</td><td class="highlight">31,500 PLN</td></tr>
+      <tr><td>Target (70%)</td><td>98 rm-hrs/wk</td><td>98,000 PLN</td><td>53,900 PLN</td><td>44,100 PLN</td></tr>
+      <tr><td>Optimised (90%)</td><td>126 rm-hrs/wk</td><td>126,000 PLN</td><td>69,300 PLN</td><td>56,700 PLN</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Conservative Growth Model (Year 1)</h3>
+    <table class="kw-table">
+      <tr><th>Quarter</th><th>Individual</th><th>Couples</th><th>Play</th><th>Diagnostics</th><th>Group</th><th>Monthly Rev.</th></tr>
+      <tr><td>Q1 (Month 1–3)</td><td>40</td><td>8</td><td>20</td><td>10</td><td>16</td><td>~18,000 PLN</td></tr>
+      <tr><td>Q2 (Month 4–6)</td><td>80</td><td>16</td><td>40</td><td>20</td><td>24</td><td>~36,000 PLN</td></tr>
+      <tr><td>Q3 (Month 7–9)</td><td>120</td><td>24</td><td>60</td><td>30</td><td>32</td><td>~54,000 PLN</td></tr>
+      <tr><td>Q4 (Month 10–12)</td><td>160</td><td>32</td><td>80</td><td>40</td><td>40</td><td class="highlight">~72,000 PLN</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Month 12 Revenue Breakdown (at Full Capacity)</h3>
+    <ul class="clean">
+      <li>Individual: 160 × 250 = <strong>40,000 PLN</strong></li>
+      <li>Couples: 32 × 500 = <strong>16,000 PLN</strong></li>
+      <li>Play therapy: 80 × 250 = <strong>20,000 PLN</strong></li>
+      <li>Diagnostics (weighted avg ~700 PLN): 40 × 700 = <strong>28,000 PLN</strong></li>
+      <li>Group: 40 × 150 = <strong>6,000 PLN</strong></li>
+      <li><strong>Total: ~110,000 PLN/month at full capacity</strong></li>
+    </ul>
+
+    <h3 class="sub-heading">3-Year Revenue Projection</h3>
+    <table class="kw-table">
+      <tr><th>Year</th><th>Projected Revenue</th><th>Growth Assumption</th></tr>
+      <tr><td>Year 1</td><td class="highlight">480,000–600,000 PLN</td><td>Conservative ramp-up, 50% avg capacity</td></tr>
+      <tr><td>Year 2</td><td>720,000–900,000 PLN</td><td>Established referral pipeline, 70% capacity</td></tr>
+      <tr><td>Year 3</td><td class="vol-high">1,100,000–1,375,000 PLN</td><td>Full capacity, diagnostics demand grows</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Therapist Compensation (WCP Structure)</h3>
+    <table class="kw-table">
+      <tr><th>Level</th><th>Split</th><th>Therapist / Session</th><th>Clinic / Session</th></tr>
+      <tr><td>Probation</td><td>40%</td><td>100 PLN</td><td>150 PLN</td></tr>
+      <tr><td>Psychologists</td><td>45%</td><td>112.50 PLN</td><td>137.50 PLN</td></tr>
+      <tr><td>In Training</td><td>50%</td><td>125 PLN</td><td>125 PLN</td></tr>
+      <tr><td>Finished Training</td><td>55%</td><td>137.50 PLN</td><td>112.50 PLN</td></tr>
+      <tr><td>Volume Bonus (40+ hrs/mo)</td><td>+5%</td><td>+12.50 PLN</td><td>—</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Break-even point:</strong> ~104 sessions/month at average revenue 265 PLN = ~27,560 PLN revenue. With monthly fixed costs of ~10,000 PLN and therapist costs at 55% of revenue, the clinic reaches monthly break-even between <strong>Month 8 and Month 10</strong> under the conservative growth model.
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 6: STAFFING ========== -->
+<div class="section" id="staffing">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">groups</span>
+    <div>
+      <div class="sec-label">Section 6</div>
+      <h2>Staffing Plan</h2>
+      <div class="sub">3-phase hiring roadmap</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="idea-card">
+      <div class="idea-title">🚀 Phase 1: Launch (Month 1–6)</div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <tr><th>Role</th><th>Count</th><th>Specialty</th></tr>
+          <tr><td>Clinical Lead</td><td>1</td><td>Experienced therapist, oversees clinical quality</td></tr>
+          <tr><td>Play Therapist</td><td>1</td><td>Child-specialised, play therapy certified</td></tr>
+          <tr><td>General Therapist</td><td>1</td><td>Individual + some couples work</td></tr>
+          <tr><td>Admin (part-time)</td><td>0.5</td><td>Reception, scheduling, payments</td></tr>
+        </table>
+        <p><strong>Monthly staff cost (est.):</strong> ~19,000–24,000 PLN (mix of contract types)</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">📈 Phase 2: Growth (Month 7–18)</div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <tr><th>Role</th><th>Count</th><th>Specialty</th></tr>
+          <tr><td>Additional Therapists</td><td>+2–3</td><td>Individual, couples, adolescent</td></tr>
+          <tr><td>Diagnostic Specialist</td><td>1</td><td>DIVA-5 / MOXO / Conners-3 certified</td></tr>
+          <tr><td>Admin (full-time)</td><td>1</td><td>Full reception + scheduling support</td></tr>
+        </table>
+        <p><strong>Monthly staff cost (est.):</strong> ~38,000–48,000 PLN</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">🎯 Phase 3: Optimisation (Month 19+)</div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <tr><th>Role</th><th>Count</th><th>Specialty</th></tr>
+          <tr><td>Full Therapist Team</td><td>6–8</td><td>Full coverage across all specialties</td></tr>
+          <tr><td>Admin / Operations</td><td>1–2</td><td>Reception, bookkeeping, marketing</td></tr>
+        </table>
+        <p><strong>Monthly staff cost (est.):</strong> ~55,000–70,000 PLN</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Key Recruitment Requirements</h3>
+    <ul class="clean">
+      <li><strong>Play therapist:</strong> Certified in play therapy (play therapy), experience with children 4–12</li>
+      <li><strong>Diagnostic specialist:</strong> DIVA-5 certified, MOXO-trained, Conners-3 interpretation experience</li>
+      <li><strong>Couples therapist:</strong> Systemic or integrative approach, 90-min session comfort</li>
+      <li>All therapists: Polish psychological society membership, active supervision, liability insurance</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 7: INVESTMENT SUMMARY ========== -->
+<div class="section" id="investment">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">savings</span>
+    <div>
+      <div class="sec-label">Section 7</div>
+      <h2>Investment Summary</h2>
+      <div class="sub">Total capital requirement &amp; payback timeline</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Initial Capital Required</h3>
+    <table class="kw-table">
+      <tr><th>Item</th><th>Low Estimate</th><th>High Estimate</th></tr>
+      <tr><td>Security Deposit (3 months rent)</td><td>15,000 PLN</td><td>25,000 PLN</td></tr>
+      <tr><td>Fit-Out &amp; Soundproofing</td><td>100,300 PLN</td><td>188,700 PLN</td></tr>
+      <tr><td>MOXO Equipment + License</td><td>15,300 PLN</td><td>27,700 PLN</td></tr>
+      <tr><td>Play Therapy Equipment</td><td>12,000 PLN</td><td>18,000 PLN</td></tr>
+      <tr><td>Legal / Permits / Registration</td><td>3,000 PLN</td><td>5,000 PLN</td></tr>
+      <tr><td>Marketing Launch (signage, online, print)</td><td>8,000 PLN</td><td>15,000 PLN</td></tr>
+      <tr><td>Working Capital Buffer (3 months)</td><td>26,700 PLN</td><td>50,600 PLN</td></tr>
+      <tr><td class="highlight">TOTAL INITIAL</td><td class="highlight">180,300 PLN</td><td class="highlight">330,000 PLN</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Year 1 Operating Budget</h3>
+    <table class="kw-table">
+      <tr><th>Item</th><th>Annual (PLN)</th></tr>
+      <tr><td>Rent (12 months)</td><td>60,000–84,000</td></tr>
+      <tr><td>Operating Costs (utilities, internet, insurance)</td><td>72,600–121,200</td></tr>
+      <tr><td>Therapist Compensation (ramp-up avg)</td><td>280,000–350,000</td></tr>
+      <tr><td>Admin / Support Staff</td><td>48,000–72,000</td></tr>
+      <tr><td>MOXO License Renewal</td><td>8,000–15,000</td></tr>
+      <tr><td>Marketing (ongoing)</td><td>24,000–36,000</td></tr>
+      <tr><td class="highlight">TOTAL YEAR 1 OPEX</td><td class="highlight">492,600–678,200</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Payback Timeline</h3>
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><h4>Month 1–6: Investment Phase</h4><p>Monthly losses of 8,000–15,000 PLN. Building patient base, establishing referrals from schools.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><h4>Month 8–10: Monthly Break-Even</h4><p>Revenue covers all monthly costs. Cumulative investment still outstanding.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><h4>Month 20–22: Full Payback</h4><p>Cumulative profits offset initial investment. Clinic becomes net positive contributor to WCP.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content"><h4>Year 3+: Growth Engine</h4><p>Projected 1.1–1.37M PLN annual revenue. Potential to expand diagnostic offering or add rooms.</p></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 8: EU FUNDING ========== -->
+<div class="section" id="funding">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">account_balance</span>
+    <div>
+      <div class="sec-label">Section 8</div>
+      <h2>EU &amp; Regional Funding Opportunities</h2>
+      <div class="sub">Grants, programs &amp; reimbursement channels</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="kw-table">
+      <tr><th>Program</th><th>Type</th><th>Eligibility</th><th>Timeline</th></tr>
+      <tr><td>FE Infrastructure/Klimat</td><td>EU Grant</td><td>Healthcare infrastructure</td><td>Ongoing</td></tr>
+      <tr><td class="highlight">KPO — Health Component</td><td>EU/National</td><td class="highlight">Mental health services modernisation</td><td>2021–2026</td></tr>
+      <tr><td>Polish Deal</td><td>National</td><td>Infrastructure</td><td>Ongoing</td></tr>
+      <tr><td>Marszałek Grants</td><td>Regional</td><td>Social projects</td><td>Annual calls</td></tr>
+      <tr><td>NFZ Contracts</td><td>Operational</td><td>Healthcare providers</td><td>Quarterly</td></tr>
+      <tr><td>WAMA COOP</td><td>Regional</td><td>NGO / social enterprise</td><td>Active</td></tr>
+      <tr><td>Narodowy Program Zdrowia</td><td>National</td><td>Mental health priority</td><td>Ongoing</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Recommended Funding Strategy</h3>
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><h4>Short-term (Month 1–3)</h4><p>Apply for Marszałek grants for social infrastructure. Contact Urząd Gminy Stawiguda about available commercial spaces and any local incentive programs.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><h4>Medium-term (Month 3–12)</h4><p>Pursue KPO funding for mental health service expansion — this is the largest potential source. Begin NFZ contract negotiations for service reimbursement.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><h4>Ongoing</h4><p>Monitor EU structural funds (2021–2027 perspective) for healthcare infrastructure grants. Annual Marszałek grant applications.</p></div>
+    </div>
+
+    <h3 class="sub-heading">Key Contact</h3>
+    <ul class="clean">
+      <li><strong>Urząd Gminy Stawiguda:</strong> ul. Olsztyńska 10, 11-034 Stawiguda &middot; Tel: 89 512-64-75 &middot; Email: stawiguda@stawiguda.pl</li>
+      <li><strong>Portal Funduszy Europejskich:</strong> funduszeeuropejskie.gov.pl</li>
+      <li><strong>NFZ Warmińsko-Mazurski:</strong> nfz.gov.pl</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 9: NEXT STEPS ========== -->
+<div class="section" id="next-steps">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">flag</span>
+    <div>
+      <div class="sec-label">Section 9</div>
+      <h2>Recommended Next Steps</h2>
+      <div class="sub">Prioritised action plan</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Week 1 — Immediate Actions</h3>
+    <ul class="clean">
+      <li>🔴 <strong>Contact Tomaszkowo listing (#2)</strong> — 81m², 4 rooms, 6,000 PLN/mo — schedule viewing</li>
+      <li>🔴 <strong>Set up OLX/Otodom alerts</strong> for "lokal usługowy Bartąg" / "Stawiguda" / "Olsztyn południe"</li>
+      <li>🔴 <strong>Contact local real estate agents</strong> specialising in commercial properties in the Olsztyn south corridor</li>
+      <li>🔴 <strong>Contact Urząd Gminy Stawiguda</strong> — ask about available commercial spaces and local incentive programs</li>
+    </ul>
+
+    <h3 class="sub-heading">Month 1 — Viewings &amp; Planning</h3>
+    <ul class="clean">
+      <li>🟡 View top 5 locations from this report</li>
+      <li>🟡 Visit existing therapy practices in target area — assess competition first-hand</li>
+      <li>🟡 Verify zoning — confirm therapy clinic use is permitted in target properties</li>
+      <li>🟡 Parking survey — evaluate family accessibility at each location</li>
+      <li>🟡 Begin recruitment: identify play therapy and diagnostic specialist candidates</li>
+      <li>🟡 Apply for Marszałek grant (regional social infrastructure)</li>
+    </ul>
+
+    <h3 class="sub-heading">Month 2–3 — Lease &amp; Build</h3>
+    <ul class="clean">
+      <li>🟢 Negotiate lease — aim for 3–5 year term with renewal options</li>
+      <li>🟢 Finalise fit-out budget and contractor selection</li>
+      <li>🟢 Order MOXO equipment and software license</li>
+      <li>🟢 Begin soundproofing and room construction</li>
+      <li>🟢 Apply for health department permits and business registration</li>
+      <li>🟢 Pursue KPO funding for mental health service expansion</li>
+    </ul>
+
+    <h3 class="sub-heading">Risk Considerations</h3>
+    <div class="idea-card">
+      <div class="idea-title">⚠️ Transportation Dependency</div>
+      <div class="idea-body"><p>Patients primarily car-dependent. Parking is essential. Winter weather may affect accessibility (Jan 2026 transport suspension precedent). Ensure adequate parking and clear winter access plan.</p></div>
+    </div>
+    <div class="idea-card">
+      <div class="idea-title">⚠️ Market Education</div>
+      <div class="idea-body"><p>Play therapy and ADHD diagnostics are not widely understood by general public. Budget for educational marketing content and school outreach programmes.</p></div>
+    </div>
+    <div class="idea-card">
+      <div class="idea-title">⚠️ Diagnostic Specialist Scarcity</div>
+      <div class="idea-body"><p>DIVA-5 / MOXO / Conners-3 certified specialists are scarce in the region. Begin recruitment early — this could be the actual bottleneck, not space or patients.</p></div>
+    </div>
+
+  </div>
+</div>
+
+</div></main>
+
+
+
+<script>
+// Scroll spy
+const sections = document.querySelectorAll('.section, .cover-section');
+const navLinks = document.querySelectorAll('.nav-link');
+const topnavSection = document.getElementById('topnav-section');
+const sectionNames = {
+  'cover': 'Overview',
+  'location': 'Location Intelligence',
+  'rental': 'Rental Market',
+  'service-design': 'Service Design',
+  'diagnostics': 'ADHD Diagnostics',
+  'financials': 'Financial Projection',
+  'staffing': 'Staffing Plan',
+  'investment': 'Investment Summary',
+  'funding': 'EU Funding',
+  'next-steps': 'Next Steps'
+};
+
+function onScroll() {
+  let current = 'cover';
+  sections.forEach(s => {
+    const top = s.getBoundingClientRect().top;
+    if (top < 200) current = s.id;
+  });
+  navLinks.forEach(l => {
+    l.classList.toggle('active', l.getAttribute('data-section') === current);
+    if (l.getAttribute('data-section') === current) {
+      topnavSection.textContent = sectionNames[current] || current;
+    }
+  });
+}
+window.addEventListener('scroll', onScroll, {passive: true});
+onScroll();
+</script>
+</body>
+</html>

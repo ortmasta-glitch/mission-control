@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="pl" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WCP Zdrowie Finansowe Report 2026 · 17 April 2026</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
+// Animate bar charts on scroll
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const bars = entry.target.querySelectorAll('.bar-animated');
+      if (bars.length > 0) {
+        bars.forEach((bar, index) => {
+          setTimeout(() => {
+            bar.classList.remove('bar-animated');
+            bar.style.width = bar.dataset.width;
+          }, index * 150);
+        });
+        barObserver.unobserve(entry.target);
+      }
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.bar-chart').forEach(chart => {
+  barObserver.observe(chart);
+});
+
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script src="assets/js/stitch-echarts-theme.js"></script>
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo svg,.sidebar-logo img{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.red{border-left-color:var(--red-t)}
+  .callout.red strong{color:#f08080}
+  .callout.green{border-left-color:var(--green-t)}
+  .callout.green strong{color:#6fcf97}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.long-term{background:rgba(155,89,182,.15);color:#c39bd3}
+  .tag.creative{background:rgba(155,89,182,.15);color:#c39bd3}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .stat-card{background:var(--surface-mid);border-radius:6px;padding:18px;border-left:3px solid var(--gold-dim)}
+  .stat-card .stat-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .stat-card .stat-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-card .stat-note{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .stat-card.green{border-left-color:var(--green-t)}
+  .stat-card.green .stat-value{color:#6fcf97}
+  .stat-card.red{border-left-color:var(--red-t)}
+  .stat-card.red .stat-value{color:#f08080}
+  .stat-card.blue{border-left-color:var(--blue-t)}
+  .stat-card.blue .stat-value{color:#7bc8e0}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .vol-low{color:#7bc8e0;font-weight:700}
+  .kw-table .vol-red{color:#f08080;font-weight:700}
+  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .funnel-step:last-child{border-bottom:none}
+  .funnel-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .priority-matrix{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .matrix-cell{padding:18px;border-radius:4px}
+  .matrix-cell.high-impact-low-effort{background:rgba(76,175,125,.08);border-left:3px solid #4CAF7D}
+  .matrix-cell.high-impact-high-effort{background:rgba(75,163,195,.08);border-left:3px solid #4BA3C3}
+  .matrix-cell.low-impact-low-effort{background:rgba(245,200,66,.08);border-left:3px solid #F5C842}
+  .matrix-cell.low-impact-high-effort{background:rgba(224,82,82,.08);border-left:3px solid #E05252}
+  .matrix-cell h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .matrix-cell.high-impact-low-effort h4{color:#6fcf97}
+  .matrix-cell.high-impact-high-effort h4{color:#7bc8e0}
+  .matrix-cell.low-impact-low-effort h4{color:#f5c842}
+  .matrix-cell.low-impact-high-effort h4{color:#f08080}
+  .matrix-cell ul{padding-left:14px;font-size:.82rem;color:var(--on-surface)}
+  .matrix-cell li{margin:4px 0}
+  .badge-row{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .page-footer{display:none}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  
+  /* CSS-Only Animated Charts */
+  .chart-container{background:var(--surface-mid);border-radius:6px;padding:24px;margin:18px 0}
+  .chart-title{font-family:"Manrope",sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px}
+  
+  /* Przychody Bar Chart */
+  .bar-chart{display:flex;flex-direction:column;gap:10px}
+  .bar-row{display:flex;align-items:center;gap:12px}
+  .bar-label{font-family:"Manrope",sans-serif;font-size:.7rem;color:var(--muted);min-width:40px;text-align:right}
+  .bar-track{flex:1;background:var(--surface-high);height:24px;border-radius:3px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-dim));border-radius:3px;width:0;transition:width 1.2s cubic-bezier(0.4,0,0.2,1)}
+  .bar-fill.animated{width:var(--bar-width)}
+  .bar-value{font-family:"Inter",sans-serif;font-size:.75rem;font-weight:600;color:var(--gold);min-width:60px}
+  
+  /* Donut Chart */
+  .donut-container{display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+  .donut-chart{width:180px;height:180px;border-radius:50%;position:relative;background:conic-gradient(var(--gold) 0deg 90deg,var(--red-t) 90deg 180deg,var(--blue-t) 180deg 270deg,var(--green-t) 270deg 360deg)}
+  .donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:110px;height:110px;background:var(--surface-mid);border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .donut-center-text{text-align:center}
+  .donut-center-value{font-family:"Inter",sans-serif;font-size:1.4rem;font-weight:800;color:var(--gold)}
+  .donut-center-label{font-family:"Manrope",sans-serif;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .donut-legend{display:flex;flex-direction:column;gap:10px}
+  .legend-item{display:flex;align-items:center;gap:10px;font-size:.8rem}
+  .legend-color{width:14px;height:14px;border-radius:3px}
+  .legend-color.gold{background:var(--gold)}
+  .legend-color.red{background:var(--red-t)}
+  .legend-color.blue{background:var(--blue-t)}
+  .legend-color.green{background:var(--green-t)}
+  .legend-label{color:var(--muted)}
+  .legend-value{color:var(--on-surface);font-weight:600}
+  
+  /* Line Chart */
+  .line-chart-container{position:relative;height:200px;background:var(--surface-high);border-radius:6px;padding:20px;overflow:hidden}
+  .line-chart-svg{width:100%;height:100%}
+  .line-chart-path{fill:none;stroke:var(--gold);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1000;stroke-dashoffset:1000;transition:stroke-dashoffset 1.5s ease-out}
+  .line-chart-path.animated{stroke-dashoffset:0}
+  .line-chart-dot{fill:var(--surface);stroke:var(--gold);stroke-width:2;opacity:0;transition:opacity 0.3s ease-out}
+  .line-chart-dot.animated{opacity:1}
+  .chart-grid-line{stroke:rgba(77,70,55,.4);stroke-width:1}
+  .chart-axis-text{font-family:"Manrope",sans-serif;font-size:.6rem;fill:var(--muted)}
+  
+  /* ECharts card containers */
+  .echarts-card{background:var(--surface-mid);border-radius:6px;padding:24px;margin:18px 0;min-height:400px}
+  .glass-panel{background:rgba(16,20,24,.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(77,70,55,.3);border-radius:12px;padding:28px;margin:20px 0;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+  .glass-panel .echarts-card{background:transparent;padding:0;margin:0}
+  .echarts-card .chart-title{font-family:"Manrope",sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px}
+  .echarts-chart{width:100%;height:400px}
+  .gauge-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .gauge-grid .echarts-chart{height:280px;background:rgba(16,20,24,.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(77,70,55,.25);border-radius:12px;padding:8px;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+
+  /* Confidence markers */
+  .confidence-row{display:flex;gap:24px;flex-wrap:wrap;margin-top:24px}
+  .confidence-item{display:flex;align-items:center;gap:8px}
+  .confidence-dot{width:8px;height:8px;border-radius:50%}
+  .confidence-dot.high{background:var(--green-t)}
+  .confidence-dot.med{background:var(--gold)}
+  .confidence-dot.low{background:var(--red-t)}
+  .confidence-text{font-family:"Manrope",sans-serif;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+  
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.priority-matrix,.vs-grid{grid-template-columns:1fr}.toc-block ol{columns:1}.page-canvas{padding:28px 16px 60px}.stat-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link"><span class="material-symbols-outlined" style="font-size:.9rem">description</span> Powrót do Raportu Strategicznego →</a>
+
+  <div class="sidebar-label">Nawigacja</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Okładka
+    </a>
+    <a class="nav-link" href="#executive-summary" data-section="executive-summary">
+      <span class="material-symbols-outlined nav-icon">summarize</span> Podsumowanie Wykonawcze
+    </a>
+    <a class="nav-link" href="#health-gauges" data-section="health-gauges">
+      <span class="material-symbols-outlined nav-icon">speed</span> Wskaźniki Zdrowia
+    </a>
+    <a class="nav-link" href="#revenue-analysis" data-section="revenue-analysis">
+      <span class="material-symbols-outlined nav-icon">trending_up</span> Przychody Analiza
+    </a>
+    <a class="nav-link" href="#cost-structure" data-section="cost-structure">
+      <span class="material-symbols-outlined nav-icon">pie_chart</span> Struktura Kosztów
+    </a>
+    <a class="nav-link" href="#analiza-costs" data-section="analiza-costs">
+      <span class="material-symbols-outlined nav-icon">receipt_long</span> Koszty ANALIZA
+    </a>
+    <a class="nav-link" href="#therapist-compensation" data-section="therapist-compensation">
+      <span class="material-symbols-outlined nav-icon">payments</span> Wynagrodzenie Terapeutów
+    </a>
+    <a class="nav-link" href="#cash-flow" data-section="cash-flow">
+      <span class="material-symbols-outlined nav-icon">account_balance_wallet</span> Przepływ Gotówki
+    </a>
+    <a class="nav-link" href="#key-risks" data-section="key-risks">
+      <span class="material-symbols-outlined nav-icon">warning</span> Kluczowe Ryzyka
+    </a>
+    <a class="nav-link" href="#recommendations" data-section="recommendations">
+      <span class="material-symbols-outlined nav-icon">lightbulb</span> Rekomendacje
+    </a>
+    <a class="nav-link" href="#methodology" data-section="methodology">
+      <span class="material-symbols-outlined nav-icon">data_object</span> Źródła Danych
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="WCP_Financial_Health_Report_2026.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇬🇧</span> Wersja EN
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP · Raport Zdrowia Finansowego 2026</span>
+  <span class="topnav-section" id="topnav-section">Okładka</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: COVER -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  <div style="margin:0 0 96px 0;padding:3px;border-radius:10px;background:linear-gradient(135deg,#e6c364 0%,#c9a84c 30%,#3a3530 60%,#1c2024 100%);box-shadow:0 20px 60px rgba(0,0,0,.4);">
+    <div style="height:240px;overflow:hidden;border-radius:8px;">
+      <img src="assets/images/deep_sea_octopus_floating.png" alt="WCP Hero" style="width:100%;display:block;margin-top:-20%;margin-bottom:-20%;">
+    </div>
+  </div>
+  
+  <span class="cover-badge">💰 Zdrowie Finansowe Intelligence · April 2026</span>
+  <h1 class="cover-h1">WCP Raport<br><span>Zdrowia Finansowego</span></h1>
+  <p class="cover-subtitle">Kompleksowa analiza finansowa dla Warmińskie Centrum Psychoterapii. Poprawiona metodologia, zweryfikowane dane bankowe, podział struktury kosztów i strategiczne rekomendacje dla zrównoważonego wzrostu.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Data</label><p>17 Kwiecień 2026</p></div>
+    <div class="cover-meta-item"><label>Okres</label><p>2025 Pełny Rok + Q1 2026</p></div>
+    <div class="cover-meta-item"><label>Jakość Danych</label><p>Wyciągi Bankowe Zweryfikowane</p></div>
+    <div class="cover-meta-item"><label>Przygotowano dla</label><p>Tomek &amp; Karolina Zagała</p></div>
+  </div>
+  <div class="confidence-row">
+    <div class="confidence-item">
+      <div class="confidence-dot high"></div>
+      <span class="confidence-text">Wysoki Poziom Ufnosci Przychody</span>
+    </div>
+    <div class="confidence-item">
+      <div class="confidence-dot high"></div>
+      <span class="confidence-text">Dane Bankowe Zweryfikowane</span>
+    </div>
+    <div class="confidence-item">
+      <div class="confidence-dot med"></div>
+      <span class="confidence-text">Deklaracje Podatkowe Przetworzone</span>
+    </div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Spis Treści</h3>
+  <ol>
+    <li><a href="#executive-summary">Podsumowanie Wykonawcze</a></li>
+    <li><a href="#health-gauges">Wskaźniki Zdrowia</a></li>
+    <li><a href="#revenue-analysis">Przychody Analiza</a></li>
+    <li><a href="#cost-structure">Struktura Kosztów</a></li>
+    <li><a href="#analiza-costs">Koszty ANALIZA</a></li>
+    <li><a href="#therapist-compensation">Wynagrodzenie Terapeutów</a></li>
+    <li><a href="#cash-flow">Przepływ Gotówki Analiza</a></li>
+    <li><a href="#key-risks">Kluczowe Ryzyka</a></li>
+    <li><a href="#recommendations">Rekomendacje Strategiczne</a></li>
+    <li><a href="#methodology">Źródła Danych i Metodologia</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: EXECUTIVE SUMMARY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="executive-summary">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">list_alt</span>
+    <div>
+      <div class="sec-label">Sekcja 01</div>
+      <h2>Podsumowanie Wykonawcze</h2>
+      <div class="sub">Szybki przegląd wyników finansowych · Kluczowe metryki</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">2.41M</div>
+        <div class="stat-label">Prawdziwe Przychody 2025 (PLN)</div>
+        <div class="stat-note">Zweryfikowane z wyciągu bankowego</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">50.6%</div>
+        <div class="stat-label">Marża Netto Gotówki</div>
+        <div class="stat-note">1,219,592 PLN gotówka netto</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">+34.7%</div>
+        <div class="stat-label">Wzrost YoY Q1</div>
+        <div class="stat-note">678,870 PLN Q1 2026</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0.99×</div>
+        <div class="stat-label">Google Ads ROAS</div>
+        <div class="stat-note">Breakeven — do poprawy</div>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <strong>⚠️ Krytyczna Poprawka:</strong> Poprzednie analizy używające ANALIZA „Przychody" jako przychodów były fundamentalnie błędne. Kolumna ANALIZA „Przychody" zawiera 80-95% płatności podatkowych (ZUS, zaliczki PIT, VAT), NIE rzeczywiste przychody biznesowe. <strong>Prawdziwe przychody należy obliczyć na podstawie wyciągów bankowych.</strong> Używanie danych ANALIZA dramatycznie niedoszacuje działalność.
+    </div>
+
+    <div class="callout green">
+      <strong>✅ Ocena Zdrowia Finansowego:</strong> WCP jest w silnej pozycji finansowej. 50.6% marża netto gotówki jest zdrowa dla firmy usługowej. Wzrost przyspiesza (+34.7% YoY). Główne ryzyko: koncentracja przychodów i wzrost zobowiązań podatkowych.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- FINANCIAL HEALTH GAUGE DASHBOARD -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="health-gauges">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">target</span>
+    <div>
+      <div class="sec-label">Panel</div>
+      <h2>Wskaźniki Zdrowia Finansowego</h2>
+      <div class="sub">Postęp Przychodów · Marża · ROAS · Wzrost YoY</div>
+    </div>
+  </div>
+  <div class="glass-panel">
+    <div class="gauge-grid">
+      <div class="echarts-chart" id="chart-gauge-revenue"></div>
+      <div class="echarts-chart" id="chart-gauge-margin"></div>
+      <div class="echarts-chart" id="chart-gauge-roas"></div>
+      <div class="echarts-chart" id="chart-gauge-growth"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: REVENUE ANALYSIS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="revenue-analysis">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">trending_up</span>
+    <div>
+      <div class="sec-label">Sekcja 02</div>
+      <h2>Przychody Analiza</h2>
+      <div class="sub">Corrected methodology · Kwartałly trends · Miesiącly breakdown</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout red">
+      <strong>⚠️ POPRAWKA METODOLOGICZNA:</strong> ANALIZA „Przychody" NIE jest przychodem. Zawiera płatności podatkowe. Prawdziwe przychody 2025 z wyciągów bankowych: <strong>2,409,461 PLN</strong> — nie ~600K, które ANALIZA może sugerować.
+    </div>
+
+    <h3 class="sub-heading">2025 Przychody by Kwartał</h3>
+
+    <table class="kw-table">
+      <tr><th>Kwartał</th><th>Przychody (PLN)</th><th>% of Rok</th><th>Trend</th></tr>
+      <tr><td>Q1 2025</td><td>503,847</td><td>20.9%</td><td class="vol-med">Baza</td></tr>
+      <tr><td>Q2 2025</td><td>612,194</td><td>25.4%</td><td class="vol-high">+21.5%</td></tr>
+      <tr><td>Q3 2025</td><td>625,089</td><td>25.9%</td><td class="vol-med">+2.1%</td></tr>
+      <tr><td>Q4 2025</td><td>668,331</td><td>27.7%</td><td class="vol-high">+6.9%</td></tr>
+      <tr><td><strong>2025 Łącznie</strong></td><td><strong>2,409,461</strong></td><td><strong>100%</strong></td><td class="vol-high">Steady growth</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Przychody Miesięczne 2025 (Dane z Wyciągów Bankowych)</h3>
+
+    <div class="glass-panel">
+      <div class="echarts-card" id="revenue-echarts-card">
+        <div class="chart-title">Miesięczny Przychody 2025 · Wykres Kolumnowy + Średnia 3-Miesięczna</div>
+        <div class="echarts-chart" id="chart-monthly-revenue"></div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Q1 2026: Przyspieszający Wzrost</h3>
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">678,870</div>
+        <div class="stat-label">Przychody Q1 2026</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">+34.7%</div>
+        <div class="stat-label">YoY vs Q1 2025</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">2.7M+</div>
+        <div class="stat-label">Prognoza 2026</div>
+      </div>
+    </div>
+
+    <p>Q1 2026 wykazuje wyjątkowe przyspieszenie. Wzrost +34.7% YoY sugeruje, że WCP skutecznie skaluje operacje i pozyskiwanie pacjentów. Przy tym tempie, roczny przychód 2026 może przekroczyć <strong>2.7M PLN</strong> — znaczący skok w porównaniu do 2.41M w 2025.</p>
+
+    <h3 class="sub-heading">Porównanie Kwartalne Przychodów</h3>
+
+    <div class="glass-panel">
+      <div class="echarts-card" id="quarterly-echarts-card">
+        <div class="chart-title">Porównanie Przychodów Kwartalnych · Q1–Q4 2025 + Q1 2026 · Wzrost YoY %</div>
+        <div class="echarts-chart" id="chart-quarterly-comparison"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: COST STRUCTURE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="cost-structure">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">money_off</span>
+    <div>
+      <div class="sec-label">Sekcja 03</div>
+      <h2>Struktura Kosztów</h2>
+      <div class="sub">Koszty operacyjne · Zobowiązania podatkowe · Podział kosztów</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Podział Kosztów 2025 (1,189,103 PLN Łącznie)</h3>
+
+    <div class="glass-panel">
+      <div class="echarts-card" id="cost-pie-card">
+        <div class="chart-title">Struktura Kosztów · Nested Pie Chart</div>
+        <div class="echarts-chart" id="chart-cost-pie"></div>
+      </div>
+    </div>
+
+    <table class="kw-table">
+      <tr><th>Kategoria Kosztów</th><th>Kwota (PLN)</th><th>% Przychodów</th><th>% Kosztów</th></tr>
+      <tr><td>Koszty Operacyjne</td><td>601,558</td><td>25.0%</td><td>50.6%</td></tr>
+      <tr><td>ZUS (Social Security)</td><td>500,150</td><td>20.8%</td><td>42.1%</td></tr>
+      <tr><td>PIT (Podatek Dochodowy)</td><td>87,395</td><td>3.6%</td><td>7.3%</td></tr>
+      <tr><td><strong>Łącznie Koszty</strong></td><td><strong>1,189,103</strong></td><td><strong>49.4%</strong></td><td><strong>100%</strong></td></tr>
+    </table>
+
+    <h3 class="sub-heading">Kluczowe Obserwacje</h3>
+
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>ZUS stanowi 42% wszystkich kosztów</h4>
+        <p>Największa pojedyncza kategoria kosztów. Przy 22+ pracownikach, zobowiązania ZUS rosną proporcjonalnie do zatrudnienia. Przejście na B2B pomogło, ale ZUS pozostaje głównym czynnikiem kosztowym.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Koszty Operacyjne stanowią 25% Przychodów</h4>
+        <p>To jest zdrowe dla firmy usługowej. Obejmuje wynajem, media, sprzęt, marketing i koszty administracyjne.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Marża Netto Gotówki: 50.6%</h4>
+        <p>Po odliczeniu wszystkich kosztów i podatków, WCP zatrzymuje 50,6% przychodów jako gotówkę — silna pozycja wspierająca inwestycje w rozwój.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: ANALIZA COST ANALYSIS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="analiza-costs">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">receipt_long</span>
+    <div>
+      <div class="sec-label">Sekcja 04</div>
+      <h2>Koszty ANALIZA — Szczegółowa Analiza</h2>
+      <div class="sub">Koszty faktur · Koszty pracownicze · Przejście UoP→B2B</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Kluczowa Obserwacja:</strong> Śledzenie kosztów ANALIZA ujawnia, że przejście z UoP (umowa o pracę) na B2B zaoszczędziło WCP znaczne bezpośrednie koszty pracodawcy przy utrzymaniu zarobków terapeutów.
+    </div>
+
+    <h3 class="sub-heading">Ewolucja Kosztów Pracowniczych (2025)</h3>
+
+    <table class="kw-table">
+      <tr><th>Okres</th><th>Koszty Pracownicze (PLN)</th><th>Interpretacja</th></tr>
+      <tr><td>Początek 2025</td><td>428,000</td><td>Kontrakty UoP (wyższy ZUS pracodawcy, zobowiązania odprawy)</td></tr>
+      <tr><td>Środek 2025</td><td>179,000</td><td>Przejście na B2B (niższe koszty bezpośrednie)</td></tr>
+      <tr><td>Koniec 2025</td><td>218,000</td><td>Stabilizacja B2B + selektywne nowe zatrudnienia</td></tr>
+    </table>
+
+    <h3 class="sub-heading">UoP vs B2B: Porównanie Kosztów</h3>
+
+    <div class="vs-grid">
+      <div class="vs-col" style="background:rgba(224,82,82,.08);border-left:3px solid #E05252;">
+        <h4 style="color:#f08080;">🔴 UoP (Umowa o Pracę)</h4>
+        <ul class="clean">
+          <li>ZUS pracodawcy: ~19.5% brutto</li>
+          <li>Zobowiązania odprawy</li>
+          <li>Wymagany płatny urlop</li>
+          <li>Pokrycie wynagrodzenia chorobowego</li>
+          <li><strong>Łączne obciążenie pracodawcy: +30-40%</strong></li>
+        </ul>
+      </div>
+      <div class="vs-col" style="background:rgba(76,175,125,.08);border-left:3px solid #4CAF7D;">
+        <h4 style="color:#6fcf97;">🟢 B2B (Samozatrudnienie)</h4>
+        <ul class="clean">
+          <li>Brak ZUS pracodawcy</li>
+          <li>Brak zobowiązań odprawy</li>
+          <li>Brak wymagań płatnego urlopu</li>
+          <li>Kontraktor sam odprowadza podatki</li>
+          <li><strong>Bezpośredni koszt: ~0% obciążenia</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <strong>💡 Szacunek Oszczędności:</strong> Przejście UoP → B2B zaoszczędziło WCP około <strong>200,000+ PLN rocznie</strong> w bezpośrednich kosztach pracodawcy. To nie zmniejsza dochodów terapeutów — kontraktorzy B2B zazwyczaj ustalają stawki, które uwzględniają własne zobowiązania podatkowe.
+    </div>
+
+    <h3 class="sub-heading">Struktura Podziału Terapeutów (ANALIZA)</h3>
+
+    <table class="kw-table">
+      <tr><th>Typ Faktury</th><th>Udział WCP</th><th>Udział Terapeuty</th><th>Uwagi</th></tr>
+      <tr><td>Terapia Indywidualna</td><td>40-55%</td><td>45-60%</td><td>Zależnie od poziomu</td></tr>
+      <tr><td>Terapia Par</td><td>40%</td><td>60%</td><td>Wyższa stawka terapeuty</td></tr>
+      <tr><td>Terapia Grupowa</td><td>40%</td><td>60%</td><td>Podział między prowadzącymi</td></tr>
+      <tr><td>Diagnostyka ADHD</td><td>45%</td><td>55%</td><td>Zawiera testowanie MOXO</td></tr>
+    </table>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="ANALIZA-COST-ANALYSIS-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Pełna Analiza Kosztów ANALIZA →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: THERAPIST COMPENSATION -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="therapist-compensation">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">business_center</span>
+    <div>
+      <div class="sec-label">Sekcja 05</div>
+      <h2>Wynagrodzenie Terapeutów</h2>
+      <div class="sub">Poziomy podziału · Bonusy za wolumen · Typy umów</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Poziomy Podziału Terapeutów</h3>
+
+    <table class="kw-table">
+      <tr><th>Poziom</th><th>Podział WCP</th><th>Podział Terapeuty</th><th>Kwalifikacja</th></tr>
+      <tr><td>Okres próbny</td><td>60%</td><td class="vol-low">40%</td><td>Nowy pracownik, pierwsze 3 miesiące</td></tr>
+      <tr><td>Psycholog</td><td>55%</td><td class="vol-med">45%</td><td>Licencjonowany psycholog</td></tr>
+      <tr><td>Szkolenie</td><td>50%</td><td class="vol-high">50%</td><td>Certyfikowany w szkole terapii</td></tr>
+      <tr><td>Ukończony</td><td>45%</td><td class="vol-high">55%</td><td>Ukończone zaawansowane szkolenie</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Struktura Bonusów za Wolumen</h3>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">40+ hrs</div>
+        <div class="stat-label">Próg Miesięczny</div>
+        <div class="stat-note">Dla uprawnienia do bonusu</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">+5%</div>
+        <div class="stat-label">Bonus za Wolumen</div>
+        <div class="stat-note">Dodatkowo do bazowego podziału</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">55%→60%</div>
+        <div class="stat-label">Maks. Udział Terapeuty</div>
+        <div class="stat-note">Z bonusem za wolumen</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Przykład Obliczenia:</strong> Terapeuta poziomu „Zakończony" (55% baza) realizujący 45 godzin w miesiącu zarobiłby <strong>60%</strong> przychodów z sesji (55% baza + 5% bonus za wolumen).
+    </div>
+
+    <h3 class="sub-heading">Podział Typów Umów</h3>
+
+    <table class="kw-table">
+      <tr><th>Typ Umowy</th><th>Udział</th><th>Implikacje</th></tr>
+      <tr><td>B2B (Samozatrudnienie)</td><td class="vol-high">~85%</td><td>Niższe koszty WCP, elastyczne skalowanie</td></tr>
+      <tr><td>UoP (Zatrudnienie)</td><td class="vol-low">~15%</td><td>Wyższe koszty, większa stabilność</td></tr>
+    </table>
+
+    <p>Wysoki udział B2B jest finansowo wydajny, ale wymaga rozbudowanych systemów zarządzania kontraktorami. Terapeuci cenią elastyczność; WCP ceni kontrolę kosztów. Ta zgodność wspiera obecną trajektorię wzrostu.</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: CASH FLOW -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="cash-flow">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">trending_up</span>
+    <div>
+      <div class="sec-label">Sekcja 06</div>
+      <h2>Przepływ Gotówki Analiza</h2>
+      <div class="sub">Miesięczny przepływ · Analiza trendów</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Miesięczny Trend Przepływu Gotówki (2025)</h3>
+
+    <div class="glass-panel">
+      <div class="echarts-card" id="cashflow-echarts-card">
+        <div class="chart-title">Przepływ Gotówki — Kaskada · Miesięczne Przychody → Koszty → Saldo Netto</div>
+        <div class="echarts-chart" id="chart-cashflow-waterfall"></div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Przepływ Gotówki Podsumowanie</h3>
+
+    <table class="kw-table">
+      <tr><th>Metryka</th><th>Kwota (PLN)</th><th>Uwagi</th></tr>
+      <tr><td>Łącznie Przepływy Wejściowe 2025</td><td>2,409,461</td><td>Płatności pacjentów, przelewy</td></tr>
+      <tr><td>Łączne Przepływy Wyjściowe 2025</td><td>1,189,103</td><td>Koszty + podatki + ZUS</td></tr>
+      <tr><td><strong>Wygenerowana Gotówka Netto</strong></td><td class="vol-high"><strong>1,220,358</strong></td><td>50.6% marża</td></tr>
+      <tr><td>Średnie Miesięczne Przepływy Wejściowe</td><td>200,788</td><td>~201K/miesiąc</td></tr>
+      <tr><td>Średnie Miesięczne Przepływy Wyjściowe</td><td>99,092</td><td>~99K/miesiąc</td></tr>
+    </table>
+
+    <div class="callout green">
+      <strong>✅ Pozycja Gotówkowa:</strong> WCP generuje dodatni przepływ gotówki każdego miesiąca. Przerwa między wpływami a wypływami jest zdrowa i poszerza się, co wskazuje na zyski w efektywności operacyjnej.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- WCP Center Divider -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div style="text-align:center;padding:40px 0 20px;border-top:1px solid rgba(77,70,55,.2);margin:0 0 64px;">
+  <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:180px;height:auto;opacity:.5;display:block;margin:0 auto;">
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 8: KEY RISKS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="key-risks">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">warning</span>
+    <div>
+      <div class="sec-label">Sekcja 07</div>
+      <h2>Kluczowe Ryzyka Finansowe</h2>
+      <div class="sub">Zagrożenia · Mitygacja · Macierz ryzyk</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Krytyczne Czynniki Ryzyka</h3>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span class="material-symbols-outlined">gpp_maybe</span> Koncentracja Przychodów
+        <span class="tag high">WYSOKI</span>
+      </div>
+      <div class="idea-body">
+        <p>Przychody WCP są skoncentrowane w sesjach terapii indywidualnej. Jakakolwiek zakłócenie głównej usługi (regulacyjne, reputacyjne, konkurencyjne) miałoby nieproporcjonalny wpływ.</p>
+        <p><strong>Mitygacja:</strong> Dywersyfikuj strumienie przychodów — terapia online (cel 15%), terapia grupowa, rozszerzenie na pary, kontrakty EAP korporacyjne.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span class="material-symbols-outlined">trending_up</span> ZUS Koszty Wzrost
+        <span class="tag medium">ŚREDNI</span>
+      </div>
+      <div class="idea-body">
+        <p>Składki ZUS rosną wraz z liczbą pracowników i inflacją płac. Przy 500K+ PLN rocznie, nawet 10% wzrost oznacza 50K+ dodatkowych kosztów.</p>
+        <p><strong>Mitygacja:</strong> Utrzymaj preferencję B2B w zatrudnianiu. Optymalizuj mix kontraktor/pracownik. Monitoruj zmiany progów ZUS.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span class="material-symbols-outlined">account_balance</span> Adekwatność Rezerwy Gotówkowej
+        <span class="tag medium">ŚREDNI</span>
+      </div>
+      <div class="idea-body">
+        <p>50.6% marży jest zdrowa, ale szybka ekspansja (Bartąg, infrastruktura terapii online) może obciążyć gotówkę, jeśli nie będzie odpowiednio tempowana.</p>
+        <p><strong>Mitygacja:</strong> Utrzymaj 3-miesięczną rezerwę kosztów operacyjnych. Stopniuj inwestycje — Bartąg dopiero po utrzymej wydajności Q2-Q3.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span class="material-symbols-outlined">campaign</span> Efektywność Marketingu
+        <span class="tag high">WYSOKI</span>
+      </div>
+      <div class="idea-body">
+        <p>Google Ads ROAS na poziomie 0.99× oznacza, że wydatki na marketing ledwo się spłacają. To jest niezrównoważone dla wzrostu.</p>
+        <p><strong>Mitygacja:</strong> Natychmiastowa optymalizacja (zobacz raport Google Ads). Przenieść budżet na kampanie marki. Testować kanały organiczne/społecznościowe.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 9: RECOMMENDATIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="recommendations">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">lightbulb</span>
+    <div>
+      <div class="sec-label">Sekcja 08</div>
+      <h2>Rekomendacje Strategiczne</h2>
+      <div class="sub">Priorytety · Działania finansowe</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Macierz Priorytetów Finansowych</h3>
+
+    <div class="priority-matrix">
+      <div class="matrix-cell high-impact-low-effort">
+        <h4>🟢 Szybkie Wygrane</h4>
+        <ul>
+          <li>Wstrzymaj kampanię Google Ads „Terapia Indywidualna"</li>
+          <li>Dodaj negatywne słowa kluczowe NFZ</li>
+          <li>Renegocjuj podziały terapeutów dla bonusów za wolumen</li>
+          <li>Przejrzyj Q1 2026 pod kątem wzorców sezonowych</li>
+        </ul>
+      </div>
+      <div class="matrix-cell high-impact-high-effort">
+        <h4>🔵 Strategiczne Działania</h4>
+        <ul>
+          <li>Wdróż strumień przychodów z terapii online (cel 15%)</li>
+          <li>Optymalizuj mix kontraktorów B2B/UoP</li>
+          <li>Zbuduj rezerwę gotówkową na 3-miesięczne koszty operacyjne</li>
+          <li>Zainwestuj w szkolenie terapeutów (ROI: 6-9 miesięcy)</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-low-effort">
+        <h4>🟡 Utrzymanie</h4>
+        <ul>
+          <li>Automatyzacja miesięcznego raportowania przepływu gotówki</li>
+          <li>Kwartalna uzgodnienie ANALIZA</li>
+          <li>Optymalizacja terminów płatności podatkowych</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-high-effort">
+        <h4>🔴 Odłóż/Zmniejsz Priorytet</h4>
+        <ul>
+          <li>Duże zakupy kapitałowe (chyba że Bartąg potwierdzony)</li>
+          <li>Złożone inwestycje w produkty finansowe</li>
+          <li>Nieistotne subskrypcje oprogramowania</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Top 3 Działania Finansowe</h3>
+
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Napraw ROAS Google Ads Natychmiast</h4>
+        <p><span class="tag high">KRYTYCZNY</span> Z 0.99× do 2.0×+ w ciągu 30 dni. Zobacz Raport Optymalizacja Google Ads dla szczegółowego planu działania.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Uruchomienie Strumienia Przychodów Terapia Online</h4>
+        <p><span class="tag high">DUŻY WPŁYW</span> Cel 15% przychodów w ciągu 6 miesięcy. Niższe koszty stałe, wyższe marże, szerszy rynek.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Utrzymanie Preferencji Kontraktów B2B</h4>
+        <p><span class="tag medium">STRUKTURALNY</span> Kontynuuj oszczędności ~200K+ rocznie vs UoP. Balansuj z rozważaniami retencji/jakości.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Strategic Intelligence Master Report →
+      </a>
+      <a href="GOOGLE-ADS-OPTIMIZATION-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">ads_click</span> Google Ads Optymalizacja →
+      </a>
+      <a href="HR-DEVELOPMENT-PLAN-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">school</span> HR Development Plan →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 10: DATA SOURCES & METHODOLOGY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="methodology">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Sekcja 09</div>
+      <h2>Źródła Danych i Metodologia</h2>
+      <div class="sub">Weryfikacja · Poziomy ufności · Ograniczenia</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Główne Źródła Danych</h3>
+
+    <table class="kw-table">
+      <tr><th>Źródło</th><th>Ufnosc</th><th>Zastosowanie</th></tr>
+      <tr><td>Wyciągi Bankowe 2025</td><td class="vol-high">WYSOKI</td><td>Weryfikacja przychodów, analiza przepływu gotówki</td></tr>
+      <tr><td>Raporty Kosztów ANALIZA</td><td class="vol-med">ŚREDNI</td><td>Koszty pracownicze, śledzenie faktur (NIE przychody)</td></tr>
+      <tr><td>Zwroty PIT-36L</td><td class="vol-med">ŚREDNI</td><td>Weryfikacja zobowiązań podatkowych</td></tr>
+      <tr><td>Kontrakty Terapeutów</td><td class="vol-high">WYSOKI</td><td>Walidacja struktury wynagrodzeń</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Referencja PIT-36L (Karolina Zagała)</h3>
+
+    <table class="kw-table">
+      <tr><th>Pole</th><th>Wartość</th></tr>
+      <tr><td>NIP</td><td>9661664701</td></tr>
+      <tr><td>Przychody (PIT)</td><td>904,675 PLN</td></tr>
+      <tr><td>Rozpoznane Koszty</td><td>777,872.80 PLN</td></tr>
+      <tr><td>Dochód</td><td>126,802.20 PLN</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Metodologia Uwagi</h3>
+
+    <div class="callout">
+      <strong>Obliczenie Przychodów:</strong> Prawdziwe przychody = Wpływy z wyciągów bankowych z płatności pacjentów, przelewów i opłat za usługi. Wyklucza przelewy wewnętrzne, wpływy z pożyczek i zwroty podatkowe.
+    </div>
+
+    <div class="callout">
+      <strong>Kategoryzacja Kosztów:</strong> Koszty operacyjne = wynajem, media, marketing, sprzęt, admin. Zobowiązania podatkowe = ZUS + PIT + VAT. Płatności dla terapeutów = kwoty wypłacone według podziałów, zarejestrowane jako COGS.
+    </div>
+
+    <div class="callout red">
+      <strong>⚠️ Ostrzeżenie ANALIZA:</strong> NIE używaj ANALIZA „Przychody" jako przychodów. Używaj wyciągów bankowych. NIE używaj ANALIZA „Koszty" jako całkowitych kosztów bez wykluczenia płatności podatkowych.
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="HR-QUALIFICATIONS-ANALYSIS-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">groups</span> Analiza Kwalifikacji HR →
+      </a>
+      <a href="ANIMA-THREAT-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">radar</span> ANIMA Threat Report →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /page-canvas -->
+</main>
+
+<!-- Scroll Spy & ECharts Init -->
+<script>
+// ========================================
+// SCROLL SPY
+// ========================================
+const sectionNames = {
+  'cover':'Okładka',
+  'executive-summary':'Podsumowanie Wykonawcze',
+  'health-gauges':'Wskaźniki Zdrowia',
+  'revenue-analysis':'Przychody Analiza',
+  'cost-structure':'Struktura Kosztów',
+  'analiza-costs':'Koszty ANALIZA',
+  'therapist-compensation':'Wynagrodzenie Terapeutów',
+  'cash-flow':'Przepływ Gotówki',
+  'key-risks':'Kluczowe Ryzyka',
+  'recommendations':'Rekomendacje',
+  'methodology':'Źródła Danych'
+};
+const navLinks = document.querySelectorAll('.nav-link[data-section]');
+const topnavSection = document.getElementById('topnav-section');
+
+function setActive(id){
+  navLinks.forEach(l=>l.classList.toggle('active',l.dataset.section===id));
+  if(topnavSection) topnavSection.textContent = sectionNames[id]||'';
+}
+
+const scrollObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) setActive(e.target.id);});
+},{rootMargin:'-15% 0px -70% 0px',threshold:0.05});
+
+Object.keys(sectionNames).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) scrollObs.observe(el);
+});
+
+navLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
+    const t=document.querySelector(link.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+
+// ========================================
+// DATA
+// ========================================
+const months = ['Sty','Lut','Mar','Kwi','Maj','Cze','Lip','Sie','Wrz','Paź','Lis','Gru'];
+const revenueData = [168000,179000,157000,198000,206000,208000,215000,180000,230000,225000,238000,253000];
+
+// 3-month moving average
+const movingAvg = revenueData.map((v,i,a) => {
+  if(i<2) return null;
+  return Math.round((a[i-2]+a[i-1]+a[i])/3);
+});
+movingAvg[0] = null; movingAvg[1] = null;
+
+// Monthly costs (approximated from 1,189,103 annual, roughly 99K/mo avg)
+const costData = [88000,92000,95000,98000,101000,103000,105000,99000,100000,102000,104000,102000];
+
+// ========================================
+// 1. MONTHLY REVENUE COLUMN CHART
+// ========================================
+function initRevenueChart() {
+  const dom = document.getElementById('chart-monthly-revenue');
+  if(!dom) return;
+  const chart = echarts.init(dom, 'stitch');
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        let html = '<div style="font-family:Inter,sans-serif" ><b>' + months[params[0].dataIndex] + ' 2025</b><br/>';
+        params.forEach(p => {
+          if(p.value != null) {
+            const val = typeof p.value === 'number' ? (p.value/1000).toFixed(0) + 'K' : p.value;
+            html += p.marker + ' ' + p.seriesName + ': <b>' + val + ' PLN</b><br/>';
+          }
+        });
+        return html + '</div>';
+      }
+    },
+    legend: {
+      data: ['Przychody','Średnia 3M'],
+      top: 0,
+      right: 20
+    },
+    grid: { left: 60, right: 30, top: 50, bottom: 40 },
+    xAxis: {
+      type: 'category',
+      data: months,
+      axisLabel: { fontSize: 11 }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        formatter: function(v) { return (v/1000).toFixed(0) + 'K'; },
+        fontSize: 11
+      }
+    },
+    animationDuration: 1200,
+    animationEasing: 'cubicOut',
+    series: [{
+      name: 'Przychody',
+      type: 'bar',
+      data: revenueData,
+      itemStyle: {
+        borderRadius: [4,4,0,0],
+        color: new echarts.graphic.LinearGradient(0,0,0,1,[
+          { offset: 0, color: '#e6c364' },
+          { offset: 1, color: '#c9a84c' }
+        ])
+      },
+      emphasis: {
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0,0,0,1,[
+            { offset: 0, color: '#f5d880' },
+            { offset: 1, color: '#e6c364' }
+          ])
+        }
+      }
+    },{
+      name: 'Średnia 3M',
+      type: 'line',
+      data: movingAvg,
+      smooth: true,
+      lineStyle: { color: '#6fcf97', width: 3 },
+      itemStyle: { color: '#6fcf97' },
+      symbol: 'circle',
+      symbolSize: 8,
+      connectNulls: false
+    }]
+  });
+  return chart;
+}
+
+// ========================================
+// 2. CASH FLOW WATERFALL CHART
+// ========================================
+function initWaterfallChart() {
+  const dom = document.getElementById('chart-cashflow-waterfall');
+  if(!dom) return;
+  const chart = echarts.init(dom, 'stitch');
+
+  // Build waterfall data: Opening → each month Revenue → each month Costs → Net
+  const wfLabels = ['Otwarcie'];
+  const wfData = [];
+  const wfHelpers = []; // [base, value, isTotal]
+
+  // Opening balance (assume ~0 start)
+  wfHelpers.push([0, 0, true]);
+
+  // Running balance
+  let runningBalance = 0;
+
+  // For each month, show Revenue (positive) then Costs (negative)
+  for(let i=0; i<12; i++) {
+    const rev = revenueData[i];
+    const cost = costData[i];
+    const net = rev - cost;
+
+    wfLabels.push(months[i] + ' Przych.');
+    wfHelpers.push([runningBalance, rev, false]);
+    runningBalance += rev;
+
+    wfLabels.push(months[i] + ' Koszty');
+    wfHelpers.push([runningBalance - cost, cost, false]); // start from top of cost block
+    runningBalance -= cost;
+  }
+
+  // Final net
+  wfLabels.push('Saldo Netto');
+  wfHelpers.push([0, runningBalance, true]);
+
+  // Convert to ECharts waterfall format
+  const positiveData = wfHelpers.map(d => d[1] >= 0 ? d[1] : 0);
+  const negativeData = wfHelpers.map(d => d[1] < 0 ? -d[1] : 0);
+  const baseData = wfHelpers.map(d => {
+    if(d[2]) return 0; // total bar
+    return d[1] >= 0 ? d[0] : d[0];
+  });
+
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        const idx = params[0].dataIndex;
+        const val = wfHelpers[idx][1];
+        const fmt = (Math.abs(val)/1000).toFixed(0) + 'K PLN';
+        return '<div style="font-family:Inter,sans-serif" ><b>' + wfLabels[idx] + '</b><br/>' +
+          (val >= 0 ? '🟢 +' : '🔴 ') + fmt + '</div>';
+      }
+    },
+    grid: { left: 70, right: 30, top: 30, bottom: 80 },
+    xAxis: {
+      type: 'category',
+      data: wfLabels,
+      axisLabel: {
+        fontSize: 9,
+        rotate: 45,
+        interval: 0
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        formatter: function(v) { return (v/1000).toFixed(0) + 'K'; },
+        fontSize: 11
+      }
+    },
+    animationDuration: 1200,
+    animationEasing: 'cubicOut',
+    series: [{
+      type: 'bar',
+      stack: 'waterfall',
+      name: 'Baza',
+      data: baseData,
+      itemStyle: { color: 'transparent' },
+      barWidth: '50%'
+    },{
+      type: 'bar',
+      stack: 'waterfall',
+      name: 'Przychody',
+      data: positiveData,
+      itemStyle: {
+        borderRadius: [3,3,0,0],
+        color: new echarts.graphic.LinearGradient(0,0,0,1,[
+          { offset: 0, color: '#e6c364' },
+          { offset: 1, color: '#c9a84c' }
+        ])
+      },
+      barWidth: '50%'
+    },{
+      type: 'bar',
+      stack: 'waterfall',
+      name: 'Koszty',
+      data: negativeData,
+      itemStyle: {
+        borderRadius: [3,3,0,0],
+        color: new echarts.graphic.LinearGradient(0,0,0,1,[
+          { offset: 0, color: '#f08080' },
+          { offset: 1, color: '#c0392b' }
+        ])
+      },
+      barWidth: '50%'
+    }]
+  });
+  return chart;
+}
+
+// ========================================
+// 3. COST BREAKDOWN NESTED PIE
+// ========================================
+function initCostPieChart() {
+  const dom = document.getElementById('chart-cost-pie');
+  if(!dom) return;
+  const chart = echarts.init(dom, 'stitch');
+  chart.setOption({
+    tooltip: {
+      trigger: 'item',
+      formatter: function(p) {
+        return '<b>' + p.name + '</b><br/>' +
+          (p.value/1000).toFixed(0) + 'K PLN (' + p.percent.toFixed(1) + '%)';
+      }
+    },
+    legend: {
+      top: 'bottom',
+      data: ['Koszty Operacyjne','ZUS','PIT','Wynajem','Marketing','Narzędzia','Admin','Ekwipunek']
+    },
+    animationDuration: 1200,
+    animationEasing: 'cubicOut',
+    series: [{
+      name: 'Główne kategorie',
+      type: 'pie',
+      radius: ['20%','45%'],
+      center: ['50%','45%'],
+      label: {
+        formatter: '{b}\n{d}%',
+        fontSize: 11
+      },
+      data: [
+        { value: 601558, name: 'Koszty Operacyjne', itemStyle: { color: '#e6c364' } },
+        { value: 500150, name: 'ZUS', itemStyle: { color: '#f08080' } },
+        { value: 87395, name: 'PIT', itemStyle: { color: '#7bc8e0' } }
+      ]
+    },{
+      name: 'Operacyjne szczegóły',
+      type: 'pie',
+      radius: ['52%','70%'],
+      center: ['50%','45%'],
+      label: {
+        formatter: '{b}\n{d}%',
+        fontSize: 10
+      },
+      data: [
+        { value: 180000, name: 'Wynajem', itemStyle: { color: '#f5c842' } },
+        { value: 150000, name: 'Marketing', itemStyle: { color: '#eb984e' } },
+        { value: 95000, name: 'Narzędzia', itemStyle: { color: '#c39bd3' } },
+        { value: 86558, name: 'Admin', itemStyle: { color: '#5dade2' } },
+        { value: 90000, name: 'Ekwipunek', itemStyle: { color: '#58d68d' } }
+      ]
+    }]
+  });
+  return chart;
+}
+
+// ========================================
+// 4. QUARTERLY COMPARISON GROUPED BAR
+// ========================================
+function initQuarterlyChart() {
+  const dom = document.getElementById('chart-quarterly-comparison');
+  if(!dom) return;
+  const chart = echarts.init(dom, 'stitch');
+
+  const quarterLabels = ['Q1 2025','Q2 2025','Q3 2025','Q4 2025','Q1 2026'];
+  const quarterRevenue = [503847,612194,625089,668331,678870];
+  const yoyGrowth = [null, 21.5, 2.1, 6.9, 34.7]; // QoQ for 2025, YoY for Q1 2026
+
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        const idx = params[0].dataIndex;
+        let html = '<b>' + quarterLabels[idx] + '</b><br/>';
+        params.forEach(p => {
+          if(p.value != null) {
+            if(p.seriesName === 'Przychody') {
+              html += p.marker + ' ' + p.seriesName + ': <b>' + (p.value/1000).toFixed(0) + 'K PLN</b><br/>';
+            } else {
+              html += p.marker + ' ' + p.seriesName + ': <b>+' + p.value.toFixed(1) + '%</b><br/>';
+            }
+          }
+        });
+        return html;
+      }
+    },
+    legend: {
+      data: ['Przychody','Wzrost %'],
+      top: 0
+    },
+    grid: { left: 70, right: 60, top: 50, bottom: 40 },
+    xAxis: {
+      type: 'category',
+      data: quarterLabels,
+      axisLabel: { fontSize: 12 }
+    },
+    yAxis: [
+      {
+        type: 'value',
+        name: 'PLN',
+        axisLabel: {
+          formatter: function(v) { return (v/1000).toFixed(0) + 'K'; },
+          fontSize: 11
+        }
+      },
+      {
+        type: 'value',
+        name: '%',
+        axisLabel: {
+          formatter: '{value}%',
+          fontSize: 11
+        },
+        splitLine: { show: false }
+      }
+    ],
+    animationDuration: 1200,
+    animationEasing: 'cubicOut',
+    series: [{
+      name: 'Przychody',
+      type: 'bar',
+      data: quarterRevenue,
+      yAxisIndex: 0,
+      barWidth: '40%',
+      itemStyle: {
+        borderRadius: [4,4,0,0],
+        color: function(params) {
+          const colors = ['#e6c364','#eb984e','#f5c842','#c39bd3','#6fcf97'];
+          return colors[params.dataIndex] || '#e6c364';
+        }
+      },
+      label: {
+        show: true,
+        position: 'top',
+        formatter: function(p) { return (p.value/1000).toFixed(0) + 'K'; },
+        fontSize: 10,
+        color: '#e0e3e8',
+        fontFamily: 'Inter, sans-serif'
+      }
+    },{
+      name: 'Wzrost %',
+      type: 'line',
+      data: yoyGrowth,
+      yAxisIndex: 1,
+      smooth: true,
+      lineStyle: { color: '#6fcf97', width: 3 },
+      itemStyle: { color: '#6fcf97' },
+      symbol: 'circle',
+      symbolSize: 10,
+      label: {
+        show: true,
+        position: 'top',
+        formatter: function(p) { return p.value != null ? '+' + p.value.toFixed(1) + '%' : ''; },
+        fontSize: 11,
+        fontWeight: 'bold',
+        color: '#6fcf97',
+        fontFamily: 'Inter, sans-serif'
+      }
+    }]
+  });
+  return chart;
+}
+
+// ========================================
+// 5. FINANCIAL HEALTH GAUGE DASHBOARD
+// ========================================
+function createGaugeOption(name, value, max, unit, colorStops) {
+  const pct = Math.min(value / max, 1);
+  return {
+    series: [{
+      type: 'gauge',
+      startAngle: 220,
+      endAngle: -40,
+      min: 0,
+      max: max,
+      splitNumber: 5,
+      progress: {
+        show: true,
+        width: 14,
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0,0,1,0, colorStops)
+        }
+      },
+      axisLine: {
+        lineStyle: {
+          width: 14,
+          color: [[1, 'rgba(77,70,55,0.3)']]
+        }
+      },
+      axisTick: { show: false },
+      splitLine: { show: false },
+      axisLabel: { show: false },
+      pointer: { show: false },
+      title: {
+        offsetCenter: [0, '70%'],
+        fontSize: 12,
+        fontFamily: 'Manrope, Inter, sans-serif',
+        color: '#8a9bb0',
+        fontWeight: 700
+      },
+      detail: {
+        valueAnimation: true,
+        offsetCenter: [0, '30%'],
+        fontSize: 28,
+        fontFamily: 'Inter, sans-serif',
+        fontWeight: 800,
+        formatter: function(v) { return v + unit; },
+        color: 'inherit'
+      },
+      data: [{ value: value, name: name }],
+      animationDuration: 1200,
+      animationEasing: 'cubicOut'
+    }]
+  };
+}
+
+function initGaugeCharts() {
+  const charts = [];
+
+  // Revenue Progress: 2.41M / 2.7M target
+  const revDom = document.getElementById('chart-gauge-revenue');
+  if(revDom) {
+    const c = echarts.init(revDom, 'stitch');
+    c.setOption(createGaugeOption(
+      'Postęp Przychodów',
+      2.41, 2.7, 'M',
+      [{ offset: 0, color: '#e6c364' }, { offset: 1, color: '#6fcf97' }]
+    ));
+    // Color the detail text gold
+    c.setOption({ series: [{ detail: { color: '#e6c364' } }] });
+    charts.push(c);
+  }
+
+  // Margin: 50.6%
+  const marginDom = document.getElementById('chart-gauge-margin');
+  if(marginDom) {
+    const c = echarts.init(marginDom, 'stitch');
+    c.setOption(createGaugeOption(
+      'Netto Marża',
+      50.6, 100, '%',
+      [{ offset: 0, color: '#6fcf97' }, { offset: 0.5, color: '#f5c842' }, { offset: 1, color: '#f08080' }]
+    ));
+    c.setOption({ series: [{ detail: { color: '#6fcf97' } }] });
+    charts.push(c);
+  }
+
+  // ROAS: 0.99× (target 2.0×)
+  const roasDom = document.getElementById('chart-gauge-roas');
+  if(roasDom) {
+    const c = echarts.init(roasDom, 'stitch');
+    c.setOption(createGaugeOption(
+      'ROAS',
+      0.99, 3, '×',
+      [{ offset: 0, color: '#f08080' }, { offset: 0.33, color: '#f5c842' }, { offset: 1, color: '#6fcf97' }]
+    ));
+    c.setOption({ series: [{ detail: { color: '#f08080' } }] });
+    charts.push(c);
+  }
+
+  // YoY Growth: 34.7%
+  const growthDom = document.getElementById('chart-gauge-growth');
+  if(growthDom) {
+    const c = echarts.init(growthDom, 'stitch');
+    c.setOption(createGaugeOption(
+      'Wzrost YoY',
+      34.7, 50, '%',
+      [{ offset: 0, color: '#7bc8e0' }, { offset: 1, color: '#6fcf97' }]
+    ));
+    c.setOption({ series: [{ detail: { color: '#6fcf97' } }] });
+    charts.push(c);
+  }
+
+  return charts;
+}
+
+// ========================================
+// INIT ALL CHARTS
+// ========================================
+const allCharts = [];
+
+function initAllCharts() {
+  const c1 = initRevenueChart();
+  const c2 = initWaterfallChart();
+  const c3 = initCostPieChart();
+  const c4 = initQuarterlyChart();
+  const gaugeCharts = initGaugeCharts();
+
+  if(c1) allCharts.push(c1);
+  if(c2) allCharts.push(c2);
+  if(c3) allCharts.push(c3);
+  if(c4) allCharts.push(c4);
+  gaugeCharts.forEach(c => allCharts.push(c));
+}
+
+// Wait for ECharts to be ready
+if(typeof echarts !== 'undefined') {
+  initAllCharts();
+}
+
+// Responsive resize
+window.addEventListener('resize', function() {
+  allCharts.forEach(c => {
+    if(c && !c.isDisposed()) c.resize();
+  });
+});
+</script>
+
+</body>
+</html>

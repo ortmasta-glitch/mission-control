@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="pl" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analiza Kwalifikacji HR · Ocena Kompetencji Zespołu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script src="assets/js/stitch-echarts-theme.js"></script>
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo svg{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.red{border-left-color:var(--red-t)}
+  .callout.red strong{color:#f08080}
+  .callout.green{border-left-color:var(--green-t)}
+  .callout.green strong{color:#6fcf97}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.creative{background:rgba(155,89,182,.15);color:#c39bd3}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .stat-card{background:var(--surface-mid);border-radius:6px;padding:18px;border-left:3px solid var(--gold-dim)}
+  .stat-card .stat-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .stat-card .stat-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-card .stat-note{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .stat-card.green{border-left-color:var(--green-t)}
+  .stat-card.green .stat-value{color:#6fcf97}
+  .stat-card.red{border-left-color:var(--red-t)}
+  .stat-card.red .stat-value{color:#f08080}
+  .stat-card.blue{border-left-color:var(--blue-t)}
+  .stat-card.blue .stat-value{color:#7bc8e0}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .vol-low{color:#7bc8e0;font-weight:700}
+  .kw-table .vol-red{color:#f08080;font-weight:700}
+  .priority-matrix{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .matrix-cell{padding:18px;border-radius:4px}
+  .matrix-cell.high-impact-low-effort{background:rgba(76,175,125,.08);border-left:3px solid #4CAF7D}
+  .matrix-cell.high-impact-high-effort{background:rgba(75,163,195,.08);border-left:3px solid #4BA3C3}
+  .matrix-cell.low-impact-low-effort{background:rgba(245,200,66,.08);border-left:3px solid #F5C842}
+  .matrix-cell.low-impact-high-effort{background:rgba(224,82,82,.08);border-left:3px solid #E05252}
+  .matrix-cell h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .matrix-cell.high-impact-low-effort h4{color:#6fcf97}
+  .matrix-cell.high-impact-high-effort h4{color:#7bc8e0}
+  .matrix-cell.low-impact-low-effort h4{color:#f5c842}
+  .matrix-cell.low-impact-high-effort h4{color:#f08080}
+  .matrix-cell ul{padding-left:14px;font-size:.82rem;color:var(--on-surface)}
+  .matrix-cell li{margin:4px 0}
+  .bar-chart{margin:24px 0}
+  .bar-item{display:flex;align-items:center;margin:10px 0;gap:14px}
+  .bar-label{min-width:140px;font-size:.8rem;color:var(--muted);text-align:right}
+  .bar-track{flex:1;height:24px;background:var(--surface-mid);border-radius:3px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:3px;width:0;transition:width 1.2s ease-out}
+  .bar-fill.green{background:linear-gradient(90deg,#3d9e6d,#4CAF7D)}
+  .bar-fill.blue{background:linear-gradient(90deg,#3d8aa3,#4BA3C3)}
+  .bar-fill.purple{background:linear-gradient(90deg,#7b4890,#9B59B6)}
+  .bar-fill.red{background:linear-gradient(90deg,#c94a4a,#E05252)}
+  .bar-value{min-width:50px;font-size:.8rem;font-weight:600;color:var(--on-surface)}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  .page-footer{display:none}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .roster-table{font-size:.75rem}
+  .roster-table td{padding:6px 10px}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.priority-matrix{grid-template-columns:1fr}.bar-label{min-width:100px}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Powrót do Raportu Strategicznego →
+  </a>
+
+  <div class="sidebar-label">Nawigacja</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Strona tytułowa
+    </a>
+    <a class="nav-link" href="#executive-summary" data-section="executive-summary">
+      <span class="material-symbols-outlined nav-icon">summarize</span> Podsumowanie
+    </a>
+    <a class="nav-link" href="#team-overview" data-section="team-overview">
+      <span class="material-symbols-outlined nav-icon">groups</span> Przegląd zespołu
+    </a>
+    <a class="nav-link" href="#qualification-gaps" data-section="qualification-gaps">
+      <span class="material-symbols-outlined nav-icon">warning</span> Luki kwalifikacyjne
+    </a>
+    <a class="nav-link" href="#training-matrix" data-section="training-matrix">
+      <span class="material-symbols-outlined nav-icon">school</span> Macierz szkoleniowa
+    </a>
+    <a class="nav-link" href="#recommendations" data-section="recommendations">
+      <span class="material-symbols-outlined nav-icon">target</span> Rekomendacje
+    </a>
+    <a class="nav-link" href="#data-sources" data-section="data-sources">
+      <span class="material-symbols-outlined nav-icon">database</span> Źródła danych
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="HR-QUALIFICATIONS-ANALYSIS.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇬🇧</span> Wersja EN
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP · Analiza Kwalifikacji HR</span>
+  <span class="topnav-section" id="topnav-section">Strona tytułowa</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 0: STRONA TYTUŁOWA -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  <div style="margin:0 0 96px 0;padding:3px;border-radius:10px;background:linear-gradient(135deg,#e6c364 0%,#c9a84c 30%,#3a3530 60%,#1c2024 100%);box-shadow:0 20px 60px rgba(0,0,0,.4);">
+    <div style="height:240px;overflow:hidden;border-radius:8px;">
+      <img src="assets/images/octopus_deep.png" alt="WCP Hero" style="width:100%;display:block;margin-top:-20%;margin-bottom:-20%;">
+    </div>
+  </div>
+  
+  <span class="cover-badge">👥 Dogłębna Analiza HR · Kwiecień 2026</span>
+  <h1 class="cover-h1">Raport Analizy<br><span>Kwalifikacji HR</span></h1>
+  <p class="cover-subtitle">Kompletna ocena kompetencji zespołu Warmińskiego Centrum Psychoterapii. Analiza 25 pracowników — 23 terapeutów i 2 stanowisk administracyjnych — identyfikacja luk w kwalifikacjach, priorytetów szkoleniowych i strategicznych możliwości rozwoju.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Całkowita liczba pracowników</label><p>25 (23 terapeutów + 2 administracja)</p></div>
+    <div class="cover-meta-item"><label>Krytyczna luka</label><p>Brak psychiatry</p></div>
+    <div class="cover-meta-item"><label>W trakcie szkolenia</label><p>11 z 23 terapeutów</p></div>
+    <div class="cover-meta-item"><label>Przygotowane dla</label><p>Tomek i Karolina Zagała</p></div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Spis treści</h3>
+  <ol>
+    <li><a href="#executive-summary">Podsumowanie wykonawcze</a></li>
+    <li><a href="#team-overview">Przegląd zespołu</a></li>
+    <li><a href="#qualification-gaps">Luki kwalifikacyjne</a></li>
+    <li><a href="#training-matrix">Macierz priorytetów szkoleniowych</a></li>
+    <li><a href="#recommendations">Rekomendacje</a></li>
+    <li><a href="#data-sources">Źródła danych</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 1: PODSUMOWANIE WYKONAWCZE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="executive-summary">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">list_alt</span>
+    <div>
+      <div class="sec-label">Sekcja 01</div>
+      <h2>Podsumowanie wykonawcze</h2>
+      <div class="sub">Szybki przegląd struktury zespołu i statusu kompetencji</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">25</div>
+        <div class="stat-label">Całkowita liczba pracowników</div>
+        <div class="stat-note">23 terapeutów + 2 administracja</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Psychiatrów</div>
+        <div class="stat-note">Krytyczna luka vs ANIMA</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">2</div>
+        <div class="stat-label">Terapeutów par</div>
+        <div class="stat-note">Julia Bochko, Krystyna Puzdrowska</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">11/23</div>
+        <div class="stat-label">Bez szkoły terapeutycznej</div>
+        <div class="stat-note">48% terapeutów</div>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <strong>🔴 Krytyczna luka:</strong> WCP ma <strong>zero psychiatrów</strong> w zespole. Konkurent ANIMA posiada wewnętrznego psychiatrę, umożliwiającego zarządzanie lekami i kompleksową obsługę ADHD. To numer 1 strategiczna luka personalna WCP.
+    </div>
+
+    <div class="callout">
+      <strong>🟡 Szansa:</strong> Tylko 11 z 23 terapeutów jest zapisanych do formalnych szkół terapeutycznych. Inwestycja w szkolenia dla pozostałych 12 mogłaby wygenerować dodatkowe 720 tys. – 1,07 mln PLN rocznych przychodów przy okresie zwrotu 6-9 miesięcy.
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 2: PRZEGLĄD ZESPOŁU -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="team-overview">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">groups</span>
+    <div>
+      <div class="sec-label">Sekcja 02</div>
+      <h2>Przegląd zespołu</h2>
+      <div class="sub">Poziomy wykształcenia · Dystrybucja szkół terapeutycznych · Specjalizacje</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Dystrybucja szkół terapeutycznych</h3>
+
+    <!-- ECharts: Therapy School Distribution Doughnut -->
+    <div id="chart-school-doughnut" style="width:100%;height:420px;margin:10px 0 24px"></div>
+
+    <div class="bar-chart">
+      <div class="bar-item">
+        <span class="bar-label">CBT</span>
+        <div class="bar-track"><div class="bar-fill green" data-width="100"></div></div>
+        <span class="bar-value">6</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">Gestalt</span>
+        <div class="bar-track"><div class="bar-fill blue" data-width="50"></div></div>
+        <span class="bar-value">3</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">Psychodynamiczna</span>
+        <div class="bar-track"><div class="bar-fill purple" data-width="33"></div></div>
+        <span class="bar-value">2</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">Systemowa</span>
+        <div class="bar-track"><div class="bar-fill" data-width="17"></div></div>
+        <span class="bar-value">1</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">Integratywna</span>
+        <div class="bar-track"><div class="bar-fill" data-width="17"></div></div>
+        <span class="bar-value">1</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">W trakcie/Brak</span>
+        <div class="bar-track"><div class="bar-fill red" data-width="48"></div></div>
+        <span class="bar-value">12</span>
+      </div>
+    </div>
+
+    <table class="kw-table">
+      <tr><th>Szkoła</th><th>Liczba</th><th>Terapeuci</th><th>Status wydajności</th></tr>
+      <tr><td>CBT (Poznawczo-Behawioralna)</td><td>6</td><td>Ewa Kocięcka-Walukiewicz, Julia Bochko, Krystyna Puzdrowska, Małgorzata Dawidziuk-Kafel, Anna Piotrowska, Wirginia Horszwald</td><td class="vol-high">Najsilniejsza</td></tr>
+      <tr><td>Gestalt</td><td>3</td><td>Anita Kraczyna, Kamila Wodowska, Patrycja Wiśniewska</td><td class="vol-med">Umiarkowana</td></tr>
+      <tr><td>Psychodynamiczna</td><td>2</td><td>Agata Skowronek, Malwina Marciniszyn</td><td class="vol-low">Słaba</td></tr>
+      <tr><td>Integratywna</td><td>1</td><td>Joanna Szylko-Kwas</td><td class="vol-low">Pojedynczy punkt</td></tr>
+      <tr><td>Systemowa</td><td>1</td><td>Anna Piotrowska (również CBT)</td><td class="vol-low">Pojedynczy punkt</td></tr>
+      <tr><td><strong>W trakcie / Brak</strong></td><td><strong>12</strong></td><td>Beata Korycka, Julia Dąbrowska, Kamila Świniarska, Katarzyna Grzegorczyk, Marta Kmieć, Marta Minko-Jankowska, Monika Iwanowicz, Paula Kamińska, Tomasz Reszka, Zuzanna Chodkowska, + 2 w trakcie</td><td class="vol-red">Główna luka</td></tr>
+    </table>
+
+    <!-- ECharts: Qualification Levels Horizontal Bar -->
+    <div id="chart-qualification-levels" style="width:100%;height:320px;margin:10px 0 24px"></div>
+
+    <h3 class="sub-heading">Dystrybucja poziomów wykształcenia</h3>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">21</div>
+        <div class="stat-label">Magister (mgr)</div>
+        <div class="stat-note">84% pracowników</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">2</div>
+        <div class="stat-label">Licencjat (lic)</div>
+        <div class="stat-note">8% pracowników</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">2</div>
+        <div class="stat-label">Inne / W trakcie</div>
+        <div class="stat-note">8% pracowników</div>
+      </div>
+    </div>
+
+    <!-- ECharts: Skill Matrix (Stacked Bars) -->
+    <div id="chart-skill-matrix" style="width:100%;height:540px;margin:10px 0 24px"></div>
+
+    <h3 class="sub-heading">Pokrycie populacji klientów</h3>
+
+    <table class="kw-table">
+      <tr><th>Populacja</th><th>Terapeuci</th><th>Pokrycie</th></tr>
+      <tr><td>Dzieci</td><td>Julia Dąbrowska, Kamila Świniarska, Katarzyna Grzegorczyk, Marta Minko-Jankowska, Paula Kamińska, Zuzanna Chodkowska, Anna Piotrowska</td><td class="vol-high">Silne (7+)</td></tr>
+      <tr><td>Młodzież (13-17)</td><td>10+ terapeutów</td><td class="vol-high">Doskonałe</td></tr>
+      <tr><td>Dorośli</td><td>15+ terapeutów</td><td class="vol-high">Doskonałe</td></tr>
+      <tr><td>Pary</td><td>Julia Bochko, Krystyna Puzdrowska, Małgorzata Dawidziuk-Kafel, Anna Piotrowska</td><td class="vol-red">Ograniczone (4)</td></tr>
+      <tr><td>Rodziny</td><td>Anna Piotrowska</td><td class="vol-red">Minimalne (1)</td></tr>
+      <tr><td>Dorośli wymagający leków</td><td>N/D — brak psychiatry</td><td class="vol-red">Brak</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Mocna strona:</strong> WCP ma doskonałe pokrycie dla dzieci i młodzieży — znacząca przewaga konkurencyjna vs ANIMA (którego usługi dla dzieci są tylko w ramach NFZ). To strategiczny atut do promowania.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 3: LUKI KWALIFIKACYJNE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="qualification-gaps">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">warning</span>
+    <div>
+      <div class="sec-label">Sekcja 03</div>
+      <h2>Luki kwalifikacyjne</h2>
+      <div class="sub">Krytyczne luki vs konkurenci · 12 osób bez zapisu do szkoły</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout red">
+      <strong>🔴 Krytyczna luka #1: Brak psychiatry</strong>
+      <br><br>
+      WCP nie może przepisywać leków ani oferować oceny psychiatrycznej. To numer 1 luka w kompetencjach WCP vs ANIMA i ogranicza:
+      <ul class="clean" style="margin-top:10px;">
+        <li>Niezależną ścieżkę diagnozy ADHD (wymaga kierowania na zewnątrz)</li>
+        <li>Zarządzanie lekami dla pacjentów</li>
+        <li>Interwencję kryzysową wymagającą wsparcia farmakologicznego</li>
+        <li>Partnerstwa ubezpieczeniowe wymagające pokrycia psychiatrycznego</li>
+      </ul>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-value">12</div>
+        <div class="stat-label">Terapeutów bez szkoły</div>
+        <div class="stat-note">52% puli terapeutycznej</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">2</div>
+        <div class="stat-label">Specjalistów od terapii par</div>
+        <div class="stat-note">Wysoko wartościowa linia usług (500 PLN/spotkanie)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1</div>
+        <div class="stat-label">Terapeuta rodzinny</div>
+        <div class="stat-note">Pojedynczy punkt awarii</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Terapeuci bez formalnego zapisu do szkoły</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📋</span> Kandydaci priorytetowi do zapisu do szkoły</div>
+      <div class="idea-body">
+        <p><strong>Zalecana pierwsza fala (6 terapeutów):</strong></p>
+        <ul class="clean">
+          <li>Beata Korycka — W trakcie studiów psychologicznych, silny potencjał kliniczny</li>
+          <li>Julia Dąbrowska — Świeża absolwentka (2022), specjalizacja w dzieciach, idealne dopasowanie CBT</li>
+          <li>Kamila Świniarska — Świeża absolwentka (2025), fokus na dzieciach, wczesne okno szkoleniowe</li>
+          <li>Katarzyna Grzegorczyk — Absolwentka 2022, generalistka, elastyczna modalność</li>
+          <li>Marta Kmieć — Absolwentka 2019, fokus na młodzieży, ustalona ścieżka</li>
+          <li>Marta Minko-Jankowska — Absolwentka 2021, dzieci/młodzież, wysokie zaangażowanie</li>
+        </ul>
+        <p><strong>Szacowany koszt:</strong> 180–240 tys. PLN dla pierwszej fali (30–40 tys. na terapeutę za program 4-letni)</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Luka w terapii par</h3>
+
+    <table class="kw-table">
+      <tr><th>Obecni terapeuci par</th><th>Szkoła</th><th>Stawka za spotkanie</th></tr>
+      <tr><td>Julia Bochko</td><td>CBT</td><td class="vol-high">500 PLN</td></tr>
+      <tr><td>Krystyna Puzdrowska</td><td>CBT</td><td class="vol-high">500 PLN</td></tr>
+      <tr><td>Małgorzata Dawidziuk-Kafel</td><td>CBT</td><td class="vol-high">500 PLN</td></tr>
+      <tr><td>Anna Piotrowska</td><td>CBT + Systemowa</td><td class="vol-high">500 PLN</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Szansa przychodowa:</strong> Terapia par w wysokości 500 PLN/spotkanie (vs 200 PLN indywidualnie) stanowi 2,5-krotny mnożnik przychodów. Dodanie zaledwie 2–3 wyszkolonych terapeutów par mogłoby wygenerować dodatkowe 384–576 tys. PLN rocznych przychodów.
+    </div>
+
+    <h3 class="sub-heading">Dystrybucja doświadczenia</h3>
+
+    <table class="kw-table">
+      <tr><th>Poziom doświadczenia</th><th>Liczba</th><th>Terapeuci</th></tr>
+      <tr><td>Senior (15+ lat)</td><td>2</td><td>Ewa Kocięcka-Walukiewicz (2010), Wirginia Horszwald (2010)</td></tr>
+      <tr><td>Mid-level (5-14 lat)</td><td>5</td><td>Małgorzata Dawidziuk-Kafel (2010), Paula Kamińska (2015), Marta Kmieć (2019), itd.</td></tr>
+      <tr><td>Wczesna kariera (2-5 lat)</td><td>8</td><td>Julia Dąbrowska (2022), Katarzyna Grzegorczyk (2022), Tomasz Reszka (2022), itd.</td></tr>
+      <tr><td>Świeżi absolwenci (2025)</td><td>5</td><td>Joanna Szylko-Kwas, Kamila Świniarska, Monika Iwanowicz, Nina Kondrusik, Zuzanna Chodkowska</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 4: MACIERZ SZKOLENIOWA -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="training-matrix">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">target</span>
+    <div>
+      <div class="sec-label">Sekcja 04</div>
+      <h2>Macierz priorytetów szkoleniowych</h2>
+      <div class="sub">Harmonogram zapisów do szkół · Budżet · Wyniki wpływu</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">426–580K</div>
+        <div class="stat-label">Inwestycja w Rok 1 (PLN)</div>
+        <div class="stat-note">Pierwsza fala + superwizja</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">720K–1.07M</div>
+        <div class="stat-label">Prognozowany zwrot przychodów</div>
+        <div class="stat-note">Okres zwrotu 6–9 miesięcy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">6.6–7.9K</div>
+        <div class="stat-label">Miesięczna superwizja</div>
+        <div class="stat-note">Ciągły rozwój zawodowy</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Macierz priorytetów szkoleniowych</h3>
+
+    <div class="priority-matrix">
+      <div class="matrix-cell high-impact-low-effort">
+        <h4>🟢 Szybkie wygrane — Wysoki wpływ, niższy wysiłek</h4>
+        <ul>
+          <li><strong>Szkolenie z prowadzenia terapii grupowej</strong> — 5 terapeutów nominowanych</li>
+          <li><strong>Certyfikacja terapii online</strong> — Rozszerzenie zasięgu</li>
+          <li><strong>Krótki kurs terapii par</strong> — 2-3 terapeutów</li>
+        </ul>
+      </div>
+      <div class="matrix-cell high-impact-high-effort">
+        <h4>🔵 Strategiczne — Wysoki wpływ, wyższy wysiłek</h4>
+        <ul>
+          <li><strong>Pierwsza fala zapisów do szkół</strong> — 6 terapeutów do CBT/Gestalt</li>
+          <li><strong>Rekrutacja psychiatry</strong> — Zamknięcie luki #1</li>
+          <li><strong>Certyfikacja terapii rodzinnej</strong> — Rozszerzenie modalności</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-low-effort">
+        <h4>🟡 Taktyczne — Niższy wpływ, niższy wysiłek</h4>
+        <ul>
+          <li>Warsztaty z edukacji ustawicznej</li>
+          <li>Grupy superwizyjne rówieśniczej</li>
+          <li>Udział w konferencjach</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-high-effort">
+        <h4>🔴 Odstawione — Niższy wpływ, wyższy wysiłek</h4>
+        <ul>
+          <li>Szkolenia w modalnościach nieopartych na dowodach</li>
+          <li>Niszowe specjalizacje o niskim popycie</li>
+          <li>Ścieżki badawcze akademickie (vs kliniczne)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Harmonogram zapisów do szkół</h3>
+
+    <table class="kw-table">
+      <tr><th>Faza</th><th>Harmonogram</th><th>Działanie</th><th>Inwestycja</th></tr>
+      <tr><td>Faza 1</td><td>Q2 2026</td><td>Identyfikacja 6 kandydatów pierwszej fali, potwierdzenie zainteresowania, alokacja budżetu</td><td>Planowanie</td></tr>
+      <tr><td>Faza 2</td><td>Q3 2026</td><td>Zapisanie 6 terapeutów do programów CBT/Gestalt</td><td>180-240 tys. PLN</td></tr>
+      <tr><td>Faza 3</td><td>Q4 2026</td><td>Rozpoczęcie programów superwizyjnych dla wszystkich wyszkolonych terapeutów</td><td>6,6–7,9 tys./mies.</td></tr>
+      <tr><td>Faza 4</td><td>2027+</td><td>Druga fala zapisów, rozwój terapii par, terapia rodzinna</td><td>Dodatkowe 200-300 tys.</td></tr>
+    </table>
+
+    <div class="callout green">
+      <strong>Prognoza ROI:</strong> Każdy terapeuta, który uzyska certyfikację szkolną, może zazwyczaj zwiększyć stawki o 20–30% i rozszerzyć segmenty pacjentów. Przy 6 terapeutach w Fali 1 po 20 spotkań/tydzień, to około 120 spotkań/tydzień × 52 tygodnie × 50 PLN podwyżki = 312 tys. PLN rocznego wzrostu. W ciągu 3 lat, skumulowany ROI przekracza 3×.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 5: REKOMENDACJE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="recommendations">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">target</span>
+    <div>
+      <div class="sec-label">Sekcja 05</div>
+      <h2>Rekomendacje</h2>
+      <div class="sub">Priorytetowe działania rekrutacyjne i szkoleniowe</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Działania priorytetowe</h3>
+
+    <div class="funnel-step">
+      <div class="step-num">P1</div>
+      <div class="step-content">
+        <h4>Zrekrutuj psychiatrę</h4>
+        <p><span class="tag high">KRYTYCZNE</span> To pojedynczy najbardziej wpływowy ruch strategiczny. Psychiatra w zespole umożliwia: niezależną ścieżkę diagnozy ADHD, zarządzanie lekami, partnerstwa ubezpieczeniowe i równowartość z ofertą ANIMA.</p>
+        <p><strong>Cel:</strong> Start w sierpniu 2026<br>
+        <strong>Budżet:</strong> 15–25 tys. PLN/miesiąc (początkowo B2B lub część etatu)<br>
+        <strong>Ogłoszenie:</strong> Gotowe do dystrybucji</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num">P2</div>
+      <div class="step-content">
+        <h4>Pierwsza fala: 6 terapeutów do szkół CBT/Gestalt</h4>
+        <p><span class="tag high">WYSOKI WPŁYW</span> Rozszerza certyfikowaną wydajność w dwóch najbardziej poszukiwanych modalnościach. Priorytet dla świeżych absolwentów o silnym potencjale klinicznym.</p>
+        <p><strong>Kandydaci:</strong> Julia Dąbrowska, Kamila Świniarska, Katarzyna Grzegorczyk, Marta Kmieć, Marta Minko-Jankowska, Beata Korycka<br>
+        <strong>Koszt:</strong> 180–240 tys. PLN w ciągu 4 lat<br>
+        <strong>ROI:</strong> 720 tys. – 1,07 mln PLN w ciągu 3 lat</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num">P2</div>
+      <div class="step-content">
+        <h4>Dodaj 2–3 terapeutów par</h4>
+        <p><span class="tag high">SZANSA PRZYCHODOWA</span> Terapia par w wysokości 500 PLN/spotkanie stanowi 2,5-krotny mnożnik przychodów vs sesje indywidualne. Obecna wydajność (4 terapeutów) jest niewystarczająca względem popytu.</p>
+        <p><strong>Podejście:</strong> Przeszkolenie obecnych terapeutów LUB rekrutacja specjalistów<br>
+        <strong>Potencjał przychodowy:</strong> 384–576 tys. PLN/rok</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num">P3</div>
+      <div class="step-content">
+        <h4>Szkolenie z prowadzenia terapii grupowej</h4>
+        <p><span class="tag medium">ŚREDNI PRIORYTET</span> Terapia grupowa to wysoka marża (150 PLN/spotkanie na uczestnika) i jest niewykorzystana w WCP. Nominowano 5 terapeutów.</p>
+        <p><strong>Budżet superwizyjny:</strong> 6 600–7 900 PLN/miesiąc ciągły</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num">P3</div>
+      <div class="step-content">
+        <h4>Systemowy terapeuta rodzinny</h4>
+        <p><span class="tag medium">ŚREDNI PRIORYTET</span> Obecnie tylko Anna Piotrowska prowadzi terapię rodzinną. Ryzyko pojedynczego punktu awarii.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Ramowy długoterminowego rozwoju</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📈</span> Inwestycja → Ramowy przychodów</div>
+      <div class="idea-body">
+        <p>Rozwój HR nie jest centrum kosztów — to mnożnik przychodów. Każdy terapeuta, który uzyska certyfikację, odblokowuje:</p>
+        <ul class="clean">
+          <li>Wyższe stawki za spotkania (wzrost 20–30%)</li>
+          <li>Nowe segmenty pacjentów (pary, rodziny, grupy)</li>
+          <li>Kwalifikację do paneli ubezpieczeniowych</li>
+          <li>Zmniejszoną zależność od superwizji</li>
+          <li>Różnicowanie konkurencyjne</li>
+        </ul>
+        <p><strong>Całkowita inwestycja w Rok 1:</strong> 426–580 tys. PLN<br>
+        <strong>Prognozowany zwrot 3-letni:</strong> 720 tys. – 1,07 mln PLN</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 6: ŹRÓDŁA DANYCH -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="data-sources">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">local_library</span>
+    <div>
+      <div class="sec-label">Sekcja 06</div>
+      <h2>Źródła danych</h2>
+      <div class="sub">Pliki źródłowe · Metodologia · Aktualizacje</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Podstawowy plik źródłowy</h3>
+
+    <table class="kw-table">
+      <tr><th>Plik</th><th>Zawartość</th><th>Ostatnia aktualizacja</th></tr>
+      <tr><td>Zespół WCP - kwalifikacje pracowników.xlsx</td><td>Pełna lista pracowników z wykształceniem, szkołą terapeutyczną, specjalizacjami, lokalizacjami</td><td>Kwiecień 2026</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Śledzone punkty danych</h3>
+
+    <table class="kw-table">
+      <tr><th>Kategoria</th><th>Szczegóły</th></tr>
+      <tr><td>Informacje podstawowe</td><td>Imię i nazwisko, poziom wykształcenia (mgr/lic), rok ukończenia</td></tr>
+      <tr><td>Szkoły terapeutyczne</td><td>CBT, Gestalt, Psychodynamiczna, Systemowa, Integratywna, Brak/W trakcie</td></tr>
+      <tr><td>Populacje klientów</td><td>Dzieci, Młodzież, Dorośli, Pary, Rodziny</td></tr>
+      <tr><td>Lokalizacja</td><td>Olsztyn, Elbląg, Ostróda</td></tr>
+      <tr><td>Stanowiska administracyjne</td><td>Kierownik Praktyki, Administracja</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Notatki metodologiczne</h3>
+
+    <ul class="clean">
+      <li>"W trakcie / Brak" wskazuje psychologów bez formalnego zapisu do szkoły terapeutycznej</li>
+      <li>Niektórzy terapeuci posiadają wielokrotne certyfikacje (np. Anna Piotrowska: CBT + Systemowa)</li>
+      <li>Rok ukończenia studiów wskazuje poziom doświadczenia, nie rok certyfikacji</li>
+      <li>Przypisania populacji klientów oparte na samodzielnie zgłoszonych specjalizacjach</li>
+    </ul>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="HR-DEVELOPMENT-PLAN-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">map</span> Plan Rozwoju HR →
+      </a>
+      <a href="WCP_Financial_Health_Report_2026-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Raport Zdrowia Finansowego →
+      </a>
+      <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">radar</span> Inteligencja Strategiczna →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /page-canvas -->
+</main>
+
+<!-- Scroll Spy & Navigation -->
+<script>
+const sectionNames = {
+  'cover':'Strona tytułowa',
+  'executive-summary':'Podsumowanie',
+  'team-overview':'Przegląd zespołu',
+  'qualification-gaps':'Luki kwalifikacyjne',
+  'training-matrix':'Macierz szkoleniowa',
+  'recommendations':'Rekomendacje',
+  'data-sources':'Źródła danych'
+};
+const navLinks = document.querySelectorAll('.nav-link[data-section]');
+const topnavSection = document.getElementById('topnav-section');
+
+function setActive(id){
+  navLinks.forEach(l=>l.classList.toggle('active',l.dataset.section===id));
+  if(topnavSection) topnavSection.textContent = sectionNames[id]||'';
+}
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) setActive(e.target.id);});
+},{rootMargin:'-15% 0px -70% 0px',threshold:0.05});
+
+Object.keys(sectionNames).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) obs.observe(el);
+});
+
+navLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
+    const t=document.querySelector(link.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+
+// Animate bar charts on scroll
+const barObserver = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const fill = entry.target;
+      const width = fill.dataset.width;
+      setTimeout(()=>{fill.style.width = width + '%';},100);
+      barObserver.unobserve(fill);
+    }
+  });
+},{threshold:0.3});
+
+document.querySelectorAll('.bar-fill').forEach(bar=>{
+  barObserver.observe(bar);
+});
+
+// ─── ECharts: Resize Handler ───
+const chartInstances = [];
+function initChart(domId) {
+  const dom = document.getElementById(domId);
+  if (!dom) { console.warn('initChart: DOM not found:', domId); return null; }
+  let chart;
+  try {
+    chart = echarts.init(dom, 'stitch');
+  } catch(e) {
+    console.warn('stitch theme failed, using default:', e);
+    chart = echarts.init(dom);
+  }
+  if (!chart) { console.warn('initChart: echarts.init returned null for:', domId); return null; }
+  chartInstances.push(chart);
+  return chart;
+}
+window.addEventListener('resize', () => chartInstances.forEach(c => c.resize()));
+
+// ─── Chart 1: Therapy School Distribution Doughnut ───
+(function(){
+  const chart = initChart('chart-school-doughnut');
+  if (!chart) return;
+  chart.setOption({
+    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+    legend: { orient: 'vertical', right: 10, top: 'center', itemGap: 14, itemWidth: 14, itemHeight: 14 },
+    series: [{
+      type: 'pie',
+      radius: ['45%', '75%'],
+      center: ['35%', '50%'],
+      avoidLabelOverlap: true,
+      itemStyle: { borderRadius: 6, borderColor: '#101418', borderWidth: 2 },
+      label: { show: true, formatter: '{b}\n{c} terapeutów', fontSize: 11, color: '#e0e3e8', lineHeight: 16 },
+      labelLine: { lineStyle: { color: 'rgba(138,155,176,0.4)' } },
+      emphasis: {
+        label: { fontSize: 13, fontWeight: 'bold' },
+        itemStyle: { shadowBlur: 16, shadowColor: 'rgba(0,0,0,0.5)' }
+      },
+      animationType: 'scale',
+      animationEasing: 'elasticOut',
+      animationDelay: function(idx) { return idx * 80; },
+      data: [
+        { value: 6, name: 'CBT', itemStyle: { color: '#6fcf97' } },
+        { value: 3, name: 'Gestalt', itemStyle: { color: '#7bc8e0' } },
+        { value: 2, name: 'Psychodynamiczna', itemStyle: { color: '#c39bd3' } },
+        { value: 1, name: 'Integracyjna', itemStyle: { color: '#e6c364' } },
+        { value: 1, name: 'Systemowa', itemStyle: { color: '#5dade2' } },
+        { value: 12, name: 'Brak szkoły', itemStyle: { color: '#f08080' },
+          label: { color: '#f08080', fontWeight: 'bold' },
+          emphasis: { itemStyle: { color: '#E05252' } }
+        }
+      ]
+    }],
+    graphic: [{
+      type: 'group',
+      left: '35%',
+      top: 'middle',
+      children: [
+        { type: 'text', style: { text: '25', textAlign: 'center', fill: '#e6c364', fontSize: 32, fontWeight: 800, fontFamily: 'Inter' }, left: 'center', top: -16 },
+        { type: 'text', style: { text: 'terapeutów', textAlign: 'center', fill: '#8a9bb0', fontSize: 11, fontFamily: 'Manrope', letterSpacing: '0.06em' }, left: 'center', top: 18 }
+      ]
+    }]
+  });
+})();
+
+// ─── Chart 2: Qualification Levels Horizontal Bar ───
+(function(){
+  const chart = initChart('chart-qualification-levels');
+  if (!chart) return;
+  chart.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    grid: { left: 90, right: 60, top: 30, bottom: 20 },
+    xAxis: { type: 'value', max: 25, axisLabel: { formatter: '{value}' }, splitLine: { lineStyle: { type: 'dashed' } } },
+    yAxis: {
+      type: 'category',
+      data: ['Inne / W trakcie', 'Licencjat (lic)', 'Magister (mgr)'],
+      axisLabel: { fontSize: 12, color: '#e0e3e8' }
+    },
+    series: [{
+      type: 'bar',
+      barWidth: '55%',
+      itemStyle: {
+        borderRadius: [0, 4, 4, 0],
+        color: function(params) {
+          var colors = ['#7bc8e0', '#f5c842', '#e6c364'];
+          return colors[params.dataIndex];
+        }
+      },
+      label: { show: true, position: 'right', color: '#e0e3e8', fontWeight: 700, fontSize: 13, formatter: '{c}' },
+      animationDuration: 1200,
+      animationEasing: 'cubicOut',
+      data: [2, 2, 21]
+    }],
+    title: {
+      text: 'Poziomy wykształcenia w zespole',
+      left: 'left',
+      top: 0,
+      textStyle: { fontSize: 13, color: '#e6c364' }
+    }
+  });
+})();
+
+// ─── Chart 3: Skill Competency Radar (Alternative) ───
+(function(){
+  const chart = initChart('chart-skill-matrix');
+  if (!chart) return;
+  var indicators = [
+    { name: 'CBT', max: 13 },
+    { name: 'Gestalt', max: 13 },
+    { name: 'Psychodynam.', max: 13 },
+    { name: 'Pary', max: 13 },
+    { name: 'Rodziny', max: 13 },
+    { name: 'Grupy', max: 13 },
+    { name: 'Dzieci', max: 13 },
+    { name: 'Młodzież', max: 13 },
+    { name: 'Dorośli', max: 13 }
+  ];
+  // Aggregated data: how many therapists at each level per competency
+  // Level 4 (expert), Level 3 (competent), Level 2 (basic), Level 1 (aware), Level 0 (none)
+  var expert =     [7, 1, 0, 4, 3, 0, 3, 0, 0];
+  var competent =    [3, 2, 0, 3, 3, 2, 2, 0, 0];
+  var basic =        [0, 2, 4, 2, 1, 2, 2, 3, 0];
+  var aware =        [0, 4, 4, 0, 3, 4, 2, 4, 4];
+  var none =         [3, 4, 5, 4, 3, 5, 4, 6, 9];
+  
+  chart.setOption({
+    tooltip: { trigger: 'item' },
+    legend: { 
+      data: ['Ekspert','Kompetentny','Podstawowy','Świadomy','Brak'],
+      bottom: 0, itemGap: 10, itemWidth: 12, itemHeight: 12,
+      textStyle: { fontSize: 10 }
+    },
+    radar: {
+      indicator: indicators,
+      shape: 'polygon',
+      splitNumber: 4,
+      name: { textStyle: { color: '#e0e3e8', fontSize: 11 } },
+      splitLine: { lineStyle: { color: 'rgba(77,70,55,0.3)' } },
+      splitArea: { 
+        show: true, 
+        areaStyle: { 
+          color: ['rgba(230,195,100,0.02)','rgba(230,195,100,0.05)','rgba(230,195,100,0.08)','rgba(230,195,100,0.12)'] 
+        } 
+      },
+      axisLine: { lineStyle: { color: 'rgba(77,70,55,0.4)' } }
+    },
+    series: [{
+      name: 'Kompetencje zespołu',
+      type: 'radar',
+      data: [
+        { value: expert, name: 'Ekspert', itemStyle: { color: '#e6c364' }, areaStyle: { color: 'rgba(230,195,100,0.25)' } },
+        { value: competent, name: 'Kompetentny', itemStyle: { color: '#7bc8e0' }, areaStyle: { color: 'rgba(123,200,224,0.2)' } },
+        { value: basic, name: 'Podstawowy', itemStyle: { color: '#6fcf97' }, areaStyle: { color: 'rgba(111,207,151,0.15)' } },
+        { value: aware, name: 'Świadomy', itemStyle: { color: '#c9a84c' }, areaStyle: { color: 'rgba(201,168,76,0.1)' } }
+      ],
+      symbol: 'circle', symbolSize: 6,
+      lineStyle: { width: 2 }
+    }],
+    title: {
+      text: 'Agregowane kompetencje zespołu (liczba terapeutów)',
+      left: 'center', top: 0,
+      textStyle: { fontSize: 13, color: '#e6c364' }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

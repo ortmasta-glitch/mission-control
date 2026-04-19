@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media Activation · Warmińskie Centrum Psychoterapii</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo img{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.long-term{background:rgba(155,89,182,.15);color:#c39bd3}
+  .tag.creative{background:rgba(155,89,182,.15);color:#c39bd3}
+  .tag.ig{background:rgba(225,48,108,.15);color:#E1306C}
+  .tag.fb{background:rgba(24,119,242,.15);color:#5b9cf6}
+  .tag.tt{background:rgba(180,180,180,.12);color:#aaa}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .funnel-step:last-child{border-bottom:none}
+  .funnel-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .social-post{border-radius:4px;padding:14px 17px;margin:12px 0;font-size:.87rem}
+  .social-post.ig{background:rgba(225,48,108,.06);border-left:3px solid #E1306C}
+  .social-post.fb{background:rgba(24,119,242,.06);border-left:3px solid #1877F2}
+  .social-post.tt{background:rgba(180,180,180,.05);border-left:3px solid #777}
+  .social-post .platform-label{font-family:"Manrope",sans-serif;font-weight:800;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:7px}
+  .social-post.ig .platform-label{color:#E1306C}
+  .social-post.fb .platform-label{color:#5b9cf6}
+  .social-post.tt .platform-label{color:#999}
+  .social-post p{color:var(--on-surface);margin-bottom:5px}
+  .post-card{background:var(--surface-mid);border:1px solid rgba(77,70,55,.3);border-radius:6px;padding:16px 18px;margin-bottom:14px}
+  .post-card .post-day{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  .post-card .post-platform{display:inline-block;padding:1px 8px;border-radius:12px;font-family:"Manrope",sans-serif;font-size:.56rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-left:6px}
+  .post-card .post-platform.ig{background:rgba(225,48,108,.15);color:#E1306C}
+  .post-card .post-platform.fb{background:rgba(24,119,242,.15);color:#5b9cf6}
+  .post-card .post-platform.tt{background:rgba(180,180,180,.12);color:#aaa}
+  .post-card .post-copy{font-size:.86rem;color:var(--on-surface);margin:8px 0 4px;line-height:1.65;white-space:pre-line}
+  .post-card .post-hashtags{font-size:.76rem;color:var(--muted);font-style:italic}
+  .post-card .post-cta{font-size:.82rem;color:var(--gold);font-weight:600;margin-top:6px}
+  .pillar-card{background:var(--surface-mid);border-radius:6px;padding:20px;margin-bottom:16px;border-left:4px solid var(--gold-dim)}
+  .pillar-card .pillar-icon{font-size:1.6rem;margin-bottom:8px}
+  .pillar-card .pillar-name{font-family:"Manrope",sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .pillar-card .pillar-desc{font-size:.88rem;color:var(--on-surface);margin-bottom:10px}
+  .pillar-card .pillar-examples{font-size:.82rem;color:var(--muted)}
+  .template-card{background:var(--surface-mid);border:1px solid rgba(77,70,55,.35);border-radius:6px;padding:20px;margin-bottom:14px}
+  .template-card .tpl-name{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .template-card .tpl-spec{font-size:.84rem;color:var(--on-surface);margin-bottom:6px}
+  .template-card .tpl-detail{font-size:.78rem;color:var(--muted)}
+  .highlight-date{background:rgba(230,195,100,.08);border:1px solid rgba(230,195,100,.25);border-radius:4px;padding:10px 14px;margin:6px 0;display:flex;align-items:flex-start;gap:10px}
+  .highlight-date .hd-rank{background:var(--gold);color:#101418;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.7rem;flex-shrink:0;font-family:"Manrope",sans-serif}
+  .highlight-date .hd-date{font-size:.76rem;color:var(--gold);font-weight:700}
+  .highlight-date .hd-name{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .highlight-date .hd-idea{font-size:.82rem;color:var(--muted);margin-top:2px}
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .kpi-card{background:var(--surface-mid);border-radius:4px;padding:16px;border-left:3px solid var(--gold-dim)}
+  .kpi-card .kpi-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .kpi-card .kpi-value{font-size:1.3rem;font-weight:800;color:var(--gold);margin-bottom:4px}
+  .kpi-card .kpi-desc{font-size:.78rem;color:var(--muted)}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  .page-footer{display:none}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  .month-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+  .month-card{background:var(--surface-mid);border-radius:4px;padding:14px;border-top:3px solid var(--gold-dim)}
+  .month-card h4{font-family:"Manrope",sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .month-card ul{padding-left:14px;font-size:.8rem;color:var(--on-surface)}
+  .month-card li{margin:3px 0}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.kpi-grid{grid-template-columns:1fr}.month-grid{grid-template-columns:1fr}.toc-block ol{columns:1}.page-canvas{padding:28px 16px 60px}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link"><span class="material-symbols-outlined" style="font-size:.9rem">description</span> Return to Strategic Report →</a>
+
+  <div class="sidebar-label">Navigation</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Overview
+    </a>
+    <a class="nav-link" href="#current-state" data-section="current-state">
+      <span class="material-symbols-outlined nav-icon">search</span> Current State
+    </a>
+    <a class="nav-link" href="#content-calendar" data-section="content-calendar">
+      <span class="material-symbols-outlined nav-icon">calendar_month</span> Content Calendar
+    </a>
+    <a class="nav-link" href="#platform-strategy" data-section="platform-strategy">
+      <span class="material-symbols-outlined nav-icon">smartphone</span> Platform Strategy
+    </a>
+    <a class="nav-link" href="#profile-unification" data-section="profile-unification">
+      <span class="material-symbols-outlined nav-icon">palette</span> Profile Unification
+    </a>
+    <a class="nav-link" href="#content-pillars" data-section="content-pillars">
+      <span class="material-symbols-outlined nav-icon">view_column</span> Content Pillars
+    </a>
+    <a class="nav-link" href="#launch-plan" data-section="launch-plan">
+      <span class="material-symbols-outlined nav-icon">rocket_launch</span> 30-Day Launch
+    </a>
+    <a class="nav-link" href="#visual-templates" data-section="visual-templates">
+      <span class="material-symbols-outlined nav-icon">design_services</span> Visual Templates
+    </a>
+    <a class="nav-link" href="#kpis" data-section="kpis">
+      <span class="material-symbols-outlined nav-icon">monitoring</span> KPIs &amp; Tracking
+    </a>
+    <a class="nav-link" href="#budget" data-section="budget">
+      <span class="material-symbols-outlined nav-icon">payments</span> Budget
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="SOCIAL-MEDIA-ACTIVATION-REPORT-PL.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇵🇱</span> PL Version
+    </a>
+  </div>
+</aside>
+
+<header class="topnav"><span class="topnav-title">WCP · Social Media Activation</span><span class="topnav-section" id="topnav-section">Overview</span></header>
+
+<main class="main-content"><div class="page-canvas">
+
+<!-- ===== COVER ===== -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  <div style="margin:0 0 96px 0;padding:3px;border-radius:10px;background:linear-gradient(135deg,#e6c364 0%,#c9a84c 30%,#3a3530 60%,#1c2024 100%);box-shadow:0 20px 60px rgba(0,0,0,.4);">
+  <img src="assets/images/social_hero.png" alt="WCP Hero" style="width:100%;max-width:100%;height:auto;display:block;border-radius:8px;">
+</div>
+  
+  <span class="cover-badge">&#9679; Social Media Strategy &middot; April 2026</span>
+  <h1 class="cover-h1">Social Media<br><span>Activation</span></h1>
+  <p class="cover-subtitle">Warmińskie Centrum Psychoterapii — Comprehensive social media activation strategy: Instagram, Facebook, TikTok. 60+ key dates, 30-day launch plan, unified visual identity.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Status</label><p>Ready to Execute</p></div>
+    <div class="cover-meta-item"><label>Platforms</label><p>Instagram · Facebook · TikTok</p></div>
+    <div class="cover-meta-item"><label>Calendar</label><p>60+ key dates annually</p></div>
+    <div class="cover-meta-item"><label>Locations</label><p>Olsztyn · Elbląg · Ostróda</p></div>
+  </div>
+</section>
+
+<!-- ===== TOC ===== -->
+<div class="toc-block">
+  <h3>📋 Contents</h3>
+  <ol>
+    <li><a href="#current-state">Current State — Profile Audit</a></li>
+    <li><a href="#content-calendar">Content Calendar — 60+ Key Dates</a></li>
+    <li><a href="#platform-strategy">Platform Strategy — Instagram, Facebook, TikTok</a></li>
+    <li><a href="#profile-unification">Profile Unification — Consistent Identity</a></li>
+    <li><a href="#content-pillars">Content Pillars — 5 Content Pillars</a></li>
+    <li><a href="#launch-plan">First 30 Days — Launch Plan</a></li>
+    <li><a href="#visual-templates">Visual Templates — Graphic Templates</a></li>
+    <li><a href="#kpis">KPIs &amp; Tracking — Metrics and Goals</a></li>
+    <li><a href="#budget">Budget — Costs and Tools</a></li>
+  </ol>
+</div>
+
+<!-- ===== SECTION 1: CURRENT STATE ===== -->
+<div class="section" id="current-state">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">search</span>
+    <div>
+      <div class="sec-label">Section 1</div>
+      <h2>Current State — WCP Social Media Profile Audit</h2>
+      <div class="sub">What we have, what we lack, where we start</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p>Before activating, we need to understand the starting point. Below is an audit of the current state of WCP social media profiles.</p>
+
+    <h3 class="sub-heading">Instagram</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span class="tag ig">INSTAGRAM</span> @wcp.psychoterapia</div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <tr><th>Metric</th><th>Current State</th><th>Target (6 months)</th></tr>
+          <tr><td>Followers</td><td>~200–400 (estimated)</td><td>1,500+</td></tr>
+          <tr><td>Posting frequency</td><td>Sporadic / inactive</td><td>4–5x/week</td></tr>
+          <tr><td>Content type</td><td>Mostly static posts</td><td>Reels + Carousels + Stories</td></tr>
+          <tr><td>Stories activity</td><td>None / rare</td><td>Daily 3-frame minimum</td></tr>
+          <tr><td>Highlights</td><td>Not organized</td><td>6–8 branded highlights</td></tr>
+          <tr><td>Bio link</td><td>Website only</td><td>Linktree with 5+ links</td></tr>
+        </table>
+        <p style="margin-top:12px"><strong>Key issue:</strong> The profile exists but is not actively managed. No consistent visual identity, irregular posting, no Reels strategy — and that is the biggest reach engine on Instagram in 2026.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Facebook</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span class="tag fb">FACEBOOK</span> Warmińskie Centrum Psychoterapii</div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <tr><th>Metric</th><th>Current State</th><th>Target (6 months)</th></tr>
+          <tr><td>Page likes</td><td>~300–600 (estimated)</td><td>1,200+</td></tr>
+          <tr><td>Posting frequency</td><td>Occasional</td><td>3–4x/week</td></tr>
+          <tr><td>Events used</td><td>No / rarely</td><td>Monthly events + workshops</td></tr>
+          <tr><td>Reviews/ratings</td><td>Some reviews</td><td>50+ reviews, active responses</td></tr>
+          <tr><td>Messenger</td><td>Passive</td><td>Auto-reply + active booking</td></tr>
+          <tr><td>Groups</td><td>None</td><td>WCP Community group (phase 2)</td></tr>
+        </table>
+        <p style="margin-top:12px"><strong>Key issue:</strong> Facebook is still the most important platform for the 30–55 age group in Poland. Lack of Events usage, Messenger as a contact channel, and insufficient response to reviews are the three biggest gaps.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">TikTok</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span class="tag tt">TIKTOK</span> @wcp.psychoterapia</div>
+      <div class="idea-body">
+        <table class="kw-table">
+          <tr><th>Metric</th><th>Current State</th><th>Target (6 months)</th></tr>
+          <tr><td>Account</td><td>Not created</td><td>Active, 2–3x/week</td></tr>
+          <tr><td>Followers</td><td>0</td><td>800+</td></tr>
+          <tr><td>Content type</td><td>N/A</td><td>Short therapy tips, myth-busting</td></tr>
+          <tr><td>Videos posted</td><td>0</td><td>30+ (first 90 days)</td></tr>
+        </table>
+        <p style="margin-top:12px"><strong>Key issue:</strong> TikTok does not exist — and it is the platform with the fastest organic reach in Poland. Short psych-educational formats are a perfect fit for therapy. We do not need to dance — we just need to talk about mental health in an accessible way.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Audit summary:</strong> WCP has a foundation — brand, team, local trust. But on social media it operates like a centre that "must have a profile" rather than a brand that leads the conversation. Moving from passive presence to active communication is the main goal of this strategy.
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: CONTENT CALENDAR ===== -->
+<div class="section" id="content-calendar">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">calendar_today</span>
+    <div>
+      <div class="sec-label">Section 2</div>
+      <h2>Content Calendar — 60+ Key Dates</h2>
+      <div class="sub">Key dates organized by month, with highlighted top 10</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p>The calendar contains 60+ awareness dates, Polish holidays, and seasonal occasions — each linked to a specific WCP service. This is not a "what to post" list — it is a map of opportunities. We pick 3–5 dates per month and build campaigns around them.</p>
+
+    <h3 class="sub-heading">🏆 Top 10 Highest-Impact Dates</h3>
+
+    <div class="highlight-date">
+      <div class="hd-rank">1</div>
+      <div><div class="hd-date">October 10</div><div class="hd-name">World Mental Health Day</div><div class="hd-idea">Full week campaign: daily live Q&A, free 20-min consultations, therapist meet-and-greet, Instagram stories takeover</div></div>
+    </div>
+    <div class="highlight-date">
+      <div class="hd-rank">2</div>
+      <div><div class="hd-date">March 8</div><div class="hd-name">International Women Day</div><div class="hd-idea">Women Power campaign: therapist stories, women mental health statistics, support group promo</div></div>
+    </div>
+    <div class="highlight-date">
+      <div class="hd-rank">3</div>
+      <div><div class="hd-date">November 19</div><div class="hd-name">Psychologist Day (Poland)</div><div class="hd-idea">Meet the WCP Team: therapist profiles, specializations, work philosophy, booking links</div></div>
+    </div>
+    <div class="highlight-date">
+      <div class="hd-rank">4</div>
+      <div><div class="hd-date">May 10</div><div class="hd-name">Mothers Day</div><div class="hd-idea">Mother-daughter relationships, maternal mental health, parent-child work promo</div></div>
+    </div>
+    <div class="highlight-date">
+      <div class="hd-rank">5</div>
+      <div><div class="hd-date">June 1</div><div class="hd-name">Children Day</div><div class="hd-idea">Children mental health, playful parenting, child therapy promo</div></div>
+    </div>
+    <div class="highlight-date">
+      <div class="hd-rank">6</div>
+      <div><div class="hd-date">November 1</div><div class="hd-name">All Saints Day</div><div class="hd-idea">Grief, loss, cemetery visits as a trigger — grief counseling</div></div>
+    </div>
+    <div class="highlight-date">
+      <div class="hd-rank">7</div>
+      <div><div class="hd-date">15 Stycznia</div><div class="hd-name">Blue Monday</div><div class="hd-idea">Depression destigmatization, "It's okay not to be okay", online support promo</div></div>
+    </div>
+    <div class="highlight-date">
+      <div class="hd-rank">8</div>
+      <div><div class="hd-date">April 7</div><div class="hd-name">World Health Day</div><div class="hd-idea">Mental health = health, holistic approach, general therapy promo</div></div>
+    </div>
+    <div class="highlight-date">
+      <div class="hd-rank">9</div>
+      <div><div class="hd-date">February 14</div><div class="hd-name">Valentine's Day</div><div class="hd-idea">Self-love campaign LUB couples therapy promo — alternatywa do komercyjnego V-Day</div></div>
+    </div>
+    <div class="highlight-date">
+      <div class="hd-rank">10</div>
+      <div><div class="hd-date">December 24–26</div><div class="hd-name">Christmas</div><div class="hd-idea">Survival guide: family boundaries, holiday stress, loneliness during holidays</div></div>
+    </div>
+
+    <h3 class="sub-heading">Calendar by Month</h3>
+
+    <div class="month-grid">
+      <div class="month-card">
+        <h4>January — A Fresh Start Without Pressure</h4>
+        <ul>
+          <li>1 — New Year's Day</li>
+          <li>6 — Three Kings</li>
+          <li>15 — Blue Monday</li>
+          <li>27 — Holocaust Remembrance Day</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>February — Love and Relationships</h4>
+        <ul>
+          <li>2 — Candlemas</li>
+          <li>14 — Valentine's Day</li>
+          <li>21 — Mother Language Day</li>
+          <li>28 — Rare Disease Day</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>March — Women and Health</h4>
+        <ul>
+          <li>1 — First Day of Spring</li>
+          <li>8 — International Women Day ★</li>
+          <li>20 — Spring Equinox</li>
+          <li>21 — World Sleep Day</li>
+          <li>27 — World Theatre Day</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>April — The Truth About Therapy</h4>
+        <ul>
+          <li>1 — April Fools' Day (therapy myths)</li>
+          <li>2 — Autism Awareness Day</li>
+          <li>7 — World Health Day ★</li>
+          <li>18–19 — Easter</li>
+          <li>22 — Earth Day</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>May — Family Diversity</h4>
+        <ul>
+          <li>1 — Labour Day</li>
+          <li>10 — Mothers Day ★</li>
+          <li>15 — International Day of Families</li>
+          <li>17 — IDAHOBT</li>
+          <li>31 — World No Tobacco Day</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>June — Anxiety and Freedom</h4>
+        <ul>
+          <li>1 — Childrens Day ★</li>
+          <li>21 — First Day of Summer</li>
+          <li>23 — Midsummer Night</li>
+          <li>26 — International Day Against Drug Abuse</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>July — Therapy on the Go</h4>
+        <ul>
+          <li>1–31 — Summer Holidays (online continuity)</li>
+          <li>15 — World Youth Skills Day</li>
+          <li>26 — Grandparents Day</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>August — Returns and Changes</h4>
+        <ul>
+          <li>1 — Warsaw Uprising Anniversary</li>
+          <li>15 — Assumption of Mary</li>
+          <li>23 — Day of Remembrance of Totalitarian Victims</li>
+          <li>31 — End of Summer Holidays</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>September — Support in Routine</h4>
+        <ul>
+          <li>1 — Start of School Year</li>
+          <li>21 — Autumn Begins (SAD)</li>
+          <li>23 — Autumn Equinox</li>
+          <li>29 — Boys Day</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>October — Mental Health Awareness</h4>
+        <ul>
+          <li>1 — Veterans Day</li>
+          <li>5 — Teachers Day</li>
+          <li>10 — World Mental Health Day ★</li>
+          <li>19 — Breast Cancer Day</li>
+          <li>31 — Halloween</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>November — Team and Trust</h4>
+        <ul>
+          <li>1 — All Saints Day ★</li>
+          <li>11 — Independence Day</li>
+          <li>19 — Psychologist Day ★</li>
+          <li>25 — Day Against Violence</li>
+          <li>30 — St. Andrew's Eve</li>
+        </ul>
+      </div>
+      <div class="month-card">
+        <h4>December — Gifts and Boundaries</h4>
+        <ul>
+          <li>6 — St. Nicholas Day</li>
+          <li>24–26 — Christmas ★</li>
+          <li>31 — New Year's Eve</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>70/30 Rule:</strong> 70% evergreen content (psychoeducation, tips, behind the scenes) + 30% seasonal and awareness date content. Not every date needs to be a post — we choose those that naturally fit WCP services.
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 3: PLATFORM STRATEGY ===== -->
+<div class="section" id="platform-strategy">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">smartphone</span>
+    <div>
+      <div class="sec-label">Section 3</div>
+      <h2>Platform Strategy — Instagram, Facebook, TikTok</h2>
+      <div class="sub">Each platform has its role in the ecosystem</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- INSTAGRAM -->
+    <h3 class="sub-heading">Instagram — Primary Visual Platform</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span class="tag ig">INSTAGRAM</span> Carousel + Reels Strategy</div>
+      <div class="idea-body">
+        <p><strong>Role:</strong> Primary platform for brand building, psychoeducation, and conversion. Instagram is where patients look for therapists — and where therapists show they are real.</p>
+
+        <h4 style="color:var(--gold);margin:14px 0 8px;font-size:.88rem;">Posting Cadence</h4>
+        <table class="kw-table">
+          <tr><th>Format</th><th>Frequency</th><th>Purpose</th></tr>
+          <tr><td>Carousel</td><td>2x/week (Wt, Czw)</td><td>Psychoeducation, myths, how-to</td></tr>
+          <tr><td>Reels</td><td>2–3x/week</td><td>Reach, virality, tips 30s</td></tr>
+          <tr><td>Static post</td><td>1x/week (Nd)</td><td>Quote, reflection</td></tr>
+          <tr><td>Stories</td><td>Daily (min 3 frames)</td><td>Engagement, polls, behind-the-scenes</td></tr>
+          <tr><td>Live</td><td>2x/month</td><td>Q&A with a therapist, deep-dive topics</td></tr>
+        </table>
+
+        <h4 style="color:var(--gold);margin:14px 0 8px;font-size:.88rem;">Reels Strategy</h4>
+        <ul class="clean">
+          <li><strong>Therapist tips:</strong> "3 breathing techniques for anxiety" (30s) — 2x/month</li>
+          <li><strong>Myth busting:</strong> "Does a therapist judge?" (15s) — 1x/month</li>
+          <li><strong>Day in the life:</strong> "Dzień z życia terapeuty WCP" (45s) — 1x/miesiąc</li>
+          <li><strong>Client questions:</strong> "Most common questions at a first session" (60s) — 2x/month</li>
+          <li><strong>Trending audio:</strong> Adapting trends to therapy context — when an opportunity arises</li>
+        </ul>
+
+        <h4 style="color:var(--gold);margin:14px 0 8px;font-size:.88rem;">Hashtag Strategy</h4>
+        <ul class="clean">
+          <li><strong>Branded (always):</strong> #WCP #WarmińskieCentrumPsychoterapii #TerapiaOnline</li>
+          <li><strong>Mental health:</strong> #MentalHealth #Therapy #Psychology #Depression #Anxiety</li>
+          <li><strong>Local:</strong> #Olsztyn #Elbląg #Ostróda #Warmia #Mazury</li>
+          <li><strong>Services:</strong> #TerapiaPar #GrupaWsparcia #ADHD #Trauma</li>
+          <li><strong>Awareness:</strong> #InternationalWomensDay #WorldMentalHealthDay</li>
+        </ul>
+        <p><strong>Avoid:</strong> Overly clinical terms (#MajorDepressive Disorder), English-only hashtags.</p>
+
+        <h4 style="color:var(--gold);margin:14px 0 8px;font-size:.88rem;">Stories Daily Structure</h4>
+        <div class="funnel-step">
+          <div class="step-num">🌅</div>
+          <div class="step-content"><h4>Morning: Quote / Affirmation</h4><p>"Start the day with one thing you are grateful for"</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">☀️</div>
+          <div class="step-content"><h4>Midday: Psychoeducation / Poll</h4><p>"Czy czujesz się przytłoczony/a dziś?" (Tak / Czasem / Nie)</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">🌙</div>
+          <div class="step-content"><h4>Evening: Reflection / Q&A</h4><p>"What supported you this week?" lub terapeuta takeover</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FACEBOOK -->
+    <h3 class="sub-heading">Facebook — Community & Events Hub</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span class="tag fb">FACEBOOK</span> Community + Events Strategy</div>
+      <div class="idea-body">
+        <p><strong>Role:</strong> Community hub for the 30–55 local community. Facebook is where parents look for help for their children, where we organize events, and where Messenger is the fastest contact channel.</p>
+
+        <h4 style="color:var(--gold);margin:14px 0 8px;font-size:.88rem;">Posting Cadence</h4>
+        <table class="kw-table">
+          <tr><th>Format</th><th>Frequency</th><th>Purpose</th></tr>
+          <tr><td>Link posts (blog/articles)</td><td>1–2x/week</td><td>SEO, authority, website traffic</td></tr>
+          <tr><td>Event posts</td><td>Monthly</td><td>Workshops, webinars, open days</td></tr>
+          <tr><td>Community posts</td><td>1x/week</td><td>Polls, questions, local engagement</td></tr>
+          <tr><td>Video / Live</td><td>2x/month</td><td>Q&A, therapist spotlights</td></tr>
+          <tr><td>Messenger</td><td>Daily monitoring</td><td>Booking inquiries, quick support</td></tr>
+        </table>
+
+        <h4 style="color:var(--gold);margin:14px 0 8px;font-size:.88rem;">Events Strategy</h4>
+        <ul class="clean">
+          <li><strong>Monthly open Q&A:</strong> "Zadaj pytanie terapeucie" — Facebook Live, 30 min</li>
+          <li><strong>Workshops:</strong> Stress workshops, mindfulness, relationship boundaries — FB Events + registration</li>
+          <li><strong>Open days:</strong> "Otwarte Drzwi WCP" — zaproszenie do poznania zespołu, space tours</li>
+          <li><strong>Awareness weeks:</strong> World Mental Health Day — full week events</li>
+        </ul>
+
+        <h4 style="color:var(--gold);margin:14px 0 8px;font-size:.88rem;">Messenger as Booking Channel</h4>
+        <p>Auto-reply: "Thank you for your message! 🤍 We reply within 1 hour during business hours (8–20). Urgent? Call: 576 081 786 or book a session: wcp.com.pl"</p>
+      </div>
+    </div>
+
+    <!-- TIKTOK -->
+    <h3 class="sub-heading">TikTok — Short-Form Therapy Tips</h3>
+    <div class="idea-card">
+      <div class="idea-title"><span class="tag tt">TIKTOK</span> Short-Form Therapy Content</div>
+      <div class="idea-body">
+        <p><strong>Rola:</strong> Discovery platform — fastest organic reach in Poland, ideal for psychoeducation in short, accessible format. We do not need to dance — we need to talk about mental health in a way people want to share.</p>
+
+        <h4 style="color:var(--gold);margin:14px 0 8px;font-size:.88rem;">Posting Cadence</h4>
+        <table class="kw-table">
+          <tr><th>Format</th><th>Frequency</th><th>Purpose</th></tr>
+          <tr><td>Therapy tips (15–30s)</td><td>2x/week</td><td>Reach, saves, shares</td></tr>
+          <tr><td>Myth busting (15–30s)</td><td>1x/week</td><td>Education, virality</td></tr>
+          <tr><td>"Did you know…" series</td><td>1x/week</td><td>Awareness, curiosity</td></tr>
+          <tr><td>Trending sounds</td><td>As opportunities arise</td><td>Algorithm boost</td></tr>
+        </table>
+
+        <h4 style="color:var(--gold);margin:14px 0 8px;font-size:.88rem;">Content Examples</h4>
+        <ul class="clean">
+          <li>"3 things you did not know about social anxiety" (30s)</li>
+          <li>"Dlaczego wypalenie zawodowe nie jest lenistwem" (25s)</li>
+          <li>"What really happens at a first therapy session" (45s)</li>
+          <li>"A sign you need therapy — that no one talks about" (20s)</li>
+          <li>"ADHD in adults: 5 myths" (carousel-style, 30s)</li>
+        </ul>
+
+        <h4 style="color:var(--gold);margin:14px 0 8px;font-size:.88rem;">TikTok Hashtag Strategy</h4>
+        <ul class="clean">
+          <li>#psychology #therapy #mentalhealth #depression #anxiety #burnout #ADHD #trauma</li>
+          <li>#olsztyn #warmia #mazury (local discovery)</li>
+          <li>#fyp #foryou (algorithm amplifiers)</li>
+        </ul>
+
+        <div class="callout">
+          <strong>Key to TikTok:</strong> Authenticity > Production. Record with your phone, speak directly, be real. Polish TikTok audiences value honesty — a therapist in a sweater talking about anxiety gets more reach than a produced reel with After Effects.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: PROFILE UNIFICATION ===== -->
+<div class="section" id="profile-unification">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">palette</span>
+    <div>
+      <div class="sec-label">Section 4</div>
+      <h2>Profile Unification — Consistent Visual Identity</h2>
+      <div class="sub">One brand, three platforms, one voice</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Rule:</strong> Anyone who visits a WCP profile — on Instagram, Facebook, or TikTok — should immediately know: this is Warmińskie Centrum Psychoterapii. Consistency builds trust. Trust builds bookings.
+    </div>
+
+    <h3 class="sub-heading">Color Scheme</h3>
+    <table class="kw-table">
+      <tr><th>Color</th><th>Hex</th><th>Usage</th></tr>
+      <tr><td>Obsidian (dark)</td><td style="color:#e0e3e8">#101418</td><td>Backgrounds, post backgrounds, story bases</td></tr>
+      <tr><td>Gold (primary accent)</td><td style="color:#e6c364">#e6c364</td><td>Headlines, CTAs, accents, borders, icons</td></tr>
+      <tr><td>Gold Dim</td><td style="color:#c9a84c">#c9a84c</td><td>Secondary accents, hover states</td></tr>
+      <tr><td>White</td><td style="color:#ffffff">#ffffff</td><td>Body text, WCP logo on dark backgrounds</td></tr>
+      <tr><td>Muted Blue-Grey</td><td style="color:#8a9bb0">#8a9bb0</td><td>Secondary text, captions</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Logo Usage</h3>
+    <ul class="clean">
+      <li><strong>Profile pictures:</strong> WCP logo (white on dark) on all three platforms — identical profile photo</li>
+      <li><strong>Cover photos (Facebook):</strong> Dark background + logo + tagline "Professional psychological help"</li>
+      <li><strong>Highlights covers (Instagram):</strong> Dark circles with gold icons (use Canva): 📅 Booking, 👥 Team, 💬 Group, 📚 Education, ⭐ Reviews, 🎯 Specialties</li>
+      <li><strong>TikTok profile:</strong> Same logo, dark/neutral banner if available</li>
+    </ul>
+
+    <h3 class="sub-heading">Bio Consistency</h3>
+    <div class="idea-card">
+      <div class="idea-title">Unified Bio Template</div>
+      <div class="idea-body">
+        <div class="social-post ig">
+          <div class="platform-label">Instagram Bio</div>
+          <p>🕯️ Warmińskie Centrum Psychoterapii<br>
+          Professional psychological help<br>
+          📍 Olsztyn · Elbląg · Ostróda · 🌐 Online<br>
+          20 therapists · Depression · Anxiety · ADHD · Trauma<br>
+          👇 Book a session</p>
+        </div>
+        <div class="social-post fb">
+          <div class="platform-label">Facebook Bio</div>
+          <p>Warmińskie Centrum Psychoterapii — Professional psychological help w Warmii i online. 20 certyfikowanych terapeutów. Olsztyn · Elbląg · Ostróda · Sesje online z całej Polski.</p>
+        </div>
+        <div class="social-post tt">
+          <div class="platform-label">TikTok Bio</div>
+          <p>🕯️ Psychoterapia bez tabu · WCP<br>
+          Tips o zdrowiu psychicznym 🧠<br>
+          📍 Olsztyn · Online<br>
+          Book a session 👇</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Typography</h3>
+    <ul class="clean">
+      <li><strong>Post graphics:</strong> Inter (headings), Manrope (labels/tags) — consistent with website and all WCP materials</li>
+      <li><strong>Caption style:</strong> Warm but professional, never clinical. Use em-dashes, not hyphens</li>
+      <li><strong>Emoji usage:</strong> Consistent set — 🕯️ 🧠 💛 🌿 📅 👥 — not random. Gold heart 💛 over red ❤️</li>
+    </ul>
+
+    <h3 class="sub-heading">Alignment with Website</h3>
+    <ul class="clean">
+      <li>Dark theme mirrors wcp.com.pl — professional, not playful</li>
+      <li>Gold accents create warmth without being "cute"</li>
+      <li>Same font family (Inter + Manrope) as web = brand cohesion</li>
+      <li>CTA language consistent: "Book a session" not "Zarezerwuj" or "Kliknij"</li>
+      <li>Link in bio always points to wcp.com.pl (via Linktree)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== SECTION 5: CONTENT PILLARS ===== -->
+<div class="section" id="content-pillars">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">account_balance</span>
+    <div>
+      <div class="sec-label">Section 5</div>
+      <h2>Content Pillars — 5 Content Pillars</h2>
+      <div class="sub">A structure that prevents asking "what should we post today?"</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p>Every WCP post fits into one of five pillars. This isn’t a limitation — it’s a framework that ensures variety and consistency. Proportions: Educational 30%, Behind the Scenes 20%, Community 20%, Testimonials 15%, Promotional 15%.</p>
+
+    <div class="pillar-card">
+      <div class="pillar-icon">📚</div>
+      <div class="pillar-name">1. Educational — Psychoeducation</div>
+      <div class="pillar-desc">Therapy types, mental health facts, myths vs facts, psychological mechanisms. Builds expert positioning, gives value without expecting anything in return.</div>
+      <div class="pillar-examples">
+        <strong>Examples:</strong> Carousel "5 mitów o depresji" · Reel "Co to jest EMDR?" · Post "CBT vs psychodynamiczna — jaka różnica?" · Story quiz "Jaki styl radzenia sobie ze stresem masz?"
+      </div>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-icon">🪞</div>
+      <div class="pillar-name">2. Behind the Scenes</div>
+      <div class="pillar-desc">The clinic, the therapists, the process. We show that WCP is real people in a real place — not an abstract service. Builds trust and lowers the barrier to first contact.</div>
+      <div class="pillar-examples">
+        <strong>Examples:</strong> Reel "Dzień z życia terapeuty WCP" · Carousel "Jak wygląda gabinet?" · Post "Poznaj [imię] — specjalizacja, filozofia pracy" · Therapist story takeover
+      </div>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-icon">👥</div>
+      <div class="pillar-name">3. Community — Community & Events</div>
+      <div class="pillar-desc">Events, support groups, workshops, local initiatives. WCP isn’t just a service — it’s part of the community. This pillar builds belonging and loyalty.</div>
+      <div class="pillar-examples">
+        <strong>Examples:</strong> Event "Otwarte Drzwi WCP" · Post about a new support group · Carousel "Jak działają grupy terapeutyczne?" · Live Q&A z terapeutą
+      </div>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-icon">⭐</div>
+      <div class="pillar-name">4. Testimonials — Testimonials & Stories</div>
+      <div class="pillar-desc">Patient stories (anonymised), reviews, transformations. The most powerful conversion pillar — people trust people, not ads. Always fully anonymised with consent.</div>
+      <div class="pillar-examples">
+        <strong>Examples:</strong> Post "Historia K.: Jak terapia zmieniła moje podejście do lęku" · Carousel "Co pacjenci mówią o WCP" · Story "Dlaczego zdecydowałem/am się na terapię" (anonimowo)
+      </div>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-icon">🎯</div>
+      <div class="pillar-name">5. Promotional — Booking CTAs</div>
+      <div class="pillar-desc">Direct booking prompts, specialty information, availability, promotions. Not aggressive — but clear. Every post from this pillar has a specific CTA.</div>
+      <div class="pillar-examples">
+        <strong>Examples:</strong> Post "Nowy terapeuta w zespole — [imię], specjalizacja: trauma" · Reel "Jak umówić wizytę online w 3 krokach" · Story countdown to group launch · Post "Wolne terminy — tydzień 15-21 kwietnia"
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Weekly Content Rhythm</h3>
+    <table class="kw-table">
+      <tr><th>Day</th><th>Theme</th><th>Pillar</th><th>Example</th></tr>
+      <tr><td>Monday</td><td>Motivation</td><td>Educational</td><td>Quote + tip for the week</td></tr>
+      <tr><td>Tuesday</td><td>Education</td><td>Educational</td><td>Carousel: myth vs fact</td></tr>
+      <tr><td>Wednesday</td><td>Workshop</td><td>Educational</td><td>Practical exercise (breathing, grounding)</td></tr>
+      <tr><td>Thursday</td><td>Team</td><td>Behind the scenes</td><td>Therapist spotlight</td></tr>
+      <tr><td>Friday</td><td>Lighter</td><td>Social</td><td>Meme / relatable therapy moment</td></tr>
+      <tr><td>Saturday</td><td>Story</td><td>Testimonials</td><td>Patient story (anonymized)</td></tr>
+      <tr><td>Sunday</td><td>Reflection</td><td>Promotional</td><td>"What supported you this week?" + CTA</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===== SECTION 6: 30-DAY LAUNCH PLAN ===== -->
+<div class="section" id="launch-plan">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">rocket</span>
+    <div>
+      <div class="sec-label">Section 6</div>
+      <h2>First 30 Days — Launch Plan</h2>
+      <div class="sub">Week by week, post by post — specifics, not theory</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Preparation (before Day 1):</strong> Set up Linktree, update bio on all platforms, prepare 6 highlight covers on Instagram, create 3 Canva templates (carousel, static, story), record 2-3 preliminary Reels.
+    </div>
+
+    <h3 class="sub-heading">Week 1 (Days 1–7) — "Who We Are"</h3>
+    <p>Goal: Show that the profile is alive. Build a foundation — who we are, what we do, how we work.</p>
+
+    <div class="post-card">
+      <div class="post-day">Day 1 — Monday <span class="post-platform ig">IG</span></div>
+      <div class="post-copy">🕯️ Jesteśmy tu. Warmińskie Centrum Psychoterapii — 20 terapeutów, 3 lokalizacje, sesje online z całej Polski.
+
+To nie jest kolejny profil o "pozytywnym myśleniu". To miejsce, gdzie mówimy o zdrowiu psychicznym szczerze — bez stygmatyzacji, bez uproszczeń.
+
+Zaczynamy. 🤍</div>
+      <div class="post-hashtags">#WCP #WarmińskieCentrumPsychoterapii #TerapiaOnline #ZdrowiePsychiczne #Olsztyn #Elbląg #Ostróda</div>
+      <div class="post-cta">📌 Link in bio → book a session</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 2 — Tuesday <span class="post-platform ig">IG CAROUSEL</span></div>
+      <div class="post-copy">5 mitów o terapii, w które nadal wierzysz 🧠
+
+Slide 1: "Tylko wariaci chodzą na terapię" → FAŁSZ. Terapia jest dla każdego, kto chce lepiej zrozumieć siebie.
+Slide 2: "Terapeuta powie mi, co robić" → FAŁSZ. Terapeuta pomaga Ci znaleźć własne odpowiedzi.
+Slide 3: "Terapia to narzekanie na dzieciństwo" → FAŁSZ. To praca nad tu i teraz — zrozumienie przeszłości pomaga, ale nie jest celem.
+Slide 4: "Musisz być w kryzysie, żeby iść na terapię" → FAŁSZ. Najlepszy czas na terapię jest wtedy, kiedy jeszcze dajesz radę.
+Slide 5: "Terapia online jest mniej skuteczna" → FAŁSZ. Badania pokazują równie skuteczną jak stacjonarna.
+
+Który mit zaskoczył Cię najbardziej? 👇</div>
+      <div class="post-hashtags">#WCP #TherapyMyths #Psychoeducation #Terapia #ZdrowiePsychiczne</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 3 — Wednesday <span class="post-platform ig">REEL</span> <span class="post-platform tt">TT</span></div>
+      <div class="post-copy">3 techniki oddechowe na lęk — które działają w 60 sekund 🌬️
+
+1. Box breathing: 4 seconds inhale, 4 hold, 4 exhale, 4 hold
+2. Double exhale: 2 short inhales through nose, 1 long exhale through mouth
+3. 4-7-8: 4 inhale, 7 hold, 8 exhale
+
+Save for later — może się przydać 💛</div>
+      <div class="post-hashtags">#WCP #Anxiety #BreathingTechniques #Terapia #Psychologia #ZdrowiePsychiczne</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 4 — Thursday <span class="post-platform ig">IG</span> <span class="post-platform fb">FB</span></div>
+      <div class="post-copy">Poznaj zespół WCP 🤍
+
+Karolina Zagała — founder, psychotherapist. Works with people in relationship crises and trauma. Believes that a safe therapeutic relationship is the foundation of change.
+
+"Ludzie często myślą, że muszą być silni sami. Ale prosić o pomoc — to jest siła."
+
+📍 Olsztyn · 🌐 Sesje online dostępne</div>
+      <div class="post-hashtags">#WCP #MeetTheTeam #Psychotherapist #Olsztyn #TerapiaOnline</div>
+      <div class="post-cta">📅 Book a session → link in bio</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 5 — Friday <span class="post-platform ig">IG REEL</span> <span class="post-platform tt">TT</span></div>
+      <div class="post-copy">A day in the life of a WCP therapist ☕
+
+7:00 — Coffee and checking session notes
+8:30 — First online session
+10:00 — Team supervision
+12:00 — In-person session at the clinic
+14:00 — Przerwa na lunch (też potrzebna! 😄)
+15:00 — Afternoon sessions
+18:00 — Documentation, planning for tomorrow
+
+Nie, nie siedzimy na kanapie i nie pytamy "a jak się z tym czujesz?" przez cały dzień 😉</div>
+      <div class="post-hashtags">#WCP #DayInTheLife #Therapist #Psychology #BehindTheScenes</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 6 — Saturday <span class="post-platform fb">FB</span></div>
+      <div class="post-copy">"Przez dwa lata myślałam, że moja lękowa jest po prostu moją osobowością. Że tak już mam. Terapeuta WCP pomógł mi zrozumieć, że lęk można zmienić. Nie overnight — ale krok po kroku. Dziś mogę jeździć tramwajem. Brzmi mało? Dla mnie to wszystko." — K., 34 lata, Olsztyn
+
+Opinie pacjentów publikujemy za ich zgodą i w pełnej anonimizacji 💛</div>
+      <div class="post-hashtags">#WCP #Reviews #Therapy #Anxiety #Olsztyn</div>
+      <div class="post-cta">💬 Chcesz porozmawiać? Book a session → wcp.com.pl</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 7 — Sunday <span class="post-platform ig">IG STORY</span></div>
+      <div class="post-copy">Niedzielna refleksja 💛
+
+"What supported you this week?"
+
+[Poll / Question sticker]
+Napisz do nas — chętnie przeczytamy 🤍</div>
+    </div>
+
+    <h3 class="sub-heading">Week 2 (Days 8–14) — "What We Learn"</h3>
+    <p>Goal: Psychoeducation as the main engine. We build expert positioning. Reels start generating reach.</p>
+
+    <div class="post-card">
+      <div class="post-day">Day 8 — Monday <span class="post-platform ig">IG</span></div>
+      <div class="post-copy">Monday bez presji 🕯️
+
+Nie musisz dzisiaj być produktowny/a. Nie musisz "wykorzystać dzień". Czasem największe osiągnięcie poniedziałku to wstanie i oddychanie.
+
+To wystarczy. Jesteś wystarczający/a 💛</div>
+      <div class="post-hashtags">#WCP #MondayWithoutPressure #SelfKnowledge #ZdrowiePsychiczne</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 9 — Tuesday <span class="post-platform ig">IG CAROUSEL</span></div>
+      <div class="post-copy">Depresja vs Smutek — jaka różnica? 🌧️
+
+Slide 1: Sadness is natural. It passes. It has a reason.
+Slide 2: Depresja nie musi mieć "powodu". Nie przechodzi sama. Wpływa na sen, apetyt, koncentrację.
+Slide 3: Smutek: "Jest mi smutno z powodu X"
+Slide 4: Depresja: "Jest mi ciężko i nie wiem dlaczego"
+Slide 5: If the heaviness doesn’t lift after 2+ weeks — it’s worth talking to a professional.
+
+Nie czekaj, aż "minie samo". Pomoc jest bliżej niż myślisz 💛</div>
+      <div class="post-hashtags">#WCP #Depression #Sadness #Psychoeducation #ZdrowiePsychiczne</div>
+      <div class="post-cta">📞 576 081 786 · wcp.com.pl</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 10 — Wednesday <span class="post-platform ig">REEL</span> <span class="post-platform tt">TT</span></div>
+      <div class="post-copy">Grounding 5-4-3-2-1 — technika na natychmiastowe uspokojie 🌿
+
+5 things you can see
+4 things you can touch
+3 things you can hear
+2 things you can smell
+1 thing you can taste
+
+Proste? Tak. Skuteczne? Też. Save for later 💛</div>
+      <div class="post-hashtags">#WCP #Grounding #Lęk #Technika #Mindfulness #ZdrowiePsychiczne</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 11 — Thursday <span class="post-platform ig">IG</span> <span class="post-platform fb">FB</span></div>
+      <div class="post-copy">Poznaj zespół WCP 🤍
+
+[Imię terapeuty] — psychoterapeutka, specjalizacja: wypalenie zawodowe i stres. Pracuje z profesjonalistami, którzy czują, że "bieżą na pustym."
+
+"Nie musisz zarabiać swojego odpoczynku. Odpoczynek jest Twoim prawem, nie nagrodą."
+
+📍 Elbląg · 🌐 Online</div>
+      <div class="post-hashtags">#WCP #MeetTheTeam #Burnout #Stress #Elbląg</div>
+      <div class="post-cta">📅 Book a session → link in bio</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 12 — Friday <span class="post-platform ig">IG REEL</span> <span class="post-platform tt">TT</span></div>
+      <div class="post-copy">Co NIE jest samotnością a co JEST samotnością 🪞
+
+Loneliness ≠ being alone
+Loneliness = lack of connection
+
+You can be in a crowd and feel lonely.
+You can be alone and feel connected.
+
+To nie o liczbie ludzi wokół Ciebie. To o jakości relacji 💛</div>
+      <div class="post-hashtags">#WCP #Loneliness #Relationships #Psychologia #ZdrowiePsychiczne</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 13 — Saturday <span class="post-platform fb">FB</span></div>
+      <div class="post-copy">📍 Olsztyn · Elbląg · Ostróda · 🌐 Online
+
+WCP is 20 therapists, 3 locations, and online sessions available from anywhere in Poland.
+
+Whether you prefer an in-person meeting or a call from home — we’re here.
+
+📞 576 081 786
+🌐 wcp.com.pl</div>
+      <div class="post-hashtags">#WCP #TerapiaOnline #Olsztyn #Elbląg #Ostróda</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 14 — Sunday <span class="post-platform ig">IG STORY</span></div>
+      <div class="post-copy">2 tygodnie za nami! 🕯️
+
+Thank you for being here. What do you want to see more of?
+
+[Poll sticker]
+□ Tips and exercises
+□ Meet the therapists
+□ Therapy myths
+□ Patient stories</div>
+    </div>
+
+    <h3 class="sub-heading">Week 3 (Days 15–21) — "How We Work"</h3>
+    <p>Goal: Practical information about WCP — process, availability, online. We lower the barrier to entry.</p>
+
+    <div class="post-card">
+      <div class="post-day">Day 15 — Monday <span class="post-platform ig">IG</span></div>
+      <div class="post-copy">Jak wygląda pierwsza sesja terapii? 🤍
+
+We know the first step is the hardest. So here’s what happens:
+
+1️⃣ You book an appointment (online or by phone)
+2️⃣ At the first session, the therapist asks what brings you in
+3️⃣ Together you decide if it’s a good fit
+4️⃣ If not — we help you find another therapist
+
+Nie musisz wiedzieć, czego szukasz. Wystarczy, że przyjdziesz 💛</div>
+      <div class="post-hashtags">#WCP #FirstSession #Therapy #HowToStart #ZdrowiePsychiczne</div>
+      <div class="post-cta">📅 Umów pierwszą sesję → wcp.com.pl</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 16 — Tuesday <span class="post-platform ig">IG CAROUSEL</span></div>
+      <div class="post-copy">Terapia online vs stacjonarna — co wybierasz? 💻🏠
+
+Slide 1: Online — flexibility, no commute, comfort of your own space
+Slide 2: In-person — therapy room, no distractions, physical presence
+Slide 3: Skuteczność? Badania pokazują: porównywalna 💛
+Slide 4: The best therapy = the one you SHOW UP for
+Slide 5: WCP offers both options — choose what suits you
+
+Twój wybór? 👇</div>
+      <div class="post-hashtags">#WCP #OnlineTherapy #InPersonTherapy #Choice #ZdrowiePsychiczne</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 17 — Wednesday <span class="post-platform ig">REEL</span> <span class="post-platform tt">TT</span></div>
+      <div class="post-copy">3 znaki, że potrzebujesz terapii — a o których nikt nie mówi 🧠
+
+1. Czujesz się "dobrze" ale nie czujesz NIC
+2. Everyone says you’re strong — but inside you’re exhausted
+3. You solve other people’s problems but ignore your own
+
+Brzmi znajomo? Porozmawiajmy 💛</div>
+      <div class="post-hashtags">#WCP #ZdrowiePsychiczne #Terapia #Lęk #Wypalenie</div>
+      <div class="post-cta">📞 576 081 786</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 18 — Thursday <span class="post-platform fb">FB</span> <span class="post-platform ig">IG</span></div>
+      <div class="post-copy">📍 Nowość w WCP!
+
+Grupa wsparcia dla kobiet — start w maju! 🤍
+
+Weekly meetings in Olsztyn + online option. Led by experienced WCP therapists. A safe space for sharing, learning, and growing.
+
+Limit miejsc: 10
+Zapisy → wcp.com.pl lub DM 💌</div>
+      <div class="post-hashtags">#WCP #GrupaWsparcia #Kobiety #Olsztyn #TerapiaGrupowa</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 19 — Friday <span class="post-platform ig">REEL</span> <span class="post-platform tt">TT</span></div>
+      <div class="post-copy">Dlaczego wypalenie zawodowe NIE jest lenistwem 🔥
+
+Lenistwo: "Nie chce mi się"
+Wypalenie: "Nie mam siły, nawet jeśli chcę"
+
+That’s the difference between choice and inability.
+
+Jeśli czujesz, że "pali Ci się na obu końcach" — nie jesteś lenwy/a. Potrzebujesz wsparcia 💛</div>
+      <div class="post-hashtags">#WCP #Wypalenie #Burnout #ZdrowiePsychiczne #Praca</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 20 — Saturday <span class="post-platform fb">FB</span></div>
+      <div class="post-copy">"Mój mąż nie chciał iść na terapię. Powiedział, że to nie dla mężczyzn. Po trzech sesjach powiedział: 'Czuję, że ktoś w końcu mnie słucha bez oceniania.' To zmieniło nasz małżeństw." — M., 41 lat, Elbląg
+
+Męskie zdrowie psychiczne jest tematem tabu. W WCP tworzymy przestrzeń, gdzie mężczyźni mogą być szczeri 💛</div>
+      <div class="post-hashtags">#WCP #MensHealth #Therapy #Relationships #Elbląg</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 21 — Sunday <span class="post-platform ig">IG STORY</span></div>
+      <div class="post-copy">3 tygodnie WCP na social media! 🕯️
+
+Dziś pytanie: Jaki jest Twój "powód nie" — dlaczego jeszcze nie spróbowałeś/aś terapii?
+
+[Question sticker]
+
+Odpowiemy na Wasze odpowiedzi w kolejnych postach 💛</div>
+    </div>
+
+    <h3 class="sub-heading">Week 4 (Days 22–30) — "Take Action"</h3>
+    <p>Goal: Conversion. Clear CTAs, availability, service promotion. People already know who we are — now they need to know how to start.</p>
+
+    <div class="post-card">
+      <div class="post-day">Day 22 — Monday <span class="post-platform ig">IG</span></div>
+      <div class="post-copy">Start your week with one question: what are you grateful for today?
+
+It doesn’t have to be big. Coffee. Sunshine. A quiet moment.
+
+Wdzięczność nie rozwiązuje problemów. Ale zmienia perspektywę, z której je widzimy 🕯️</div>
+      <div class="post-hashtags">#WCP #Gratitude #Monday #ZdrowiePsychiczne</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 23 — Tuesday <span class="post-platform ig">IG CAROUSEL</span></div>
+      <div class="post-copy">Jak umówić wizytę w WCP — w 3 krokach 📅
+
+Step 1: Go to wcp.com.pl or call 576 081 786
+Step 2: Choose a therapist (or let us match you — free 20-min consultation)
+Step 3: Pick a date — in-person or online
+
+Gotowe. To prostsze niż myślisz 💛</div>
+      <div class="post-hashtags">#WCP #BookAppointment #Therapy #Process #ZdrowiePsychiczne</div>
+      <div class="post-cta">👉 wcp.com.pl — zacznij dziś</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 24 — Wednesday <span class="post-platform ig">REEL</span> <span class="post-platform tt">TT</span></div>
+      <div class="post-copy">ADHD u dorosłych — 5 rzeczy, których nikt Ci nie powiedział 🧠
+
+1. "Zawsze miałeś/aś ADHD" — nie "nabyłeś/aś"
+2. Hyperfocus is real — it’s not laziness, it’s dysregulation
+3. Late diagnosis = grief za "utracone lata"
+4. Treatment changes lives — but it’s not magic
+5. WCP oferuje diagnostykę DIVA 5.0 🤍
+
+More at wcp.com.pl →</div>
+      <div class="post-hashtags">#WCP #ADHD #DorośliADHD #Diagnostyka #Psychologia</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 25 — Thursday <span class="post-platform ig">IG</span> <span class="post-platform fb">FB</span></div>
+      <div class="post-copy">Poznaj zespół WCP 🤍
+
+[Imię] — psychoterapeuta, specjalizacja: trauma i EMDR. Pracuje z osobami, które doświadczyły trudnych wydarzeń i chcą je przetworzyć — nie "zapomnieć".
+
+"Trauma nie jest tym, co Ci się przydarzyło. Jest tym, co się działo wewnątrz Ciebie w reakcji na to."
+
+📍 Ostróda · 🌐 Online</div>
+      <div class="post-hashtags">#WCP #PoznajTeam #Trauma #EMDR #Ostróda</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 26 — Friday <span class="post-platform ig">REEL</span> <span class="post-platform tt">TT</span></div>
+      <div class="post-copy">Boundary check 🛑
+
+Czy potrafisz powiedzieć "nie" bez poczucia winy?
+
+✅ Yes → great, keep that
+❌ No → it’s not your fault. Many people learn this. And a therapist can help.
+
+Granice nie są egoistyczne. Są konieczne 💛</div>
+      <div class="post-hashtags">#WCP #Boundaries #Boundaries #Relationships #ZdrowiePsychiczne</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 27 — Saturday <span class="post-platform fb">FB</span></div>
+      <div class="post-copy">WCP — 3 lokalizacje, 20 terapeutów, 1 misja 🕯️
+
+Professional psychological help w Olsztynie, Elblągu i Ostródzie + sesje online z każdego miejsca w Polsce.
+
+Specjalizacje:
+🔹 Depresja i lęk
+🔹 Wypalenie zawodowe
+🔹 Trauma i EMDR
+🔹 Terapia par
+🔹 ADHD diagnostyka
+🔹 Grupy wsparcia
+
+📞 576 081 786
+🌐 wcp.com.pl</div>
+      <div class="post-hashtags">#WCP #Psychotherapy #Olsztyn #Elbląg #Ostróda #OnlineTherapy</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 28 — Sunday <span class="post-platform ig">IG STORY</span></div>
+      <div class="post-copy">Miesiąc za nami! 🕯️💛
+
+What did you enjoy the most?
+[Poll]
+□ Education and tips
+□ Meet the team
+□ Patient stories
+□ Therapy myths
+
+Idziemy dalej 💛</div>
+    </div>
+
+    <div class="post-card">
+      <div class="post-day">Day 29–30 — Mon/Tue <span class="post-platform ig">IG</span> <span class="post-platform fb">FB</span></div>
+      <div class="post-copy">30 dni WCP na social media 🕯️
+
+Thank you for being here. We started from zero — and we’re building a community that talks about mental health without shame.
+
+Co dalej?
+📚 Więcej psychoedukacji
+🪞 Więcej za kulisami
+👥 Więcej społeczności
+⭐ More testimonials
+🎯 Więcej możliwości rezerwacji
+
+Zostań z nami. Najlepsze przed nami 💛</div>
+      <div class="post-hashtags">#WCP #WarmińskieCentrumPsychoterapii #TerapiaOnline #ZdrowiePsychiczne #Olsztyn</div>
+      <div class="post-cta">👉 wcp.com.pl — zacznij swoją zmianę</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 7: VISUAL TEMPLATES ===== -->
+<div class="section" id="visual-templates">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">palette</span>
+    <div>
+      <div class="sec-label">Section 7</div>
+      <h2>Visual Templates — Graphic Templates</h2>
+      <div class="sub">Canva Specifications — dark theme, gold accents, 100% consistency</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Rule:</strong> All templates are created in Canva Pro. Once created, we reuse them — swapping text, images, colour. Visual consistency is not about aesthetics — it is about recognisability.
+    </div>
+
+    <h3 class="sub-heading">Story Templates (1080 × 1920px)</h3>
+    <div class="template-card">
+      <div class="tpl-name">🕯️ Morning Quote</div>
+      <div class="tpl-spec">Dark background (#101418) · Gold quote text center-aligned · WCP logo bottom-right (15% opacity) · Font: Inter Light 300</div>
+      <div class="tpl-detail">Usage: Monday quote, Sunday reflection. Text area: 70% of frame. Gold divider line above quote.</div>
+    </div>
+    <div class="template-card">
+      <div class="tpl-name">📊 Poll Template</div>
+      <div class="tpl-spec">Dark background · Gold question text top · 2 option boxes (dark surface-mid with gold border) · WCP logo bottom-left</div>
+      <div class="tpl-detail">Usage: "Do you feel overwhelmed?" · Engagement driver</div>
+    </div>
+    <div class="template-card">
+      <div class="tpl-name">🗣️ Q&A Template</div>
+      <div class="tpl-spec">Dark background · "Ask a Therapist" gold header · Question sticker box · Therapist photo bottom-right circle</div>
+      <div class="tpl-detail">Usage: Weekly Q&A stories. Answered next day in follow-up story.</div>
+    </div>
+    <div class="template-card">
+      <div class="tpl-name">⏰ Countdown Template</div>
+      <div class="tpl-spec">Dark background · Gold event title · Date/time · Countdown sticker · WCP logo top-left</div>
+      <div class="tpl-detail">Usage: Support group launch, workshops, open days</div>
+    </div>
+
+    <h3 class="sub-heading">Post Templates (1080 × 1080px)</h3>
+    <div class="template-card">
+      <div class="tpl-name">💡 Quote Post</div>
+      <div class="tpl-spec">Obsidian bg · Large gold quote center · Attribution line (therapist name + specialization) · WCP logo bottom</div>
+      <div class="tpl-detail">Usage: Mondays, Sundays. Therapist quotes, wisdom snippets.</div>
+    </div>
+    <div class="template-card">
+      <div class="tpl-name">👤 Therapist Spotlight</div>
+      <div class="tpl-spec">Split layout: Left = therapist photo (60%), Right = dark panel with name, specialization, quote · Gold accent bar top</div>
+      <div class="tpl-detail">Usage: Thursdays "Meet the Team". Photo by Tomek or professional session.</div>
+    </div>
+    <div class="template-card">
+      <div class="tpl-name">📋 Service Promo</div>
+      <div class="tpl-spec">Dark bg · Service icon (gold) · Service name (gold, large) · 2-3 bullet points · CTA "Book a session → wcp.com.pl"</div>
+      <div class="tpl-detail">Usage: Promotional pillar. ADHD, support groups, couples therapy, online.</td>
+    </div>
+    <div class="template-card">
+      <div class="tpl-name">⭐ Testimonial</div>
+      <div class="tpl-spec">Dark bg · Gold quotation marks top · Anonymized quote text · Stars rating · "Opinia pacjenta WCP" label · WCP logo</div>
+      <div class="tpl-detail">Usage: Saturday testimonials. Always anonymized with consent.</td>
+    </div>
+
+    <h3 class="sub-heading">Carousel Templates (1080 × 1350px, 5–8 slides)</h3>
+    <div class="template-card">
+      <div class="tpl-name">📖 Myth vs Fact Carousel</div>
+      <div class="tpl-spec">Slide 1: Cover — dark bg, gold title "5 MYTHS ABOUT THERAPY" · Slides 2–5: Split — top myth (red-ish text), bottom fact (gold text) · Final slide: CTA + logo</div>
+      <div class="tpl-detail">Usage: Tuesday psychoeducation. Highest engagement format on Instagram.</td>
+    </div>
+    <div class="template-card">
+      <div class="tpl-name">🔢 List Carousel</div>
+      <div class="tpl-spec">Slide 1: Cover — "3 techniques…" · Slides 2–4: One tip per slide with icon · Final: CTA + "Save for later"</div>
+      <div class="tpl-detail">Usage: Practical tips, how-to, step-by-step. High save rate.</td>
+    </div>
+    <div class="template-card">
+      <div class="tpl-name">⚖️ Comparison Carousel</div>
+      <div class="tpl-spec">Slide 1: Cover · Slides 2+: Side-by-side comparison (left A, right B) · Final: "The best therapy = the one you can access"</div>
+      <div class="tpl-detail">Usage: Online vs in-person, depression vs sadness, etc.</td>
+    </div>
+
+    <h3 class="sub-heading">Reels Covers (1080 × 1920px, visible as 1080 × 1350 in grid)</h3>
+    <div class="template-card">
+      <div class="tpl-name">🎬 Reel Cover</div>
+      <div class="tpl-spec">Dark bg · Short title (3–5 words) in gold · Minimal icon · WCP logo top-left · Keep text in safe zone (top 67%)</div>
+      <div class="tpl-detail">Custom cover for every Reel — never use auto-generated thumbnail. Consistency in grid = professional appearance.</td>
+    </div>
+
+    <h3 class="sub-heading">Instagram Highlights Covers (1080 × 1080px circles)</h3>
+    <div class="template-card">
+      <div class="tpl-name">Highlight Icon Set (8 pcs)</div>
+      <div class="tpl-spec">Dark circle bg (#101418) · Gold line-art icon · Labels: 📅 Booking · 👥 Team · 💬 Group · 📚 Education · ⭐ Reviews · 🎯 Specialties · 🧠 Tips · 📖 FAQ</div>
+      <div class="tpl-detail">Created once, used permanently. Must match brand kit exactly.</td>
+    </div>
+
+    <h3 class="sub-heading">Canva Brand Kit Setup</h3>
+    <ul class="clean">
+      <li><strong>Colors:</strong> #101418 (primary bg), #e6c364 (accent), #c9a84c (secondary), #ffffff (text), #8a9bb0 (muted)</li>
+      <li><strong>Fonts:</strong> Inter (headings, body), Manrope (labels, tags, uppercase text)</li>
+      <li><strong>Logo:</strong> WCP_logo_white.svg — use as watermark at 10–15% opacity, or full opacity in sidebar/bottom positions</li>
+      <li><strong>Upload all templates as "Brand Templates"</strong> — team can duplicate and edit without breaking design</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== SECTION 8: KPIs & TRACKING ===== -->
+<div class="section" id="kpis">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Section 8</div>
+      <h2>KPIs &amp; Tracking — Metrics and Goals</h2>
+      <div class="sub">What we measure, how often, and what we do with it</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Rule:</strong> We do not measure everything. We measure what drives decisions. Likes are nice — but bookings are business. Every KPI must have an owner, a target, and a review cadence.
+    </div>
+
+    <h3 class="sub-heading">Monthly KPI Targets</h3>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Instagram Followers</div>
+        <div class="kpi-value">+5–10%/mo</div>
+        <div class="kpi-desc">Target: 1,500 in 6 months (from ~300)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Engagement Rate</div>
+        <div class="kpi-value">3–5%</div>
+        <div class="kpi-desc">IG health industry average: 2.5%. Target: above average.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Profile Visits → Website</div>
+        <div class="kpi-value">15–20%</div>
+        <div class="kpi-desc">Conversion from profile to link click. Measures CTA effectiveness.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">DM Inquiries</div>
+        <div class="kpi-value">10–20/mo</div>
+        <div class="kpi-desc">Direct service inquiries. The most important leading indicator.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Story Completion</div>
+        <div class="kpi-value">70%+</div>
+        <div class="kpi-desc">Percentage of viewers who watch stories to completion. A measure of content quality.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Reel Saves/Shares</div>
+        <div class="kpi-value">50+/mo</div>
+        <div class="kpi-desc">Saves = value. Shares = virality. The most important Reels metrics.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Booking Attribution</div>
+        <div class="kpi-value">Track</div>
+        <div class="kpi-desc">"How did you hear about us?" in the booking form. Social media as a source.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Facebook Event RSVPs</div>
+        <div class="kpi-value">20+/event</div>
+        <div class="kpi-desc">A measure of local engagement and community building.</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Review Cadence</h3>
+    <table class="kw-table">
+      <tr><th>Frequency</th><th>What</th><th>Who</th><th>Action</th></tr>
+      <tr><td>Weekly</td><td>Post performance, DM responses</td><td>Community Manager</td><td>Adjust next week's content</td></tr>
+      <tr><td>Monthly</td><td>Full KPI dashboard review</td><td>Content Strategist + Karolina</td><td>Strategy adjustments, new content ideas</td></tr>
+      <tr><td>Quarterly</td><td>Deep analysis: what worked, what didn't, ROI</td><td>Full team</td><td>Calendar revision, budget review, pivot decisions</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Quarterly Review Questions</h3>
+    <ul class="clean">
+      <li>Which posts had the highest engagement? Why?</li>
+      <li>Which day/time works best? (Adjust scheduling)</li>
+      <li>Which awareness dates resonated, and which "flopped"?</li>
+      <li>Are we attracting ideal patients or just likes?</li>
+      <li>What is our cost per inquiry (if we advertise)?</li>
+      <li>How many bookings come from social media vs other channels?</li>
+    </ul>
+
+    <h3 class="sub-heading">Booking Attribution — "How Did You Hear About Us?"</h3>
+    <p>Add a "How did you hear about us?" field to the booking form (Booknetic). Options:</p>
+    <ul class="clean">
+      <li>Instagram</li>
+      <li>Facebook</li>
+      <li>TikTok</li>
+      <li>Google Search</li>
+      <li>ZnanyLekarz</li>
+      <li>Friend referral</li>
+      <li>Other</li>
+    </ul>
+    <p>This is the only reliable source of data on real social media ROI. Without it — we’re guessing.</p>
+  </div>
+</div>
+
+<!-- ===== SECTION 9: BUDGET ===== -->
+<div class="section" id="budget">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">savings</span>
+    <div>
+      <div class="sec-label">Section 9</div>
+      <h2>Budget — Costs and Tools</h2>
+      <div class="sub">Real calculation, not aspirations</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Monthly Tools & Subscriptions</h3>
+    <table class="kw-table">
+      <tr><th>Tool</th><th>Purpose</th><th>Cost (PLN/mo)</th></tr>
+      <tr><td>Canva Pro</td><td>Graphics design, templates, brand kit</td><td>~50</td></tr>
+      <tr><td>Later.com or Buffer</td><td>Post scheduling, analytics</td><td>~75</td></tr>
+      <tr><td>Meta Business Suite</td><td>FB/IG analytics & scheduling</td><td>Free</td></tr>
+      <tr><td>CapCut</td><td>Reels/TikTok video editing</td><td>Free</td></tr>
+      <tr><td>Unum or Planoly</td><td>Visual grid planning</td><td>~40</td></tr>
+      <tr><td>Linktree Pro</td><td>Bio link management</td><td>~40</td></tr>
+      <tr><td>Google Analytics</td><td>Website traffic from social</td><td>Free</td></tr>
+    </table>
+    <p style="margin-top:12px"><strong>Monthly tool cost: ~205 PLN</strong></p>
+
+    <h3 class="sub-heading">One-Time Setup Costs</h3>
+    <table class="kw-table">
+      <tr><th>Item</th><th>Purpose</th><th>Cost (PLN)</th></tr>
+      <tr><td>Canva Brand Kit + Templates</td><td>Initial template creation (10+ templates)</td><td>Internal (time ~8h)</td></tr>
+      <tr><td>Photographer session</td><td>Team photos, clinic interiors, therapist portraits</td><td>500–1,500</td></tr>
+      <tr><td>Instagram Highlights setup</td><td>8 branded highlight covers</td><td>Internal (Canva)</td></tr>
+      <tr><td>Linktree setup</td><td>5–6 links configured</td><td>Internal (1h)</td></tr>
+      <tr><td>Bio/profile optimization</td><td>All 3 platforms unified</td><td>Internal (2h)</td></tr>
+    </table>
+    <p style="margin-top:12px"><strong>One-time costs: 500–1,500 PLN (mainly photo session)</strong></p>
+
+    <h3 class="sub-heading">Paid Promotion (Optional / Phase 2)</h3>
+    <table class="kw-table">
+      <tr><th>Channel</th><th>Monthly Budget</th><th>Target Audience</th><th>Objective</th></tr>
+      <tr><td>Instagram/Facebook Ads</td><td>500–1,000 PLN</td><td>Women 25–45, Warmia-Mazury</td><td>Traffic to website, lead gen</td></tr>
+      <tr><td>Boosted posts</td><td>100–200 PLN/post</td><td>Existing followers + lookalike</td><td>Reach amplification on key dates</td></tr>
+      <tr><td>TikTok Ads (Phase 3)</td><td>500–1,000 PLN</td><td>18–35, mental health interest</td><td>Awareness, follower growth</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Recommendation:</strong> First 60 days — no paid ads. We build organically, learn what works. After 60 days — with a test budget of 500 PLN/month on Meta Ads, targeting the best-performing posts. TikTok Ads only in phase 3 (month 4+), when we have a content library.
+    </div>
+
+    <h3 class="sub-heading">Total Estimated Budget — First 6 Months</h3>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Months 1–2 (Organic Only)</div>
+        <div class="kpi-value">~410 PLN</div>
+        <div class="kpi-desc">Tools + setup. No paid promotion.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Months 3–4 (Light Ads)</div>
+        <div class="kpi-value">~1,410 PLN/mo</div>
+        <div class="kpi-desc">Tools + 500–1,000 PLN Meta Ads</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Months 5–6 (Full Strategy)</div>
+        <div class="kpi-value">~1,910 PLN/mo</div>
+        <div class="kpi-desc">Tools + Meta Ads + TikTok Ads</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">6-Month Total</div>
+        <div class="kpi-value">~8,800 PLN</div>
+        <div class="kpi-desc">Including 500–1,500 PLN photo session</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Crisis & Safeguarding Protocol</h3>
+    <p>When someone sends a DM in crisis:</p>
+    <div class="idea-card">
+      <div class="idea-title">🚨 Crisis Response Script</div>
+      <div class="idea-body">
+        <p style="font-style:italic;color:var(--on-surface)">"Thank you for reaching out. We care deeply about your safety.</p>
+        <p style="font-style:italic;color:var(--on-surface)">If you are thinking about suicide or feel you might harm yourself, please contact immediately:</p>
+        <p style="font-style:italic;color:var(--on-surface)">☎️ Adult Helpline: 116 123 (free, 24/7)<br>
+        ☎️ Children and Youth Helpline: 116 111<br>
+        🚨 Numer alarmowy: 112</p>
+        <p style="font-style:italic;color:var(--on-surface)">We can also help you arrange an urgent consultation with our team — let us know if you want us to call you back.</p>
+        <p style="font-style:italic;color:var(--on-surface)">You matter. Please seek support now. 💛"</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Team Roles & Responsibilities</h3>
+    <table class="kw-table">
+      <tr><th>Role</th><th>Responsibility</th><th>Assignee</th></tr>
+      <tr><td>Content Strategist</td><td>Calendar planning, topic selection, KPI review</td><td>[TBD]</td></tr>
+      <tr><td>Copywriter</td><td>Polish captions, stories, reels scripts</td><td>[TBD]</td></tr>
+      <tr><td>Designer</td><td>Canva graphics, carousels, templates</td><td>[TBD]</td></tr>
+      <tr><td>Videographer</td><td>Reels filming, editing</td><td>Tomek</td></tr>
+      <tr><td>Community Manager</td><td>Responding to comments, DMs, moderation</td><td>[TBD]</td></tr>
+      <tr><td>Approver</td><td>Final review before posting</td><td>Karolina</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Next Steps:</strong>
+      <ol style="margin-top:8px;padding-left:18px;">
+        <li>Strategy review with Karolina and the marketing team</li>
+        <li>Role assignment — who does what (copy, design, approval, posting)</li>
+        <li>Create Canva templates — branded templates for recurring posts</li>
+        <li>Batch Q1 content creation — start with January–March</li>
+        <li>Tool configuration — Meta Business Suite + Later + Linktree</li>
+        <li>Launch and iterate — we measure, learn, adjust</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">dashboard</span> Strategic Intelligence Master Report →
+      </a>
+      <a href="GOOGLE-ADS-OPTIMIZATION-REPORT.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">ads_click</span> Google Ads Optimization →
+      </a>
+      <a href="ONLINE-THERAPY-PROMOTION-PLAN.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">videocam</span> Online Therapy Promotion →
+      </a>
+      <a href="WCP_Financial_Health_Report_2026.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">account_balance</span> Financial Health Report →
+      </a>
+    </div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</main>
+
+<script>
+// Active nav link tracking on scroll
+const sections = document.querySelectorAll('.section, .cover-section');
+const navLinks = document.querySelectorAll('.nav-link');
+const topnavSection = document.getElementById('topnav-section');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-section') === id);
+      });
+      const header = entry.target.querySelector('.section-header h2') || entry.target.querySelector('.cover-h1');
+      if (topnavSection && header) {
+        const text = id === 'cover' ? 'Overview' : header.textContent.split('—')[0].trim();
+        topnavSection.textContent = text;
+      }
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-80px 0px -60% 0px' });
+
+sections.forEach(section => observer.observe(section));
+
+// Smooth scroll for nav links
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>

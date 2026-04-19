@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WCP Strategic Intelligence Report · 17 April 2026</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo svg{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.red{border-left-color:var(--red-t)}
+  .callout.red strong{color:#f08080}
+  .callout.green{border-left-color:var(--green-t)}
+  .callout.green strong{color:#6fcf97}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.long-term{background:rgba(155,89,182,.15);color:#c39bd3}
+  .tag.creative{background:rgba(155,89,182,.15);color:#c39bd3}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .stat-card{background:var(--surface-mid);border-radius:6px;padding:18px;border-left:3px solid var(--gold-dim)}
+  .stat-card .stat-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .stat-card .stat-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-card .stat-note{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .stat-card.green{border-left-color:var(--green-t)}
+  .stat-card.green .stat-value{color:#6fcf97}
+  .stat-card.red{border-left-color:var(--red-t)}
+  .stat-card.red .stat-value{color:#f08080}
+  .stat-card.blue{border-left-color:var(--blue-t)}
+  .stat-card.blue .stat-value{color:#7bc8e0}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .vol-low{color:#7bc8e0;font-weight:700}
+  .kw-table .vol-red{color:#f08080;font-weight:700}
+  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .funnel-step:last-child{border-bottom:none}
+  .funnel-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .priority-matrix{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .matrix-cell{padding:18px;border-radius:4px}
+  .matrix-cell.high-impact-low-effort{background:rgba(76,175,125,.08);border-left:3px solid #4CAF7D}
+  .matrix-cell.high-impact-high-effort{background:rgba(75,163,195,.08);border-left:3px solid #4BA3C3}
+  .matrix-cell.low-impact-low-effort{background:rgba(245,200,66,.08);border-left:3px solid #F5C842}
+  .matrix-cell.low-impact-high-effort{background:rgba(224,82,82,.08);border-left:3px solid #E05252}
+  .matrix-cell h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .matrix-cell.high-impact-low-effort h4{color:#6fcf97}
+  .matrix-cell.high-impact-high-effort h4{color:#7bc8e0}
+  .matrix-cell.low-impact-low-effort h4{color:#f5c842}
+  .matrix-cell.low-impact-high-effort h4{color:#f08080}
+  .matrix-cell ul{padding-left:14px;font-size:.82rem;color:var(--on-surface)}
+  .matrix-cell li{margin:4px 0}
+  .badge-row{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .page-footer{display:none}
+  .timeline-row{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .timeline-row:last-child{border-bottom:none}
+  .timeline-day{background:var(--surface-high);border-radius:4px;padding:6px 12px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;flex-shrink:0;min-width:60px;text-align:center}
+  .timeline-content h4{font-size:.9rem;font-weight:700;color:var(--on-surface);margin-bottom:3px}
+  .timeline-content p{font-size:.84rem;color:var(--muted)}
+  .timeline-content .owner{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-t);margin-top:4px}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .vs-col{padding:18px;border-radius:4px}
+  .vs-col.wcp{background:rgba(76,175,125,.06);border-left:3px solid var(--green-t)}
+  .vs-col.anima{background:rgba(224,82,82,.06);border-left:3px solid var(--red-t)}
+  .vs-col h4{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+  .vs-col.wcp h4{color:#6fcf97}
+  .vs-col.anima h4{color:#f08080}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.priority-matrix,.vs-grid{grid-template-columns:1fr}.toc-block ol{columns:1}.page-canvas{padding:28px 16px 60px}.stat-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Return to Strategic Report →
+  </a>
+
+  <div class="sidebar-label">Navigation</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Cover
+    </a>
+    <a class="nav-link" href="#executive-summary" data-section="executive-summary">
+      <span class="material-symbols-outlined nav-icon">summarize</span> Executive Summary
+    </a>
+    <a class="nav-link" href="#financial-health" data-section="financial-health">
+      <span class="material-symbols-outlined nav-icon">account_balance</span> Financial Health
+    </a>
+    <a class="nav-link" href="#hr-team" data-section="hr-team">
+      <span class="material-symbols-outlined nav-icon">groups</span> HR &amp; Team
+    </a>
+    <a class="nav-link" href="#competitor-threat" data-section="competitor-threat">
+      <span class="material-symbols-outlined nav-icon">radar</span> Competitor Threat
+    </a>
+    <a class="nav-link" href="#google-ads" data-section="google-ads">
+      <span class="material-symbols-outlined nav-icon">ads_click</span> Google Ads
+    </a>
+    <a class="nav-link" href="#anima-counter" data-section="anima-counter">
+      <span class="material-symbols-outlined nav-icon">shield</span> ANIMA Counter-Strategy
+    </a>
+    <a class="nav-link" href="#bartag-expansion" data-section="bartag-expansion">
+      <span class="material-symbols-outlined nav-icon">add_business</span> Bartąg Expansion
+    </a>
+    <a class="nav-link" href="#online-therapy" data-section="online-therapy">
+      <span class="material-symbols-outlined nav-icon">videocam</span> Online Therapy
+    </a>
+    <a class="nav-link" href="#social-media" data-section="social-media">
+      <span class="material-symbols-outlined nav-icon">smartphone</span> Social Media
+    </a>
+    <a class="nav-link" href="#mission-control" data-section="mission-control">
+      <span class="material-symbols-outlined nav-icon">dashboard</span> Mission Control
+    </a>
+    <a class="nav-link" href="#action-plan" data-section="action-plan">
+      <span class="material-symbols-outlined nav-icon">map</span> 30-Day Action Plan
+    </a>
+  </nav>
+    <div style="padding:12px 20px;border-top:1px solid rgba(77,70,55,.3)">
+  </div>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="WCP-Strategic-Intelligence-Report-PL.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇵🇱</span> PL Version
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP · Strategic Intelligence Report</span>
+  <span class="topnav-section" id="topnav-section">Cover</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 0: COVER -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  <div style="margin:0 0 96px 0;padding:3px;border-radius:10px;background:linear-gradient(135deg,#e6c364 0%,#c9a84c 30%,#3a3530 60%,#1c2024 100%);box-shadow:0 20px 60px rgba(0,0,0,.4);">
+  <img src="assets/images/brain_header.png" alt="WCP Hero" style="width:100%;max-width:100%;height:auto;display:block;border-radius:8px;">
+</div>
+  
+  <span class="cover-badge">🕯️ Confidential Strategic Intelligence · April 2026</span>
+  <h1 class="cover-h1">WCP Strategic<br><span>Intelligence Report</span></h1>
+  <p class="cover-subtitle">Warmińskie Centrum Psychoterapii — Complete situational analysis and growth roadmap. Synthesizing financial health, team gaps, competitor threat, advertising performance, expansion plans, and digital strategy into one decisive document.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Date</label><p>17 April 2026</p></div>
+    <div class="cover-meta-item"><label>Status</label><p>Analyzed · Stress-tested · Action-ready</p></div>
+    <div class="cover-meta-item"><label>Team</label><p>25 staff · 3 locations</p></div>
+    <div class="cover-meta-item"><label>Prepared for</label><p>Tomek &amp; Karolina Zagała</p></div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Contents</h3>
+  <ol>
+    <li><a href="#executive-summary">Executive Summary</a></li>
+    <li><a href="#financial-health">Financial Health</a></li>
+    <li><a href="#hr-team">HR &amp; Team Gaps</a></li>
+    <li><a href="#competitor-threat">Competitor Threat: ANIMA</a></li>
+    <li><a href="#google-ads">Google Ads Audit</a></li>
+    <li><a href="#anima-counter">ANIMA Counter-Strategy</a></li>
+    <li><a href="#bartag-expansion">Bartąg Expansion</a></li>
+    <li><a href="#online-therapy">Online Therapy Promotion</a></li>
+    <li><a href="#social-media">Social Media Activation</a></li>
+    <li><a href="#mission-control">Mission Control Dashboard</a></li>
+    <li><a href="#action-plan">30-Day Master Action Plan</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: EXECUTIVE SUMMARY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="executive-summary">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">list_alt</span>
+    <div>
+      <div class="sec-label">Section 01</div>
+      <h2>Executive Summary</h2>
+      <div class="sub">One-page snapshot for Tomek &amp; Karolina</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">2.41M</div>
+        <div class="stat-label">True Revenue 2025 (PLN)</div>
+        <div class="stat-note">Bank statements, not ANALIZA</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">+34.7%</div>
+        <div class="stat-label">Q1 2026 YoY Growth</div>
+        <div class="stat-note">678,870 PLN Q1 2026</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">50.6%</div>
+        <div class="stat-label">Net Cash Margin</div>
+        <div class="stat-note">1,219,592 PLN net cash</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0.99×</div>
+        <div class="stat-label">Google Ads ROAS</div>
+        <div class="stat-note">Breakeven — must improve</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">🔥 Top 5 Priority Actions</h3>
+
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Recruit a Psychiatrist</h4>
+        <p>WCP's #1 capability gap vs ANIMA. Job posting ready, target Aug 2026. This unlocks ADHD pathway independence and prescription capability.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Fix Google Ads — Stop the Bleed</h4>
+        <p>ROAS at breakeven. "Individual Therapy" campaign has 0 conversions — pause today. Add NFZ negatives, fix Elbląg CPA (2× Olsztyn). 30-day plan ready.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Launch Social Media &amp; Online Therapy</h4>
+        <p>60+ date calendar, 28 post concepts ready. Target 15% online revenue in 6 months. 8,800 PLN 6-month budget — modest, high upside.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Pursue NFZ Contract</h4>
+        <p>5-10× patient pool expansion. 12-24 month timeline. ANIMA already has this — WCP must close the gap. Begin application now.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Open Bartąg Location (Low-Risk Rental)</h4>
+        <p>25-35K initial investment. 7-8 sessions/week break-even by month 2-3. Karolina's vision validated with 3 OLX listings identified.</p>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <strong>⚠️ Critical Warning:</strong> ANALIZA "Przychody" column is NOT revenue — it's 80-95% tax payments. Do NOT use ANALIZA figures for business decisions. True revenue is 2,409,461 PLN from bank statements. Using ANALIZA numbers would dramatically understate the business and could lead to catastrophic strategic errors.
+    </div>
+
+    <div class="callout green">
+      <strong>✅ Confidence Signal:</strong> Q1 2026 revenue at 678,870 PLN represents +34.7% YoY growth. The business is accelerating, not plateauing. All strategic moves are backed by a healthy and growing cash position.
+    </div>
+
+  </div>
+</div>
+
+<!-- WCP Center Divider Logo -->
+<div style="text-align:center;padding:40px 0 20px;border-top:1px solid rgba(77,70,55,.2);margin:0 0 64px;">
+  <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:180px;height:auto;opacity:.5;display:block;margin:0 auto;">
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: FINANCIAL HEALTH -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="financial-health">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">savings</span>
+    <div>
+      <div class="sec-label">Section 02</div>
+      <h2>Financial Health</h2>
+      <div class="sub">Corrected methodology · Key figures · Cost breakdown</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout red">
+      <strong>⚠️ METHODOLOGY CORRECTION:</strong> Previous analyses using ANALIZA "Przychody" as revenue were fundamentally wrong. ANALIZA's "Przychody" column contains 80-95% tax payments (ZUS, PIT advances, VAT), NOT actual business revenue. <strong>True revenue must be calculated from bank statement inflows.</strong>
+    </div>
+
+    <h3 class="sub-heading">2025 Financial Overview (Corrected)</h3>
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">2,409,461</div>
+        <div class="stat-label">True Revenue (PLN)</div>
+        <div class="stat-note">Bank statement inflows</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">1,219,592</div>
+        <div class="stat-label">Net Cash (PLN)</div>
+        <div class="stat-note">50.6% margin</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">601,558</div>
+        <div class="stat-label">Operating Costs (PLN)</div>
+        <div class="stat-note">25% of revenue</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">500,150</div>
+        <div class="stat-label">ZUS (PLN)</div>
+        <div class="stat-note">20.8% of revenue</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">327,395</div>
+        <div class="stat-label">PIT (PLN)</div>
+        <div class="stat-note">13.6% of revenue</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Q1 2026: Growth Accelerating</h3>
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">678,870</div>
+        <div class="stat-label">Q1 2026 Revenue (PLN)</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">+34.7%</div>
+        <div class="stat-label">YoY Growth vs Q1 2025</div>
+      </div>
+    </div>
+
+    <p>Q1 2026 shows strong acceleration. At this run rate, 2026 annual revenue could reach <strong>2.7M+ PLN</strong> — a significant step up from 2025.</p>
+
+    <h3 class="sub-heading">Cost Structure Breakdown</h3>
+
+    <table class="kw-table">
+      <tr><th>Category</th><th>Amount (PLN)</th><th>% of Revenue</th><th>Trend</th></tr>
+      <tr><td>Operating Costs</td><td>601,558</td><td>25.0%</td><td class="vol-med">Stable</td></tr>
+      <tr><td>ZUS Contributions</td><td>500,150</td><td>20.8%</td><td class="vol-low">Structural</td></tr>
+      <tr><td>PIT</td><td>327,395</td><td>13.6%</td><td class="vol-low">Structural</td></tr>
+      <tr><td><strong>Net Cash</strong></td><td><strong>1,219,592</strong></td><td><strong>50.6%</strong></td><td class="vol-high">Healthy</td></tr>
+    </table>
+
+    <h3 class="sub-heading">ANALIZA Cost Analysis: UoP → B2B Shift</h3>
+    <p>ANALIZA data reveals a significant structural shift in employment costs as WCP transitioned from UoP (employment contracts) to B2B:</p>
+
+    <table class="kw-table">
+      <tr><th>Period</th><th>Employee Costs (PLN)</th><th>Interpretation</th></tr>
+      <tr><td>Early 2025</td><td>428,000</td><td>UoP contracts (higher employer costs)</td></tr>
+      <tr><td>Mid 2025</td><td>179,000</td><td>Transition to B2B (lower direct costs)</td></tr>
+      <tr><td>Late 2025</td><td>218,000</td><td>B2B stabilisation + new hires</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Key Takeaway:</strong> The UoP → B2B shift saved WCP ~200K+ PLN in direct employer costs. However, this doesn't mean therapists earn less — B2B contractors set their own rates. The savings come from eliminating employer-side ZUS, severance obligations, and paid-leave requirements.
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="WCP_Financial_Health_Report_2026.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Full Financial Health Report (Interactive Charts) →
+      </a>
+      <a href="ANALIZA-COST-ANALYSIS.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">analytics</span> ANALIZA Cost Deep-Dive →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: HR & TEAM GAPS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="hr-team">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">groups</span>
+    <div>
+      <div class="sec-label">Section 03</div>
+      <h2>HR &amp; Team Gaps</h2>
+      <div class="sub">Capability analysis · Development plan · Investment → revenue</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">25</div>
+        <div class="stat-label">Total Staff</div>
+        <div class="stat-note">23 therapists + 2 admin</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Psychiatrists</div>
+        <div class="stat-note">Critical gap vs ANIMA</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">2</div>
+        <div class="stat-label">Couples Therapists</div>
+        <div class="stat-note">Julia Bochko, Krystyna Puzdrowska</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">12/23</div>
+        <div class="stat-label">Without Therapy School</div>
+        <div class="stat-note">52% of therapists</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Therapy School Distribution</h3>
+
+    <table class="kw-table">
+      <tr><th>School</th><th>Count</th><th>Capacity Status</th></tr>
+      <tr><td>CBT (Cognitive-Behavioral)</td><td>6</td><td class="vol-high">Strongest</td></tr>
+      <tr><td>Gestalt</td><td>3</td><td class="vol-med">Moderate</td></tr>
+      <tr><td>Psychodynamiczna</td><td>2</td><td class="vol-low">Thin</td></tr>
+      <tr><td>Integracyjna</td><td>1</td><td class="vol-low">Single point</td></tr>
+      <tr><td>Systemowa</td><td>1</td><td class="vol-low">Single point</td></tr>
+      <tr><td><strong>No school training</strong></td><td><strong>12</strong></td><td class="vol-red">Gap</td></tr>
+    </table>
+
+    <h3 class="sub-heading">HR Development Plan: Investment → Revenue</h3>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🎯</span> Year 1 Investment: 426,000 – 580,000 PLN
+        <span class="tag high">HIGH PRIORITY</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>Projected Revenue Return:</strong> 720,000 – 1,070,000 PLN</p>
+        <p><strong>Payback Period:</strong> 6 – 9 months</p>
+        <p>This is not a cost center — it's a revenue multiplier. Every therapist who gains a school certification unlocks higher session rates and new patient segments.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Priority Actions</h3>
+
+    <div class="funnel-step">
+      <div class="step-num">P1</div>
+      <div class="step-content">
+        <h4>Recruit Psychiatrist</h4>
+        <p><span class="tag high">CRITICAL</span> Target: August 2026. Job posting is ready. This single hire closes WCP's biggest capability gap vs ANIMA and enables independent ADHD diagnosis pathway.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">P2</div>
+      <div class="step-content">
+        <h4>First Wave: 6 Therapists into CBT/Gestalt Schools</h4>
+        <p><span class="tag high">HIGH IMPACT</span> Expands certified capacity in the two most demanded modalities. Also: couples therapy expansion (384,000 – 576,000 PLN/year revenue potential with just 2-3 additional trained couples therapists).</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">P3</div>
+      <div class="step-content">
+        <h4>Group Therapy Facilitator Training</h4>
+        <p><span class="tag medium">MEDIUM</span> 5 therapists nominated. Group therapy is high-margin, underutilized at WCP. Supervision budget: 6,600 – 7,900 PLN/month for ongoing professional development.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="HR-QUALIFICATIONS-ANALYSIS.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> HR Qualifications Full Analysis →
+      </a>
+      <a href="HR-DEVELOPMENT-PLAN.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">school</span> HR Development Plan →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: COMPETITOR THREAT -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="competitor-threat">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">target</span>
+    <div>
+      <div class="sec-label">Section 04</div>
+      <h2>Competitor Threat: ANIMA</h2>
+      <div class="sub">Profile · Asymmetries · WCP counter-advantages</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout red">
+      <strong>⚠️ ANIMA is the #1 direct threat.</strong> With 6 locations, NFZ contracts, an in-house psychiatrist, PTP certification, a day ward, and 40+ specialists — ANIMA has structural advantages WCP cannot ignore. But ANIMA has a critical weakness: <strong>3.2/5 Google reviews (58 reviews)</strong>. WCP sits at <strong>4.7/5 (119 reviews)</strong>.
+    </div>
+
+    <h3 class="sub-heading">Head-to-Head Comparison</h3>
+
+    <div class="vs-grid">
+      <div class="vs-col wcp">
+        <h4>🟢 WCP — Warmińskie Centrum Psychoterapii</h4>
+        <ul class="clean">
+          <li><strong>3 locations:</strong> Olsztyn, Elbląg, Ostróda</li>
+          <li><strong>22+ therapists</strong> (only multi-location center in Warmia)</li>
+          <li><strong>Reviews:</strong> 4.7/5 (119 reviews) ✅</li>
+          <li><strong>DIVA-5 ADHD:</strong> 600 PLN (50% cheaper)</li>
+          <li><strong>MOXO:</strong> Unique in region ✅</li>
+          <li><strong>Brand:</strong> Warmer, more personal</li>
+          <li><strong>No psychiatrist</strong> ❌</li>
+          <li><strong>No NFZ contract</strong> ❌</li>
+        </ul>
+      </div>
+      <div class="vs-col anima">
+        <h4>🔴 ANIMA — Centrum Terapii ANIMA</h4>
+        <ul class="clean">
+          <li><strong>6 locations</strong> across region</li>
+          <li><strong>40+ specialists</strong></li>
+          <li><strong>Reviews:</strong> 3.2/5 (58 reviews) ❌</li>
+          <li><strong>DIVA-5 ADHD:</strong> 1,200 PLN (2× WCP)</li>
+          <li><strong>MOXO:</strong> Not available</li>
+          <li><strong>Brand:</strong> More clinical, institutional</li>
+          <li><strong>Psychiatrist on staff</strong> ✅</li>
+          <li><strong>NFZ contracts</strong> ✅</li>
+          <li><strong>PTP, day ward</strong> ✅</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">ANIMA Pricing Intelligence</h3>
+
+    <table class="kw-table">
+      <tr><th>Service</th><th>ANIMA Price (PLN)</th><th>WCP Price (PLN)</th><th>WCP Advantage</th></tr>
+      <tr><td>Psychiatrist Consultation</td><td>300</td><td>N/A</td><td class="vol-red">Gap — must recruit</td></tr>
+      <tr><td>Psychotherapy Session</td><td>200</td><td>~200</td><td class="vol-low">Parity</td></tr>
+      <tr><td>DIVA-5 ADHD Diagnosis</td><td>1,200</td><td>600</td><td class="vol-high">50% cheaper</td></tr>
+    </table>
+
+    <h3 class="sub-heading">WCP's Counter-Advantages</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>1️⃣</span> Price Dominance on ADHD</div>
+      <div class="idea-body">
+        <p>DIVA-5 at 600 PLN vs ANIMA's 1,200 PLN is not a small advantage — it's <strong>a dealbreaker for price-sensitive patients</strong>. Combined with MOXO (unique in the region), WCP owns the ADHD diagnostic pathway on value. Promote aggressively.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>2️⃣</span> Review Score Dominance</div>
+      <div class="idea-body">
+        <p>4.7/5 vs 3.2/5 is a <strong>massive trust gap</strong>. Patients read reviews before booking. This is WCP's strongest organic competitive moat. Protect it, grow it, weaponize it in marketing.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>3️⃣</span> Brand Warmth</div>
+      <div class="idea-body">
+        <p>WCP feels like a place where humans help humans. ANIMA feels like an institution. In mental health, the emotional register of your brand is the product. Lean into warmth — it's a structural advantage, not just aesthetics.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="COMPETITOR-ANALYSIS-REPORT.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Full Competitor Analysis Report →
+      </a>
+      <a href="ANIMA-THREAT-REPORT.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">radar</span> ANIMA Deep Threat Analysis →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: GOOGLE ADS AUDIT -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="google-ads">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">target</span>
+    <div>
+      <div class="sec-label">Section 05</div>
+      <h2>Google Ads Audit</h2>
+      <div class="sub">ROAS analysis · Critical issues · 30-day optimization plan</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <a href="GOOGLE-ADS-OPTIMIZATION-REPORT.html" class="sub-report-link">
+      <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Full Google Ads Optimization Report →
+    </a>
+
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-value">0.99×</div>
+        <div class="stat-label">Overall ROAS</div>
+        <div class="stat-note">Breakeven — every PLN returns ~1 PLN</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">11.85</div>
+        <div class="stat-label">Brand CPA (PLN)</div>
+        <div class="stat-note">Best performing campaign</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0</div>
+        <div class="stat-label">"Individual Therapy" Campaign Conversions</div>
+        <div class="stat-note">PAUSE IMMEDIATELY</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">102.74</div>
+        <div class="stat-label">Elbląg CPA (PLN)</div>
+        <div class="stat-note">2× Olsztyn CPA</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Critical Issues Found</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🔴</span> "Individual Therapy" Campaign: Zero Conversions <span class="tag high">PAUSE NOW</span></div>
+      <div class="idea-body">
+        <p>This campaign is spending budget with <strong>zero conversions</strong>. Every PLN spent is wasted. Pause immediately and reallocate budget to brand campaign and high-performing local keywords.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🔴</span> NFZ Keyword Leak <span class="tag high">URGENT</span></div>
+      <div class="idea-body">
+        <p>WCP does NOT have NFZ contracts. Yet ads are triggering on NFZ-related searches, wasting clicks on patients who can't afford private therapy. Add comprehensive NFZ negative keywords immediately.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🟡</span> 625/677 Keywords With No Quality Score <span class="tag medium">HIGH EFFORT</span></div>
+      <div class="idea-body">
+        <p>92% of keywords lack a Quality Score, meaning Google hasn't gathered enough data to evaluate them. This indicates low impression volume, poor ad-to-keyword relevance, or both. A systematic quality score improvement effort is needed.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">30-Day Optimization Plan</h3>
+
+    <div class="funnel-step">
+      <div class="step-num">D0</div>
+      <div class="step-content">
+        <h4>Day 0 — Immediate Actions</h4>
+        <p>Pause the "Individual Therapy" campaign. Add NFZ negative keywords across all campaigns. Set Elbląg bid adjustment to -30% while investigating.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">D7</div>
+      <div class="step-content">
+        <h4>Day 7 — Elbląg Fix</h4>
+        <p>Create separate Elbląg campaign with tailored ad copy and lower budget. Analyse landing page conversion for Elbląg traffic — may need location-specific messaging.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">D14</div>
+      <div class="step-content">
+        <h4>Day 14 — Match Type Shift</h4>
+        <p>Move high-spend broad match keywords to exact/phrase match. This reduces wasted spend on irrelevant queries and improves Quality Score over time.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">D30</div>
+      <div class="step-content">
+        <h4>Day 30 — Budget Reallocation + New Campaigns</h4>
+        <p>Shift budget from underperformers to brand + local campaigns. Launch new Online Therapy campaign (50 PLN/day). Launch ADHD-specific campaign targeting "ADHD diagnosis" keywords.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- WCP Center Divider Logo -->
+<div style="text-align:center;padding:40px 0 20px;border-top:1px solid rgba(77,70,55,.2);margin:0 0 64px;"> <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:180px;height:auto;opacity:.5;display:block;margin:0 auto;"> </div>
+
+<!-- SECTION 6: ANIMA COUNTER-STRATEGY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="anima-counter">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">verified_user</span>
+    <div>
+      <div class="sec-label">Section 06</div>
+      <h2>ANIMA Counter-Strategy</h2>
+      <div class="sub">Priority actions · Psychiatrist recruitment · NFZ pursuit · ADHD defense</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <a href="ANIMA-COUNTER-STRATEGY-REPORT.html" class="sub-report-link">
+      <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Full ANIMA Counter-Strategy Report →
+    </a>
+
+    <div class="funnel-step">
+      <div class="step-num">P1</div>
+      <div class="step-content">
+        <h4>Recruit Psychiatrist — Timeline: Aug 2026</h4>
+        <p><span class="tag high">CRITICAL</span> This is the single highest-leverage strategic move. A psychiatrist on staff enables: independent ADHD diagnosis pathway, medication management, insurance partnerships, and parity with ANIMA's offering. <strong>Job posting is ready for distribution.</strong></p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">P2</div>
+      <div class="step-content">
+        <h4>Pursue NFZ Contract — 5-10× Patient Pool</h4>
+        <p><span class="tag high">HIGH IMPACT</span> ANIMA already has NFZ contracts. Without one, WCP is invisible to the ~70% of Polish patients who search NFZ first. Timeline: 12-24 months for application processing. Begin the application immediately — this is a strategic must, not an option.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">P2</div>
+      <div class="step-content">
+        <h4>ADHD Flagship Defense — Price + Uniqueness</h4>
+        <p><span class="tag medium">DEFEND</span> WCP's DIVA-5 at 600 PLN (vs ANIMA 1,200) + MOXO (unique in region) makes WCP the undeniable value leader for ADHD diagnosis. Promote this aggressively in all channels — Google Ads, social, website, ZnanyLekarz.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">P2</div>
+      <div class="step-content">
+        <h4>SEO &amp; Review Attack — Target ANIMA's 3.2/5 Weakness</h4>
+        <p><span class="tag quick-win">QUICK WIN</span> When patients search "ANIMA psychotherapy" or "ANIMA reviews," WCP should appear with content that highlights the review gap. Not negative campaigning — but content like "How to choose a therapist in Olsztyn — what to look for" that naturally surfaces review scores.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Strategic Note:</strong> WCP does not need to match ANIMA facility-for-facility. The winning strategy is to be <strong>the better choice</strong>, not the bigger one. Better reviews, better prices, warmer brand, unique diagnostics (MOXO). The psychiatrist hire + NFZ contract close the only gaps that actually matter.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: BARTĄG EXPANSION -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="bartag-expansion">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">home</span>
+    <div>
+      <div class="sec-label">Section 07</div>
+      <h2>Bartąg Expansion</h2>
+      <div class="sub">Karolina's vision · Rental model · CCPT equipment · Financials</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <a href="WCP-Expansion-Report-v2.html" class="sub-report-link">
+      <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Full Bartąg Expansion Report v2 →
+    </a>
+
+    <div class="callout green">
+      <strong>✅ Karolina's Feedback Incorporated:</strong> Scope narrowed to Bartąg area only (not multi-location expansion). Model changed from purchase to rental — 10-15× lower initial investment. Flat-like layout validated as ideal for therapy practice.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">25-35K</div>
+        <div class="stat-label">Initial Investment (PLN)</div>
+        <div class="stat-note">With buffer: 32,000-52,000 PLN</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">7-8</div>
+        <div class="stat-label">Sessions/Week to Break-even</div>
+        <div class="stat-note">Month 2-3</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">4,070-7,505</div>
+        <div class="stat-label">CCPT Equipment (PLN)</div>
+        <div class="stat-note">Wood preferred, used sourcing</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Layout: Flat-to-Clinic Conversion</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🏠</span> Flat-Like Layout — Minimal Conversion Needed</div>
+      <div class="idea-body">
+        <ul class="clean">
+          <li><strong>2 bedrooms → 2 therapy rooms</strong> (already have doors, privacy, appropriate size)</li>
+          <li><strong>Kitchen → Staff room</strong> (breaks, storage, informal supervision)</li>
+          <li><strong>Corridor → Waiting area</strong> (add seating, calming decor)</li>
+          <li><strong>Living room → Reception / intake</strong></li>
+        </ul>
+        <p>Rental flats need minimal conversion for therapy use. No plumbing changes, no structural work. Just furniture, sound insulation between rooms, and professional signage.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">CCPT Equipment Budget (Play Therapy)</h3>
+
+    <table class="kw-table">
+      <tr><th>Item</th><th>Used/New</th><th>Est. Cost (PLN)</th></tr>
+      <tr><td>Sandbox (wood, 70×50×8 cm)</td><td>Wood / Used</td><td>400-800</td></tr>
+      <tr><td>Sand (kinetic, 10 kg)</td><td>New</td><td>100-200</td></tr>
+      <tr><td>Miniature set (300+ figures)</td><td>Mixed</td><td>1,500-3,000</td></tr>
+      <tr><td>Water tray</td><td>Wood</td><td>200-400</td></tr>
+      <tr><td>Shelves / storage</td><td>Used</td><td>500-1,200</td></tr>
+      <tr><td>Art supplies (paints, clay, paper)</td><td>New</td><td>370-905</td></tr>
+      <tr><td>Pillows, rugs, sensory items</td><td>Mixed</td><td>500-1,000</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td><strong>4,070-7,505</strong></td></tr>
+    </table>
+
+    <h3 class="sub-heading">Bartąg Listings Identified (OLX)</h3>
+
+    <table class="kw-table">
+      <tr><th>Listing</th><th>Area</th><th>Fit</th></tr>
+      <tr><td>Apartment #1</td><td>42 m²</td><td class="vol-med">Compact but viable</td></tr>
+      <tr><td>Apartment #2</td><td>49 m²</td><td class="vol-high">Sweet spot</td></tr>
+      <tr><td>Apartment #3</td><td>57 m²</td><td class="vol-high">Spacious — future-proof</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 8: ONLINE THERAPY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="online-therapy">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">videocam</span>
+    <div>
+      <div class="sec-label">Section 08</div>
+      <h2>Online Therapy Promotion</h2>
+      <div class="sub">Landing page · Ad campaign · Revenue target</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">15%</div>
+        <div class="stat-label">Revenue Target from Online</div>
+        <div class="stat-note">Within 6 months</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">4.0×</div>
+        <div class="stat-label">Target ROAS</div>
+        <div class="stat-note">Google Ads campaign</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">50 PLN</div>
+        <div class="stat-label">Daily Ad Budget</div>
+        <div class="stat-note">~1,500 PLN/month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">60 PLN</div>
+        <div class="stat-label">Target CPA</div>
+        <div class="stat-note">Cost per acquisition</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Dedicated Landing Page Wireframe</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🌐</span> wcp.com.pl/terapia-online — 9-Section Architecture</div>
+      <div class="idea-body">
+        <div class="funnel-step">
+          <div class="step-num">1</div>
+          <div class="step-content"><h4>Hero Section</h4><p>"Professional psychological help — without leaving home." CTA: "Book an online appointment →"</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">2</div>
+          <div class="step-content"><h4>Trust Bar</h4><p>Social proof strip: sessions conducted, review scores, therapist count</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">3</div>
+          <div class="step-content"><h4>How It Works (3 steps)</h4><p>"Choose a therapist → Book a time slot → Join the session"</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">4</div>
+          <div class="step-content"><h4>For Whom Section</h4><p>Cards: stress, depression, anxiety, ADHD, grief, youth</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">5</div>
+          <div class="step-content"><h4>Meet Your Therapist</h4><p>Photo grid with specialisation tags and video intros</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">6</div>
+          <div class="step-content"><h4>Intake Quiz</h4><p>"Which therapy is right for me?" — 5-7 questions → therapist match</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">7</div>
+          <div class="step-content"><h4>3-Tier Commitment Ladder</h4><p>Free consult → Discounted first session → 5-session package</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">8</div>
+          <div class="step-content"><h4>FAQ Accordion</h4><p>Effectiveness, privacy, process, therapist switching</p></div>
+        </div>
+        <div class="funnel-step">
+          <div class="step-num">9</div>
+          <div class="step-content"><h4>Sticky CTA</h4><p>Floating "Book your first session" button on scroll</p></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Google Ads Campaign: Online Therapy</h3>
+
+    <table class="kw-table">
+      <tr><th>Parameter</th><th>Value</th></tr>
+      <tr><td>Daily Budget</td><td>50 PLN</td></tr>
+      <tr><td>Target CPA</td><td>60 PLN</td></tr>
+      <tr><td>Target ROAS</td><td>4.0×</td></tr>
+      <tr><td>Primary Keywords</td><td>psychologist online, psychotherapist online, therapy online</td></tr>
+      <tr><td>Negative Keywords</td><td>free, free, NFZ, refunded, work, studies</td></tr>
+      <tr><td>Landing Page</td><td>wcp.com.pl/terapia-online</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Booknetic Integration</h3>
+    <p>Steps defined for integrating online therapy booking directly into the Booknetic system. Patients should be able to filter by "online available," select a therapist, choose a time slot, and receive a video link — all within one flow. No phone calls needed.</p>
+
+    <h3 class="sub-heading">Social Media Post Concepts (5 Ready)</h3>
+    <ul class="clean">
+      <li><strong>Post 1:</strong> "What does an online session look like? 3 steps →" (carousel)</li>
+      <li><strong>Post 2:</strong> "Therapy from the couch — does it really work?" (myth-busting)</li>
+      <li><strong>Post 3:</strong> "Why 20 specialists are better than 1" (breadth sell)</li>
+      <li><strong>Post 4:</strong> "You feel something is off, but don't know what? We can help." (feel-first)</li>
+      <li><strong>Post 5:</strong> "First online session — 50% off. Book now." (conversion)</li>
+    </ul>
+
+    </div>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="ONLINE-THERAPY-PROMOTION-PLAN.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Full Online Therapy Promotion Plan →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 9: SOCIAL MEDIA -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="social-media">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">smartphone</span>
+    <div>
+      <div class="sec-label">Section 09</div>
+      <h2>Social Media Activation</h2>
+      <div class="sub">Calendar · 30-day launch · Platform strategies</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <a href="SOCIAL-MEDIA-ACTIVATION-REPORT.html" class="sub-report-link">
+      <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Full Social Media Activation Report →
+    </a>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">60+</div>
+        <div class="stat-label">Dates in Content Calendar</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">28</div>
+        <div class="stat-label">Post Concepts (First 30 Days)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">~8,800</div>
+        <div class="stat-label">6-Month Budget (PLN)</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Profile Unification Plan</h3>
+    <p>All WCP social media profiles unified under a consistent visual identity:</p>
+    <ul class="clean">
+      <li><strong>Color scheme:</strong> Dark theme, gold accents (matching this report)</li>
+      <li><strong>Bios:</strong> Consistent across platforms — same tagline, same contact info, same link</li>
+      <li><strong>Imagery:</strong> No stock photos. Real therapists, real spaces, warm lighting</li>
+      <li><strong>Logo:</strong> Crown + WCP wordmark prominently placed</li>
+    </ul>
+
+    <h3 class="sub-heading">Platform Strategy</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📸</span> Instagram — Carousels + Reels</div>
+      <div class="idea-body">
+        <p><strong>Primary audience:</strong> 25-40, aesthetic-aware, already consuming mental health content.</p>
+        <ul class="clean">
+          <li><strong>Carousels:</strong> Education pillars — "5 signs you should talk to a specialist", "CBT vs Gestalt — which therapy is right for you?"</li>
+          <li><strong>Reels:</strong> Short-form therapist tips, myth-busting, "day in the life" content</li>
+          <li><strong>Stories:</strong> Daily presence — polls, Q&amp;A, behind-the-scenes, booking reminders</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>👥</span> Facebook — Community + Events</div>
+      <div class="idea-body">
+        <p><strong>Primary audience:</strong> 30-55, parents, professionals, life-transition demographics.</p>
+        <ul class="clean">
+          <li><strong>Community posts:</strong> Longer-form educational content, therapist spotlights</li>
+          <li><strong>Facebook Live:</strong> Monthly Q&amp;A sessions with therapists</li>
+          <li><strong>Events:</strong> Webinars, open days, workshops</li>
+          <li><strong>Facebook Group:</strong> "Psychological Support — Warmia and Mazury" (moderated)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🎵</span> TikTok — Therapy Tips &amp; Myth-Busting</div>
+      <div class="idea-body">
+        <p><strong>Primary audience:</strong> 18-30, Gen Z, high mental health content engagement.</p>
+        <ul class="clean">
+          <li><strong>Format:</strong> Authentic, phone-shot, therapist-on-camera content</li>
+          <li><strong>Topics:</strong> "Myths about therapy", "POV: Your first session", "3 techniques for a panic attack"</li>
+          <li><strong>Tone:</strong> Real, warm, zero corporate polish. Authenticity &gt; production value</li>
+          <li><strong>Pilot:</strong> 4 videos from 2 willing therapists → measure before scaling</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">30-Day Launch: Post Concepts (Summary)</h3>
+
+    <table class="kw-table">
+      <tr><th>Week</th><th>Instagram</th><th>Facebook</th><th>TikTok</th></tr>
+      <tr><td>Week 1</td><td>4 carousel + 2 reels</td><td>3 community posts</td><td>2 myth-busting videos</td></tr>
+      <tr><td>Week 2</td><td>4 carousel + 2 reels</td><td>3 community + 1 event</td><td>2 tips videos</td></tr>
+      <tr><td>Week 3</td><td>3 carousel + 3 reels</td><td>3 community posts</td><td>2 POV format</td></tr>
+      <tr><td>Week 4</td><td>3 carousel + 3 reels</td><td>2 community + 1 live</td><td>2 Q&amp;A format</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Ethical Floor:</strong> Never exploit vulnerability for engagement. Lead with empowerment, normalisation, and practical value. Always include crisis line info (116 123) on mental health content. No clinical cure claims.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 10: MISSION CONTROL -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="mission-control">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Section 10</div>
+      <h2>Mission Control Dashboard</h2>
+      <div class="sub">Task pipeline · Trust scores · Document stats</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">19</div>
+        <div class="stat-label">Total Tasks</div>
+        <div class="stat-note">14 done · 5 open</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">0.71</div>
+        <div class="stat-label">Overall Trust Score</div>
+        <div class="stat-note">🟢 Green zone</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">100</div>
+        <div class="stat-label">Documents in Repository</div>
+        <div class="stat-note">87 financial · 8 advertising · 4 HR</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">13,799</div>
+        <div class="stat-label">Financial Transactions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">651</div>
+        <div class="stat-label">Ad Metric Groups</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Trust Scores by Category</h3>
+
+    <table class="kw-table">
+      <tr><th>Category</th><th>Trust Score</th><th>Status</th><th>Notes</th></tr>
+      <tr><td>Overall</td><td>0.71</td><td class="vol-high">🟢 Green</td><td>Healthy across most dimensions</td></tr>
+      <tr><td>Financial</td><td>0.74</td><td class="vol-high">🟢 Green</td><td>Strong data quality from bank statements</td></tr>
+      <tr><td>Advertising</td><td>0.99</td><td class="vol-high">🟢 Excellent</td><td>Comprehensive metrics import</td></tr>
+      <tr><td>Documents</td><td>0.40</td><td class="vol-red">🔴 Needs Work</td><td>Parse backlog — 100 docs, many unprocessed</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Open Tasks (5)</h3>
+
+    <table class="kw-table">
+      <tr><th>Task</th><th>Status</th><th>Blocker</th></tr>
+      <tr><td>Financial document parsing</td><td class="vol-red">Blocked</td><td>Parse backlog</td></tr>
+      <tr><td>HR document ingestion</td><td class="vol-red">Blocked</td><td>Parse backlog</td></tr>
+      <tr><td>Competitor monitoring automation</td><td class="vol-med">In Progress</td><td>—</td></tr>
+      <tr><td>Social media calendar deployment</td><td class="vol-med">In Progress</td><td>—</td></tr>
+      <tr><td>Google Ads optimization execution</td><td class="vol-med">In Progress</td><td>—</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Priority:</strong> The documents trust score at 0.40 is the weakest link. Clearing the parse backlog would unlock better financial analysis and HR intelligence. Recommend dedicating a sprint to document processing.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 11: 30-DAY MASTER ACTION PLAN -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="action-plan">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">map</span>
+    <div>
+      <div class="sec-label">Section 11</div>
+      <h2>30-Day Master Action Plan</h2>
+      <div class="sub">Consolidated timeline from all analyses · With owners</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout green">
+      <strong>✅ This is the consolidated execution plan</strong> — drawn from all nine analyses. Every action has an owner and a deadline. The first 7 days contain the highest-impact moves.
+    </div>
+
+    <h3 class="sub-heading">WEEK 1: Critical Fixes &amp; Quick Wins (Apr 18-24)</h3>
+
+    <div class="timeline-row">
+      <div class="timeline-day" style="background:#4CAF7D;color:#101418">✅ Day 0</div>
+      <div class="timeline-content">
+        <h4>✅ Pause "Individual Therapy" Google Ads Campaign — COMPLETED</h4>
+        <p>Zero conversions = zero excuse. Campaign fully stopped 18 April 2026. Budget reallocated to brand campaign. Monthly savings: ~1,650 PLN.</p>
+        <div class="owner" style="color:#6fcf97">✅ Completed 18 Apr — Owner: Ewelina / Marketing Coordinator</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day" style="background:#4CAF7D;color:#101418">✅ Day 0</div>
+      <div class="timeline-content">
+        <h4>✅ Add NFZ Negative Keywords — COMPLETED</h4>
+        <p>NFZ, free, free, refunded and 16+ more negatives added across ALL Google Ads campaigns at both campaign and account level. Keyword bleed stopped.</p>
+        <div class="owner" style="color:#6fcf97">✅ Completed 18 Apr — Owner: Ewelina / Google Ads Manager</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 1-2</div>
+      <div class="timeline-content">
+        <h4>📋 Distribute Psychiatrist Job Posting</h4>
+        <p>Post on Pracuj.pl, LinkedIn, OLX, and professional networks. Target: Aug 2026 start.</p>
+        <div class="owner">Owner: Ewelina / Karolina</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 1-3</div>
+      <div class="timeline-content">
+        <h4>📱 Update Google Business Profiles (All 3 Locations)</h4>
+        <p>Lead with online therapy in descriptions. Add Q&amp;A entries. Update services section.</p>
+        <div class="owner">Owner: Ewelina / Admin</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 2-3</div>
+      <div class="timeline-content">
+        <h4>🌐 Publish /terapia-online Landing Page (Basic Version)</h4>
+        <p>Hero + trust bar + 3-step process + CTA. Polish later. Ship now.</p>
+        <div class="owner">Owner: Tomek / Web Developer</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 3-5</div>
+      <div class="timeline-content">
+        <h4>📸 Unify Social Media Profiles</h4>
+        <p>Dark theme + gold accents. Consistent bios. Same contact info across all platforms.</p>
+        <div class="owner">Owner: Social Media Coordinator</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">WEEK 2: Optimization &amp; Launch (Apr 25 - May 1)</h3>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 7</div>
+      <div class="timeline-content">
+        <h4>🎯 Fix Elbląg Google Ads Campaign</h4>
+        <p>Create separate Elbląg campaign with tailored copy. Set bid adjustments. Analyze landing page for Elbląg traffic.</p>
+        <div class="owner">Owner: Ewelina / Google Ads Manager</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 7-8</div>
+      <div class="timeline-content">
+        <h4>🚀 Launch Social Media 30-Day Calendar</h4>
+        <p>First 7 posts go live. Instagram carousel + Facebook community post + TikTok myth-busting video.</p>
+        <div class="owner">Owner: Social Media Coordinator / Willing Therapists</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 8-10</div>
+      <div class="timeline-content">
+        <h4>🏡 View Bartąg Rental Listings</h4>
+        <p>Schedule visits for 3 OLX apartments (42 m², 49 m², 57 m²). Bring layout checklist.</p>
+        <div class="owner">Owner: Karolina</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 10</div>
+      <div class="timeline-content">
+        <h4>📋 Begin NFZ Contract Application</h4>
+        <p>Research requirements, prepare documentation. 12-24 month process — the earlier you start, the earlier you finish.</p>
+        <div class="owner">Owner: Karolina / Ewelina</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">WEEKS 3-4: Scale &amp; Deepen (May 2-17)</h3>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 14</div>
+      <div class="timeline-content">
+        <h4>🔄 Shift Google Ads Match Types</h4>
+        <p>Move high-spend broad match keywords to exact/phrase match. Improve Quality Score systematically.</p>
+        <div class="owner">Owner: Ewelina / Google Ads Manager</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 14-17</div>
+      <div class="timeline-content">
+        <h4>📹 Film Therapist Video Intros (4-6 Therapists)</h4>
+        <p>30-60 second selfie-style videos. Script: name, specialization, approach. Add to website and social.</p>
+        <div class="owner">Owner: Tomek / Willing Therapists</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 17-20</div>
+      <div class="timeline-content">
+        <h4>🏫 Enroll First Wave Therapists in CBT/Gestalt Schools</h4>
+        <p>Identify 6 therapists, confirm enrollment, budget allocation. Y1 investment: 426-580K PLN.</p>
+        <div class="owner">Owner: Karolina / Clinical Lead</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 21-25</div>
+      <div class="timeline-content">
+        <h4>🎨 Build Intake Quiz for /terapia-online</h4>
+        <p>"Which therapy is right for me?" — 5-7 questions → therapist match. Key conversion booster.</p>
+        <div class="owner">Owner: Tomek / Web Developer</div>
+      </div>
+    </div>
+
+    <div class="timeline-row">
+      <div class="timeline-day">Day 28-30</div>
+      <div class="timeline-content">
+        <h4>💰 Reallocate Google Ads Budget</h4>
+        <p>Based on 30-day data: shift from underperformers to brand + local + online therapy + ADHD campaigns.</p>
+        <div class="owner">Owner: Ewelina / Google Ads Manager</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Beyond 30 Days</h3>
+
+    <div class="priority-matrix">
+      <div class="matrix-cell high-impact-low-effort">
+        <h4>🟢 Continue &amp; Optimize</h4>
+        <ul>
+          <li>Weekly social media cadence</li>
+          <li>Google Ads performance reviews</li>
+          <li>NFZ application progress</li>
+          <li>Psychiatrist recruitment pipeline</li>
+          <li>Bartąg location decision</li>
+        </ul>
+      </div>
+      <div class="matrix-cell high-impact-high-effort">
+        <h4>🔵 Build Toward</h4>
+        <ul>
+          <li>Online therapy 15% revenue target</li>
+          <li>Therapist school enrollment</li>
+          <li>Couples therapy expansion</li>
+          <li>Group therapy launch</li>
+          <li>B2B EAP partnerships</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-low-effort">
+        <h4>🟡 Do When Convenient</h4>
+        <ul>
+          <li>Citation building (Bing, Apple Maps)</li>
+          <li>Google Business weekly posts</li>
+          <li>Print materials distribution</li>
+          <li>Email nurture sequence setup</li>
+        </ul>
+      </div>
+      <div class="matrix-cell low-impact-high-effort">
+        <h4>🔴 Plan For Later</h4>
+        <ul>
+          <li>Podcast production</li>
+          <li>Major website redesign</li>
+          <li>Bus stop / citylight advertising</li>
+          <li>Patient referral programme</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+</main>
+
+<!-- Scroll Spy & Navigation -->
+<script>
+const sectionNames = {
+  'cover':'Cover',
+  'executive-summary':'Executive Summary',
+  'financial-health':'Financial Health',
+  'hr-team':'HR & Team',
+  'competitor-threat':'Competitor Threat',
+  'google-ads':'Google Ads',
+  'anima-counter':'ANIMA Counter-Strategy',
+  'bartag-expansion':'Bartąg Expansion',
+  'online-therapy':'Online Therapy',
+  'social-media':'Social Media',
+  'mission-control':'Mission Control',
+  'action-plan':'30-Day Action Plan'
+};
+const navLinks = document.querySelectorAll('.nav-link[data-section]');
+const topnavSection = document.getElementById('topnav-section');
+
+function setActive(id){
+  navLinks.forEach(l=>l.classList.toggle('active',l.dataset.section===id));
+  if(topnavSection) topnavSection.textContent = sectionNames[id]||'';
+}
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) setActive(e.target.id);});
+},{rootMargin:'-15% 0px -70% 0px',threshold:0.05});
+
+Object.keys(sectionNames).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) obs.observe(el);
+});
+
+navLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
+    const t=document.querySelector(link.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+
+</body>
+</html>

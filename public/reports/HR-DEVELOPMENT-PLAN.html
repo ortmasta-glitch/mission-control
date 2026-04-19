@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR Development Plan · WCP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo img{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.red{border-left-color:var(--red-t)}
+  .callout.red strong{color:#f08080}
+  .callout.green{border-left-color:var(--green-t)}
+  .callout.green strong{color:#6fcf97}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .stat-card{background:var(--surface-mid);border-radius:6px;padding:18px;border-left:3px solid var(--gold-dim)}
+  .stat-card .stat-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .stat-card .stat-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-card .stat-note{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .stat-card.green{border-left-color:var(--green-t)}
+  .stat-card.green .stat-value{color:#6fcf97}
+  .stat-card.red{border-left-color:var(--red-t)}
+  .stat-card.red .stat-value{color:#f08080}
+  .stat-card.blue{border-left-color:var(--blue-t)}
+  .stat-card.blue .stat-value{color:#7bc8e0}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .vol-low{color:#7bc8e0;font-weight:700}
+  .kw-table .vol-red{color:#f08080;font-weight:700}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .page-footer{display:none}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  .bar-chart-container{margin:20px 0;padding:15px;background:var(--surface-mid);border-radius:4px}
+  .bar-item{display:flex;align-items:center;margin:12px 0;font-size:.85rem}
+  .bar-label{width:140px;flex-shrink:0;color:var(--muted);font-size:.78rem}
+  .bar-wrap{flex:1;background:rgba(16,20,24,.5);border-radius:3px;height:24px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;border-radius:3px;transition:width 1.2s ease-out}
+  .bar-gold{background:var(--gold)}
+  .bar-green{background:var(--green-t)}
+  .bar-red{background:var(--red-t)}
+  .bar-value{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:.7rem;color:var(--on-surface);font-weight:600}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .funnel-step:last-child{border-bottom:none}
+  .funnel-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .timeline-row{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .timeline-row:last-child{border-bottom:none}
+  .timeline-q{background:var(--surface-high);border-radius:4px;padding:6px 12px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;flex-shrink:0;min-width:80px;text-align:center}
+  .timeline-month{background:var(--surface-high);border-radius:4px;padding:6px 12px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap;flex-shrink:0;min-width:100px;text-align:center}
+  .timeline-content h4{font-size:.9rem;font-weight:700;color:var(--on-surface);margin-bottom:3px}
+  .timeline-content p{font-size:.84rem;color:var(--muted)}
+  .timeline-content .owner{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-t);margin-top:4px}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.page-canvas{padding:28px 16px 60px}.stat-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Return to Strategic Report →
+  </a>
+
+  <div class="sidebar-label">Navigation</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Home
+    </a>
+    <a class="nav-link" href="#executive-summary" data-section="executive-summary">
+      <span class="material-symbols-outlined nav-icon">summarize</span> Summary
+    </a>
+    <a class="nav-link" href="#psychiatrist" data-section="psychiatrist">
+      <span class="material-symbols-outlined nav-icon">medication</span> Psychiatrist
+    </a>
+    <a class="nav-link" href="#therapy-schools" data-section="therapy-schools">
+      <span class="material-symbols-outlined nav-icon">school</span> Therapy Schools
+    </a>
+    <a class="nav-link" href="#couples-therapy" data-section="couples-therapy">
+      <span class="material-symbols-outlined nav-icon">favorite</span> Couples Therapy
+    </a>
+    <a class="nav-link" href="#group-therapy" data-section="group-therapy">
+      <span class="material-symbols-outlined nav-icon">groups</span> Groups
+    </a>
+    <a class="nav-link" href="#supervision" data-section="supervision">
+      <span class="material-symbols-outlined nav-icon">supervisor_account</span> Supervision
+    </a>
+    <a class="nav-link" href="#budget" data-section="budget">
+      <span class="material-symbols-outlined nav-icon">account_balance</span> Budget
+    </a>
+    <a class="nav-link" href="#timeline" data-section="timeline">
+      <span class="material-symbols-outlined nav-icon">timeline</span> Timeline
+    </a>
+    <a class="nav-link" href="#responsibilities" data-section="responsibilities">
+      <span class="material-symbols-outlined nav-icon">assignment_ind</span> Responsibilities
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="HR-DEVELOPMENT-PLAN-PL.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇵🇱</span> PL Version
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP · HR Development Plan</span>
+  <span class="topnav-section" id="topnav-section">Home</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- COVER -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  
+  <span class="cover-badge">🕯️ Strategic Team Development Plan · April 2026</span>
+  <h1 class="cover-h1">HR Development<br><span>Plan</span></h1>
+  <p class="cover-subtitle">Warmińskie Centrum Psychoterapii — Plan to close critical HR gaps. Psychiatrist recruitment, therapy schools for psychologists, couples therapy expansion, group facilitator training, and supervision budget. Five priority actions ranked by business impact.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Date</label><p>17 April 2026</p></div>
+    <div class="cover-meta-item"><label>Author</label><p>Inspector (Der Alte sub-agent)</p></div>
+    <div class="cover-meta-item"><label>Responsible</label><p>Ewelina Romanowska, Karolina Zagała</p></div>
+    <div class="cover-meta-item"><label>Classification</label><p>Confidential · Internal</p></div>
+  </div>
+</section>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="section" id="executive-summary">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">summarize</span>
+    <div>
+      <div class="sec-label">Section 01</div>
+      <h2>Executive Summary</h2>
+      <div class="sub">Five priority actions ranked by business impact</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p>WCP has 23 active psychotherapists but faces critical gaps in service offerings that limit revenue and clinical capabilities. This plan covers five priority actions ranked by business impact:</p>
+
+    <table class="kw-table">
+      <tr><th>Priority</th><th>Action</th><th>Revenue Impact</th><th>Investment</th><th>Timeline</th></tr>
+      <tr><td><span class="tag high">P1</span></td><td>Psychiatrist Recruitment</td><td class="vol-high">★★★★★</td><td>25-35K PLN/month</td><td>3-6 months</td></tr>
+      <tr><td><span class="tag high">P2</span></td><td>Therapy School Enrollment (5+ psychologists)</td><td class="vol-high">★★★★</td><td>75-150K PLN total</td><td>Enrollment Q3 2026</td></tr>
+      <tr><td><span class="tag high">P2</span></td><td>Couples Therapy Development (2-3 therapists)</td><td class="vol-high">★★★★</td><td>Recruitment costs</td><td>2-4 months</td></tr>
+      <tr><td><span class="tag medium">P3</span></td><td>Group Facilitator Training</td><td class="vol-med">★★★</td><td>3-5K PLN / therapist</td><td>Q3-Q4 2026</td></tr>
+      <tr><td><span class="tag medium">P3</span></td><td>Supervision Budget (7 new graduates)</td><td class="vol-med">★★★</td><td>~2,500 PLN/month / therapist</td><td>Ongoing 2026</td></tr>
+    </table>
+
+    <div class="callout green">
+      <strong>✅ Key Results:</strong> Estimated annual ROI: <strong>400-600K PLN</strong> within 18 months with total investment of <strong>180-300K PLN</strong>. Payback period: <strong>6-9 months</strong>.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">426-580K</div>
+        <div class="stat-label">Year 1 Investment (PLN)</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">720K-1.07M</div>
+        <div class="stat-label">Revenue Potential (PLN)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">6-9</div>
+        <div class="stat-label">Months to Payback</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Psychiatrists (Gap vs ANIMA)</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PSYCHIATRIST RECRUITMENT -->
+<div class="section" id="psychiatrist">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">medication</span>
+    <div>
+      <div class="sec-label">Section 02</div>
+      <h2>P1: Psychiatrist Recruitment</h2>
+      <div class="sub">Why this is priority #1 · Compensation · Onboarding plan</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout red">
+      <strong>⚠️ Why This is Priority #1:</strong> WCP cannot prescribe medication or offer psychiatric evaluation. Main competitor <strong>ANIMA has an on-staff psychiatrist</strong> — this is the biggest service gap. Patients requiring medication (ADHD, severe depression, anxiety disorders, bipolar disorder) must be referred out.
+    </div>
+
+    <h3 class="sub-heading">Compensation Benchmarking — Polish Psychiatry Market 2026</h3>
+
+    <table class="kw-table">
+      <tr><th>Setting</th><th>Monthly Gross (PLN)</th><th>Annual Gross (PLN)</th><th>Notes</th></tr>
+      <tr><td>NFZ full-time</td><td>12,000-18,000</td><td>144,000-216,000</td><td>Base + overtime, low retention</td></tr>
+      <tr><td>Private clinic (salary)</td><td>20,000-30,000</td><td>240,000-360,000</td><td>Typical private range</td></tr>
+      <tr><td>Private clinic (revenue share)</td><td>60-70% per session</td><td>Variable</td><td>Popular model — 250-350 PLN/session</td></tr>
+      <tr><td>ANIMA (estimate)</td><td>25,000-35,000</td><td>300,000-420,000</td><td>Competitive private offer</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Recommended Compensation Model</h3>
+    <ul class="clean">
+      <li><strong>Base salary:</strong> 15,000-18,000 PLN gross/month (guaranteed minimum)</li>
+      <li><strong>Revenue share:</strong> 60% per session (250-300 PLN/session → 150-180 PLN for psychiatrist)</li>
+      <li><strong>Monthly target:</strong> 25,000-35,000 PLN gross at full schedule</li>
+      <li><strong>Benefits:</strong> flexible hours, administrative support, ready patient flow, modern space</li>
+    </ul>
+
+    <h3 class="sub-heading">Onboarding Plan (First 90 Days)</h3>
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Welcome (Week 1)</h4>
+        <p>Orientation with Ewelina, meet the therapy team, clinic tour, system access (Booknetic, records), workstation setup.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Integration (Weeks 2-4)</h4>
+        <p>Shadowing with 2-3 therapists (CBT + psychodynamic), attend team meeting, begin schedule, establish patient handoff protocols.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Ramp-up (Weeks 5-8)</h4>
+        <p>Full patient schedule (target 60%), begin psychiatric assessments, coordinate pharmacotherapy with therapists.</p>
+      </div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Full Productivity (Weeks 9-12)</h4>
+        <p>Full schedule (80-100%), established patient referral flow, participate in team case conferences.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Estimated Budget</h3>
+    <table class="kw-table">
+      <tr><th>Item</th><th>Cost (PLN)</th><th>Frequency</th></tr>
+      <tr><td>Psychiatrist salary (target)</td><td>25,000-35,000</td><td>Monthly</td></tr>
+      <tr><td>Recruitment costs (Pracuj.pl, LinkedIn)</td><td>2,000-4,000</td><td>One-time</td></tr>
+      <tr><td>Onboarding and equipment</td><td>3,000-5,000</td><td>One-time</td></tr>
+      <tr><td><strong>Year 1 total</strong></td><td><strong>~310,000-430,000</strong></td><td>Annually</td></tr>
+    </table>
+
+    <p><strong>Revenue offset:</strong> At 15 patients/week × 250 PLN × 48 weeks = <strong>minimum 180,000 PLN/year</strong>; with medication management packages and integrated care packages, <strong>250,000-350,000 PLN/year</strong> is realistic.</p>
+
+    <div class="callout">
+      <strong>📅 Recruitment Timeline:</strong> Job posting (April 25, 2026) → Active search (April 28 - May 31) → First interviews (June 1-15) → Offer (June 30) → Start date (July 15 - August 15, 2026) → Full productivity (October 15, 2026).
+    </div>
+
+  </div>
+</div>
+
+<!-- THERAPY SCHOOLS -->
+<div class="section" id="therapy-schools">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">school</span>
+    <div>
+      <div class="sec-label">Section 03</div>
+      <h2>P2: Therapy School Enrollment</h2>
+      <div class="sub">12 therapists without school · First wave · Second wave · School options</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Current Status:</strong> <strong>12 therapists</strong> are not enrolled in therapy school. These individuals have completed psychology studies (master's) but have not undergone formal psychotherapy training. This blocks clinical opportunities and limits compensation.
+    </div>
+
+    <h3 class="sub-heading">Therapists Without School (12 People)</h3>
+    <table class="kw-table">
+      <tr><th>#</th><th>Name</th><th>Degree</th><th>Year</th><th>Works With</th><th>Recommended School</th></tr>
+      <tr><td>1</td><td>Beata Korycka</td><td>In progress</td><td>—</td><td>Youth, Adults</td><td>CBT (after completing studies)</td></tr>
+      <tr><td>2</td><td>Julia Dąbrowska</td><td>M.A. Psychology</td><td>2022</td><td>Children, Youth, Adults</td><td>CBT</td></tr>
+      <tr><td>3</td><td>Kamila Świniarska</td><td>M.A. Psychology</td><td>2025</td><td>Children, Youth</td><td>CBT or Gestalt</td></tr>
+      <tr><td>4</td><td>Katarzyna Grzegorczyk</td><td>M.A. Psychology</td><td>2022</td><td>Children, Youth, Adults</td><td>Gestalt</td></tr>
+      <tr><td>5</td><td>Marta Kmieć</td><td>M.A. Psychology</td><td>2019</td><td>Youth, Adults</td><td>CBT</td></tr>
+      <tr><td>6</td><td>Marta Minko-Jankowska</td><td>M.A. Psychology</td><td>2021</td><td>Children, Youth, Adults</td><td>CBT</td></tr>
+      <tr><td>7</td><td>Monika Iwanowicz</td><td>M.A. Psychology</td><td>2025</td><td>Youth, Adults</td><td>Gestalt</td></tr>
+      <tr><td>8</td><td>Paula Kamińska</td><td>M.A. Psychology</td><td>2015</td><td>Children, Youth, Parents</td><td>CBT (priority)</td></tr>
+      <tr><td>9</td><td>Tomasz Reszka</td><td>M.A. Psychology</td><td>2022</td><td>Youth, Adults</td><td>Gestalt</td></tr>
+      <tr><td>10</td><td>Zuzanna Chodkowska</td><td>M.A. Psychology</td><td>2025</td><td>Children, Youth</td><td>CBT</td></tr>
+      <tr><td>11</td><td>Joanna Szylko-Kwas</td><td>M.A. Psychology</td><td>2025</td><td>Youth, Adults</td><td>Gestalt (already integrative)</td></tr>
+      <tr><td>12</td><td>Malwina Marciniszyn</td><td>M.A. Environmental Protection</td><td>—</td><td>Adults</td><td>Psychodynamic (already enrolled)</td></tr>
+    </table>
+
+    <p><strong>Note:</strong> Malwina Marciniszyn is already in psychodynamic training, and Beata Korycka is still completing psychology studies. Effective number requiring enrollment: <strong>10 therapists</strong>, with target <strong>5+ enrolled by Q4 2026</strong>.</p>
+
+    <h3 class="sub-heading">First Wave (Q3 2026) — Priority Preliminary</h3>
+    <table class="kw-table">
+      <tr><th>Therapist</th><th>Why Priority</th><th>Program</th><th>Est. Cost</th></tr>
+      <tr><td><strong>Paula Kamińska</strong></td><td>11 years experience, children/families work — highest revenue potential</td><td>CBT</td><td>25,000-30,000 PLN</td></tr>
+      <tr><td><strong>Marta Kmieć</strong></td><td>7 years experience, youth/adults</td><td>CBT</td><td>20,000-25,000 PLN</td></tr>
+      <tr><td><strong>Marta Minko-Jankowska</strong></td><td>5 years experience, wide age range</td><td>CBT</td><td>20,000-25,000 PLN</td></tr>
+      <tr><td><strong>Julia Dąbrowska</strong></td><td>4 years experience, children/youth/adults</td><td>CBT</td><td>20,000-25,000 PLN</td></tr>
+      <tr><td><strong>Katarzyna Grzegorczyk</strong></td><td>4 years experience, children/youth/adults</td><td>Gestalt</td><td>20,000-25,000 PLN</td></tr>
+      <tr><td><strong>Tomasz Reszka</strong></td><td>4 years experience, male therapist (diversity asset)</td><td>Gestalt</td><td>20,000-25,000 PLN</td></tr>
+    </table>
+
+    <h3 class="sub-heading">School Options in Poland (2026)</h3>
+    <table class="kw-table">
+      <tr><th>School</th><th>Location</th><th>Modality</th><th>Duration</th><th>Cost</th><th>Notes</th></tr>
+      <tr><td>PTP CBT</td><td>Multiple cities + online</td><td>CBT</td><td>4 years</td><td>25,000-30,000 PLN</td><td>Gold standard, PTPIP accredited</td></tr>
+      <tr><td>SWPS University — CBT</td><td>Warsaw/Wrocław + online</td><td>CBT</td><td>3 years</td><td>20,000-25,000 PLN</td><td>Good reputation</td></tr>
+      <tr><td>Olsztyn Gestalt Psychotherapy School</td><td>Olsztyn</td><td>Gestalt</td><td>4 years</td><td>18,000-25,000 PLN</td><td>Local — minimal commute!</td></tr>
+      <tr><td>Gestalt Psychotherapy Institute (Kraków)</td><td>Kraków + online</td><td>Gestalt</td><td>4 years</td><td>22,000-28,000 PLN</td><td>Established</td></tr>
+      <tr><td>Psychodynamic Psychotherapy School (Łódź)</td><td>Łódź + online</td><td>Psychodynamic</td><td>4 years</td><td>20,000-25,000 PLN</td><td>For existing psychodynamic team</td></tr>
+    </table>
+
+    <div class="callout green">
+      <strong>✅ Funding Model:</strong> WCP subsidizes 50-70% of tuition, therapist covers remainder. This is standard in Polish private clinics, ensures mutual commitment, and reduces turnover risk.
+    </div>
+
+  </div>
+</div>
+
+<!-- COUPLES THERAPY -->
+<div class="section" id="couples-therapy">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">favorite</span>
+    <div>
+      <div class="sec-label">Section 04</div>
+      <h2>P2: Couples Therapy Development</h2>
+      <div class="sub">Current status · Recruitment · Timeline plan</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Current Status</h3>
+    <p>Only <strong>2 therapists</strong> explicitly offer couples therapy:</p>
+    <ul class="clean">
+      <li><strong>Julia Bochko</strong> (CBT)</li>
+      <li><strong>Krystyna Puzdrowska</strong> (CBT, in training since 2025)</li>
+    </ul>
+    <p>Additionally, <strong>Anna Piotrowska</strong> (CBT + Systemic) and <strong>Małgorzata Dawidziuk-Kafel</strong> (CBT) mention couples/families, but only Julia and Krystyna are primary couples therapists.</p>
+
+    <h3 class="sub-heading">Business Case</h3>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">250 PLN</div>
+        <div class="stat-label">Individual Rate</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">500 PLN</div>
+        <div class="stat-label">Couples Rate (2× individual)</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">192,000 PLN</div>
+        <div class="stat-label">Revenue / therapist / year (8 sessions/week)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">384-576K</div>
+        <div class="stat-label">Potential Revenue Increase (PLN/year)</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Recruitment: 2-3 Additional Couples Therapists</h3>
+    <p><strong>Internal candidates prioritized for training:</strong></p>
+    <table class="kw-table">
+      <tr><th>Therapist</th><th>Why</th><th>Action</th></tr>
+      <tr><td>Anna Piotrowska</td><td>Already systemic training + CBT, works with families</td><td>Formalize couples offering, active marketing</td></tr>
+      <tr><td>Małgorzata Dawidziuk-Kafel</td><td>CBT, mentions couples, 16 years experience</td><td>Provide couples supervision + marketing support</td></tr>
+      <tr><td>Marta Minko-Jankowska</td><td>Wide age range, interested in development</td><td>Couples therapy training module</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Recruitment Timeline:</strong> Confirm internal candidates (May 15, 2026) → Internal couples supervision (May 30) → External posting (May 15) → Interviews (June) → Hiring (July-August 2026) → Couples marketing (from May 2026).
+    </div>
+
+  </div>
+</div>
+
+<!-- GROUP THERAPY -->
+<div class="section" id="group-therapy">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">groups</span>
+    <div>
+      <div class="sec-label">Section 05</div>
+      <h2>P3: Group Facilitator Training</h2>
+      <div class="sub">Business case · Recommended programs · Training candidates</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Business Case</h3>
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">150 PLN</div>
+        <div class="stat-label">Group Rate / Participant</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">6-10</div>
+        <div class="stat-label">Typical Group Size</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">900-1,500</div>
+        <div class="stat-label">Revenue / Group Session (PLN)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">450-750</div>
+        <div class="stat-label">Revenue / Therapist Hour</div>
+      </div>
+    </div>
+
+    <p>Group therapy is the <strong>most profitable and scalable</strong> service WCP can offer. One therapist running 2 groups/week generates more revenue than 3-4 additional individual hours.</p>
+
+    <h3 class="sub-heading">Recommended Group Programs</h3>
+    <table class="kw-table">
+      <tr><th>Program</th><th>Target Audience</th><th>Session Rate</th><th>Potential</th></tr>
+      <tr><td>Social anxiety group (CBT)</td><td>Adults</td><td>150 PLN</td><td class="vol-high">High demand, evidence-based</td></tr>
+      <tr><td>DBT skills group</td><td>Adults with emotional instability</td><td>150 PLN</td><td class="vol-high">Strong evidence base</td></tr>
+      <tr><td>Parenting skills group</td><td>Parents of children in therapy</td><td>150 PLN</td><td class="vol-med">Cross-sell from child therapy</td></tr>
+      <tr><td>Grief/loss group</td><td>Adults</td><td>150 PLN</td><td class="vol-med">Niche, underserved</td></tr>
+      <tr><td>Social skills group for teens</td><td>Youth 13-17</td><td>130 PLN</td><td class="vol-high">Flows from youth practice</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Who Should Be Trained</h3>
+    <table class="kw-table">
+      <tr><th>Therapist</th><th>Rationale</th><th>Recommended Training</th></tr>
+      <tr><td>Ewa Kocięcka-Walukiewicz</td><td>Senior CBT (16 years), ideal for anxiety/DBT groups</td><td>DBT Intensive Training (~8,000 PLN)</td></tr>
+      <tr><td>Anna Piotrowska</td><td>CBT + Systemic, works with children/families — parenting groups</td><td>Group facilitation + systemic module (~5,000 PLN)</td></tr>
+      <tr><td>Wirginia Horszwald</td><td>CBT (since 2025), youth specialist — teen groups</td><td>CBT group therapy module (~4,000 PLN)</td></tr>
+      <tr><td>Paula Kamińska</td><td>Most experienced untrained therapist, children/youth — parenting groups</td><td>Group facilitation training (~5,000 PLN)</td></tr>
+      <tr><td>Patrycja Wiśniewska</td><td>Gestalt, experiential approach — grief/existential groups</td><td>Gestalt group facilitation (~4,000 PLN)</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Training Budget</h3>
+    <table class="kw-table">
+      <tr><th>Training</th><th>Cost / Therapist</th><th>Therapists</th><th>Total</th></tr>
+      <tr><td>DBT Intensive Training</td><td>8,000 PLN</td><td>1</td><td>8,000 PLN</td></tr>
+      <tr><td>CBT Group Therapy Module</td><td>4,000-5,000 PLN</td><td>2</td><td>8,000-10,000 PLN</td></tr>
+      <tr><td>General Group Facilitation</td><td>4,000-5,000 PLN</td><td>2</td><td>8,000-10,000 PLN</td></tr>
+      <tr><td><strong>Total</strong></td><td></td><td><strong>5 therapists</strong></td><td><strong>24,000-28,000 PLN</strong></td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- SUPERVISION -->
+<div class="section" id="supervision">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">supervisor_account</span>
+    <div>
+      <div class="sec-label">Section 06</div>
+      <h2>P3: Supervision Budget</h2>
+      <div class="sub">7 new graduates · Supervision model · Internal option</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Current Status</h3>
+    <p><strong>7 therapists graduated in 2025</strong> and need regular supervision as early-career practitioners:</p>
+    <table class="kw-table">
+      <tr><th>Therapist</th><th>Year</th><th>Modality</th><th>Supervision Needed</th></tr>
+      <tr><td>Joanna Szylko-Kwas</td><td>2025</td><td>Integrative</td><td>Integrative supervisor</td></tr>
+      <tr><td>Kamila Świniarska</td><td>2025</td><td>None (needs school)</td><td>General + school-aligned</td></tr>
+      <tr><td>Kamila Wodowska</td><td>2025</td><td>Gestalt (2025)</td><td>Gestalt supervisor</td></tr>
+      <tr><td>Monika Iwanowicz</td><td>2025</td><td>None</td><td>General psychological supervisor</td></tr>
+      <tr><td>Zuzanna Chodkowska</td><td>2025</td><td>None</td><td>General + children/youth specialist</td></tr>
+      <tr><td>Anita Kraczyna</td><td>2025 (Gestalt)</td><td>Gestalt</td><td>Gestalt supervisor</td></tr>
+      <tr><td>Krystyna Puzdrowska</td><td>2025 (CBT)</td><td>CBT</td><td>CBT supervisor</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Supervision Cost Estimate (Polish Market 2026)</h3>
+    <table class="kw-table">
+      <tr><th>Type</th><th>Rate (PLN/hour)</th><th>Frequency</th><th>Monthly Cost / Therapist</th></tr>
+      <tr><td>Individual supervision</td><td>250-350</td><td>2x/month (1.5h)</td><td>750-1,050</td></tr>
+      <tr><td>Group supervision</td><td>100-150</td><td>2x/month (2h)</td><td>400-600</td></tr>
+      <tr><td>School-required supervision</td><td>200-300</td><td>2x/month (1.5h)</td><td>600-900</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Recommended Supervision Model</h3>
+    <p><strong>Hybrid approach:</strong> Group supervision (cost-effective) + individual supervision (for complex cases).</p>
+
+    <h3 class="sub-heading">Internal Supervisor Option</h3>
+    <p><strong>Ewa Kocięcka-Walukiewicz</strong> (CBT, 16 years) and <strong>Wirginia Horszwald</strong> (CBT, 16 years) can lead CBT group supervision internally at reduced rates. This would save ~15,000-20,000 PLN/year and build internal capabilities.</p>
+
+    <table class="kw-table">
+      <tr><th>Approach</th><th>Annual Cost</th><th>Notes</th></tr>
+      <tr><td>All external supervision</td><td>79,200-94,800 PLN</td><td>Full cost</td></tr>
+      <tr><td>Internal CBT + external others</td><td><strong>60,000-75,000 PLN</strong></td><td>Ewa/Wirginia lead CBT groups</td></tr>
+      <tr><td>70% WCP subsidy (internal model)</td><td><strong>42,000-52,500 PLN</strong></td><td>Actual WCP annual expense</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- BUDGET -->
+<div class="section" id="budget">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">account_balance</span>
+    <div>
+      <div class="sec-label">Section 07</div>
+      <h2>Consolidated Budget Summary</h2>
+      <div class="sub">Investment · Revenue potential · ROI timeline</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout green">
+      <strong>💡 Key Strategic Insight:</strong>
+      <ul class="clean" style="margin-top:8px">
+        <li><strong>Couples therapy</strong> — <span style="color:var(--green-t)">fastest payback</span> (revenue from day one)</li>
+        <li><strong>Psychiatrist</strong> — <span style="color:var(--gold)">highest strategic impact</span> (closes #1 gap vs ANIMA)</li>
+        <li><strong>Group therapy</strong> — <span style="color:var(--blue-t)">most scalable</span> (highest revenue per therapist hour)</li>
+      </ul>
+    </div>
+
+    <table class="kw-table">
+      <tr><th>Initiative</th><th>Year 1 Investment (PLN)</th><th>Year 1 Revenue Potential (PLN)</th><th>ROI Timeline</th></tr>
+      <tr><td>Psychiatrist Recruitment</td><td>310,000-430,000</td><td>250,000-350,000</td><td>Payback Month 10-14</td></tr>
+      <tr><td>Therapy School Enrollment (first wave)</td><td>35,000-45,000</td><td>Indirect — higher rates</td><td>Payback 2-4 years</td></tr>
+      <tr><td>Couples Therapy Development</td><td>15,000-25,000</td><td class="vol-high">384,000-576,000</td><td class="vol-high">Payback Month 1-2</td></tr>
+      <tr><td>Group Training</td><td>24,000-28,000</td><td>86,000-144,000 (2 groups)</td><td>Payback Month 3-5</td></tr>
+      <tr><td>Supervision Budget</td><td>42,000-52,500</td><td>Retention + quality assurance</td><td>Ongoing necessity</td></tr>
+      <tr><td><strong>TOTAL</strong></td><td><strong>426,000-580,500</strong></td><td><strong>720,000-1,070,000+</strong></td><td class="vol-high"><strong>~6-9 month payback</strong></td></tr>
+    </table>
+
+    <h3 class="sub-heading">Investment vs Return Visualization</h3>
+    <div class="bar-chart-container">
+      <div class="bar-item">
+        <div class="bar-label">Psychiatrist</div>
+        <div class="bar-wrap">
+          <div class="bar-fill bar-red" style="width:100%"></div>
+          <span class="bar-value">310-430K</span>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">Therapy Schools</div>
+        <div class="bar-wrap">
+          <div class="bar-fill bar-gold" style="width:11%"></div>
+          <span class="bar-value">35-45K</span>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">Couples Therapy</div>
+        <div class="bar-wrap">
+          <div class="bar-fill bar-green" style="width:6%"></div>
+          <span class="bar-value">15-25K</span>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">Groups</div>
+        <div class="bar-wrap">
+          <div class="bar-fill bar-gold" style="width:7%"></div>
+          <span class="bar-value">24-28K</span>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">Supervision</div>
+        <div class="bar-wrap">
+          <div class="bar-fill bar-gold" style="width:13%"></div>
+          <span class="bar-value">42-52K</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="section" id="timeline">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">timeline</span>
+    <div>
+      <div class="sec-label">Section 08</div>
+      <h2>Master Timeline (Gantt View)</h2>
+      <div class="sub">Visual timeline of all five initiatives</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div style="background:var(--surface-mid);border-radius:4px;padding:20px;margin:18px 0;font-family:monospace;font-size:.75rem;line-height:1.8;overflow-x:auto">
+<pre style="color:var(--muted)">
+2026                    APR  MAY  JUN  JUL  AUG  SEP  OCT  NOV  DEC
+────────────────────────────────────────────────────────────────────────
+P1: Psychiatrist        [post→][search→][intvw][offer][start→][ramp→]
+P2: Therapy Schools          [interest][budget][enroll→][enroll→]
+P2: Couples Therapy     [int][post→][intvw][hire][deploy→][marketing]
+P3: Group Training           [identify→][enroll→][training────────→][pilot]
+P3: Supervision                   [setup→][ongoing supervision─────────────────]
+</pre>
+    </div>
+
+    <h3 class="sub-heading">Milestones by Month</h3>
+
+    <div class="timeline-row">
+      <div class="timeline-month">April 2026</div>
+      <div class="timeline-content">
+        <h4>Preparation and Postings</h4>
+        <p>Psychiatrist job posting, present plan to therapists, couples therapist job posting.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-month">May 2026</div>
+      <div class="timeline-content">
+        <h4>Gauging and Internal Actions</h4>
+        <p>Confirm internal candidates for couples therapy, set up internal couples supervision, identify therapists for groups.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-month">June 2026</div>
+      <div class="timeline-content">
+        <h4>Budget Decisions and Recruitment</h4>
+        <p>Approve therapy school budget, recruitment interviews (psychiatrist, couples therapists), submit school applications.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-month">July-August 2026</div>
+      <div class="timeline-content">
+        <h4>Onboarding</h4>
+        <p>Psychiatrist starts (July 15 - Aug 15), hire couples therapists, first group training programs.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-month">September-October 2026</div>
+      <div class="timeline-content">
+        <h4>Training and Integration</h4>
+        <p>First wave therapy school enrollment confirmed, ongoing group trainings, psychiatrist ramp-up to full productivity.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-month">November-December 2026</div>
+      <div class="timeline-content">
+        <h4>Pilot and Review</h4>
+        <p>First 2 pilot groups, review supervision progress, psychiatrist full productivity (Oct 15).</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RESPONSIBILITIES -->
+<div class="section" id="responsibilities">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">assignment_ind</span>
+    <div>
+      <div class="sec-label">Section 09</div>
+      <h2>Implementation Responsibilities</h2>
+      <div class="sub">Action owners · Support · Approvals</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="kw-table">
+      <tr><th>Action</th><th>Primary Owner</th><th>Support</th><th>Approval</th></tr>
+      <tr><td>Psychiatrist recruitment</td><td>Ewelina Romanowska</td><td>Karolina (interviews)</td><td>Tomek + Karolina</td></tr>
+      <tr><td>Therapy school enrollment</td><td>Ewelina (coordination)</td><td>Therapists (applications)</td><td>Karolina (budget)</td></tr>
+      <tr><td>Couples therapy development</td><td>Ewelina</td><td>Tomek (marketing)</td><td>Karolina</td></tr>
+      <tr><td>Group training</td><td>Ewelina</td><td>Seniors (mentoring)</td><td>Karolina</td></tr>
+      <tr><td>Supervision budget</td><td>Ewelina</td><td>Ewa/Wirginia (internal CBT)</td><td>Karolina</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Central Coordination:</strong> Ewelina Romanowska is the central coordinator for all HR initiatives. <strong>Karolina Zagała</strong> approves budget and signs off on hiring decisions. <strong>Tomek Zagała</strong> supports marketing and technology (Booknetic integration, website updates).
+    </div>
+
+    <h3 class="sub-heading">Key Risks and Mitigations</h3>
+    <table class="kw-table">
+      <tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Mitigation</th></tr>
+      <tr><td>Psychiatrist recruitment fails (small talent pool in Olsztyn)</td><td class="vol-med">Medium</td><td class="vol-high">High</td><td>Consider telepsychiatry, part-time, or relocation package</td></tr>
+      <tr><td>Therapists decline therapy school (time/cost)</td><td class="vol-med">Medium</td><td class="vol-med">Medium</td><td>Subsidize 70%, offer schedule flexibility</td></tr>
+      <tr><td>Couples therapists not found locally</td><td class="vol-low">Low</td><td class="vol-med">Medium</td><td>First train internal candidates, then external recruitment</td></tr>
+      <tr><td>Low group attendance</td><td class="vol-low">Low</td><td class="vol-low">Low</td><td>Start with 1-2 pilot groups, validate demand before scaling</td></tr>
+      <tr><td>Supervision costs exceed budget</td><td class="vol-low">Low</td><td class="vol-low">Low</td><td>Internal supervisor option provides cost ceiling</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- RELATED REPORTS -->
+<div class="section" style="background:transparent;border:1px solid rgba(77,70,55,.3)">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">folder_open</span>
+    <div>
+      <div class="sec-label">Related Documents</div>
+      <h2>Sub-Reports and Analyses</h2>
+    </div>
+  </div>
+  <div class="section-body">
+    <p>See related WCP strategic reports:</p>
+    <a href="ANALIZA-COST-ANALYSIS.html" class="sub-report-link">
+      <span class="material-symbols-outlined" style="font-size:.9rem">analytics</span> Cost Analysis (ANALIZA) →
+    </a>
+    <a href="HR-QUALIFICATIONS-ANALYSIS.html" class="sub-report-link">
+      <span class="material-symbols-outlined" style="font-size:.9rem">description</span> HR Qualifications Analysis →
+    </a>
+  </div>
+</div>
+
+</div><!-- /page-canvas -->
+</main>
+
+<!-- Scroll Spy & Navigation -->
+<script>
+const sectionNames = {
+  'cover':'Home',
+  'executive-summary':'Summary',
+  'psychiatrist':'Psychiatrist',
+  'therapy-schools':'Therapy Schools',
+  'couples-therapy':'Couples Therapy',
+  'group-therapy':'Groups',
+  'supervision':'Supervision',
+  'budget':'Budget',
+  'timeline':'Timeline',
+  'responsibilities':'Responsibilities'
+};
+const navLinks = document.querySelectorAll('.nav-link[data-section]');
+const topnavSection = document.getElementById('topnav-section');
+
+function setActive(id){
+  navLinks.forEach(l=>l.classList.toggle('active',l.dataset.section===id));
+  if(topnavSection) topnavSection.textContent = sectionNames[id]||'';
+}
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) setActive(e.target.id);});
+},{rootMargin:'-15% 0px -70% 0px',threshold:0.05});
+
+Object.keys(sectionNames).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) obs.observe(el);
+});
+
+navLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
+    const t=document.querySelector(link.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+
+// Bar chart animation on scroll
+const barObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const bars = entry.target.querySelectorAll('.bar-fill');
+      bars.forEach(bar=>{
+        const width = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(()=>{bar.style.width = width;}, 100);
+      });
+      barObserver.unobserve(entry.target);
+    }
+  });
+},{threshold:0.3});
+
+const chartContainer = document.querySelector('.bar-chart-container');
+if(chartContainer) barObserver.observe(chartContainer);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Competitor Analysis — WCP Strategic Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo img{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.red{border-left-color:var(--red-t)}
+  .callout.red strong{color:#f08080}
+  .callout.green{border-left-color:var(--green-t)}
+  .callout.green strong{color:#6fcf97}
+  .callout.blue{border-left-color:var(--blue-t)}
+  .callout.blue strong{color:#7bc8e0}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.gold{background:rgba(230,195,100,.15);color:var(--gold)}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .stat-card{background:var(--surface-mid);border-radius:6px;padding:18px;border-left:3px solid var(--gold-dim)}
+  .stat-card .stat-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .stat-card .stat-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-card .stat-note{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .stat-card.green{border-left-color:var(--green-t)}
+  .stat-card.green .stat-value{color:#6fcf97}
+  .stat-card.red{border-left-color:var(--red-t)}
+  .stat-card.red .stat-value{color:#f08080}
+  .stat-card.blue{border-left-color:var(--blue-t)}
+  .stat-card.blue .stat-value{color:#7bc8e0}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table tr:hover td{background:rgba(230,195,100,.05)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .vol-low{color:#7bc8e0;font-weight:700}
+  .kw-table .vol-red{color:#f08080;font-weight:700}
+  .kw-table .highlight-row td{background:rgba(230,195,100,.1)!important}
+  .badge-row{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  ul.clean li::marker{color:var(--gold-dim)}
+  .page-footer{display:none}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  
+  /* Competitor Card Specific Styles */
+  .competitor-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden;border:1px solid rgba(77,70,55,.3)}
+  .competitor-card .cc-header{padding:16px 20px;background:var(--surface-high);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .competitor-card .cc-name{font-weight:700;color:var(--on-surface);font-size:1rem}
+  .competitor-card .cc-location{padding:0 20px 12px;font-size:.8rem;color:var(--muted);background:var(--surface-high);border-bottom:1px solid rgba(77,70,55,.2)}
+  .competitor-card .cc-cols{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .competitor-card .cc-col{padding:16px 20px}
+  .competitor-card .cc-col:first-child{border-right:1px solid rgba(77,70,55,.2)}
+  .competitor-card .cc-col-title{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+  .competitor-card .cc-col-title.strengths{color:#6fcf97}
+  .competitor-card .cc-col-title.weaknesses{color:#f08080}
+  .competitor-card ul{padding-left:16px;margin:0}
+  .competitor-card li{font-size:.84rem;color:var(--on-surface);margin:4px 0}
+  .competitor-card li::marker{color:var(--muted)}
+  
+  /* Positioning Map */
+  .map-container{background:var(--surface-mid);border-radius:4px;padding:24px;font-family:"JetBrains Mono",monospace;font-size:.78rem;line-height:1.6;overflow-x:auto;margin:18px 0;color:var(--muted)}
+  .map-container .highlight{color:var(--gold);font-weight:700}
+  
+  /* Priority Lists */
+  .priority-list{list-style:none;padding:0;margin:0}
+  .priority-list li{padding:12px 16px;margin-bottom:8px;background:var(--surface-mid);border-radius:4px;border-left:3px solid var(--gold-dim);font-size:.9rem}
+  .priority-list li.critical{border-left-color:var(--red-t)}
+  .priority-list li.high{border-left-color:#f59e0b}
+  .priority-list li.medium{border-left-color:var(--blue-t)}
+  .priority-list li.low{border-left-color:var(--green-t)}
+  .priority-list li strong{color:var(--on-surface)}
+  
+  /* Animated Charts */
+  .chart-container{margin:24px 0;padding:20px;background:var(--surface-mid);border-radius:4px}
+  .echarts-box{width:100%;height:420px;min-height:320px;margin:16px 0;border-radius:4px}
+  .echarts-box.scatter{height:460px}
+  .chart-title{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px}
+  .bar-chart{display:flex;flex-direction:column;gap:10px}
+  .bar-row{display:flex;align-items:center;gap:12px}
+  .bar-label{width:120px;font-size:.78rem;color:var(--muted);text-align:right;flex-shrink:0}
+  .bar-track{flex:1;height:24px;background:var(--surface-high);border-radius:3px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;border-radius:3px;transition:width 1.2s ease-out;position:relative;overflow:hidden}
+  .bar-fill.gold{background:linear-gradient(90deg,var(--gold) 0%,var(--gold-dim) 100%)}
+  .bar-fill.green{background:linear-gradient(90deg,var(--green-t) 0%,#3d8b6f 100%)}
+  .bar-fill.red{background:linear-gradient(90deg,var(--red-t) 0%,#b84444 100%)}
+  .bar-fill.blue{background:linear-gradient(90deg,var(--blue-t) 0%,#3d8db0 100%)}
+  .bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.1) 50%,transparent 100%);animation:shimmer 2s infinite}
+  @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+  .bar-value{font-size:.78rem;font-weight:700;color:var(--on-surface);margin-left:8px;min-width:40px}
+  .bar-animated{width:0!important}
+  
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.page-canvas{padding:28px 16px 60px}.stat-grid{grid-template-columns:1fr 1fr}.competitor-card .cc-cols{grid-template-columns:1fr}.competitor-card .cc-col:first-child{border-right:none;border-bottom:1px solid rgba(77,70,55,.2)}.kw-table{font-size:.75rem}.bar-label{width:80px;font-size:.7rem}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Return to Strategic Report →
+  </a>
+
+  <div class="sidebar-label">Navigation</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Cover
+    </a>
+    <a class="nav-link" href="#executive-summary" data-section="executive-summary">
+      <span class="material-symbols-outlined nav-icon">summarize</span> Executive Summary
+    </a>
+    <a class="nav-link" href="#wcp-baseline" data-section="wcp-baseline">
+      <span class="material-symbols-outlined nav-icon">person</span> WCP Baseline
+    </a>
+    <a class="nav-link" href="#landscape" data-section="landscape">
+      <span class="material-symbols-outlined nav-icon">map</span> Competitive Landscape
+    </a>
+    <a class="nav-link" href="#positioning" data-section="positioning">
+      <span class="material-symbols-outlined nav-icon">scatter_plot</span> Positioning Map
+    </a>
+    <a class="nav-link" href="#profiles" data-section="profiles">
+      <span class="material-symbols-outlined nav-icon">groups</span> Competitor Profiles
+    </a>
+    <a class="nav-link" href="#gap-analysis" data-section="gap-analysis">
+      <span class="material-symbols-outlined nav-icon">find_replace</span> Gap Analysis
+    </a>
+    <a class="nav-link" href="#rankings" data-section="rankings">
+      <span class="material-symbols-outlined nav-icon">leaderboard</span> Rankings
+    </a>
+    <a class="nav-link" href="#recommendations" data-section="recommendations">
+      <span class="material-symbols-outlined nav-icon">lightbulb</span> Recommendations
+    </a>
+    <a class="nav-link" href="#pricing" data-section="pricing">
+      <span class="material-symbols-outlined nav-icon">payments</span> Pricing Matrix
+    </a>
+    <a class="nav-link" href="#limitations" data-section="limitations">
+      <span class="material-symbols-outlined nav-icon">warning</span> Data Limitations
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="COMPETITOR-ANALYSIS-REPORT-PL.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇵🇱</span> PL Version
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP · Deep Competitor Analysis</span>
+  <span class="topnav-section" id="topnav-section">Cover</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 0: COVER -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  <div style="margin:0 0 96px 0;padding:3px;border-radius:10px;background:linear-gradient(135deg,#e6c364 0%,#c9a84c 30%,#3a3530 60%,#1c2024 100%);box-shadow:0 20px 60px rgba(0,0,0,.4);">
+    <img src="assets/images/competition_hero.png" alt="WCP Hero" style="width:100%;max-width:100%;height:auto;display:block;border-radius:8px;">
+  </div>
+  
+  <span class="cover-badge">🕯️ Confidential Strategic Intelligence · April 2026</span>
+  <h1 class="cover-h1">Deep Competitor<br><span>Analysis</span></h1>
+  <p class="cover-subtitle">Comprehensive analysis of the competitive landscape across Olsztyn, Elbląg, and Ostróda — including in-depth ANIMA threat assessment. Ranking competitors across patient portals, social media, Google presence, website quality, and service breadth.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Date</label><p>18 April 2026</p></div>
+    <div class="cover-meta-item"><label>Prepared By</label><p>Kartograf (Der Alte oversight)</p></div>
+    <div class="cover-meta-item"><label>Status</label><p>Internal — Strategic Review</p></div>
+    <div class="cover-meta-item"><label>Coverage</label><p>3 Locations · 22 Therapists</p></div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Contents</h3>
+  <ol>
+    <li><a href="#executive-summary">Executive Summary</a></li>
+    <li><a href="#wcp-baseline">WCP Baseline Profile</a></li>
+    <li><a href="#landscape">Competitive Landscape</a></li>
+    <li><a href="#positioning">Competitive Positioning Map</a></li>
+    <li><a href="#profiles">Competitor Profiles</a></li>
+    <li><a href="#gap-analysis">Gap Analysis</a></li>
+    <li><a href="#rankings">WCP Relative Rankings</a></li>
+    <li><a href="#recommendations">Strategic Recommendations</a></li>
+    <li><a href="#pricing">Competitive Pricing Matrix</a></li>
+    <li><a href="#limitations">Data Limitations</a></li>
+  </ol>
+</div>
+
+<!-- Sub-report Links -->
+<div style="margin-bottom:64px;padding:20px 24px;background:var(--surface-low);border-radius:4px;border:1px solid rgba(77,70,55,.3)">
+  <h3 style="font-family:'Manrope',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:12px">📑 Related Reports</h3>
+  <a href="GOOGLE-ADS-OPTIMIZATION-REPORT.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">ads_click</span> Google Ads Optimization Report →
+  </a>
+  <a href="ANIMA-THREAT-REPORT.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">radar</span> ANIMA Threat Report →
+  </a>
+  <a href="ANIMA-COUNTER-STRATEGY-REPORT.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">shield</span> ANIMA Counter-Strategy Report →
+  </a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: EXECUTIVE SUMMARY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="executive-summary">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">list_alt</span>
+    <div>
+      <div class="sec-label">Section 01</div>
+      <h2>Executive Summary</h2>
+      <div class="sub">Market position · Key findings · Strategic context</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p>WCP occupies a <strong>unique structural position</strong> in the Warmia region: it is the only multi-location, multi-therapist psychotherapy center operating across three cities with 22 therapists. The competitive landscape consists primarily of <strong>solo practitioners and small group practices</strong> (1–3 therapists), <strong>national online platforms</strong> (TwojPsycholog, Wellbee, Mentali), and <strong>public/NFZ facilities</strong> that serve a different market segment.</p>
+
+    <div class="callout red">
+      <strong>Key finding:</strong> WCP's primary competitive threat is not from other therapy centers (none exist at comparable scale) but from <strong>(1)</strong> national online therapy platforms reducing geographic barriers, <strong>(2)</strong> individual therapists with strong ZnanyLekarz profiles, and <strong>(3)</strong> WCP's own underinvestment in social media and digital presence relative to its scale advantage.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card gold">
+        <div class="stat-value">22</div>
+        <div class="stat-label">Therapists (3 locations)</div>
+        <div class="stat-note">Scale advantage</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-value">119</div>
+        <div class="stat-label">ZnanyLekarz Reviews</div>
+        <div class="stat-note">4.7/5 rating</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-value">12+</div>
+        <div class="stat-label">Therapy Modalities</div>
+        <div class="stat-note">Broadest locally</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-value">2.4M</div>
+        <div class="stat-label">PLN 2025 Revenue</div>
+        <div class="stat-note">+34.7% growth</div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">WCP Competitive Advantages vs Market</div>
+      <div class="bar-chart" id="advantage-chart">
+        <div class="bar-row">
+          <span class="bar-label">Scale</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="95%"></div></div>
+          <span class="bar-value">95%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">ZnanyLekarz</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="85%"></div></div>
+          <span class="bar-value">85%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Service Breadth</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="90%"></div></div>
+          <span class="bar-value">90%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Social Media</span>
+          <div class="bar-track"><div class="bar-fill red bar-animated" data-width="25%"></div></div>
+          <span class="bar-value">25%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Online Presence</span>
+          <div class="bar-track"><div class="bar-fill blue bar-animated" data-width="60%"></div></div>
+          <span class="bar-value">60%</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: WCP BASELINE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="wcp-baseline">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">person</span>
+    <div>
+      <div class="sec-label">Section 02</div>
+      <h2>WCP Profile (Baseline)</h2>
+      <div class="sub">Baseline metrics for competitive comparison</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="kw-table">
+      <thead><tr><th>Dimension</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Locations</td><td>3 — Olsztyn (15 therapists), Elbląg (5), Ostróda (2)</td></tr>
+        <tr><td>Therapy modalities</td><td>12+ — CBT, Gestalt, Psychodynamic, Schema, ACT, EMDR, TSR, DBT, TUS, Addiction, Mindfulness, Integrative</td></tr>
+        <tr class="highlight-row"><td>ZnanyLekarz</td><td>119 reviews, active clinic profile <span class="tag quick-win">Strong</span></td></tr>
+        <tr><td>Pricing</td><td>250 PLN/50min individual · 500 PLN/90min couples · 100 PLN/group · 250 PLN/online</td></tr>
+        <tr class="highlight-row"><td>Diagnostics</td><td>MOXO (300 PLN), DIVA-5 (600 PLN), Conners-3 (800 PLN) <span class="tag quick-win">Unique locally</span></td></tr>
+        <tr><td>Website</td><td>wcp.com.pl — WordPress/Bricks, redesign in progress</td></tr>
+        <tr class="highlight-row"><td>Social media</td><td>FB 645 likes, IG 148 followers <span class="tag high">Critical gap</span></td></tr>
+        <tr><td>Founded</td><td>Sep 2020 (Olsztyn) · 2022 (Elbląg) · Mar 2025 (Ostróda)</td></tr>
+        <tr class="highlight-row"><td>2026 Q1 Revenue</td><td>678,870 PLN (+34.7% YoY) <span class="tag quick-win">Growing</span></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: COMPETITIVE LANDSCAPE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="landscape">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">map</span>
+    <div>
+      <div class="sec-label">Section 03</div>
+      <h2>Competitive Landscape</h2>
+      <div class="sub">Four-tier competitive analysis</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Tier 1: Structural Competitors</h3>
+    <div class="callout green">
+      <strong>No purely private competitor at this scale exists in the Warmia region.</strong> WCP is the only private therapy organization with 3+ locations and 20+ therapists. However, <strong>Centrum Psychiatrii ANIMA</strong> — which combines NFZ and commercial services across 6 locations with 40+ specialists — is a structural competitor of a different kind.
+    </div>
+
+    <h3 class="sub-heading">Tier 1b: Structural Competitor — ANIMA</h3>
+    <div class="competitor-card" style="border:1px solid rgba(224,82,82,.4)">
+      <div class="cc-header" style="background:rgba(224,82,82,.1)">
+        <span class="cc-name">Centrum Psychiatrii ANIMA</span>
+        <span class="tag high">🔴 CRITICAL threat — Structural</span>
+      </div>
+      <div class="cc-location">anima.olsztyn.pl · 6 locations · 40+ specialists · NFZ + Commercial</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Key Advantages over WCP</div>
+          <ul>
+            <li><strong>NFZ contracts</strong> — Access to patient pool 5–10× larger than private-only market</li>
+            <li><strong>Psychiatrist on staff</strong> — Complete care pathway (medication + therapy under one roof)</li>
+            <li><strong>6 locations</strong> vs WCP's 3 — Including new Iława office (March 2026)</li>
+            <li><strong>40+ specialists</strong> vs WCP's 22 — nearly double the team</li>
+            <li><strong>Day ward for neurosis</strong> (NFZ-funded) — hospital-level service WCP cannot offer</li>
+            <li><strong>PTP accreditation</strong> — Polish Psychiatric Association official certification</li>
+            <li><strong>Dedicated children/youth center</strong> with 26 staff at Olsztyn</li>
+            <li><strong>Facebook 2,200+ followers</strong> vs WCP's 645</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ WCP Advantages over ANIMA</div>
+          <ul>
+            <li><strong>Google Reviews: 3.2/5 (58 reviews)</strong> vs WCP's 4.7/5 — significant trust gap</li>
+            <li><strong>DIVA-5: 1,200 PLN</strong> vs WCP's 600 PLN — WCP is 50% cheaper</li>
+            <li><strong>MOXO ADHD test</strong> — WCP unique offering, ANIMA doesn't have it</li>
+            <li><strong>Warm, modern brand</strong> vs ANIMA's clinical/institutional feel</li>
+            <li><strong>Online booking (Booknetic)</strong> vs ANIMA's phone-based registration</li>
+            <li><strong>Blog stale since 2021</strong> — No content marketing</li>
+            <li><strong>Split websites</strong> (anima.olsztyn.pl + animaolsztyn.pl) — confusing for patients</li>
+            <li><strong>Individual therapy: 200 PLN</strong> — undercuts WCP's 250 PLN (price pressure)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Tier 2: Regional Group Practices & Solos</h3>
+
+    <table class="kw-table">
+      <thead><tr><th>Price Range</th><th>Count (Olsztyn ZL)</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>180 PLN</td><td>~3</td><td class="vol-low">Trainee therapists</td></tr>
+        <tr><td>200 PLN</td><td>~7</td><td class="vol-med">Most common price point</td></tr>
+        <tr><td>220–230 PLN</td><td>~5</td><td class="vol-med">Mid-range practitioners</td></tr>
+        <tr class="highlight-row"><td>250 PLN</td><td>~3</td><td class="vol-high">WCP's price level — experienced therapists</td></tr>
+        <tr><td>300 PLN</td><td>1</td><td class="vol-high">Premium individual practitioner</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Pricing insight:</strong> WCP at 250 PLN is positioned at the <strong>upper end of the local market</strong> but not the most expensive. Average Olsztyn therapist charges ~215 PLN. WCP justifies the premium through breadth of modalities, diagnostic services, and multiple locations.</p>
+
+    <h3 class="sub-heading">Tier 3: National Online Platforms</h3>
+    <p>TwojPsycholog (7,200+ specialists, 85,000+ patients), Wellbee (running Google Ads targeting Warmia patients), and Mentali (appears in local Olsztyn/Ostróda searches) represent the most significant competitive threat. They reduce geographic barriers and intercept patients at the search stage before they find WCP.</p>
+
+    <h3 class="sub-heading">Tier 4: Public/NFZ</h3>
+    <p>Free but 3–12 month wait times. Drives patients to private therapy — acts as a demand driver, not a real competitor.</p>
+
+    <div class="chart-container">
+      <div class="chart-title">Competitor Distribution by Tier</div>
+      <div class="bar-chart" id="tier-chart">
+        <div class="bar-row">
+          <span class="bar-label">Tier 1: Structural</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="5%"></div></div>
+          <span class="bar-value">1 (WCP only)</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Tier 2: Regional</span>
+          <div class="bar-track"><div class="bar-fill blue bar-animated" data-width="45%"></div></div>
+          <span class="bar-value">~16 practices</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Tier 3: National</span>
+          <div class="bar-track"><div class="bar-fill red bar-animated" data-width="35%"></div></div>
+          <span class="bar-value">3 platforms</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Tier 4: Public/NFZ</span>
+          <div class="bar-track"><div class="bar-fill green bar-animated" data-width="15%"></div></div>
+          <span class="bar-value">Limited</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: POSITIONING MAP -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="positioning">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Section 04</div>
+      <h2>Competitive Positioning Map</h2>
+      <div class="sub">Visual competitive matrix</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+        <div class="chart-container" style="padding:24px">
+      <div class="chart-title">Positioning Map — Scale vs Delivery Model</div>
+      <div id="positioning-map-chart" class="echarts-box scatter" style="height:460px"></div>
+    </div>
+
+    <div class="callout">
+      <strong>WCP and ANIMA both occupy the upper-right quadrant (high scale, in-person), but with different models.</strong> WCP is private-only; ANIMA leverages NFZ contracts for a 5–10× larger patient pool. WCP's moat is brand warmth, reviews, and agility — not scale alone.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: COMPETITOR PROFILES -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="profiles">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">groups</span>
+    <div>
+      <div class="sec-label">Section 05</div>
+      <h2>Competitor Profiles</h2>
+      <div class="sub">Detailed analysis of 6 key competitors</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- ANIMA -->
+    <div class="competitor-card" style="border:1px solid rgba(224,82,82,.4)">
+      <div class="cc-header" style="background:rgba(224,82,82,.1)">
+        <span class="cc-name">Centrum Psychiatrii ANIMA</span>
+        <span class="tag high">🔴 CRITICAL — Structural Competitor</span>
+      </div>
+      <div class="cc-location">anima.olsztyn.pl · animaolsztyn.pl · 6 locations (Olsztyn HQ, Olsztyn Children/Youth, Szczytno, Biskupiec, Iława 🆕, Węgorzewo) · Iwona Trzonkowska-Żyśko</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Strengths</div>
+          <ul>
+            <li><strong>NFZ access</strong> — treats patients on public insurance; patient pool 5–10× larger than private-only market</li>
+            <li><strong>Psychiatrist on staff</strong> — medication + therapy under one roof; WCP cannot offer this</li>
+            <li><strong>6 locations</strong> — including new Iława office (March 2026) that threatens WCP's Ostróda market</li>
+            <li><strong>40+ specialists</strong> across all locations (26 at children/youth center alone)</li>
+            <li><strong>NFZ-funded day ward</strong> for neurosis treatment — hospital-level service</li>
+            <li><strong>PTP accreditation</strong> (Polish Psychiatric Association) — institutional credibility</li>
+            <li><strong>Dedicated children/youth center</strong> — separate facility with full team</li>
+            <li><strong>Facebook 2,200+ followers</strong> — 3.4× WCP's following</li>
+            <li><strong>ZnanyLekarz online registration</strong> — integrated booking via platform</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Weaknesses</div>
+          <ul>
+            <li><strong>Google Reviews: 3.2/5</strong> (58 reviews) — very poor rating; significant trust deficit</li>
+            <li><strong>Individual therapy: 200 PLN</strong> — undercuts WCP but signals lower-value positioning</li>
+            <li><strong>DIVA-5: 1,200 PLN</strong> — double WCP's 600 PLN price; WCP dominates ADHD diagnostics</li>
+            <li><strong>Blog stale since 2021</strong> — no content marketing, no SEO content</li>
+            <li><strong>Split website</strong> (anima.olsztyn.pl + animaolsztyn.pl) — confusing patient experience</li>
+            <li><strong>Clinical/institutional brand</strong> — lacks WCP's warmth and modernity</li>
+            <li><strong>Phone-based registration</strong> — no online booking for psychiatry services</li>
+            <li><strong>NFZ dependency risk</strong> — NFZ contracts can change; commercial diversification limited</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CP Wasiński -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">Centrum Psychoterapii Dariusz Wasiński</span>
+        <span class="tag medium">🟡 Moderate threat</span>
+      </div>
+      <div class="cc-location">cp.olsztyn.pl · Olsztyn · 8 listed staff</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Strengths</div>
+          <ul>
+            <li>Only local competitor offering <strong>formal diagnostics</strong> (ADOS-2, Conners, DIVA-5, SCID)</li>
+            <li>Specializes in <strong>children with ADHD, Asperger's, behavioral disorders</strong></li>
+            <li>Offers <strong>TUS</strong> (social skills training) groups — recurring revenue</li>
+            <li>Active community engagement (literary evenings, FASD congress)</li>
+            <li>Academic connections (UWM lecturer on team)</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Weaknesses</div>
+          <ul>
+            <li>Small team (8 vs WCP's 22)</li>
+            <li>Basic website design, limited online booking</li>
+            <li>Phone registration only during limited hours</li>
+            <li>No unified ZnanyLekarz clinic profile</li>
+            <li>CBT-only approach (less choice for patients)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Olsztyńskie CP KONTAKT -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">Olsztyńskie Centrum Psychoterapii KONTAKT</span>
+        <span class="tag medium">🟡 Moderate threat</span>
+      </div>
+      <div class="cc-location">psychoterapiaolsztyn.com.pl · Olsztyn · 3 therapists · 20+ years</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Strengths</div>
+          <ul>
+            <li><strong>Strongest Facebook presence</strong> in Olsztyn (805 likes, 30 talking about this — outperforms WCP per-therapist)</li>
+            <li>20+ years experience — deep credibility & word-of-mouth</li>
+            <li>Unique approaches: MBT, ISTDP, EFT — not commonly available</li>
+            <li>PTP & European Association certifications</li>
+            <li>Offers supervision and training — attracts professional referrals</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Weaknesses</div>
+          <ul>
+            <li>Very small team (3 vs WCP's 22)</li>
+            <li>Minimal website — almost no content, no pricing, no booking</li>
+            <li>No visible ZnanyLekarz clinic profile</li>
+            <li>No online therapy offering</li>
+            <li>Limited service breadth (individual, group, couples only)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- E-Moc-Ja -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">E-Moc-Ja Centrum Psychoterapii</span>
+        <span class="tag high">🟠 Medium-High threat</span>
+      </div>
+      <div class="cc-location">e-moc-ja.pl · Olsztyn + Warsaw + Ostrów Maz. · Since 2015 · CBT-focused</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Strengths</div>
+          <ul>
+            <li><strong>Multi-location</strong> (3 cities) — only other multi-site competitor in Olsztyn</li>
+            <li>Established since 2015</li>
+            <li>CBT-only with clear, credible positioning ("scientifically proven")</li>
+            <li>Offers online therapy (Skype, Zoom)</li>
+            <li>Psychiatry support on team</li>
+            <li>Active Facebook page (hiring posts signal growth)</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Weaknesses</div>
+          <ul>
+            <li>CBT-only (narrow choice for patients)</li>
+            <li>Olsztyn branch feels like an outpost, not a hub</li>
+            <li>Blog content stale (last updated ~2021)</li>
+            <li>No ZnanyLekarz clinic profile found</li>
+            <li>No group therapy, no diagnostics</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Centrum Terapii poMOC -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">Centrum Terapii poMOC</span>
+        <span class="tag quick-win">🟢 Low threat</span>
+      </div>
+      <div class="cc-location">centrumterapiipomoc.com · Ostróda · Solo (Natalia Kruszewska) · CBT + Psychotraumatology</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Strengths</div>
+          <ul>
+            <li><strong>Online calendar booking</strong> — only local competitor with this</li>
+            <li>Explicitly <strong>LGBTQ+ friendly</strong></li>
+            <li><strong>Perinatal/postpartum</strong> support — underserved niche</li>
+            <li>Online therapy prominently offered</li>
+            <li>Extensive problem list (good for SEO)</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Weaknesses</div>
+          <ul>
+            <li>Solo practitioner — very limited capacity</li>
+            <li>New entrant in Ostróda</li>
+            <li>CBT/trauma-focused only</li>
+            <li>No group therapy, no diagnostics</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wellbee -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">Wellbee</span>
+        <span class="tag high">🔴 High threat — National</span>
+      </div>
+      <div class="cc-location">wellbee.pl · National online platform · Google Ads active</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Strengths</div>
+          <ul>
+            <li><strong>Professional-grade platform</strong> with full online booking</li>
+            <li><strong>Running Google Ads</strong> targeting "psychoterapia online" nationwide (including Warmia)</li>
+            <li>Free matching service ("Opiekun Terapii") reduces patient friction</li>
+            <li>Multiple therapeutic approaches</li>
+            <li>National scale = SEO + brand awareness advantage</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Weaknesses</div>
+          <ul>
+            <li>Online-only (no physical presence in Warmia)</li>
+            <li>No group therapy, no diagnostics</li>
+            <li>Less personal — platform model vs. local clinic</li>
+            <li>Cannot provide in-person sessions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TwojPsycholog -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">TwojPsycholog.pl</span>
+        <span class="tag high">🔴 High threat — National</span>
+      </div>
+      <div class="cc-location">twojpsycholog.pl · 7,200+ specialists · 85,000+ patients · 41,000+ monthly visits</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Strengths</div>
+          <ul>
+            <li>Massive scale — 7,200+ verified specialists</li>
+            <li>Specialist matching algorithm + free initial consultation calls</li>
+            <li>Reduces geographic barriers for patients</li>
+            <li>Has approached WCP about listing (channel opportunity)</li>
+            <li>41,000+ monthly visits = strong SEO presence</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Weaknesses</div>
+          <ul>
+            <li>Marketplace model — less quality control</li>
+            <li>Patients may choose individual therapists instead of WCP</li>
+            <li>Pricing variable (150–350 PLN) — confusing for patients</li>
+            <li>Limited local presence knowledge</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: GAP ANALYSIS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="gap-analysis">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">search</span>
+    <div>
+      <div class="sec-label">Section 06</div>
+      <h2>Gap Analysis: Where WCP Is Vulnerable</h2>
+      <div class="sub">Critical vulnerabilities and competitive threats</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-value">148</div>
+        <div class="stat-label">Instagram Followers</div>
+        <div class="stat-note">For 22-therapist org</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0</div>
+        <div class="stat-label">TikTok Presence</div>
+        <div class="stat-note">Open field unclaimed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">645</div>
+        <div class="stat-label">Facebook Likes</div>
+        <div class="stat-note">KONTAKT: 805 with 3 therapists</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-value">250</div>
+        <div class="stat-label">PLN/Session</div>
+        <div class="stat-note">vs ~215 PLN avg</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🏥</span> NFZ Access <span class="tag high">STRUCTURAL</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>WCP is private-only · ANIMA has NFZ contracts = 5–10× larger patient pool</strong></p>
+        <p>ANIMA can treat NFZ-funded patients at zero cost to the patient, then upsell to commercial services. WCP has no access to this pipeline. This is the single largest structural disadvantage — it cannot be quickly replicated.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🧠</span> Psychiatrist Gap <span class="tag high">CRITICAL</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>ANIMA has psychiatrist on staff · WCP has none</strong></p>
+        <p>Patients needing medication management (depression, anxiety, ADHD) must see a psychiatrist before or alongside therapy. ANIMA keeps them in-house; WCP sends them elsewhere — creating friction and leakage in the care pathway.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>📍</span> Geographic Coverage <span class="tag medium">GROWING</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>ANIMA: 6 locations · WCP: 3 locations · New Iława office threatens Ostróda</strong></p>
+        <p>ANIMA's new Iława commercial office (March 2026) directly targets patients between Olsztyn and WCP's Ostróda clinic. Their NFZ facilities in Szczytno and Biskupiec capture small-town referral pipelines WCP cannot access.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>📱</span> Social Media <span class="tag high">CRITICAL</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>IG 148 followers · FB 645 likes · TikTok absent · ANIMA has 2,200+ FB followers</strong></p>
+        <p>Patients find therapists through social media, not clinic profiles. WCP is also losing the social media battle to ANIMA (2,200 vs 645 Facebook followers). If WCP's therapists build personal brands independently, WCP loses the platform advantage.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🌐</span> Online Therapy <span class="tag medium">GROWING</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>Offered but not promoted · National platforms own this space</strong></p>
+        <p>TwojPsycholog and Wellbee make online therapy accessible from anywhere. ANIMA offers psychiatry + therapy under one roof. WCP offers online sessions but doesn't actively promote this — patients may never discover WCP.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>💰</span> Price Sensitivity <span class="tag medium">MODERATE</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>250 PLN vs market avg ~215 PLN</strong></p>
+        <p>Patients comparing purely on price may choose cheaper alternatives, especially for initial consultations.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>⭐</span> ZnanyLekarz Dependency <span class="tag medium">MODERATE</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>Primary acquisition funnel · Single-channel risk</strong></p>
+        <p>If the platform raises prices, changes algorithms, or a competitor outbids, WCP's primary funnel is compromised.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🔍</span> Google Presence <span class="tag medium">MODERATE</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>3 locations = advantage · Not fully optimized</strong></p>
+        <p>Individual practitioners with better Google Business optimization may outrank WCP despite its scale advantage.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: RANKINGS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="rankings">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">emoji_events</span>
+    <div>
+      <div class="sec-label">Section 07</div>
+      <h2>WCP Relative Rankings</h2>
+      <div class="sub">Competitive position across key dimensions</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="kw-table">
+      <thead><tr><th>Dimension</th><th>WCP Rank</th><th>ANIMA Rank</th><th>Gap</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr class="highlight-row"><td>Team Scale</td><td class="vol-med">🥈 #2 (22)</td><td class="vol-high">🥇 #1 (40+)</td><td>ANIMA has ~2× WCP's team</td><td><span class="tag high">High</span></td></tr>
+        <tr><td>Locations</td><td class="vol-med">🥈 #2 (3)</td><td class="vol-high">🥇 #1 (6)</td><td>ANIMA double WCP's locations</td><td><span class="tag high">High</span></td></tr>
+        <tr class="highlight-row"><td>ZnanyLekarz</td><td class="vol-high">🥇 #1</td><td class="vol-red">⚠️ Weak (3.2/5)</td><td>119 reviews, 4.7/5 — WCP dominates</td><td><span class="tag medium">Medium</span></td></tr>
+        <tr><td>Facebook</td><td class="vol-med">🥈 #2 (645)</td><td class="vol-high">🥇 #1 (2,200+)</td><td>ANIMA 3.4× WCP's followers</td><td><span class="tag high">Critical</span></td></tr>
+        <tr><td>Instagram</td><td class="vol-red">🔴 Very weak</td><td class="vol-low">➖ Absent</td><td>148 followers — both weak</td><td><span class="tag high">Critical</span></td></tr>
+        <tr><td>TikTok</td><td class="vol-low">➖ Absent</td><td class="vol-low">➖ Absent</td><td>Open field — neither owns it</td><td><span class="tag medium">Medium</span></td></tr>
+        <tr><td>Google Presence</td><td class="vol-med">🥈 Strong</td><td class="vol-med">🥈 Moderate</td><td>WCP reviews better; ANIMA has NFZ pipeline</td><td><span class="tag high">High</span></td></tr>
+        <tr class="highlight-row"><td>Psychiatrist</td><td class="vol-red">❌ None</td><td class="vol-high">✅ On staff</td><td>Critical gap — care fragmentation</td><td><span class="tag high">Critical</span></td></tr>
+        <tr class="highlight-row"><td>NFZ Access</td><td class="vol-red">❌ Private only</td><td class="vol-high">✅ NFZ + Commercial</td><td>5–10× larger patient pool</td><td><span class="tag high">Critical</span></td></tr>
+        <tr><td>ADHD Diagnostics</td><td class="vol-high">🥇 #1 (600 PLN)</td><td class="vol-red">⚠️ 1,200 PLN</td><td>WCP 50% cheaper on DIVA-5</td><td><span class="tag medium">Medium</span></td></tr>
+        <tr class="highlight-row"><td>Brand Warmth</td><td class="vol-high">🥇 #1</td><td class="vol-red">⚠️ Clinical</td><td>WCP's warm brand is key differentiator</td><td><span class="tag medium">Medium</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="chart-container">
+      <div class="chart-title">WCP Rankings by Dimension (higher = better)</div>
+      <div class="bar-chart" id="ranking-chart">
+        <div class="bar-row">
+          <span class="bar-label">ZnanyLekarz</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="95%"></div></div>
+          <span class="bar-value">#1</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Service Breadth</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="95%"></div></div>
+          <span class="bar-value">#1</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Website Quality</span>
+          <div class="bar-track"><div class="bar-fill green bar-animated" data-width="75%"></div></div>
+          <span class="bar-value">#2</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Google Presence</span>
+          <div class="bar-track"><div class="bar-fill green bar-animated" data-width="70%"></div></div>
+          <span class="bar-value">#2</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Facebook</span>
+          <div class="bar-track"><div class="bar-fill blue bar-animated" data-width="50%"></div></div>
+          <span class="bar-value">#3</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Instagram</span>
+          <div class="bar-track"><div class="bar-fill red bar-animated" data-width="15%"></div></div>
+          <span class="bar-value">Weak</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">TikTok</span>
+          <div class="bar-track"><div class="bar-fill red bar-animated" data-width="0%"></div></div>
+          <span class="bar-value">Absent</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 8: STRATEGIC RECOMMENDATIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="recommendations">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">lightbulb</span>
+    <div>
+      <div class="sec-label">Section 08</div>
+      <h2>Strategic Recommendations</h2>
+      <div class="sub">Prioritized action plan by urgency</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">🔴 Critical — Do Immediately</h3>
+    <ul class="priority-list">
+      <li class="critical"><strong>Recruit psychiatrist</strong> — WCP's biggest vulnerability vs ANIMA. Patients needing medication management currently must go elsewhere. A psychiatrist on staff completes the care pathway and eliminates the #1 reason patients choose ANIMA over WCP.</li>
+      <li class="critical"><strong>Dominate ADHD diagnostics</strong> — WCP's DIVA-5 at 600 PLN vs ANIMA's 1,200 PLN is a 50% price advantage. Promote MOXO (unique, ANIMA doesn't offer). Make WCP the go-to ADHD center in Warmia.</li>
+      <li class="critical"><strong>Fix Instagram</strong> — 148 followers is unacceptable for 22 therapists. Post 3x/week minimum: therapist spotlights, mental health tips, behind-the-scenes, anonymized client testimonials. Unfollow irrelevant accounts (1,578 → &lt;200). Target: 1,000 followers in 6 months.</li>
+      <li class="critical"><strong>Add visible online booking to website</strong> — Booknetic is already used in the business — make it prominent. Add "Book appointment online" CTA on every page. Consider ZnanyLekarz booking widget too.</li>
+      <li class="critical"><strong>Counter Google Ads from national platforms</strong> — Run Google Ads for "psychoterapia Olsztyn", "psychoterapia Elbląg", "psychoterapia Ostróda". Emphasize local presence + physical offices + 22 therapists. Budget: 500–1,000 PLN/month would dominate local search.</li>
+    </ul>
+
+    <h3 class="sub-heading">🟠 High Priority — Within 30 Days</h3>
+    <ul class="priority-list">
+      <li class="high"><strong>Weaponize reviews against ANIMA</strong> — ANIMA's 3.2/5 Google rating is their biggest weakness. WCP at 4.7/5 should actively grow ZnanyLekarz reviews (target: 200 by end of 2026). Post-session SMS asking for review. Reviews are the single most powerful differentiator.</li>
+      <li class="high"><strong>Launch online therapy prominently</strong> — Add "Psychoterapia online" as a prominent service. Create a dedicated SEO-optimized landing page. Counters Wellbee/Mentali directly. ANIMA offers online registration but limited online therapy promotion.</li>
+      <li class="high"><strong>Boost Facebook engagement</strong> — ANIMA has 2,200+ followers vs WCP's 645. This is a 3.4× gap. Post 3–5x/week. Run Facebook Ads targeting Warmia. Target: 1,500 likes in 6 months.</li>
+      <li class="high"><strong>Verify Twój Psycholog presence</strong> — If WCP doesn't have a profile, create one immediately. If it does, optimize with full team, services, photos.</li>
+      <li class="high"><strong>Monitor ANIMA Iława expansion</strong> — New commercial office opened March 2026. Track patient flow from Iława area that previously went to WCP Ostróda. Consider opening a competing presence if volumes drop.</li>
+    </ul>
+
+    <h3 class="sub-heading">🟡 Medium Priority — Within 90 Days</h3>
+    <ul class="priority-list">
+      <li class="medium"><strong>Launch TikTok</strong> — No local competitor owns this channel. First mover advantage. Short-form mental health content in Polish. Target: 18–35 demographic.</li>
+      <li class="medium"><strong>Add child therapy specialization</strong> — CP Wasiński is the only structured child/ADHD practice in Olsztyn. Add TUS groups (recurring revenue, community building).</li>
+      <li class="medium"><strong>Add sexology to service roster</strong> — Orłowska is the only sexologist in Ostróda. High-demand service that drives couples therapy referrals.</li>
+      <li class="medium"><strong>SEO content strategy</strong> — Blog 1–2 articles/week targeting "psychoterapia Olsztyn", "psycholog Elbląg", "CBT Ostróda". Polish-language, locally optimized.</li>
+    </ul>
+
+    <h3 class="sub-heading">🟢 Ongoing</h3>
+    <ul class="priority-list">
+      <li class="low"><strong>Grow ZnanyLekarz reviews</strong> — 119 is strong but not insurmountable. Post-session SMS asking for review. Target: 200 reviews by end of 2026.</li>
+      <li class="low"><strong>Google Business optimization</strong> — All 3 locations: complete profiles, photos, Q&A, respond to every review. Weekly Google Business posts.</li>
+      <li class="low"><strong>Patient app development</strong> — Per strategic goals. Creates a moat no regional competitor can match.</li>
+      <li class="low"><strong>B2B/EAP program</strong> — Corporate wellness packages. No competitor has the scale for this.</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 9: PRICING MATRIX -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="pricing">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">credit_card</span>
+    <div>
+      <div class="sec-label">Section 09</div>
+      <h2>Competitive Pricing Matrix</h2>
+      <div class="sub">Price comparison across service types</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="kw-table">
+      <thead><tr><th>Provider</th><th>Individual (50min)</th><th>Couples (90min)</th><th>Online</th><th>Diagnostic</th><th>Group</th><th>Psychiatrist</th></tr></thead>
+      <tbody>
+        <tr class="highlight-row"><td><strong>WCP</strong></td><td><strong>250 PLN</strong></td><td><strong>500 PLN</strong></td><td><strong>250 PLN</strong></td><td><strong>300–1,000 PLN</strong></td><td><strong>100 PLN</strong></td><td>❌ N/A</td></tr>
+        <tr style="background:rgba(224,82,82,.08)"><td><strong>ANIMA</strong></td><td>200 PLN</td><td>N/A</td><td>N/A</td><td>DIVA-5: 1,200 PLN</td><td>N/A</td><td>✅ from 300 PLN</td></tr>
+        <tr><td>ZL Average (Olsztyn)</td><td>~215 PLN</td><td>N/A</td><td>~200 PLN</td><td>N/A</td><td>N/A</td></tr>
+        <tr><td>ZL Lowest</td><td>180 PLN</td><td>N/A</td><td>180 PLN</td><td>170 PLN</td><td>N/A</td></tr>
+        <tr><td>ZL Highest</td><td>300 PLN</td><td>N/A</td><td>250 PLN</td><td>N/A</td><td>N/A</td></tr>
+        <tr><td>TwojPsycholog</td><td>150–350 PLN</td><td>300–600 PLN</td><td>150–350 PLN</td><td>Varies</td><td>Varies</td></tr>
+        <tr><td>NFZ/Public</td><td>Free</td><td>Free</td><td>Limited</td><td>Free</td><td>Limited</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Bottom line:</strong> WCP pricing is competitive at the premium end of the local market, justified by scale, service breadth, and diagnostic capabilities that no local competitor offers. <strong>Key pricing advantage vs ANIMA:</strong> DIVA-5 at 600 PLN (50% cheaper than ANIMA's 1,200 PLN). <strong>Key vulnerability:</strong> ANIMA undercuts WCP by 50 PLN on individual therapy (200 vs 250 PLN).
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Individual Therapy Pricing Comparison</div>
+      <div class="bar-chart" id="pricing-chart">
+        <div class="bar-row">
+          <span class="bar-label">ZL Lowest</span>
+          <div class="bar-track"><div class="bar-fill green bar-animated" data-width="60%"></div></div>
+          <span class="bar-value">180 PLN</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">ZL Average</span>
+          <div class="bar-track"><div class="bar-fill blue bar-animated" data-width="72%"></div></div>
+          <span class="bar-value">215 PLN</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label"><strong>WCP</strong></span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="83%"></div></div>
+          <span class="bar-value"><strong>250 PLN</strong></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label" style="color:#f08080">ANIMA</span>
+          <div class="bar-track"><div class="bar-fill red bar-animated" data-width="67%"></div></div>
+          <span class="bar-value" style="color:#f08080">200 PLN</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">ZL Highest</span>
+          <div class="bar-track"><div class="bar-fill blue bar-animated" data-width="100%"></div></div>
+          <span class="bar-value">300 PLN</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 10: DATA LIMITATIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="limitations">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">warning</span>
+    <div>
+      <div class="sec-label">Section 10</div>
+      <h2>Data Limitations</h2>
+      <div class="sub">Known gaps and confidence levels</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout blue">
+      <ul class="clean">
+        <li><strong>ZnanyLekarz:</strong> JS-rendered content not fully accessible; exact review counts for competitors unverified</li>
+        <li><strong>Social media:</strong> Facebook/Instagram block programmatic access; engagement metrics from search snippets only</li>
+        <li><strong>Google Reviews:</strong> Requires browser automation for reliable data</li>
+        <li><strong>TwojPsycholog:</strong> Local listings not verifiable without account access</li>
+        <li><strong>ANIMA data:</strong> Blog last updated 2021; commercial revenue unknown; exact team count estimated from public listings</li>
+        <li><strong>Competitor revenue:</strong> Not publicly available for private practices in Poland</li>
+      </ul>
+    </div>
+
+    <p><strong>Recommendation:</strong> Run a focused browser-based research session to fill data gaps, particularly for ZnanyLekarz individual therapist profiles and social media follower counts.</p>
+
+  </div>
+</div>
+
+</div><!-- /page-canvas -->
+</main>
+
+<!-- Scroll Spy & Navigation -->
+<script>
+const sectionNames = {
+  'cover':'Cover',
+  'executive-summary':'Executive Summary',
+  'wcp-baseline':'WCP Baseline',
+  'landscape':'Competitive Landscape',
+  'positioning':'Positioning Map',
+  'profiles':'Competitor Profiles',
+  'gap-analysis':'Gap Analysis',
+  'rankings':'Rankings',
+  'recommendations':'Recommendations',
+  'pricing':'Pricing Matrix',
+  'limitations':'Data Limitations'
+};
+const navLinks = document.querySelectorAll('.nav-link[data-section]');
+const topnavSection = document.getElementById('topnav-section');
+
+function setActive(id){
+  navLinks.forEach(l=>l.classList.toggle('active',l.dataset.section===id));
+  if(topnavSection) topnavSection.textContent = sectionNames[id]||'';
+}
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) setActive(e.target.id);});
+},{rootMargin:'-15% 0px -70% 0px',threshold:0.05});
+
+Object.keys(sectionNames).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) obs.observe(el);
+});
+
+navLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
+    const t=document.querySelector(link.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+
+// Animated bar charts with IntersectionObserver
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const bars = entry.target.querySelectorAll('.bar-animated');
+      bars.forEach((bar, index) => {
+        setTimeout(() => {
+          bar.classList.remove('bar-animated');
+          bar.style.width = bar.dataset.width;
+        }, index * 150);
+      });
+      barObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.bar-chart').forEach(chart => {
+  barObserver.observe(chart);
+});
+</script>
+
+<!-- ECharts Positioning Map Chart -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script src="assets/js/stitch-echarts-theme.js"></script>
+<script>
+(function() {
+  const chartEl = document.getElementById('positioning-map-chart');
+  if (!chartEl) return;
+  
+  const chart = echarts.init(chartEl, 'stitch');
+  chart.setOption({
+    tooltip: {
+      trigger: 'item',
+      formatter: function(p) {
+        return '<b>' + p.data[3] + '</b><br/>' +
+          'Delivery: ' + (p.data[0] < 0 ? 'Online' : 'In-Person') + ' (' + p.data[0] + ')<br/>' +
+          'Scale: ' + p.data[1] + ' therapists';
+      }
+    },
+    grid: { left: 100, right: 60, top: 50, bottom: 80 },
+    xAxis: {
+      name: 'Delivery Model →',
+      nameLocation: 'middle', nameGap: 50,
+      nameTextStyle: { color: '#e6c364', fontSize: 13, fontFamily: 'Manrope, sans-serif', fontWeight: 700 },
+      min: -10, max: 10, interval: 2,
+      axisLabel: {
+        formatter: function(v) {
+          if (v === -10) return 'ONLINE';
+          if (v === 10) return 'IN-PERSON';
+          return '';
+        },
+        color: '#8a9bb0',
+        fontSize: 11,
+        fontWeight: 'bold'
+      },
+      splitLine: { lineStyle: { color: 'rgba(77,70,55,0.3)', type: 'dashed' } }
+    },
+    yAxis: {
+      name: 'Scale ↑',
+      nameLocation: 'middle', nameGap: 60,
+      nameTextStyle: { color: '#e6c364', fontSize: 13, fontFamily: 'Manrope, sans-serif', fontWeight: 700 },
+      min: 0, max: 25, interval: 5,
+      axisLabel: {
+        formatter: function(v) {
+          if (v === 20) return 'HIGH (10+)';
+          if (v === 0) return 'LOW (1)';
+          return v;
+        },
+        color: '#8a9bb0',
+        fontSize: 11
+      },
+      splitLine: { lineStyle: { color: 'rgba(77,70,55,0.3)', type: 'dashed' } }
+    },
+    series: [{
+      type: 'scatter',
+      animationDuration: 1400,
+      animationEasing: 'elasticOut',
+      symbolSize: function(val) { return Math.max(val[2] * 5, 15); },
+      data: [
+        [0, 22, 22, 'WCP'],
+        [-6, 8, 8, 'TwojPsycholog'],
+        [4, 5, 5, 'Small Groups'],
+        [-5, 1, 1, 'Solos'],
+        [2, 3, 3, 'NFZ']
+      ],
+      itemStyle: {
+        shadowBlur: 15,
+        shadowColor: function(p) {
+          var colors = {
+            'WCP': 'rgba(230,195,100,0.5)',
+            'TwojPsycholog': 'rgba(123,200,224,0.4)',
+            'Small Groups': 'rgba(76,175,125,0.4)',
+            'Solos': 'rgba(224,82,82,0.4)',
+            'NFZ': 'rgba(155,89,182,0.4)'
+          };
+          return colors[p.data[3]] || 'rgba(138,155,176,0.3)';
+        },
+        color: function(p) {
+          var colors = {
+            'WCP': '#e6c364',
+            'TwojPsycholog': '#7bc8e0',
+            'Small Groups': '#6fcf97',
+            'Solos': '#f08080',
+            'NFZ': '#9B59B6'
+          };
+          return colors[p.data[3]] || '#8a9bb0';
+        }
+      },
+      label: {
+        show: true,
+        position: 'top',
+        formatter: function(p) { return p.data[3]; },
+        color: '#e0e3e8',
+        fontFamily: 'Manrope, sans-serif',
+        fontWeight: 600,
+        fontSize: 11
+      },
+      emphasis: {
+        scale: true,
+        itemStyle: {
+          shadowBlur: 25,
+          shadowColor: 'rgba(230,195,100,0.6)'
+        }
+      },
+      markLine: {
+        silent: true,
+        lineStyle: { color: 'rgba(230,195,100,0.3)', type: 'solid', width: 2 },
+        data: [
+          [{ coord: [0, 0] }, { coord: [0, 25] }],
+          [{ coord: [-10, 10] }, { coord: [10, 10] }]
+        ]
+      },
+      markArea: {
+        silent: true,
+        itemStyle: { color: 'transparent', borderWidth: 1, borderType: 'dashed', borderColor: 'rgba(77,70,55,0.2)' },
+        data: [
+          [{ name: 'Online / Low Scale', coord: [-10, 0] }, { coord: [0, 10] }],
+          [{ name: 'Online / High Scale', coord: [-10, 10] }, { coord: [0, 25] }],
+          [{ name: 'In-Person / Low Scale', coord: [0, 0] }, { coord: [10, 10] }],
+          [{ name: 'In-Person / High Scale', coord: [0, 10] }, { coord: [10, 25] }]
+        ],
+        label: {
+          show: true,
+          position: 'insideTopLeft',
+          color: 'rgba(138,155,176,0.5)',
+          fontSize: 10,
+          fontFamily: 'Manrope, sans-serif'
+        }
+      }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+})();
+</script>
+
+</body>
+</html>

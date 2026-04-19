@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="pl" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analiza Kosztów ANALIZA · Dogłębna Analiza 40 Miesięcy</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script src="assets/js/stitch-echarts-theme.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo svg{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.red{border-left-color:var(--red-t)}
+  .callout.red strong{color:#f08080}
+  .callout.green{border-left-color:var(--green-t)}
+  .callout.green strong{color:#6fcf97}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .stat-card{background:var(--surface-mid);border-radius:6px;padding:18px;border-left:3px solid var(--gold-dim)}
+  .stat-card .stat-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .stat-card .stat-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-card .stat-note{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .stat-card.green{border-left-color:var(--green-t)}
+  .stat-card.green .stat-value{color:#6fcf97}
+  .stat-card.red{border-left-color:var(--red-t)}
+  .stat-card.red .stat-value{color:#f08080}
+  .stat-card.blue{border-left-color:var(--blue-t)}
+  .stat-card.blue .stat-value{color:#7bc8e0}
+  .echart-box{width:100%;height:380px;margin:18px 0;border-radius:6px;background:var(--surface-mid);opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+  .echart-box.visible{opacity:1;transform:translateY(0)}
+  .echart-box.tall{height:420px}
+  @media(max-width:768px){.echart-box,.echart-box.tall{height:280px}}
+  .chart-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 8px}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .vol-low{color:#7bc8e0;font-weight:700}
+  .kw-table .vol-red{color:#f08080;font-weight:700}
+  .bar-chart{margin:24px 0}
+  .bar-item{display:flex;align-items:center;margin:10px 0;gap:14px}
+  .bar-label{min-width:100px;font-size:.8rem;color:var(--muted);text-align:right}
+  .bar-track{flex:1;height:24px;background:var(--surface-mid);border-radius:3px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:3px;width:0;transition:width 1.2s ease-out}
+  .bar-fill.green{background:linear-gradient(90deg,#3d9e6d,#4CAF7D)}
+  .bar-fill.red{background:linear-gradient(90deg,#c94a4a,#E05252)}
+  .bar-value{min-width:70px;font-size:.8rem;font-weight:600;color:var(--on-surface)}
+  .bar-item:hover .bar-fill{filter:brightness(1.1)}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  .page-footer{display:none}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .funnel-step{display:flex;gap:16px;margin:20px 0;align-items:flex-start}
+  .funnel-step .step-num{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface-high);border:2px solid var(--gold-dim);border-radius:50%;font-family:"Manrope",sans-serif;font-size:.78rem;font-weight:800;color:var(--gold);margin-top:2px}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--on-surface);margin-bottom:4px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted);line-height:1.6}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.stat-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Powrót do Raportu Strategicznego →
+  </a>
+
+  <div class="sidebar-label">Nawigacja</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Strona Tytułowa
+    </a>
+    <a class="nav-link" href="#methodology" data-section="methodology">
+      <span class="material-symbols-outlined nav-icon">warning</span> Metodologia
+    </a>
+    <a class="nav-link" href="#invoice-costs" data-section="invoice-costs">
+      <span class="material-symbols-outlined nav-icon">receipt</span> Koszty Faktur
+    </a>
+    <a class="nav-link" href="#employee-costs" data-section="employee-costs">
+      <span class="material-symbols-outlined nav-icon">groups</span> Koszty Pracownicze
+    </a>
+    <a class="nav-link" href="#tax-insurance" data-section="tax-insurance">
+      <span class="material-symbols-outlined nav-icon">account_balance</span> Podatki i Ubezpieczenia
+    </a>
+    <a class="nav-link" href="#cost-ratios" data-section="cost-ratios">
+      <span class="material-symbols-outlined nav-icon">analytics</span> Wskaźniki Kosztów
+    </a>
+    <a class="nav-link" href="#findings" data-section="findings">
+      <span class="material-symbols-outlined nav-icon">lightbulb</span> Kluczowe Wnioski
+    </a>
+    <a class="nav-link" href="#data-sources" data-section="data-sources">
+      <span class="material-symbols-outlined nav-icon">database</span> Źródła Danych
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="ANALIZA-COST-ANALYSIS.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇬🇧</span> Wersja EN
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP · Analiza Kosztów ANALIZA</span>
+  <span class="topnav-section" id="topnav-section">Strona Tytułowa</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 0: STRONA TYTUŁOWA -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  
+  <span class="cover-badge">📊 Dogłębna Analiza Finansowa · Kwiecień 2026</span>
+  <h1 class="cover-h1">Raport Analizy<br><span>Kosztów</span></h1>
+  <p class="cover-subtitle">Kompleksowa analiza kosztów obejmująca 40 miesięcy na podstawie danych z plików ANALIZA XLSX (sty 2023 – kwi 2026). Śledzenie kosztów faktur, wydatków pracowniczych, zobowiązań podatkowych i zmian strukturalnych w modelach zatrudnienia.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Okres Analizy</label><p>40 Miesięcy</p></div>
+    <div class="cover-meta-item"><label>Liczba Danych</label><p>13 799 Transakcji</p></div>
+    <div class="cover-meta-item"><label>Pliki Źródłowe</label><p>ANALIZA 2023-2026</p></div>
+    <div class="cover-meta-item"><label>Przygotowano Dla</label><p>Tomasz i Karolina Zagała</p></div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Spis Treści</h3>
+  <ol>
+    <li><a href="#methodology">Ostrzeżenie Metodologiczne</a></li>
+    <li><a href="#invoice-costs">Koszty Faktur (Kolumna B)</a></li>
+    <li><a href="#employee-costs">Koszty Pracownicze (Kolumna C)</a></li>
+    <li><a href="#tax-insurance">Podatki i Ubezpieczenia (Kolumna E)</a></li>
+    <li><a href="#cost-ratios">Wskaźniki Kosztów i Trendy</a></li>
+    <li><a href="#findings">Kluczowe Wnioski i Rekomendacje</a></li>
+    <li><a href="#data-sources">Źródła Danych i Metodologia</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 1: OSTRZEŻENIE METODOLOGICZNE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="methodology">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">warning</span>
+    <div>
+      <div class="sec-label">Sekcja 01</div>
+      <h2>Krytyczne Ostrzeżenie Metodologiczne</h2>
+      <div class="sub">Zrozumienie, co faktycznie reprezentują dane ANALIZA</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout red">
+      <strong>⚠️ KRYTYCZNE:</strong> Kolumna E ANALIZA ("Przychody") <strong>NIE JEST</strong> przychodem z terapii — stanowi ona w 80-95% płatności podatkowych (ZUS, PIT-4R, PIT-36L). Użycie "Przychodów" z ANALIZY jako przychodu doprowadziłoby do katastrofalnych błędów strategicznych. Prawdziwy przychód pochodzi wyłącznie z wyciągów bankowych.
+    </div>
+
+    <h3 class="sub-heading">Co Faktycznie Śledzi Każda Kolumna ANALIZA</h3>
+
+    <table class="kw-table">
+      <tr><th>Kolumna</th><th>Zawiera</th><th>Powszechne Błędne Przekonanie</th><th>Rzeczywistość</th></tr>
+      <tr><td><strong>Kolumna A</strong></td><td>Okres / Data</td><td>—</td><td>Miesiąc raportowania</td></tr>
+      <tr><td><strong>Kolumna B</strong></td><td>Koszty Faktur/Operacyjne</td><td>Wszystkie koszty firmy</td><td>Materiały biurowe, media, usługi profesjonalne</td></tr>
+      <tr><td><strong>Kolumna C</strong></td><td>Koszty Pracownicze</td><td>Pełny koszt pracy</td><td>Umowy UoP (płacone przez pracodawcę); wykonawcy B2B wykluczeni</td></tr>
+      <tr><td><strong>Kolumna D</strong></td><td>Płatności Podatkowe (ZUS)</td><td>—</td><td>Składki ubezpieczenia społecznego</td></tr>
+      <tr><td><strong>Kolumna E</strong></td><td>"Przychody"</td><td>Przychód z terapii</td><td class="vol-red">80-95% to płatności podatkowe, NIE przychód</td></tr>
+    </table>
+
+    <div class="callout green">
+      <strong>✅ Poprawne Źródła Danych:</strong> Wyciągi bankowe ("wyciągi") to JEDYNE wiarygodne źródło prawdziwego przychodu i analizy przepływów pieniężnych. ANALIZA jest wartościowa do analizy struktury kosztów i planowania podatkowego — nie do pomiaru przychodu.
+    </div>
+
+    <h3 class="sub-heading">Zatwierdzone Dane Finansowe 2025 (Wyciągi Bankowe)</h3>
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">2 409 461</div>
+        <div class="stat-label">Prawdziwy Przychód (PLN)</div>
+        <div class="stat-note">Wpływy z wyciągów bankowych</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1 219 592</div>
+        <div class="stat-label">Gotówka Netto (PLN)</div>
+        <div class="stat-note">Marża 50,6%</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">~95%</div>
+        <div class="stat-label">"Przychody" ANALIZA</div>
+        <div class="stat-note">To faktycznie płatności podatkowe</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Logo WCP Separator -->
+<div style="text-align:center;padding:40px 0 20px;border-top:1px solid rgba(77,70,55,.2);margin:0 0 64px;">
+  <img src="assets/images/WCP_logo_white.svg" alt="Logo WCP" style="width:180px;height:auto;opacity:.5;display:block;margin:0 auto;">
+  </div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 2: KOSZTY FAKTUR -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="invoice-costs">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">receipt_long</span>
+    <div>
+      <div class="sec-label">Sekcja 02</div>
+      <h2>Koszty Faktur (Kolumna B)</h2>
+      <div class="sub">Wydatki operacyjne według roku · Rozbicie miesięczne · Trendy</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">329 244</div>
+        <div class="stat-label">Koszty Faktur 2025 (PLN)</div>
+        <div class="stat-note">Wydatki operacyjne</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">-17%</div>
+        <div class="stat-label">vs 2023</div>
+        <div class="stat-note">Optymalizacja kosztów</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">601 558</div>
+        <div class="stat-label">Całkowite Koszty Operacyjne (2025)</div>
+        <div class="stat-note">25% prawdziwego przychodu</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Koszty Faktur Według Roku</h3>
+
+    <div class="bar-chart">
+      <div class="bar-item">
+        <span class="bar-label">2023</span>
+        <div class="bar-track"><div class="bar-fill" data-width="100"></div></div>
+        <span class="bar-value">398 782 PLN</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">2024</span>
+        <div class="bar-track"><div class="bar-fill" data-width="82"></div></div>
+        <span class="bar-value">327 695 PLN</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">2025</span>
+        <div class="bar-track"><div class="bar-fill green" data-width="83"></div></div>
+        <span class="bar-value">329 244 PLN</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">2026 Q1</span>
+        <div class="bar-track"><div class="bar-fill" data-width="36"></div></div>
+        <span class="bar-value">143 444 PLN</span>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Kluczowe Kategorie Kosztów w Kolumnie B</h3>
+
+    <table class="kw-table">
+      <tr><th>Kategoria</th><th>2023</th><th>2024</th><th>2025</th><th>Trend</th></tr>
+      <tr><td>Materiały Biurowe i Zaopatrzenie</td><td>~45 tys.</td><td>~38 tys.</td><td>~42 tys.</td><td class="vol-med">Stabilny</td></tr>
+      <tr><td>Usługi Profesjonalne</td><td>~85 tys.</td><td>~72 tys.</td><td>~68 tys.</td><td class="vol-high">Spadek</td></tr>
+      <tr><td>Marketing i Reklama</td><td>~95 tys.</td><td>~78 tys.</td><td>~82 tys.</td><td class="vol-med">Stabilny</td></tr>
+      <tr><td>Oprogramowanie i Subskrypcje</td><td>~42 tys.</td><td>~48 tys.</td><td>~56 tys.</td><td class="vol-low">Wzrost</td></tr>
+      <tr><td>Lokal i Media</td><td>~78 tys.</td><td>~62 tys.</td><td>~58 tys.</td><td class="vol-high">Zoptymalizowany</td></tr>
+      <tr><td>Inne Koszty Operacyjne</td><td>~54 tys.</td><td>~30 tys.</td><td>~23 tys.</td><td class="vol-high">Zredukowany</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Wniosek:</strong> Koszty faktur znacząco spadły z 2023 do 2024-2025, co wskazuje na udaną optymalizację kosztów. Q1 2026 wykazuje wyższy poziom, ale obejmuje dodatkowe inwestycje w oprogramowanie (Booknetic, narzędzia analityczne).
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 3: KOSZTY PRACOWNICZE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="employee-costs">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">groups</span>
+    <div>
+      <div class="sec-label">Sekcja 03</div>
+      <h2>Koszty Pracownicze (Kolumna C)</h2>
+      <div class="sub">Trendy płacowe · Zmiana strukturalna UoP vs B2B</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Uwaga:</strong> Kolumna C ANALIZA śledzi wyłącznie koszty UoP (umowy o pracę). Wykonawcy B2B fakturują osobno i NIE są uwzględnieni w tych danych. Dramatyczny spadek odzwierciedla zmianę strukturalną, a nie obniżki wynagrodzeń terapeutów.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-value">428 tys.</div>
+        <div class="stat-label">Koszty Pracownicze 2023</div>
+        <div class="stat-note">Umowy UoP</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">179 tys.</div>
+        <div class="stat-label">Koszty Pracownicze 2024</div>
+        <div class="stat-note">-58% r/r</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">218 tys.</div>
+        <div class="stat-label">Koszty Pracownicze 2025</div>
+        <div class="stat-note">+22% vs 2024</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Transformacja UoP → B2B</h3>
+
+    <div class="bar-chart">
+      <div class="bar-item">
+        <span class="bar-label">Początek 2025</span>
+        <div class="bar-track"><div class="bar-fill red" data-width="100"></div></div>
+        <span class="bar-value">428 000 PLN</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">Połowa 2025</span>
+        <div class="bar-track"><div class="bar-fill green" data-width="42"></div></div>
+        <span class="bar-value">179 000 PLN</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">Koniec 2025</span>
+        <div class="bar-track"><div class="bar-fill" data-width="51"></div></div>
+        <span class="bar-value">218 000 PLN</span>
+      </div>
+    </div>
+
+    <div class="chart-title">📉 Trend Kosztów Pracowniczych (UoP)</div>
+    <div id="chart-employee-trend" class="echart-box tall"></div>
+
+    <div class="chart-title">📊 Struktura Zatrudnienia: UoP vs B2B</div>
+    <div id="chart-uop-b2b" class="echart-box"></div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>💡</span> Analiza Zmiany Strukturalnej</div>
+      <div class="idea-body">
+        <p>Dramatyczny spadek z 428 tys. (2023) do 179 tys. (2024) odzwierciedla strategiczną zmianę z umów o pracę (UoP) na umowy B2B (wykonawcze).</p>
+        <p><strong>Wpływ Finansowy:</strong> ~200 tys.+ PLN rocznych oszczędności w bezpośrednich kosztach pracodawcy</p>
+        <p><strong>Dlaczego oszczędności:</strong> Eliminacja ZUS po stronie pracodawcy (ok. 20% brutto), obowiązków urlopowych, wymogów odprawy oraz zasiłków chorobowych.</p>
+        <p><strong>Istotne:</strong> Wykonawcy B2B ustalają własne stawki — nie oznacza to niższych zarobków terapeutów. Oszczędności wynikają z efektywności strukturalnej, a nie z obniżek płac.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Porównanie Modeli Zatrudnienia</h3>
+
+    <table class="kw-table">
+      <tr><th>Aspekt</th><th>UoP (Umowa o Pracę)</th><th>B2B (Umowa Zlecenie)</th></tr>
+      <tr><td>Koszt ZUS Pracodawcy</td><td class="vol-red">~20% brutto</td><td class="vol-high">0% (płaci wykonawca)</td></tr>
+      <tr><td>Urlop Wypoczynkowy</td><td>Wymagany (20-26 dni)</td><td class="vol-high">Nie wymagany</td></tr>
+      <tr><td>Zasiłek Chorobowy</td><td>Odpowiedzialność pracodawcy</td><td class="vol-high">Nieobjęty</td></tr>
+      <tr><td>Odprawa</td><td>Wymagana prawnie</td><td class="vol-high">Nie dotyczy</td></tr>
+      <tr><td>Elastyczność</td><td class="vol-low">Regulowana</td><td class="vol-high">Wysoka</td></tr>
+      <tr><td>Netto Terapeuty</td><td>Po podatku ~70%</td><td>~85% po kosztach</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 4: PODATKI I UBEZPIECZENIA -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="tax-insurance">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">account_balance</span>
+    <div>
+      <div class="sec-label">Sekcja 04</div>
+      <h2>Podatki i Ubezpieczenia (Kolumna E)</h2>
+      <div class="sub">ZUS, PIT-4R, PIT-36L · Dlaczego "Przychody" są mylące</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout red">
+      <strong>⚠️ Pamiętaj:</strong> Kolumna E ANALIZA jest oznaczona jako "Przychody", ale zawiera przede wszystkim zobowiązania podatkowe i ubezpieczeniowe. To najczęściej błędnie rozumiany punkt danych w analizie finansowej WCP.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-value">501 350</div>
+        <div class="stat-label">ZUS 2025 (PLN)</div>
+        <div class="stat-note">20,8% prawdziwego przychodu</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">267 735</div>
+        <div class="stat-label">Suma PIT 2025 (PLN)</div>
+        <div class="stat-note">PIT-4R + PIT-36L</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">769 085</div>
+        <div class="stat-label">Całkowite Zobowiązania Podatkowe</div>
+        <div class="stat-note">~32% przychodu</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Rozbicie Podatków i Ubezpieczeń 2025</h3>
+
+    <div class="bar-chart">
+      <div class="bar-item">
+        <span class="bar-label">ZUS</span>
+        <div class="bar-track"><div class="bar-fill red" data-width="100"></div></div>
+        <span class="bar-value">501 350 PLN</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">PIT-4R</span>
+        <div class="bar-track"><div class="bar-fill" data-width="31"></div></div>
+        <span class="bar-value">152 840 PLN</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">PIT-36L</span>
+        <div class="bar-track"><div class="bar-fill" data-width="23"></div></div>
+        <span class="bar-value">114 895 PLN</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">VAT (8/9M)</span>
+        <div class="bar-track"><div class="bar-fill" data-width="9"></div></div>
+        <span class="bar-value">46 626 PLN</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">Ubezpieczenia</span>
+        <div class="bar-track"><div class="bar-fill" data-width="3"></div></div>
+        <span class="bar-value">13 250 PLN</span>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Alert Trendów Podatkowych Q1 2026</h3>
+
+    <table class="kw-table">
+      <tr><th>Kategoria</th><th>Q1 2026 (PLN)</th><th>Zrocznicowane</th><th>vs 2025</th></tr>
+      <tr><td>ZUS</td><td>186 575</td><td>~746 tys.</td><td class="vol-red">+49%</td></tr>
+      <tr><td>PIT-4R</td><td>28 750</td><td>~115 tys.</td><td class="vol-low">-25%</td></tr>
+      <tr><td>PIT-36L</td><td>64 810</td><td>~259 tys.</td><td class="vol-red">+126%</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Alert 2026:</strong> Płatności ZUS są o 49% wyższe w porównaniu rok do roku. Może to odzwierciedlać: 1) Więcej pracowników UoP, 2) Wyższą podstawę wynagrodzeń, 3) Zmiany regulacyjne. PIT-36L jest również znacząco podwyższony — skonsultuj z księgowym.
+    </div>
+
+    <h3 class="sub-heading">Dodatkowe Linie Przychodowe (2025)</h3>
+
+    <table class="kw-table">
+      <tr><th>Źródło</th><th>Kwota (PLN)</th><th>Uwagi</th></tr>
+      <tr><td>Kontrakty Rządowe (Projekty UE)</td><td>115 090</td><td>Powiat Iławski, Gmina Elbląg, ECUS TUS</td></tr>
+      <tr><td>Sponsoringi (Fundacje/Sport)</td><td>16 380</td><td>Partnerstwa społeczne</td></tr>
+      <tr><td><strong>Całkowity Przychód Nieterapeutyczny</strong></td><td><strong>131 470</strong></td><td>~5,5% całkowitego przychodu</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 5: WSKAŹNIKI KOSZTÓW -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="cost-ratios">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Sekcja 05</div>
+      <h2>Wskaźniki Kosztów i Trendy</h2>
+      <div class="sub">Koszty operacyjne jako % przychodu · Wizualizacja trendów</div>
+    </div>
+  </div>
+
+  <div style="margin:24px 0;border-radius:8px;overflow:hidden;">
+    <img src="assets/images/funds_pool.jpg" alt="Funds Pool" style="width:100%;height:280px;object-fit:cover;object-position:center;display:block;">
+  </div>
+
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-value">25,0%</div>
+        <div class="stat-label">Wskaźnik Kosztów Operacyjnych</div>
+        <div class="stat-note">2025: zdrowa marża</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">34,4%</div>
+        <div class="stat-label">Wskaźnik Całkowitych Kosztów</div>
+        <div class="stat-note">W tym zobowiązania podatkowe</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value">50,6%</div>
+        <div class="stat-label">Marża Gotówki Netto</div>
+        <div class="stat-note">Doskonała retencja</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Struktura Kosztów jako % Prawdziwego Przychodu (2025)</h3>
+
+    <div class="bar-chart">
+      <div class="bar-item">
+        <span class="bar-label">Koszty Operacyjne</span>
+        <div class="bar-track"><div class="bar-fill green" data-width="50"></div></div>
+        <span class="bar-value">25,0%</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">Płatności ZUS</span>
+        <div class="bar-track"><div class="bar-fill" data-width="42"></div></div>
+        <span class="bar-value">20,8%</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">Płatności PIT</span>
+        <div class="bar-track"><div class="bar-fill" data-width="27"></div></div>
+        <span class="bar-value">13,6%</span>
+      </div>
+      <div class="bar-item">
+        <span class="bar-label">Gotówka Netto</span>
+        <div class="bar-track"><div class="bar-fill green" data-width="100"></div></div>
+        <span class="bar-value">50,6%</span>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Analiza Trendów 40-Miesięcznych</h3>
+
+    <table class="kw-table">
+      <tr><th>Okres</th><th>Koszty Faktur</th><th>Koszty Pracownicze</th><th>Całkowite Koszty Operacyjne</th><th>Koszt/Przychód</th></tr>
+      <tr><td>2023 (12 mies.)</td><td>398 782</td><td>427 958</td><td>826 740</td><td class="vol-med">~41%</td></tr>
+      <tr><td>2024 (12 mies.)</td><td>327 695</td><td>178 878</td><td>506 573</td><td class="vol-high">~25%</td></tr>
+      <tr><td>2025 (12 mies.)</td><td>329 244</td><td>217 648</td><td>546 892</td><td class="vol-high">~23%</td></tr>
+      <tr><td>2026 Q1 (3 mies.)</td><td>143 444</td><td>56 682</td><td>200 126</td><td class="vol-med">~30%</td></tr>
+    </table>
+
+    <div class="callout green">
+      <strong>Kluczowy Wniosek:</strong> Wskaźnik kosztów operacyjnych znacząco poprawił się z ~41% (2023) do ~23% (2025). Odbywa się to dzięki zmianie UoP→B2B i ogólnej optymalizacji kosztów. Firma działa efektywniej przy rosnącym przychodzie.
+    </div>
+
+    <div class="chart-title">🎯 Postęp Zarobków Terapeuty (Lejek)</div>
+    <div id="chart-funnel" class="echart-box"></div>
+
+    <div class="chart-title">💰 Rozbicie Kosztu Sesji (250 PLN)</div>
+    <div id="chart-session" class="echart-box"></div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 6: KLUCZOWE WNIOSKI -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="findings">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">lightbulb</span>
+    <div>
+      <div class="sec-label">Sekcja 06</div>
+      <h2>Kluczowe Wnioski i Rekomendacje</h2>
+      <div class="sub">Strategiczne spostrzeżenia z 40 miesięcy danych kosztowych</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Zmiana UoP → B2B Oszczędziła ~200 tys.+ PLN Rocznie</h4>
+        <p>Strukturalna transformacja z umów o pracę na umowy B2B wyeliminowała zobowiązania ZUS po stronie pracodawcy i zmniejszyła obciążenie związane z zgodnością z przepisami. To trwały zysk efektywności, który kumuluje się co roku.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Wskaźnik Kosztów Operacyjnych Poprawił Się z 41% do 23%</h4>
+        <p>Pomimo wzrostu przychodu WCP stało się znacznie bardziej efektywne operacyjnie. Kontrola kosztów jest doskonała — należy utrzymać obecną dyscyplinę podczas skalowania.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Wzrost ZUS w 2026 Wymaga Uwagi</h4>
+        <p>Płatności ZUS w Q1 2026 są o 49% wyższe w porównaniu z 2025. Sprawdź: Czy to wynik nowych pracowników UoP? Zmian regulacyjnych? Wyższej podstawy wynagrodzeń? Wpływ na budżet może wynieść 200 tys.+ PLN, jeśli trend się utrzyma.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Przychód z Projektów UE to Strategiczna Szansa</h4>
+        <p>115 tys. PLN z kontraktów rządowych w 2025 pokazuje, że WCP może pozyskiwać środki publiczne. Realizuj systematycznie — to dywersyfikuje przychody i buduje relacje instytucjonalne.</p>
+      </div>
+    </div>
+
+    <div class="funnel-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Koszty Oprogramowania Rosną — Monitoruj ROI</h4>
+        <p>Koszty oprogramowania/subskrypcji wzrosły z 42 tys. (2023) do 56 tys. (2025). Wraz ze skalowaniem narzędzi (Booknetic, platformy analityczne, marketingowe), upewnij się, że każde ma mierzalny zwrot z inwestycji.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Rekomendacje</h3>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>🎯</span> Działania Natychmiastowe</div>
+      <div class="idea-body">
+        <ul class="clean">
+          <li>Przejrzyj wzrost ZUS 2026 z księgowym — zrozum czynniki i wpływ na budżet</li>
+          <li>Przeprowadź audyt subskrypcji oprogramowania — rezygnuj z nieużywanych, optymizuj używane</li>
+          <li>Zdokumentuj proces zarządzania wykonawcami B2B dla celów zgodności</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title"><span>📈</span> Strategiczne Możliwości</div>
+      <div class="idea-body">
+        <ul class="clean">
+          <li>Systematycznie realizuj kontrakty UE/lokalne — potencjał przychodu 100 tys.+</li>
+          <li>Negocjuj rabaty przy większych wolumenach z cyklicznymi dostawcami (marketing, oprogramowanie)</li>
+          <li>Rozważ wspólne centrum usług administracyjnych dla dalszej optymalizacji kosztów przy skalowaniu</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SEKCJA 7: ŹRÓDŁA DANYCH -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="data-sources">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">local_library</span>
+    <div>
+      <div class="sec-label">Sekcja 07</div>
+      <h2>Źródła Danych i Metodologia</h2>
+      <div class="sub">Pliki źródłowe · Podejście analityczne · Ograniczenia</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Główne Pliki Źródłowe</h3>
+
+    <table class="kw-table">
+      <tr><th>Plik</th><th>Okres</th><th>Rekordy</th></tr>
+      <tr><td>ANALIZA 2023.xlsx</td><td>Sty 2023 – Gru 2023</td><td>~3 200</td></tr>
+      <tr><td>ANALIZA 2024.xlsx</td><td>Sty 2024 – Gru 2024</td><td>~3 800</td></tr>
+      <tr><td>ANALIZA 2025.xlsx</td><td>Sty 2025 – Gru 2025</td><td>~4 100</td></tr>
+      <tr><td>ANALIZA 2026.xlsx</td><td>Sty 2026 – Kwi 2026</td><td>~2 700</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Metodologia</h3>
+
+    <table class="kw-table">
+      <tr><th>Źródło Danych</th><th>Co Pokazuje</th><th>Do Czego Służy</th></tr>
+      <tr><td>Wyciągi Bankowe ("wyciągi")</td><td>Prawdziwy przychód gotówkowy, wzorce wypłat</td><td class="vol-high">Przychód, przepływy pieniężne, trendy wzrostu</td></tr>
+      <tr><td>ANALIZA Kolumna B+C</td><td>Rozbicie kosztów operacyjnych</td><td class="vol-high">Optymalizacja kosztów, budżetowanie</td></tr>
+      <tr><td>ANALIZA Kolumna D+E</td><td>Zobowiązania podatkowe/regulacyjne</td><td class="vol-med">Planowanie podatkowe, zgodność</td></tr>
+      <tr><td>Arkusze ANALIZA "ZAPISY"</td><td>Zapisy pacjentów według kanału</td><td class="vol-high">ROI marketingowy, pozyskiwanie</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Uwaga o Jakości Danych:</strong> Wszystkie dane pochodzą z oficjalnych zapisów księgowych WCP. Dane kosztowe z ANALIZA są wiarygodne. Dane przychodowe muszą być skonfrontowane z wyciągami bankowymi, a nie z Kolumną E ANALIZA.
+    </div>
+
+    <h3 class="sub-heading">Ograniczenia</h3>
+
+    <ul class="clean">
+      <li>Płatności wykonawców B2B NIE są uwzględnione w kosztach pracowniczych ANALIZA — prawdziwy koszt pracy jest wyższy</li>
+      <li>Struktura kategoryzacji kosztów może zmieniać się między latami (zmiany metod księgowych)</li>
+      <li>Dane 2026 są częściowe (Q1 + kwiecień) — roczne prognozy mogą ulec zmianie</li>
+      <li>Oznaczenie Kolumny E ANALIZA jako "Przychody" jest mylące i powodowało historyczne błędy analityczne</li>
+    </ul>
+
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="WCP_Financial_Health_Report_2026-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Raport Zdrowia Finansowego →
+      </a>
+      <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">radar</span> Inteligencja Strategiczna →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /page-canvas -->
+</main>
+
+<!-- Scroll Spy & Nawigacja -->
+<script>
+const sectionNames = {
+  'cover':'Strona Tytułowa',
+  'methodology':'Metodologia',
+  'invoice-costs':'Koszty Faktur',
+  'employee-costs':'Koszty Pracownicze',
+  'tax-insurance':'Podatki i Ubezpieczenia',
+  'cost-ratios':'Wskaźniki Kosztów',
+  'findings':'Kluczowe Wnioski',
+  'data-sources':'Źródła Danych'
+};
+const navLinks = document.querySelectorAll('.nav-link[data-section]');
+const topnavSection = document.getElementById('topnav-section');
+
+function setActive(id){
+  navLinks.forEach(l=>l.classList.toggle('active',l.dataset.section===id));
+  if(topnavSection) topnavSection.textContent = sectionNames[id]||'';
+}
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) setActive(e.target.id);});
+},{rootMargin:'-15% 0px -70% 0px',threshold:0.05});
+
+Object.keys(sectionNames).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) obs.observe(el);
+});
+
+navLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
+    const t=document.querySelector(link.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+
+// Animacja wykresów słupkowych przy przewijaniu
+const barObserver = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const fill = entry.target;
+      const width = fill.dataset.width;
+      setTimeout(()=>{fill.style.width = width + '%';},100);
+      barObserver.unobserve(fill);
+    }
+  });
+},{threshold:0.3});
+
+document.querySelectorAll('.bar-fill').forEach(bar=>{
+  barObserver.observe(bar);
+});
+
+// ═══════════════════════════════════════════════════════════
+// ECHARTS VISUALIZATIONS
+// ═══════════════════════════════════════════════════════════
+
+const chartInstances = [];
+const chartReady = {};
+
+function initChart(id, optionFn) {
+  const dom = document.getElementById(id);
+  if (!dom) return null;
+  const chart = echarts.init(dom, 'stitch');
+  chart.setOption(optionFn(chart));
+  chartInstances.push(chart);
+  chartReady[id] = true;
+  return chart;
+}
+
+// Reveal chart containers on scroll
+const echartObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      const id = entry.target.id;
+      if (!chartReady[id]) {
+        if (id === 'chart-employee-trend') initEmployeeTrend();
+        if (id === 'chart-uop-b2b') initUoPB2B();
+        if (id === 'chart-funnel') initFunnel();
+        if (id === 'chart-session') initSession();
+      }
+      echartObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.echart-box').forEach(el => echartObserver.observe(el));
+
+// Resize handler
+window.addEventListener('resize', () => {
+  chartInstances.forEach(c => c.resize());
+});
+
+// ── Chart 1: Employee Cost Trend Area ─────────────────────
+function initEmployeeTrend() {
+  initChart('chart-employee-trend', (chart) => ({
+    title: {
+      text: 'Trend Kosztów Pracowniczych (UoP)',
+      subtext: 'Ewolucja 428K → 179K → 218K · Kolumna C ANALIZA',
+      left: 'center'
+    },
+    tooltip: {
+      trigger: 'axis',
+      formatter: function(params) {
+        const p = params[0];
+        return '<b>' + p.name + '</b><br/>' +
+          '<span style="color:#e6c364">●</span> Koszty UoP: <b>' +
+          p.value.toLocaleString('pl-PL') + ' PLN</b>';
+      }
+    },
+    grid: { left: '8%', right: '6%', top: 80, bottom: 40 },
+    xAxis: {
+      type: 'category',
+      data: ['2023', '2024', '2025', '2026 Q1 (rocz.)'],
+      boundaryGap: false
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        formatter: v => (v / 1000).toFixed(0) + 'K'
+      }
+    },
+    series: [{
+      name: 'Koszty UoP',
+      type: 'line',
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 10,
+      lineStyle: { width: 3, color: '#e6c364' },
+      itemStyle: { color: '#e6c364', borderWidth: 3, borderColor: '#101418' },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: 'rgba(224,82,82,0.55)' },
+          { offset: 0.5, color: 'rgba(245,200,66,0.30)' },
+          { offset: 1, color: 'rgba(111,207,151,0.08)' }
+        ])
+      },
+      data: [428000, 179000, 218000, 227000],
+      markPoint: {
+        data: [
+          { type: 'max', name: 'Max', symbolSize: 50, label: { formatter: '{c}', fontSize: 10 } },
+          { type: 'min', name: 'Min', symbolSize: 50, label: { formatter: '{c}', fontSize: 10 } }
+        ],
+        itemStyle: { color: '#e6c364' }
+      },
+      markLine: {
+        data: [{ type: 'average', name: 'Średnia' }],
+        lineStyle: { color: '#f5c842', type: 'dashed' },
+        label: { formatter: 'Średnia: {c}', color: '#f5c842' }
+      },
+      animationDuration: 1500,
+      animationEasing: 'cubicOut'
+    }]
+  }));
+}
+
+// ── Chart 2: UoP vs B2B Stacked Bar ──────────────────────
+function initUoPB2B() {
+  initChart('chart-uop-b2b', (chart) => ({
+    title: {
+      text: 'UoP vs B2B — Trend Przesunięcia',
+      subtext: 'Struktura kosztów zatrudnienia w czasie',
+      left: 'center'
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'cross', crossStyle: { color: '#8a9bb0' } },
+      formatter: function(params) {
+        let s = '<b>' + params[0].name + '</b><br/>';
+        params.forEach(p => {
+          if (p.seriesType === 'bar' || p.seriesType === 'line') {
+            s += '<span style="color:' + p.color + '">●</span> ' +
+              p.seriesName + ': <b>' +
+              p.value.toLocaleString('pl-PL') + ' PLN</b><br/>';
+          }
+        });
+        return s;
+      }
+    },
+    legend: {
+      data: ['Koszty UoP', 'Koszty B2B', 'Udział B2B %'],
+      top: 65
+    },
+    grid: { left: '8%', right: '10%', top: 100, bottom: 40 },
+    xAxis: {
+      type: 'category',
+      data: ['2023', '2024', '2025'],
+      axisPointer: { type: 'shadow' }
+    },
+    yAxis: [
+      {
+        type: 'value',
+        name: 'PLN',
+        axisLabel: { formatter: v => (v / 1000).toFixed(0) + 'K' }
+      },
+      {
+        type: 'value',
+        name: '%',
+        min: 0, max: 100,
+        axisLabel: { formatter: '{value}%' },
+        splitLine: { show: false }
+      }
+    ],
+    series: [
+      {
+        name: 'Koszty UoP',
+        type: 'bar',
+        barWidth: '28%',
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: '#4db6ac' },
+            { offset: 1, color: '#00897b' }
+          ]),
+          borderRadius: [3, 3, 0, 0]
+        },
+        emphasis: { itemStyle: { shadowBlur: 12, shadowColor: 'rgba(77,182,172,0.4)' } },
+        data: [428000, 179000, 218000],
+        animationDelay: idx => idx * 200
+      },
+      {
+        name: 'Koszty B2B',
+        type: 'bar',
+        barWidth: '28%',
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: '#e6c364' },
+            { offset: 1, color: '#c9a84c' }
+          ]),
+          borderRadius: [3, 3, 0, 0]
+        },
+        emphasis: { itemStyle: { shadowBlur: 12, shadowColor: 'rgba(230,195,100,0.4)' } },
+        data: [30000, 180000, 160000],
+        animationDelay: idx => idx * 200 + 300
+      },
+      {
+        name: 'Udział B2B %',
+        type: 'line',
+        yAxisIndex: 1,
+        symbol: 'circle',
+        symbolSize: 10,
+        lineStyle: { width: 3, color: '#f5c842', type: 'dashed' },
+        itemStyle: { color: '#f5c842', borderWidth: 2, borderColor: '#1c2024' },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(245,200,66,0.2)' },
+            { offset: 1, color: 'rgba(245,200,66,0)' }
+          ])
+        },
+        data: [6.5, 50.1, 42.3],
+        animationDelay: idx => idx * 200 + 600
+      }
+    ],
+    animationEasing: 'elasticOut',
+    animationDuration: 1200
+  }));
+}
+
+// ── Chart 3: Therapist Compensation Funnel ────────────────
+function initFunnel() {
+  initChart('chart-funnel', (chart) => ({
+    title: {
+      text: 'Postęp Zarobków Terapeuty',
+      subtext: 'Od okresu próbnego do pełnej kwalifikacji',
+      left: 'center'
+    },
+    tooltip: {
+      trigger: 'item',
+      formatter: function(params) {
+        return '<b>' + params.name + '</b><br/>' +
+          'Udział w sesji: <b>' + params.value + '%</b><br/>' +
+          'Przy 250 PLN/sesję: <b>' + (250 * params.value / 100).toFixed(0) + ' PLN</b>';
+      }
+    },
+    legend: {
+      show: false
+    },
+    series: [{
+      name: 'Zarobki Terapeuty',
+      type: 'funnel',
+      left: '10%',
+      top: 80,
+      bottom: 20,
+      width: '80%',
+      min: 0,
+      max: 60,
+      minSize: '20%',
+      maxSize: '100%',
+      sort: 'ascending',
+      gap: 4,
+      label: {
+        show: true,
+        position: 'inside',
+        formatter: function(params) {
+          return params.name + '\n' + params.value + '% (' + (250 * params.value / 100).toFixed(0) + ' PLN)';
+        },
+        fontSize: 13,
+        fontWeight: 'bold',
+        color: '#101418',
+        lineHeight: 20
+      },
+      itemStyle: {
+        borderColor: '#101418',
+        borderWidth: 2
+      },
+      emphasis: {
+        label: { fontSize: 15 }
+      },
+      data: [
+        { value: 55, name: 'Kwalifikacja Pełna', itemStyle: { color: '#6fcf97' } },
+        { value: 50, name: 'Po Szkoleniu', itemStyle: { color: '#58d68d' } },
+        { value: 45, name: 'Psycholog', itemStyle: { color: '#f5c842' } },
+        { value: 40, name: 'Okres Próbny', itemStyle: { color: '#f08080' } }
+      ],
+      animationDuration: 1500,
+      animationEasing: 'cubicOut'
+    }]
+  }));
+}
+
+// ── Chart 4: Cost per Session Breakdown Doughnut ─────────
+function initSession() {
+  initChart('chart-session', (chart) => ({
+    title: {
+      text: 'Rozbicie Kosztu Sesji (250 PLN)',
+      subtext: 'Przeciętny podział — sesja terapeutyczna',
+      left: 'center'
+    },
+    tooltip: {
+      trigger: 'item',
+      formatter: function(params) {
+        return '<b>' + params.name + '</b><br/>' +
+          'Kwota: <b>' + params.value + ' PLN</b><br/>' +
+          'Udział: <b>' + params.percent.toFixed(1) + '%</b>';
+      }
+    },
+    legend: {
+      orient: 'vertical',
+      right: '5%',
+      top: 'middle',
+      textStyle: { fontSize: 12 }
+    },
+    series: [{
+      name: 'Koszt Sesji',
+      type: 'pie',
+      radius: ['40%', '70%'],
+      center: ['40%', '55%'],
+      avoidLabelOverlap: true,
+      itemStyle: {
+        borderRadius: 6,
+        borderColor: '#101418',
+        borderWidth: 3
+      },
+      label: {
+        show: true,
+        formatter: '{b}\n{d}%',
+        fontSize: 11,
+        color: '#e0e3e8',
+        lineHeight: 16
+      },
+      emphasis: {
+        label: { show: true, fontSize: 14, fontWeight: 'bold' },
+        itemStyle: {
+          shadowBlur: 20,
+          shadowOffsetX: 0,
+          shadowColor: 'rgba(0,0,0,0.5)'
+        }
+      },
+      data: [
+        { value: 113, name: 'Terapeuta (45%)', itemStyle: { color: '#e6c364' } },
+        { value: 55, name: 'Klinika (22%)', itemStyle: { color: '#7bc8e0' } },
+        { value: 38, name: 'ZUS (15%)', itemStyle: { color: '#f08080' } },
+        { value: 25, name: 'PIT (10%)', itemStyle: { color: '#c39bd3' } },
+        { value: 12, name: 'Operacyjne (5%)', itemStyle: { color: '#eb984e' } },
+        { value: 7, name: 'Rezerwa (3%)', itemStyle: { color: '#5dade2' } }
+      ],
+      animationType: 'scale',
+      animationEasing: 'elasticOut',
+      animationDuration: 1500,
+      animationDelay: idx => idx * 150
+    }]
+  }));
+}
+</script>
+
+</body>
+</html>

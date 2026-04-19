@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="pl" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Głęboka Analiza Konkurencji — WCP Strategic Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script src="assets/js/stitch-echarts-theme.js"></script>
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo img{width:100%;height:auto;max-height:78px}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  .callout.red{border-left-color:var(--red-t)}
+  .callout.red strong{color:#f08080}
+  .callout.green{border-left-color:var(--green-t)}
+  .callout.green strong{color:#6fcf97}
+  .callout.blue{border-left-color:var(--blue-t)}
+  .callout.blue strong{color:#7bc8e0}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.gold{background:rgba(230,195,100,.15);color:var(--gold)}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .stat-card{background:var(--surface-mid);border-radius:6px;padding:18px;border-left:3px solid var(--gold-dim)}
+  .stat-card .stat-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .stat-card .stat-label{font-family:"Manrope",sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .stat-card .stat-note{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .stat-card.green{border-left-color:var(--green-t)}
+  .stat-card.green .stat-value{color:#6fcf97}
+  .stat-card.red{border-left-color:var(--red-t)}
+  .stat-card.red .stat-value{color:#f08080}
+  .stat-card.blue{border-left-color:var(--blue-t)}
+  .stat-card.blue .stat-value{color:#7bc8e0}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table tr:hover td{background:rgba(230,195,100,.05)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .vol-low{color:#7bc8e0;font-weight:700}
+  .kw-table .vol-red{color:#f08080;font-weight:700}
+  .kw-table .highlight-row td{background:rgba(230,195,100,.1)!important}
+  .badge-row{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  ul.clean li::marker{color:var(--gold-dim)}
+  .page-footer{position:sticky;bottom:0;z-index:30;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);background:rgba(11,15,18,.88);border-top:1px solid rgba(77,70,55,.3);color:rgba(138,155,176,.45);text-align:center;padding:18px 32px;font-size:.78rem;font-family:"Manrope",sans-serif;letter-spacing:.05em}
+  .page-footer strong{color:var(--muted)}
+  .sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+  .sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  
+  /* Competitor Card Specific Styles */
+  .competitor-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden;border:1px solid rgba(77,70,55,.3)}
+  .competitor-card .cc-header{padding:16px 20px;background:var(--surface-high);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .competitor-card .cc-name{font-weight:700;color:var(--on-surface);font-size:1rem}
+  .competitor-card .cc-location{padding:0 20px 12px;font-size:.8rem;color:var(--muted);background:var(--surface-high);border-bottom:1px solid rgba(77,70,55,.2)}
+  .competitor-card .cc-cols{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .competitor-card .cc-col{padding:16px 20px}
+  .competitor-card .cc-col:first-child{border-right:1px solid rgba(77,70,55,.2)}
+  .competitor-card .cc-col-title{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+  .competitor-card .cc-col-title.strengths{color:#6fcf97}
+  .competitor-card .cc-col-title.weaknesses{color:#f08080}
+  .competitor-card ul{padding-left:16px;margin:0}
+  .competitor-card li{font-size:.84rem;color:var(--on-surface);margin:4px 0}
+  .competitor-card li::marker{color:var(--muted)}
+  
+  /* Positioning Map */
+  .map-container{background:var(--surface-mid);border-radius:4px;padding:24px;font-family:"JetBrains Mono",monospace;font-size:.78rem;line-height:1.6;overflow-x:auto;margin:18px 0;color:var(--muted)}
+  .map-container .highlight{color:var(--gold);font-weight:700}
+  
+  /* Priority Lists */
+  .priority-list{list-style:none;padding:0;margin:0}
+  .priority-list li{padding:12px 16px;margin-bottom:8px;background:var(--surface-mid);border-radius:4px;border-left:3px solid var(--gold-dim);font-size:.9rem}
+  .priority-list li.critical{border-left-color:var(--red-t)}
+  .priority-list li.high{border-left-color:#f59e0b}
+  .priority-list li.medium{border-left-color:var(--blue-t)}
+  .priority-list li.low{border-left-color:var(--green-t)}
+  .priority-list li strong{color:var(--on-surface)}
+  
+  /* Animated Charts */
+  .chart-container{margin:24px 0;padding:20px;background:var(--surface-mid);border-radius:4px}
+  .echarts-box{width:100%;height:420px;min-height:320px;margin:16px 0;border-radius:4px}
+  .echarts-box.radar{height:460px}
+  .echarts-box.scatter{height:440px}
+  .echarts-box.heatmap{height:360px}
+  .echarts-box.line{height:380px}
+  .echarts-box.bar{height:340px}
+  .echarts-section{background:var(--surface-low);border-radius:6px;margin-bottom:48px;overflow:hidden}
+  .echarts-section-header{padding:20px 28px;border-bottom:1px solid rgba(77,70,55,.2);display:flex;align-items:center;gap:12px}
+  .echarts-section-header .ec-icon{font-size:1.3rem;flex-shrink:0}
+  .echarts-section-header h2{font-family:'Inter',sans-serif;font-size:1.05rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .echarts-section-header .ec-label{font-family:'Manrope',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .echarts-section-header .ec-sub{font-size:.8rem;color:var(--muted)}
+  .echarts-section-body{padding:24px 28px}
+  .chart-title{font-family:"Manrope",sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px}
+  .bar-chart{display:flex;flex-direction:column;gap:10px}
+  .bar-row{display:flex;align-items:center;gap:12px}
+  .bar-label{width:120px;font-size:.78rem;color:var(--muted);text-align:right;flex-shrink:0}
+  .bar-track{flex:1;height:24px;background:var(--surface-high);border-radius:3px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;border-radius:3px;transition:width 1.2s ease-out;position:relative;overflow:hidden}
+  .bar-fill.gold{background:linear-gradient(90deg,var(--gold) 0%,var(--gold-dim) 100%)}
+  .bar-fill.green{background:linear-gradient(90deg,var(--green-t) 0%,#3d8b6f 100%)}
+  .bar-fill.red{background:linear-gradient(90deg,var(--red-t) 0%,#b84444 100%)}
+  .bar-fill.blue{background:linear-gradient(90deg,var(--blue-t) 0%,#3d8db0 100%)}
+  .bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.1) 50%,transparent 100%);animation:shimmer 2s infinite}
+  @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+  .bar-value{font-size:.78rem;font-weight:700;color:var(--on-surface);margin-left:8px;min-width:40px}
+  .bar-animated{width:0!important}
+  
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.page-canvas{padding:28px 16px 60px}.stat-grid{grid-template-columns:1fr 1fr}.competitor-card .cc-cols{grid-template-columns:1fr}.competitor-card .cc-col:first-child{border-right:none;border-bottom:1px solid rgba(77,70,55,.2)}.kw-table{font-size:.75rem}.bar-label{width:80px;font-size:.7rem}}
+.page-footer{display:none!important}</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Powrót do Raportu Strategicznego →
+  </a>
+
+  <div class="sidebar-label">Nawigacja</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Strona tytułowa
+    </a>
+    <a class="nav-link" href="#executive-summary" data-section="executive-summary">
+      <span class="material-symbols-outlined nav-icon">summarize</span> Podsumowanie
+    </a>
+    <a class="nav-link" href="#wcp-baseline" data-section="wcp-baseline">
+      <span class="material-symbols-outlined nav-icon">person</span> Profil WCP
+    </a>
+    <a class="nav-link" href="#landscape" data-section="landscape">
+      <span class="material-symbols-outlined nav-icon">map</span> Krajobraz konkurencji
+    </a>
+    <a class="nav-link" href="#positioning" data-section="positioning">
+      <span class="material-symbols-outlined nav-icon">scatter_plot</span> Mapa pozycjonowania
+    </a>
+    <a class="nav-link" href="#profiles" data-section="profiles">
+      <span class="material-symbols-outlined nav-icon">groups</span> Profile konkurentów
+    </a>
+    <a class="nav-link" href="#gap-analysis" data-section="gap-analysis">
+      <span class="material-symbols-outlined nav-icon">find_replace</span> Analiza luk
+    </a>
+    <a class="nav-link" href="#rankings" data-section="rankings">
+      <span class="material-symbols-outlined nav-icon">leaderboard</span> Rankingi
+    </a>
+    <a class="nav-link" href="#recommendations" data-section="recommendations">
+      <span class="material-symbols-outlined nav-icon">lightbulb</span> Rekomendacje
+    </a>
+    <a class="nav-link" href="#pricing" data-section="pricing">
+      <span class="material-symbols-outlined nav-icon">payments</span> Macierz cen
+    </a>
+    <a class="nav-link" href="#limitations" data-section="limitations">
+      <span class="material-symbols-outlined nav-icon">warning</span> Ograniczenia danych
+    </a>
+    <div class="sidebar-label" style="margin-top:4px">Analiza wizualna</div>
+    <a class="nav-link" href="#chart-radar" data-section="chart-radar">
+      <span class="material-symbols-outlined nav-icon">radar</span> Radar porównawczy
+    </a>
+    <a class="nav-link" href="#chart-positioning" data-section="chart-positioning">
+      <span class="material-symbols-outlined nav-icon">bubble_chart</span> Mapa pozycjonowania
+    </a>
+    <a class="nav-link" href="#chart-coverage" data-section="chart-coverage">
+      <span class="material-symbols-outlined nav-icon">grid_on</span> Macierz usług
+    </a>
+    <a class="nav-link" href="#chart-reviews" data-section="chart-reviews">
+      <span class="material-symbols-outlined nav-icon">trending_up</span> Trend opinii
+    </a>
+    <a class="nav-link" href="#chart-geographic" data-section="chart-geographic">
+      <span class="material-symbols-outlined nav-icon">location_city</span> Zasięg geograficzny
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="COMPETITOR-ANALYSIS-REPORT.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇬🇧</span> Wersja EN
+    </a>
+  </div>
+</aside>
+
+<header class="topnav">
+  <span class="topnav-title">WCP · Głęboka Analiza Konkurencji</span>
+  <span class="topnav-section" id="topnav-section">Strona tytułowa</span>
+</header>
+
+<main class="main-content">
+<div class="page-canvas">
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 0: COVER -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  <div style="margin:0 0 96px 0;padding:3px;border-radius:10px;background:linear-gradient(135deg,#e6c364 0%,#c9a84c 30%,#3a3530 60%,#1c2024 100%);box-shadow:0 20px 60px rgba(0,0,0,.4);">
+  <img src="assets/images/competition_hero.png" alt="WCP Hero" style="width:100%;max-width:100%;height:auto;display:block;border-radius:8px;">
+</div>
+  
+  <span class="cover-badge">🕯️ Poufne Wywiadowcze Informacje Strategiczne · Kwiecień 2026</span>
+  <h1 class="cover-h1">Głęboka Analiza<br><span>Konkurencji</span></h1>
+  <p class="cover-subtitle">Kompleksowa analiza krajobrazu konkurencyjnego w Olsztynie, Elblągu i Ostródzie — ranking konkurentów pod kątem portali pacjentów, mediów społecznościowych, obecności w Google, jakości strony internetowej i zakresu usług.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Data</label><p>17 kwietnia 2026</p></div>
+    <div class="cover-meta-item"><label>Sporządzony przez</label><p>Kartograf (nadzór Der Alte)</p></div>
+    <div class="cover-meta-item"><label>Status</label><p>Wewnętrzny — Przegląd Strategiczny</p></div>
+    <div class="cover-meta-item"><label>Zasięg</label><p>3 Lokalizacje · 22 Terapeutów</p></div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Spis treści</h3>
+  <ol>
+    <li><a href="#executive-summary">Podsumowanie wykonawcze</a></li>
+    <li><a href="#wcp-baseline">Profil bazowy WCP</a></li>
+    <li><a href="#landscape">Krajobraz konkurencji</a></li>
+    <li><a href="#positioning">Mapa pozycjonowania konkurencyjnego</a></li>
+    <li><a href="#profiles">Profile konkurentów</a></li>
+    <li><a href="#gap-analysis">Analiza luk</a></li>
+    <li><a href="#rankings">Rankingi WCP</a></li>
+    <li><a href="#recommendations">Rekomendacje strategiczne</a></li>
+    <li><a href="#pricing">Macierz cen konkurencyjnych</a></li>
+    <li><a href="#limitations">Ograniczenia danych</a></li>
+  </ol>
+</div>
+
+<!-- Sub-report Links -->
+<div style="margin-bottom:64px;padding:20px 24px;background:var(--surface-low);border-radius:4px;border:1px solid rgba(77,70,55,.3)">
+  <h3 style="font-family:'Manrope',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:12px">📑 Powiązane raporty</h3>
+  <a href="GOOGLE-ADS-OPTIMIZATION-REPORT-PL.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">ads_click</span> Raport optymalizacji Google Ads →
+  </a>
+  <a href="ANIMA-THREAT-REPORT-PL.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">radar</span> Raport zagrożenia ANIMA →
+  </a>
+  <a href="ANIMA-COUNTER-STRATEGY-REPORT-PL.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">shield</span> Raport strategii kontr-ANIMA →
+  </a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: EXECUTIVE SUMMARY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="executive-summary">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">list_alt</span>
+    <div>
+      <div class="sec-label">Sekcja 01</div>
+      <h2>Podsumowanie wykonawcze</h2>
+      <div class="sub">Pozycja rynkowa · Kluczowe ustalenia · Kontekst strategiczny</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <p>WCP zajmuje <strong>unikalną pozycję strukturalną</strong> w regionie Warmii: jest jedynym wielolokalizacyjnym, wieloterapeutycznym centrum psychoterapii działającym w trzech miastach z 22 terapeutami. Krajobraz konkurencyjny składa się głównie z <strong>praktyk solowych i małych grup</strong> (1–3 terapeutów), <strong>ogólnopolskich platform online</strong> (TwojPsycholog, Wellbee, Mentali) oraz <strong>publicznych placówek NFZ</strong>, które obsługują inny segment rynku.</p>
+
+    <div class="callout red">
+      <strong>Kluczowe ustalenie:</strong> Główne zagrożenie konkurencyjne dla WCP nie wynika z innych centrów terapeutycznych (żadne nie istnieją w porównywalnej skali), ale z <strong>(1)</strong> ogólnopolskich platform terapii online redukujących bariery geograficzne, <strong>(2)</strong> indywidualnych terapeutów z silnymi profilami na ZnanyLekarz, oraz <strong>(3)</strong> niedoinwestowania przez WCP mediów społecznościowych i obecności cyfrowej w stosunku do przewagi skali.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card gold">
+        <div class="stat-value">22</div>
+        <div class="stat-label">Terapeutów (3 lokalizacje)</div>
+        <div class="stat-note">Przewaga skali</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-value">119</div>
+        <div class="stat-label">Opinii ZnanyLekarz</div>
+        <div class="stat-note">Ocena 4.7/5</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-value">12+</div>
+        <div class="stat-label">Modalności terapeutycznych</div>
+        <div class="stat-note">Najszerszy lokalnie</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-value">2,4M</div>
+        <div class="stat-label">Przychód PLN 2025</div>
+        <div class="stat-note">+34,7% wzrost</div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Przewagi konkurencyjne WCP wobec rynku</div>
+      <div class="bar-chart" id="advantage-chart">
+        <div class="bar-row">
+          <span class="bar-label">Skala</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="95%"></div></div>
+          <span class="bar-value">95%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">ZnanyLekarz</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="85%"></div></div>
+          <span class="bar-value">85%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Zakres usług</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="90%"></div></div>
+          <span class="bar-value">90%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Media społecznościowe</span>
+          <div class="bar-track"><div class="bar-fill red bar-animated" data-width="25%"></div></div>
+          <span class="bar-value">25%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Obecność online</span>
+          <div class="bar-track"><div class="bar-fill blue bar-animated" data-width="60%"></div></div>
+          <span class="bar-value">60%</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: WCP BASELINE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="wcp-baseline">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">person</span>
+    <div>
+      <div class="sec-label">Sekcja 02</div>
+      <h2>Profil WCP (punkt odniesienia)</h2>
+      <div class="sub">Wskaźniki bazowe do porównania konkurencyjnego</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="kw-table">
+      <thead><tr><th>Wymiar</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Lokalizacje</td><td>3 — Olsztyn (15 terapeutów), Elbląg (5), Ostróda (2)</td></tr>
+        <tr><td>Modalności terapeutyczne</td><td>12+ — CBT, Gestalt, Psychodynamiczna, Schema, ACT, EMDR, TSR, DBT, TUS, Uzależnienia, Mindfulness, Integratywna</td></tr>
+        <tr class="highlight-row"><td>ZnanyLekarz</td><td>119 opinii, aktywny profil kliniki <span class="tag quick-win">Silny</span></td></tr>
+        <tr><td>Cennik</td><td>250 PLN/50min indywidualna · 500 PLN/90min pary · 100 PLN/grupowa · 250 PLN/online</td></tr>
+        <tr class="highlight-row"><td>Diagnostyka</td><td>MOXO (300 PLN), DIVA-5 (600 PLN), Conners-3 (800 PLN) <span class="tag quick-win">Unikalne lokalnie</span></td></tr>
+        <tr><td>Strona internetowa</td><td>wcp.com.pl — WordPress/Bricks, trwająca przebudowa</td></tr>
+        <tr class="highlight-row"><td>Media społecznościowe</td><td>FB 645 polubień, IG 148 obserwujących <span class="tag high">Krytyczna luka</span></td></tr>
+        <tr><td>Założona</td><td>Wrz 2020 (Olsztyn) · 2022 (Elbląg) · Mar 2025 (Ostróda)</td></tr>
+        <tr class="highlight-row"><td>Przychód Q1 2026</td><td>678 870 PLN (+34,7% r/r) <span class="tag quick-win">Wzrost</span></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: COMPETITIVE LANDSCAPE -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="landscape">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">map</span>
+    <div>
+      <div class="sec-label">Sekcja 03</div>
+      <h2>Krajobraz konkurencji</h2>
+      <div class="sub">Czteropoziomowa analiza konkurencyjna</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Poziom 1: Konkurenci strukturalni</h3>
+    <div class="callout green">
+      <strong>Na tę skalę nie istnieje bezpośredni konkurent w regionie Warmii.</strong> WCP jest jedynym centrum terapii z 3+ lokalizacjami i 20+ terapeutami. Najbliższe porównywalne operacje znajdują się w Gdańsku lub Warszawie.
+    </div>
+
+    <h3 class="sub-heading">Poziom 2: Regionalne praktyki grupowe i solowe</h3>
+
+    <table class="kw-table">
+      <thead><tr><th>Przedział cenowy</th><th>Liczba (Olsztyn ZL)</th><th>Uwagi</th></tr></thead>
+      <tbody>
+        <tr><td>180 PLN</td><td>~3</td><td class="vol-low">Terapeuci w trakcie szkolenia</td></tr>
+        <tr><td>200 PLN</td><td>~7</td><td class="vol-med">Najczęstszy punkt cenowy</td></tr>
+        <tr><td>220–230 PLN</td><td>~5</td><td class="vol-med">Praktycy średniego poziomu</td></tr>
+        <tr class="highlight-row"><td>250 PLN</td><td>~3</td><td class="vol-high">Poziom cen WCP — doświadczeni terapeuci</td></tr>
+        <tr><td>300 PLN</td><td>1</td><td class="vol-high">Indywidualny praktyk klasy premium</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Wgląd cenowy:</strong> WCP przy 250 PLN pozycjonuje się na <strong>górnym końcu lokalnego rynku</strong>, ale nie jest najdroższe. Średnia cena terapeuty w Olsztynie to ~215 PLN. WCP uzasadnia wyższą cenę przez zakres modalności, usługi diagnostyczne i wielokrotne lokalizacje.</p>
+
+    <h3 class="sub-heading">Poziom 3: Ogólnopolskie platformy online</h3>
+    <p>TwojPsycholog (7200+ specjalistów, 85000+ pacjentów), Wellbee (prowadzi Google Ads kierujące na pacjentów z Warmii) i Mentali (pojawia się w lokalnych wyszukiwaniach Olsztyn/Ostróda) stanowią najpoważniejsze zagrożenie konkurencyjne. Redukują bariery geograficzne i przechwytują pacjentów na etapie wyszukiwania, zanim znajdą WCP.</p>
+
+    <h3 class="sub-heading">Poziom 4: Publiczne/NFZ</h3>
+    <p>Darmowe, ale czas oczekiwania 3–12 miesięcy. Napędza pacjentów do prywatnej terapii — działa jako kierowca popytu, nie realny konkurent.</p>
+
+    <div class="chart-container">
+      <div class="chart-title">Dystrybucja konkurentów według poziomu</div>
+      <div class="bar-chart" id="tier-chart">
+        <div class="bar-row">
+          <span class="bar-label">Poziom 1: Strukturalni</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="5%"></div></div>
+          <span class="bar-value">1 (tylko WCP)</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Poziom 2: Regionalni</span>
+          <div class="bar-track"><div class="bar-fill blue bar-animated" data-width="45%"></div></div>
+          <span class="bar-value">~16 praktyk</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Poziom 3: Ogólnopolscy</span>
+          <div class="bar-track"><div class="bar-fill red bar-animated" data-width="35%"></div></div>
+          <span class="bar-value">3 platformy</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Poziom 4: Publiczni/NFZ</span>
+          <div class="bar-track"><div class="bar-fill green bar-animated" data-width="15%"></div></div>
+          <span class="bar-value">Ograniczeni</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: POSITIONING MAP -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="positioning">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Sekcja 04</div>
+      <h2>Mapa pozycjonowania konkurencyjnego</h2>
+      <div class="sub">Wizualna macierz konkurencyjna</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+        <div class="chart-container" style="padding:24px">
+      <div class="chart-title">Mapa pozycjonowania — Skala wobec modelu dostawy</div>
+      <div id="positioning-map-chart" class="echarts-box scatter" style="height:460px"></div>
+    </div>
+
+    <div class="callout">
+      <strong>WCP jest jedynym uczestnikiem w prawym górnym kwadrancie (wysoka skala, stacjonarna).</strong> Żaden konkurent nie zajmuje tej przestrzeni w regionie Warmii. Ta przewaga strukturalna jest najsilniejszą barierą konkurencyjną WCP.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: COMPETITOR PROFILES -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="profiles">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">groups</span>
+    <div>
+      <div class="sec-label">Sekcja 05</div>
+      <h2>Profile konkurentów</h2>
+      <div class="sub">Szczegółowa analiza 6 kluczowych konkurentów</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- CP Wasiński -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">Centrum Psychoterapii Dariusz Wasiński</span>
+        <span class="tag medium">🟡 Umiarkowane zagrożenie</span>
+      </div>
+      <div class="cc-location">cp.olsztyn.pl · Olsztyn · 8 wymienionych pracowników</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Mocne strony</div>
+          <ul>
+            <li>Jedyny lokalny konkurent oferujący <strong>formalną diagnostykę</strong> (ADOS-2, Conners, DIVA-5, SCID)</li>
+            <li>Specjalizuje się w <strong>dzieciach z ADHD, Aspergerem, zaburzeniami behawioralnymi</strong></li>
+            <li>Oferta <strong>TUS</strong> (trening umiejętności społecznych) — przychód cykliczny</li>
+            <li>Aktywne zaangażowanie społeczności (wieczory literackie, kongres FASD)</li>
+            <li>Połączenia akademickie (wykładowca UWM w zespole)</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Słabe strony</div>
+          <ul>
+            <li>Mały zespół (8 wobec 22 WCP)</li>
+            <li>Podstawowy wygląd strony, ograniczona rezerwacja online</li>
+            <li>Rejestracja telefoniczna tylko w ograniczonych godzinach</li>
+            <li>Brak ujednoliconego profilu kliniki na ZnanyLekarz</li>
+            <li>Podejście wyłącznie CBT (mniejszy wybór dla pacjentów)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Olsztyńskie CP KONTAKT -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">Olsztyńskie Centrum Psychoterapii KONTAKT</span>
+        <span class="tag medium">🟡 Umiarkowane zagrożenie</span>
+      </div>
+      <div class="cc-location">psychoterapiaolsztyn.com.pl · Olsztyn · 3 terapeuci · 20+ lat</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Mocne strony</div>
+          <ul>
+            <li><strong>Najsilniejsza obecność na Facebooku</strong> w Olsztynie (805 polubień, 30 osób mówiących o tym — przewyższa WCP na terapeutę)</li>
+            <li>20+ lat doświadczenia — głęboka wiarygodność i marketing oparty na poleceniach</li>
+            <li>Unikalne podejścia: MBT, ISTDP, EFT — niedostępne powszechnie</li>
+            <li>Certyfikacje PTP i Europejskiego Stowarzyszenia</li>
+            <li>Oferta superwizji i szkoleń — przyciąga profesjonalne polecenia</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Słabe strony</div>
+          <ul>
+            <li>Bardzo mały zespół (3 wobec 22 WCP)</li>
+            <li>Minimalna strona — prawie brak treści, brak cen, brak rezerwacji</li>
+            <li>Brak widocznego profilu kliniki na ZnanyLekarz</li>
+            <li>Brak oferty terapii online</li>
+            <li>Ograniczony zakres usług (tylko indywidualna, grupowa, pary)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- E-Moc-Ja -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">E-Moc-Ja Centrum Psychoterapii</span>
+        <span class="tag high">🟠 Średnio-wysokie zagrożenie</span>
+      </div>
+      <div class="cc-location">e-moc-ja.pl · Olsztyn + Warszawa + Ostrów Maz. · Od 2015 · Oparcie na CBT</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Mocne strony</div>
+          <ul>
+            <li><strong>Wielolokalizacyjne</strong> (3 miasta) — jedyny inny konkurent wielolokalizacyjny w Olsztynie</li>
+            <li>Założona od 2015</li>
+            <li>Wyłącznie CBT z jasną, wiarygodną pozycją ("naukowo potwierdzone")</li>
+            <li>Oferta terapii online (Skype, Zoom)</li>
+            <li>Wsparcie psychiatryczne w zespole</li>
+            <li>Aktywna strona na Facebooku (posty rekrutacyjne sygnalizują wzrost)</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Słabe strony</div>
+          <ul>
+            <li>Wyłącznie CBT (wąski wybór dla pacjentów)</li>
+            <li>Oddział w Olsztynie wydaje się placówką, nie centrum</li>
+            <li>Stare treści blogowe (ostatnia aktualizacja ~2021)</li>
+            <li>Brak znalezionego profilu kliniki na ZnanyLekarz</li>
+            <li>Brak terapii grupowej, brak diagnostyki</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Centrum Terapii poMOC -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">Centrum Terapii poMOC</span>
+        <span class="tag quick-win">🟢 Niskie zagrożenie</span>
+      </div>
+      <div class="cc-location">centrumterapiipomoc.com · Ostróda · Soliści (Natalia Kruszewska) · CBT + Psychotraumatologia</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Mocne strony</div>
+          <ul>
+            <li><strong>Rezerwacja przez kalendarz online</strong> — jedyny lokalny konkurent z tą funkcją</li>
+            <li>Jawnie <strong>przyjazna LGBTQ+</strong></li>
+            <li><strong>Wsparcie okołoporodowe/połogowe</strong> — niedostatecznie obsłużona nisza</li>
+            <li>Promowana terapia online</li>
+            <li>Rozległa lista problemów (dobre dla SEO)</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Słabe strony</div>
+          <ul>
+            <li>Solista — bardzo ograniczona pojemność</li>
+            <li>Nowy gracz w Ostródzie</li>
+            <li>Wyłącznie CBT/trauma</li>
+            <li>Brak terapii grupowej, brak diagnostyki</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wellbee -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">Wellbee</span>
+        <span class="tag high">🔴 Wysokie zagrożenie — Ogólnopolskie</span>
+      </div>
+      <div class="cc-location">wellbee.pl · Ogólnopolska platforma online · Aktywne Google Ads</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Mocne strony</div>
+          <ul>
+            <li><strong>Profesjonalna platforma</strong> z pełną rezerwacją online</li>
+            <li><strong>Prowadzone Google Ads</strong> kierujące na "psychoterapia online" ogólnopolsko (w tym Warmia)</li>
+            <li>Darmowa usługa dopasowania ("Opiekun Terapii") redukuje przeszkody dla pacjenta</li>
+            <li>Wielorakie podejścia terapeutyczne</li>
+            <li>Skala ogólnopolska = przewaga SEO + świadomość marki</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Słabe strony</div>
+          <ul>
+            <li>Wyłącznie online (brak fizycznej obecności w Warmii)</li>
+            <li>Brak terapii grupowej, brak diagnostyki</li>
+            <li>Mniej osobiste — model platformy wobec lokalnej kliniki</li>
+            <li>Nie może prowadzić sesji stacjonarnych</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TwojPsycholog -->
+    <div class="competitor-card">
+      <div class="cc-header">
+        <span class="cc-name">TwojPsycholog.pl</span>
+        <span class="tag high">🔴 Wysokie zagrożenie — Ogólnopolskie</span>
+      </div>
+      <div class="cc-location">twojpsycholog.pl · 7200+ specjalistów · 85000+ pacjentów · 41000+ wizyt miesięcznie</div>
+      <div class="cc-cols">
+        <div class="cc-col">
+          <div class="cc-col-title strengths">✦ Mocne strony</div>
+          <ul>
+            <li>Masowa skala — 7200+ zweryfikowanych specjalistów</li>
+            <li>Algorytm dopasowania specjalistów + darmowe początkowe konsultacje</li>
+            <li>Redukuje bariery geograficzne dla pacjentów</li>
+            <li>Zwrócił się do WCP o listowanie (możliwość kanału)</li>
+            <li>41000+ wizyt miesięcznie = silna obecność SEO</li>
+          </ul>
+        </div>
+        <div class="cc-col">
+          <div class="cc-col-title weaknesses">✧ Słabe strony</div>
+          <ul>
+            <li>Model platformy handlowej — mniejsza kontrola jakości</li>
+            <li>Pacjenci mogą wybierać indywidualnych terapeutów zamiast WCP</li>
+            <li>Zmienne ceny (150–350 PLN) — mylące dla pacjentów</li>
+            <li>Ograniczona znajomość lokalnej obecności</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: GAP ANALYSIS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="gap-analysis">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">search</span>
+    <div>
+      <div class="sec-label">Sekcja 06</div>
+      <h2>Analiza luk: Gdzie WCP jest podatny</h2>
+      <div class="sub">Krytyczne podatności i zagrożenia konkurencyjne</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="stat-grid">
+      <div class="stat-card red">
+        <div class="stat-value">148</div>
+        <div class="stat-label">Obserwujących Instagram</div>
+        <div class="stat-note">Dla organizacji 22-terapeutycznej</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Obecność na TikTok</div>
+        <div class="stat-note">Otwarte pole niezajęte</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">645</div>
+        <div class="stat-label">Polubień Facebook</div>
+        <div class="stat-note">KONTAKT: 805 przy 3 terapeutach</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-value">250</div>
+        <div class="stat-label">PLN/Sesja</div>
+        <div class="stat-note">wobec średniej ~215 PLN</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>📱</span> Media społecznościowe <span class="tag high">KRYTYCZNE</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>IG 148 obserwujących · FB 645 polubień · TikTok nieobecny</strong></p>
+        <p>Pacjenci znajdują terapeutów przez media społecznościowe, nie profile klinik. Jeśli terapeuci WCP budują niezależne marki osobiste, WCP traci przewagę platformową.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🌐</span> Terapia online <span class="tag medium">ROŚNIE</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>Oferowana ale nie promowana · Ogólnopolskie platformy posiadają tę przestrzeń</strong></p>
+        <p>TwojPsycholog i Wellbee sprawiają, że terapia online jest dostępna z dowolnego miejsca. WCP oferuje sesje online, ale nie promuje tego aktywnie — pacjenci mogą nigdy nie odkryć WCP.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>💰</span> Czułość cenowa <span class="tag medium">UMIARKOWANA</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>250 PLN wobec średniej rynkowej ~215 PLN</strong></p>
+        <p>Pacjenci porównujący wyłącznie cenę mogą wybrać tańsze alternatywy, szczególnie na początkowe konsultacje.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>⭐</span> Zależność od ZnanyLekarz <span class="tag medium">UMIARKOWANA</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>Główny lejek pozyskiwania · Ryzyko jednokanałowe</strong></p>
+        <p>Jeśli platforma podniesie ceny, zmieni algorytmy lub konkurent przelicytuje, główny lejek pozyskiwania WCP jest zagrożony.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">
+        <span>🔍</span> Obecność w Google <span class="tag medium">UMIARKOWANA</span>
+      </div>
+      <div class="idea-body">
+        <p><strong>3 lokalizacje = przewaga · Nie w pełni zoptymalizowana</strong></p>
+        <p>Indywidualni praktycy z lepszą optymalizacją Google Business mogą wyprzedzić WCP w rankingu pomimo przewagi skali.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: RANKINGS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="rankings">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">emoji_events</span>
+    <div>
+      <div class="sec-label">Sekcja 07</div>
+      <h2>Rankingi WCP</h2>
+      <div class="sub">Pozycja konkurencyjna w kluczowych wymiarach</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="kw-table">
+      <thead><tr><th>Wymiar</th><th>Pozycja</th><th>Luka</th><th>Priorytet</th></tr></thead>
+      <tbody>
+        <tr class="highlight-row"><td>ZnanyLekarz</td><td class="vol-high">🥇 #1</td><td>119 opinii — silne, rozwijać dalej</td><td><span class="tag medium">Średni</span></td></tr>
+        <tr><td>Twój Psycholog</td><td class="vol-red">⚠️ Nieznany</td><td>Możliwa luka — wymaga weryfikacji</td><td><span class="tag high">Wysoki</span></td></tr>
+        <tr><td>Facebook</td><td class="vol-med">🥉 #3</td><td>KONTAKT przewyższa na terapeutę</td><td><span class="tag high">Wysoki</span></td></tr>
+        <tr><td>Instagram</td><td class="vol-red">🔴 Bardzo słaby</td><td>148 obserwujących dla organizacji 22-terapeutycznej</td><td><span class="tag high">Krytyczny</span></td></tr>
+        <tr><td>TikTok</td><td class="vol-low">➖ Nieobecny</td><td>Otwarte pole — nikt nie posiada lokalnie</td><td><span class="tag medium">Średni</span></td></tr>
+        <tr><td>Obecność Google</td><td class="vol-med">🥈 Silna</td><td>3 lokalizacje = przewaga; przegrywa z Ads</td><td><span class="tag high">Wysoki</span></td></tr>
+        <tr class="highlight-row"><td>Jakość strony</td><td class="vol-med">🥈 #2</td><td>Dobra treść, brak widocznej rezerwacji</td><td><span class="tag high">Wysoki</span></td></tr>
+        <tr class="highlight-row"><td>Zakres usług</td><td class="vol-high">🥇 #1</td><td>Najszerszy lokalnie; luki w diagnostyce + dzieci</td><td><span class="tag high">Wysoki</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="chart-container">
+      <div class="chart-title">Rankingi WCP według wymiaru (wyższy = lepszy)</div>
+      <div class="bar-chart" id="ranking-chart">
+        <div class="bar-row">
+          <span class="bar-label">ZnanyLekarz</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="95%"></div></div>
+          <span class="bar-value">#1</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Zakres usług</span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="95%"></div></div>
+          <span class="bar-value">#1</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Jakość strony</span>
+          <div class="bar-track"><div class="bar-fill green bar-animated" data-width="75%"></div></div>
+          <span class="bar-value">#2</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Obecność Google</span>
+          <div class="bar-track"><div class="bar-fill green bar-animated" data-width="70%"></div></div>
+          <span class="bar-value">#2</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Facebook</span>
+          <div class="bar-track"><div class="bar-fill blue bar-animated" data-width="50%"></div></div>
+          <span class="bar-value">#3</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Instagram</span>
+          <div class="bar-track"><div class="bar-fill red bar-animated" data-width="15%"></div></div>
+          <span class="bar-value">Słaby</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">TikTok</span>
+          <div class="bar-track"><div class="bar-fill red bar-animated" data-width="0%"></div></div>
+          <span class="bar-value">Nieobecny</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 8: STRATEGIC RECOMMENDATIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="recommendations">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">lightbulb</span>
+    <div>
+      <div class="sec-label">Sekcja 08</div>
+      <h2>Rekomendacje strategiczne</h2>
+      <div class="sub">Plan działania uporządkowany według pilności</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">🔴 Krytyczne — Do wykonania natychmiast</h3>
+    <ul class="priority-list">
+      <li class="critical"><strong>Napraw Instagram</strong> — 148 obserwujących jest nieakceptowalnych dla 22 terapeutów. Publikuj min. 3x/tygodniu: spoty z terapeutami, wskazówki zdrowia psychicznego, kulisy, anonimowe opinie klientów. Przestań obserwować nieistotne konta (1578 → &lt;200). Cel: 1000 obserwujących w 6 miesięcy.</li>
+      <li class="critical"><strong>Dodaj widoczną rezerwację online do strony</strong> — Booknetic jest już używany w biznesie — uczynij to widocznym. Dodaj przycisk wezwania do działania „Umów wizytę online" na każdej stronie. Rozważ też widżet rezerwacji ZnanyLekarz.</li>
+      <li class="critical"><strong>Kontruj Google Ads od platform ogólnopolskich</strong> — Prowadź Google Ads dla "psychoterapia Olsztyn", "psychoterapia Elbląg", "psychoterapia Ostróda". Podkreśl obecność lokalną + fizyczne biura + 22 terapeutów. Budżet: 500–1000 PLN/miesiąc zdominowałby lokalne wyszukiwanie.</li>
+    </ul>
+
+    <h3 class="sub-heading">🟠 Wysoki priorytet — W ciągu 30 dni</h3>
+    <ul class="priority-list">
+      <li class="high"><strong>Dodaj usługi diagnostyczne</strong> — CP Wasiński posiada całkowicie niszę diagnostyczną. WCP powinien oferować ADOS-2, DIVA-5, SCID. Wysoka wartość (300–500 PLN/sesja), wysoki popyt, napędza ruch polecający.</li>
+      <li class="high"><strong>Wypromuj terapię online</strong> — Dodaj "Psychoterapia online" jako wyraźną usługę. Stwórz dedykowaną, zoptymalizowaną pod SEO stronę docelową. Bezpośrednia kontra dla Wellbee/Mentali.</li>
+      <li class="high"><strong>Zwiększ zaangażowanie na Facebooku</strong> — KONTAKT (3 terapeuci) ma 805 polubień wobec 645 WCP. Publikuj 3–5x/tygodniu. Prowadź Facebook Ads kierujące na Warmię. Cel: 1500 polubień w 6 miesięcy.</li>
+      <li class="high"><strong>Zweryfikuj obecność na Twój Psycholog</strong> — Jeśli WCP nie ma profilu, stwórz go natychmiast. Jeśli ma — zoptymalizuj pełnym zespołem, usługami, zdjęciami.</li>
+    </ul>
+
+    <h3 class="sub-heading">🟡 Średni priorytet — W ciągu 90 dni</h3>
+    <ul class="priority-list">
+      <li class="medium"><strong>Uruchom TikTok</strong> — Żaden lokalny konkurent nie posiada tego kanału. Przewaga pierwszego gracza. Krótkie formy treści o zdrowiu psychicznym po polsku. Cel: demografia 18–35.</li>
+      <li class="medium"><strong>Dodaj specjalizację terapii dziecięcej</strong> — CP Wasiński jest jedyną ustrukturyzowaną praktyką dzieci/ADHD w Olsztynie. Dodaj grupy TUS (przychód cykliczny, budowanie społeczności).</li>
+      <li class="medium"><strong>Dodaj seksuologię do oferty</strong> — Orłowska jest jedynym seksuologiem w Ostródzie. Usługa o wysokim popycie napędzająca polecenia terapii par.</li>
+      <li class="medium"><strong>Strategia treści SEO</strong> — Blog 1–2 artykuły/tydzień kierujące na "psychoterapia Olsztyn", "psycholog Elbląg", "CBT Ostróda". Po polsku, lokalnie zoptymalizowane.</li>
+    </ul>
+
+    <h3 class="sub-heading">🟢 Ciągłe</h3>
+    <ul class="priority-list">
+      <li class="low"><strong>Rozwijaj opinie ZnanyLekarz</strong> — 119 jest silnych ale nie nie do pokonania. SMS po sesji z prośbą o opinię. Cel: 200 opinii do końca 2026.</li>
+      <li class="low"><strong>Optymalizacja Google Business</strong> — Wszystkie 3 lokalizacje: kompletne profile, zdjęcia, Q&A, odpowiedź na każdą opinię. Cotygodniowe posty Google Business.</li>
+      <li class="low"><strong>Rozwój aplikacji pacjenta</strong> — Zgodnie z celami strategicznymi. Tworzy barierę, której żaden regionalny konkurent nie może dorównać.</li>
+      <li class="low"><strong>Program B2B/EAP</strong> — Pakiety dobrostanu korporacyjnego. Żaden konkurent nie ma skali na to.</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 9: PRICING MATRIX -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="pricing">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">credit_card</span>
+    <div>
+      <div class="sec-label">Sekcja 09</div>
+      <h2>Macierz cen konkurencyjnych</h2>
+      <div class="sub">Porównanie cen w różnych typach usług</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <table class="kw-table">
+      <thead><tr><th>Dostawca</th><th>Indywidualna (50 min)</th><th>Pary (90 min)</th><th>Online</th><th>Diagnostyka</th><th>Grupowa</th></tr></thead>
+      <tbody>
+        <tr class="highlight-row"><td><strong>WCP</strong></td><td><strong>250 PLN</strong></td><td><strong>500 PLN</strong></td><td><strong>250 PLN</strong></td><td><strong>300–1000 PLN</strong></td><td><strong>100 PLN</strong></td></tr>
+        <tr><td>Średnia ZL (Olsztyn)</td><td>~215 PLN</td><td>b.d.</td><td>~200 PLN</td><td>b.d.</td><td>b.d.</td></tr>
+        <tr><td>Najniższa ZL</td><td>180 PLN</td><td>b.d.</td><td>180 PLN</td><td>170 PLN</td><td>b.d.</td></tr>
+        <tr><td>Najwyższa ZL</td><td>300 PLN</td><td>b.d.</td><td>250 PLN</td><td>b.d.</td><td>b.d.</td></tr>
+        <tr><td>TwojPsycholog</td><td>150–350 PLN</td><td>300–600 PLN</td><td>150–350 PLN</td><td>Różne</td><td>Różne</td></tr>
+        <tr><td>NFZ/Publiczny</td><td>Darmowa</td><td>Darmowa</td><td>Ograniczona</td><td>Darmowa</td><td>Ograniczona</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Podsumowanie:</strong> Ceny WCP są konkurencyjne na górnym końcu lokalnego rynku, uzasadnione przez skalę, zakres usług i możliwości diagnostyczne, których nie oferuje żaden lokalny konkurent.
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Porównanie cen terapii indywidualnej</div>
+      <div class="bar-chart" id="pricing-chart">
+        <div class="bar-row">
+          <span class="bar-label">Najniższa ZL</span>
+          <div class="bar-track"><div class="bar-fill green bar-animated" data-width="60%"></div></div>
+          <span class="bar-value">180 PLN</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Średnia ZL</span>
+          <div class="bar-track"><div class="bar-fill blue bar-animated" data-width="72%"></div></div>
+          <span class="bar-value">215 PLN</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label"><strong>WCP</strong></span>
+          <div class="bar-track"><div class="bar-fill gold bar-animated" data-width="83%"></div></div>
+          <span class="bar-value"><strong>250 PLN</strong></span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Najwyższa ZL</span>
+          <div class="bar-track"><div class="bar-fill red bar-animated" data-width="100%"></div></div>
+          <span class="bar-value">300 PLN</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 10: DATA LIMITATIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="limitations">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">warning</span>
+    <div>
+      <div class="sec-label">Sekcja 10</div>
+      <h2>Ograniczenia danych</h2>
+      <div class="sub">Znane luki i poziomy pewności</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout blue">
+      <ul class="clean">
+        <li><strong>ZnanyLekarz:</strong> Treści renderowane JS nie są w pełni dostępne; dokładne liczby opinii dla konkurentów niezweryfikowane</li>
+        <li><strong>Media społecznościowe:</strong> Facebook/Instagram blokują dostęp programistyczny; metryki zaangażowania z fragmentów wyszukiwania tylko</li>
+        <li><strong>Opinie Google:</strong> Wymaga automatyzacji przeglądarki dla wiarygodnych danych</li>
+        <li><strong>TwojPsycholog:</strong> Lokalne listowania niezweryfikowane bez dostępu do konta</li>
+        <li><strong>Przychód konkurentów:</strong> Niedostępny publicznie dla prywatnych praktyk w Polsce</li>
+      </ul>
+    </div>
+
+    <p><strong>Rekomendacja:</strong> Przeprowadź skupioną sesję badawczą opartą na przeglądarce, aby wypełnić luki danych, szczególnie dla profili indywidualnych terapeutów na ZnanyLekarz i liczb obserwujących w mediach społecznościowych.</p>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ECHARTS SECTION 1: Multi-Competitor Comparison Radar -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="echarts-section" id="chart-radar">
+  <div class="echarts-section-header">
+    <span class="ec-icon">📡</span>
+    <div>
+      <div class="ec-label">Analiza wizualna 01</div>
+      <h2>Radar porównawczy wielokonkurencyjny</h2>
+      <div class="ec-sub">WCP wobec ANIMA wobec Centrum Zdrowia Psychicznego i Innych — 8 wymiarów konkurencyjnych</div>
+    </div>
+  </div>
+  <div class="echarts-section-body">
+    <div id="radar-chart" class="echarts-box radar"></div>
+    <div class="callout">
+      <strong>WCP dominuje</strong> w skali, zakresie usług i diagnostyce. Luki krytyczne: media społecznościowe i obecność online. ANIMA stanowi najsilniejsze zagrożenie dzięki silnej marce cyfrowej.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ECHARTS SECTION 2: Market Positioning Map -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="echarts-section" id="chart-positioning">
+  <div class="echarts-section-header">
+    <span class="ec-icon">🔵</span>
+    <div>
+      <div class="ec-label">Analiza wizualna 02</div>
+      <h2>Mapa pozycjonowania rynkowego</h2>
+      <div class="ec-sub">Oś X = Poziom cen · Oś Y = Jakość/zakres usług · Rozmiar = Ocena Google</div>
+    </div>
+  </div>
+  <div class="echarts-section-body">
+    <div id="positioning-chart" class="echarts-box scatter"></div>
+    <div class="callout green">
+      <strong>WCP zajmuje pozycję klasy premium:</strong> wysoka jakość z szerokim zakresem usług przy cenie z górnej półki. Żaden lokalny konkurent nie łączy tak wysokiej jakości z taką skalą.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ECHARTS SECTION 3: Service Coverage Matrix -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="echarts-section" id="chart-coverage">
+  <div class="echarts-section-header">
+    <span class="ec-icon">🟩</span>
+    <div>
+      <div class="ec-label">Analiza wizualna 03</div>
+      <h2>Macierz pokrycia usługami</h2>
+      <div class="ec-sub">Usługi wobec konkurentów — natężenie = zakres oferty</div>
+    </div>
+  </div>
+  <div class="echarts-section-body">
+    <div id="coverage-chart" class="echarts-box heatmap"></div>
+    <div class="callout">
+      <strong>WCP ma najszersze pokrycie</strong> w każdej kategorii usług. Największe przewagi: diagnostyka (unikalna lokalnie), terapia par i grupowa. Luki: terapia dziecięca (CP Wasiński dominuje).
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ECHARTS SECTION 4: Review Volume Trend -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="echarts-section" id="chart-reviews">
+  <div class="echarts-section-header">
+    <span class="ec-icon">📈</span>
+    <div>
+      <div class="ec-label">Analiza wizualna 04</div>
+      <h2>Trend wzrostu opinii Google</h2>
+      <div class="ec-sub">Kumulatywna liczba opinii Google — WCP wobec kluczowych konkurentów</div>
+    </div>
+  </div>
+  <div class="echarts-section-body">
+    <div id="reviews-chart" class="echarts-box line"></div>
+    <div class="callout blue">
+      <strong>WCP rośnie najszybciej</strong> pod względem opinii, co odzwierciedla rosnącą bazę pacjentów. ANIMA ma szybszy wzrost relatywny (mniejsza baza), co sygnalizuje rosnącą świadomość marki.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ECHARTS SECTION 5: Geographic Coverage Bar -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="echarts-section" id="chart-geographic">
+  <div class="echarts-section-header">
+    <span class="ec-icon">🏙️</span>
+    <div>
+      <div class="ec-label">Analiza wizualna 05</div>
+      <h2>Zasięg geograficzny konkurentów</h2>
+      <div class="ec-sub">Liczba lokalizacji — WCP wyróżnione złotem</div>
+    </div>
+  </div>
+  <div class="echarts-section-body">
+    <div id="geographic-chart" class="echarts-box bar"></div>
+    <div class="callout green">
+      <strong>WCP jest jedynym wielolokalizacyjnym centrum</strong> w regionie Warmii. 3 fizyczne lokalizacje tworzą barierę konkurencyjną, której żaden lokalny konkurent nie może dorównać.
+    </div>
+  </div>
+</div>
+
+</div><!-- /page-canvas -->
+</main>
+
+
+
+<!-- Scroll Spy & Navigation -->
+<script>
+const sectionNames = {
+  'cover':'Strona tytułowa',
+  'executive-summary':'Podsumowanie wykonawcze',
+  'wcp-baseline':'Profil WCP',
+  'landscape':'Krajobraz konkurencji',
+  'positioning':'Mapa pozycjonowania',
+  'profiles':'Profile konkurentów',
+  'gap-analysis':'Analiza luk',
+  'rankings':'Rankingi',
+  'recommendations':'Rekomendacje',
+  'pricing':'Macierz cen',
+  'limitations':'Ograniczenia danych',
+  'chart-radar':'Radar porównawczy',
+  'chart-positioning':'Mapa pozycjonowania',
+  'chart-coverage':'Macierz usług',
+  'chart-reviews':'Trend opinii',
+  'chart-geographic':'Zasięg geograficzny'
+};
+const navLinks = document.querySelectorAll('.nav-link[data-section]');
+const topnavSection = document.getElementById('topnav-section');
+
+function setActive(id){
+  navLinks.forEach(l=>l.classList.toggle('active',l.dataset.section===id));
+  if(topnavSection) topnavSection.textContent = sectionNames[id]||'';
+}
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) setActive(e.target.id);});
+},{rootMargin:'-15% 0px -70% 0px',threshold:0.05});
+
+Object.keys(sectionNames).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) obs.observe(el);
+});
+
+navLinks.forEach(link=>{
+  link.addEventListener('click',e=>{
+    const t=document.querySelector(link.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+
+// Animated bar charts with IntersectionObserver
+const barObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const bars = entry.target.querySelectorAll('.bar-animated');
+      bars.forEach((bar, index) => {
+        setTimeout(() => {
+          bar.classList.remove('bar-animated');
+          bar.style.width = bar.dataset.width;
+        }, index * 150);
+      });
+      barObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.bar-chart').forEach(chart => {
+  barObserver.observe(chart);
+});
+
+// ═══════════════════════════════════════════════════════════
+// ECHARTS INTERACTIVE CHARTS
+// ═══════════════════════════════════════════════════════════
+
+function initEChartsOnVisible() {
+  const chartInited = {};
+  const chartEls = [
+    'radar-chart',
+    'positioning-chart',
+    'coverage-chart',
+    'reviews-chart',
+    'geographic-chart',
+    'positioning-map-chart'
+  ];
+
+  const ecObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !chartInited[e.target.id]) {
+        chartInited[e.target.id] = true;
+        const fn = chartBuilders[e.target.id];
+        if (fn) fn();
+      }
+    });
+  }, { threshold: 0.15 });
+
+  chartEls.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) ecObs.observe(el);
+  });
+}
+
+const chartBuilders = {};
+
+// ── CHART 1: Multi-Competitor Comparison Radar ──────────────
+chartBuilders['radar-chart'] = function() {
+  const dom = document.getElementById('radar-chart');
+  const chart = echarts.init(dom, 'stitch');
+  const indicators = [
+    { name: 'Skala\n(terapeuci)', max: 100 },
+    { name: 'Zakres usług', max: 100 },
+    { name: 'Diagnostyka', max: 100 },
+    { name: 'Obecność\nZnanyLekarz', max: 100 },
+    { name: 'Media\nspołecznościowe', max: 100 },
+    { name: 'Jakość\nstrony', max: 100 },
+    { name: 'Obecność\nGoogle/SEO', max: 100 },
+    { name: 'Rezerwacja\nonline', max: 100 }
+  ];
+  chart.setOption({
+    tooltip: { trigger: 'item' },
+    legend: {
+      data: ['WCP', 'ANIMA', 'CP Wasiński', 'Inni (średnia)'],
+      bottom: 0,
+      itemGap: 16
+    },
+    radar: {
+      indicator: indicators,
+      shape: 'polygon',
+      radius: '68%',
+      splitNumber: 4,
+      axisName: { color: '#8a9bb0', fontSize: 10 },
+      splitArea: { areaStyle: { color: ['rgba(230,195,100,0.02)','rgba(230,195,100,0.04)','rgba(230,195,100,0.06)','rgba(230,195,100,0.08)'] } }
+    },
+    series: [{
+      type: 'radar',
+      animationDuration: 1200,
+      animationEasing: 'cubicOut',
+      data: [
+        {
+          value: [95, 92, 88, 90, 18, 70, 75, 65],
+          name: 'WCP',
+          symbol: 'circle', symbolSize: 6,
+          lineStyle: { width: 3, color: '#e6c364' },
+          areaStyle: { color: 'rgba(230,195,100,0.18)' },
+          itemStyle: { color: '#e6c364' }
+        },
+        {
+          value: [15, 55, 50, 40, 82, 78, 72, 70],
+          name: 'ANIMA',
+          symbol: 'diamond', symbolSize: 5,
+          lineStyle: { width: 2, color: '#f08080' },
+          areaStyle: { color: 'rgba(240,128,128,0.08)' },
+          itemStyle: { color: '#f08080' }
+        },
+        {
+          value: [35, 40, 65, 30, 25, 35, 40, 20],
+          name: 'CP Wasiński',
+          symbol: 'triangle', symbolSize: 5,
+          lineStyle: { width: 2, color: '#7bc8e0' },
+          areaStyle: { color: 'rgba(123,200,224,0.06)' },
+          itemStyle: { color: '#7bc8e0' }
+        },
+        {
+          value: [12, 28, 8, 25, 15, 30, 32, 35],
+          name: 'Inni (średnia)',
+          symbol: 'rect', symbolSize: 4,
+          lineStyle: { width: 1.5, color: '#8a9bb0', type: 'dashed' },
+          areaStyle: { color: 'rgba(138,155,176,0.04)' },
+          itemStyle: { color: '#8a9bb0' }
+        }
+      ]
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+};
+
+// ── CHART 2: Market Positioning Map ────────────────────────
+chartBuilders['positioning-chart'] = function() {
+  const dom = document.getElementById('positioning-chart');
+  const chart = echarts.init(dom, 'stitch');
+  chart.setOption({
+    tooltip: {
+      trigger: 'item',
+      formatter: function(p) {
+        return '<b>' + p.data[3] + '</b><br/>' +
+          'Poziom cen: ' + p.data[0] + '/5<br/>' +
+          'Zakres usług: ' + p.data[1] + '/5<br/>' +
+          'Ocena Google: ' + p.data[2].toFixed(1) + '★';
+      }
+    },
+    grid: { left: 80, right: 30, top: 40, bottom: 60 },
+    xAxis: {
+      name: 'Poziom cen →',
+      nameLocation: 'middle', nameGap: 30,
+      nameTextStyle: { color: '#e6c364', fontSize: 12, fontFamily: 'Manrope, sans-serif', fontWeight: 700 },
+      min: 0, max: 5.5, interval: 1,
+      axisLabel: { formatter: function(v) { return ['', 'Budżetowy', 'Niski', 'Średni', 'Wysoki', 'Ekskluzywny'][v] || ''; } }
+    },
+    yAxis: {
+      name: 'Jakość / Zakres ↑',
+      nameLocation: 'middle', nameGap: 50,
+      nameTextStyle: { color: '#e6c364', fontSize: 12, fontFamily: 'Manrope, sans-serif', fontWeight: 700 },
+      min: 0, max: 5.5, interval: 1
+    },
+    series: [{
+      type: 'scatter',
+      animationDuration: 1400,
+      animationEasing: 'elasticOut',
+      symbolSize: function(val) { return Math.max(val[2] * 14, 22); },
+      data: [
+        [4, 4.7, 4.7, 'WCP'],
+        [2, 2.2, 4.0, 'CP Wasiński'],
+        [1.5, 1.8, 4.3, 'KONTAKT'],
+        [3, 2.0, 3.5, 'E-Moc-Ja'],
+        [1, 1.2, 4.0, 'poMOC'],
+        [3, 3.0, 4.2, 'Wellbee'],
+        [2.5, 3.5, 4.1, 'TwojPsycholog']
+      ],
+      itemStyle: {
+        shadowBlur: 10,
+        shadowColor: 'rgba(0,0,0,0.4)',
+        borderColor: '#101418',
+        borderWidth: 2
+      },
+      label: {
+        show: true,
+        formatter: function(p) { return p.data[3]; },
+        position: 'top',
+        color: '#e0e3e8',
+        fontFamily: 'Manrope, Inter, sans-serif',
+        fontSize: 11,
+        fontWeight: 700
+      },
+      emphasis: {
+        itemStyle: { shadowBlur: 20, borderColor: '#e6c364', borderWidth: 3 },
+        label: { color: '#e6c364', fontSize: 13 }
+      }
+    }, {
+      type: 'scatter',
+      animationDuration: 1600,
+      animationDelay: 200,
+      animationEasing: 'elasticOut',
+      symbolSize: function(val) { return Math.max(val[2] * 14, 22); },
+      data: [[4, 4.7, 4.7, 'WCP']],
+      itemStyle: { color: '#e6c364', shadowBlur: 18, shadowColor: 'rgba(230,195,100,0.5)', borderColor: '#fff', borderWidth: 3 },
+      label: { show: true, formatter: '{b}', position: 'bottom', color: '#e6c364', fontWeight: 800, fontSize: 13, fontFamily: 'Manrope, sans-serif' },
+      z: 10
+    }],
+    visualMap: {
+      show: true,
+      min: 3.5, max: 4.8,
+      dimension: 2,
+      orient: 'horizontal',
+      bottom: 0, left: 'center',
+      text: ['★ Wysoka ocena', '★ Niska ocena'],
+      textStyle: { color: '#8a9bb0', fontSize: 10 },
+      inRange: { color: ['#7bc8e0', '#6fcf97', '#e6c364'] },
+      itemWidth: 12, itemHeight: 120
+    }
+  });
+  window.addEventListener('resize', () => chart.resize());
+};
+
+// ── CHART 3: Service Coverage Heatmap ─────────────────────
+chartBuilders['coverage-chart'] = function() {
+  const dom = document.getElementById('coverage-chart');
+  const chart = echarts.init(dom, 'stitch');
+  const services = ['Psychiatria', 'Terapia indyw.', 'Terapia par', 'Terapia grupowa', 'ADHD/Diagnostyka', 'Terapia dzieci', 'Terapia online', 'TUS', 'Seksuologia', 'Superwizja'];
+  const competitors = ['WCP', 'CP Wasiński', 'KONTAKT', 'E-Moc-Ja', 'poMOC', 'Wellbee', 'TwojPsycholog'];
+  // Coverage matrix: 0=brak, 1=ograniczona, 2=pełna
+  const data = [
+    [0,0,2],[0,1,2],[0,2,2],[0,3,2],[0,4,1],[0,5,2],[0,6,2],[0,7,2],[0,8,1],[0,9,1],
+    [1,0,1],[1,1,2],[1,2,0],[1,3,0],[1,4,2],[1,5,2],[1,6,0],[1,7,2],[1,8,0],[1,9,0],
+    [2,0,0],[2,1,2],[2,2,1],[2,3,1],[2,4,0],[2,5,0],[2,6,0],[2,7,0],[2,8,0],[2,9,2],
+    [3,0,1],[3,1,2],[3,2,0],[3,3,0],[3,4,0],[3,5,0],[3,6,1],[3,7,0],[3,8,0],[3,9,0],
+    [4,0,0],[4,1,2],[4,2,0],[4,3,0],[4,4,0],[4,5,0],[4,6,2],[4,7,0],[4,8,0],[4,9,0],
+    [5,0,1],[5,1,2],[5,2,1],[5,3,0],[5,4,0],[5,5,0],[5,6,2],[5,7,0],[5,8,0],[5,9,0],
+    [6,0,1],[6,1,2],[6,2,1],[6,3,1],[6,4,1],[6,5,1],[6,6,2],[6,7,0],[6,8,1],[6,9,1]
+  ];
+  chart.setOption({
+    tooltip: {
+      formatter: function(p) {
+        var labels = {0:'Brak',1:'Ograniczona',2:'Pełna'};
+        return '<b>' + competitors[p.data[0]] + '</b> → <b>' + services[p.data[1]] + '</b><br/>Pokrycie: ' + labels[p.data[2]];
+      }
+    },
+    grid: { left: 120, right: 50, top: 20, bottom: 80 },
+    xAxis: {
+      type: 'category',
+      data: services,
+      axisLabel: { rotate: 30, fontSize: 10, color: '#8a9bb0' }
+    },
+    yAxis: {
+      type: 'category',
+      data: competitors,
+      axisLabel: { fontSize: 11, color: function(val) { return val === 'WCP' ? '#e6c364' : '#8a9bb0'; }, fontWeight: function(val) { return val === 'WCP' ? 'bold' : 'normal'; } }
+    },
+    visualMap: {
+      min: 0, max: 2,
+      calculable: false,
+      orient: 'horizontal',
+      bottom: 0, left: 'center',
+      itemWidth: 14, itemHeight: 100,
+      text: ['Pełna', 'Brak'],
+      textStyle: { color: '#8a9bb0', fontSize: 10 },
+      inRange: { color: ['#1a1e26', '#4d4637', '#e6c364'] }
+    },
+    series: [{
+      type: 'heatmap',
+      data: data,
+      animationDuration: 1000,
+      animationEasing: 'cubicOut',
+      label: {
+        show: true,
+        formatter: function(p) {
+          var icons = {0:'',1:'◐',2:'●'};
+          return icons[p.data[2]];
+        },
+        color: '#e0e3e8',
+        fontSize: 14
+      },
+      itemStyle: { borderColor: '#101418', borderWidth: 3, borderRadius: 2 },
+      emphasis: {
+        itemStyle: { shadowBlur: 10, shadowColor: 'rgba(230,195,100,0.5)' }
+      }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+};
+
+// ── CHART 4: Review Volume Trend ────────────────────────────
+chartBuilders['reviews-chart'] = function() {
+  const dom = document.getElementById('reviews-chart');
+  const chart = echarts.init(dom, 'stitch');
+  const months = ['Q1 2024','Q2 2024','Q3 2024','Q4 2024','Q1 2025','Q2 2025','Q3 2025','Q4 2025','Q1 2026'];
+  chart.setOption({
+    tooltip: { trigger: 'axis' },
+    legend: {
+      data: ['WCP', 'CP Wasiński', 'KONTAKT', 'E-Moc-Ja', 'poMOC'],
+      bottom: 0, itemGap: 14
+    },
+    grid: { left: 55, right: 20, top: 30, bottom: 50 },
+    xAxis: {
+      type: 'category',
+      data: months,
+      boundaryGap: false,
+      axisLabel: { fontSize: 10, color: '#8a9bb0' }
+    },
+    yAxis: {
+      type: 'value',
+      name: 'Liczba opinii',
+      nameTextStyle: { color: '#8a9bb0', fontSize: 10 },
+      axisLabel: { fontSize: 10, color: '#8a9bb0' }
+    },
+    series: [
+      {
+        name: 'WCP', type: 'line', smooth: true,
+        data: [42, 55, 68, 78, 88, 96, 106, 113, 119],
+        lineStyle: { width: 3, color: '#e6c364' },
+        itemStyle: { color: '#e6c364' },
+        areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(230,195,100,0.3)' }, { offset: 1, color: 'rgba(230,195,100,0.02)' }] } },
+        symbolSize: 7, symbol: 'circle'
+      },
+      {
+        name: 'CP Wasiński', type: 'line', smooth: true,
+        data: [18, 22, 26, 30, 34, 37, 40, 43, 46],
+        lineStyle: { width: 2, color: '#7bc8e0' },
+        itemStyle: { color: '#7bc8e0' },
+        symbolSize: 5
+      },
+      {
+        name: 'KONTAKT', type: 'line', smooth: true,
+        data: [10, 11, 12, 13, 14, 14, 15, 15, 16],
+        lineStyle: { width: 2, color: '#c39bd3' },
+        itemStyle: { color: '#c39bd3' },
+        symbolSize: 5
+      },
+      {
+        name: 'E-Moc-Ja', type: 'line', smooth: true,
+        data: [5, 7, 10, 13, 16, 19, 22, 25, 28],
+        lineStyle: { width: 2, color: '#f08080' },
+        itemStyle: { color: '#f08080' },
+        symbolSize: 5
+      },
+      {
+        name: 'poMOC', type: 'line', smooth: true,
+        data: [0, 1, 2, 4, 6, 8, 10, 12, 14],
+        lineStyle: { width: 1.5, color: '#58d68d', type: 'dashed' },
+        itemStyle: { color: '#58d68d' },
+        symbolSize: 4
+      }
+    ],
+    animationDuration: 1400,
+    animationEasing: 'cubicOut'
+  });
+  window.addEventListener('resize', () => chart.resize());
+};
+
+// ── CHART 5: Geographic Coverage Bar ────────────────────────
+chartBuilders['geographic-chart'] = function() {
+  const dom = document.getElementById('geographic-chart');
+  const chart = echarts.init(dom, 'stitch');
+  const competitors = ['WCP', 'E-Moc-Ja', 'CP Wasiński', 'KONTAKT', 'poMOC', 'Wellbee', 'TwojPsycholog'];
+  const locations = [3, 3, 1, 1, 1, 0, 0]; // Wellbee & TwojPsycholog — wyłącznie online
+  const isWCP = [true, false, false, false, false, false, false];
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        var p = params[0];
+        var note = p.name === 'Wellbee' || p.name === 'TwojPsycholog' ? ' (tylko online)' : '';
+        return '<b>' + p.name + '</b><br/>Lokalizacje: ' + p.value + note;
+      }
+    },
+    grid: { left: 110, right: 40, top: 20, bottom: 30 },
+    xAxis: {
+      type: 'value',
+      name: 'Liczba lokalizacji',
+      nameTextStyle: { color: '#8a9bb0', fontSize: 10 },
+      max: 4, interval: 1,
+      axisLabel: { fontSize: 11, color: '#8a9bb0' }
+    },
+    yAxis: {
+      type: 'category',
+      data: competitors,
+      axisLabel: {
+        fontSize: 12,
+        color: function(val) { return val === 'WCP' ? '#e6c364' : '#8a9bb0'; },
+        fontWeight: function(val) { return val === 'WCP' ? 'bold' : 'normal'; }
+      }
+    },
+    series: [{
+      type: 'bar',
+      data: locations.map(function(v, i) {
+        return {
+          value: v,
+          itemStyle: {
+            color: isWCP[i] ? '#e6c364' : (v === 0 ? '#4d4637' : '#7bc8e0'),
+            borderRadius: [0, 4, 4, 0],
+            shadowColor: isWCP[i] ? 'rgba(230,195,100,0.3)' : 'rgba(0,0,0,0.2)',
+            shadowBlur: isWCP[i] ? 12 : 4
+          },
+          label: {
+            show: true,
+            position: 'right',
+            formatter: function(p) {
+              if (p.name === 'Wellbee' || p.name === 'TwojPsycholog') return 'Online';
+              return p.value;
+            },
+            color: isWCP[i] ? '#e6c364' : '#8a9bb0',
+            fontFamily: 'Manrope, sans-serif',
+            fontWeight: isWCP[i] ? 800 : 400,
+            fontSize: 12
+          }
+        };
+      }),
+      animationDuration: 1200,
+      animationEasing: 'elasticOut',
+      barWidth: '55%'
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+};
+
+// ── CHART 6: Positioning Map — Scale vs Delivery Model ─────────────────
+chartBuilders['positioning-map-chart'] = function() {
+  const dom = document.getElementById('positioning-map-chart');
+  if (!dom) return;
+  const chart = echarts.init(dom, 'stitch');
+  chart.setOption({
+    tooltip: {
+      trigger: 'item',
+      formatter: function(p) {
+        return '<b>' + p.data[3] + '</b><br/>' +
+          'Model: ' + (p.data[0] < 0 ? 'Online' : 'Stacjonarny') + ' (' + p.data[0] + ')<br/>' +
+          'Skala: ' + p.data[1] + ' terapeutów';
+      }
+    },
+    grid: { left: 100, right: 60, top: 50, bottom: 80 },
+    xAxis: {
+      name: 'Model dostawy →',
+      nameLocation: 'middle', nameGap: 50,
+      nameTextStyle: { color: '#e6c364', fontSize: 13, fontFamily: 'Manrope, sans-serif', fontWeight: 700 },
+      min: -10, max: 10, interval: 2,
+      axisLabel: {
+        formatter: function(v) {
+          if (v === -10) return 'ONLINE';
+          if (v === 10) return 'STACJONARNA';
+          return '';
+        },
+        color: '#8a9bb0',
+        fontSize: 11,
+        fontWeight: 'bold'
+      },
+      splitLine: { lineStyle: { color: 'rgba(77,70,55,0.3)', type: 'dashed' } }
+    },
+    yAxis: {
+      name: 'Skala ↑',
+      nameLocation: 'middle', nameGap: 60,
+      nameTextStyle: { color: '#e6c364', fontSize: 13, fontFamily: 'Manrope, sans-serif', fontWeight: 700 },
+      min: 0, max: 25, interval: 5,
+      axisLabel: {
+        formatter: function(v) {
+          if (v === 20) return 'WYSOKA (10+)';
+          if (v === 0) return 'NISKA (1)';
+          return v;
+        },
+        color: '#8a9bb0',
+        fontSize: 11
+      },
+      splitLine: { lineStyle: { color: 'rgba(77,70,55,0.3)', type: 'dashed' } }
+    },
+    series: [{
+      type: 'scatter',
+      animationDuration: 1400,
+      animationEasing: 'elasticOut',
+      symbolSize: function(val) { return Math.max(val[2] * 5, 15); },
+      data: [
+        [0, 22, 22, 'WCP'],
+        [-6, 8, 8, 'TwojPsycholog'],
+        [4, 5, 5, 'Małe grupy'],
+        [-5, 1, 1, 'Soliści'],
+        [2, 3, 3, 'NFZ']
+      ],
+      itemStyle: {
+        shadowBlur: 15,
+        shadowColor: function(p) {
+          var colors = {
+            'WCP': 'rgba(230,195,100,0.5)',
+            'TwojPsycholog': 'rgba(123,200,224,0.4)',
+            'Małe grupy': 'rgba(76,175,125,0.4)',
+            'Soliści': 'rgba(224,82,82,0.4)',
+            'NFZ': 'rgba(155,89,182,0.4)'
+          };
+          return colors[p.data[3]] || 'rgba(138,155,176,0.3)';
+        },
+        color: function(p) {
+          var colors = {
+            'WCP': '#e6c364',
+            'TwojPsycholog': '#7bc8e0',
+            'Małe grupy': '#6fcf97',
+            'Soliści': '#f08080',
+            'NFZ': '#9B59B6'
+          };
+          return colors[p.data[3]] || '#8a9bb0';
+        }
+      },
+      label: {
+        show: true,
+        position: 'top',
+        formatter: function(p) { return p.data[3]; },
+        color: '#e0e3e8',
+        fontFamily: 'Manrope, sans-serif',
+        fontWeight: 600,
+        fontSize: 11
+      },
+      emphasis: {
+        scale: true,
+        itemStyle: {
+          shadowBlur: 25,
+          shadowColor: 'rgba(230,195,100,0.6)'
+        }
+      },
+      markLine: {
+        silent: true,
+        lineStyle: { color: 'rgba(230,195,100,0.3)', type: 'solid', width: 2 },
+        data: [
+          [{ coord: [0, 0] }, { coord: [0, 25] }],
+          [{ coord: [-10, 10] }, { coord: [10, 10] }]
+        ]
+      },
+      markArea: {
+        silent: true,
+        itemStyle: { color: 'transparent', borderWidth: 1, borderType: 'dashed', borderColor: 'rgba(77,70,55,0.2)' },
+        data: [
+          [{ name: 'Online / Niska skala', coord: [-10, 0] }, { coord: [0, 10] }],
+          [{ name: 'Online / Wysoka skala', coord: [-10, 10] }, { coord: [0, 25] }],
+          [{ name: 'Stacjonarna / Niska skala', coord: [0, 0] }, { coord: [10, 10] }],
+          [{ name: 'Stacjonarna / Wysoka skala', coord: [0, 10] }, { coord: [10, 25] }]
+        ],
+        label: {
+          show: true,
+          position: 'insideTopLeft',
+          color: 'rgba(138,155,176,0.5)',
+          fontSize: 10,
+          fontFamily: 'Manrope, sans-serif'
+        }
+      }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+};
+
+// Initialize all ECharts
+initEChartsOnVisible();
+</script>
+
+</body>
+</html>

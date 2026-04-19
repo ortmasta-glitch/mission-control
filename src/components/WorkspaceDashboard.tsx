@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, ArrowRight, Folder, Users, CheckSquare, Trash2, AlertTriangle, Activity, Rocket, BarChart2, FolderOpen, Megaphone } from 'lucide-react';
+import { Plus, ArrowRight, Folder, Users, CheckSquare, Trash2, AlertTriangle, Activity, Rocket, BarChart2, FolderOpen, Megaphone, FileText } from 'lucide-react';
 import Link from 'next/link';
 import type { WorkspaceStats } from '@/lib/types';
 
@@ -50,6 +50,15 @@ export function WorkspaceDashboard() {
               <h1 className="text-xl font-bold">Mission Control</h1>
             </div>
             <div className="flex flex-wrap items-center gap-2">
+              <a
+                href="/reports/WCP-Strategic-Intelligence-Report.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="min-h-11 px-4 rounded-lg border border-mc-accent/40 bg-mc-accent/10 text-mc-accent hover:bg-mc-accent/20 flex items-center gap-2 text-sm font-medium"
+              >
+                <FileText className="w-4 h-4" />
+                Current Report
+              </a>
               <Link
                 href="/autopilot"
                 className="min-h-11 px-4 rounded-lg border border-mc-border bg-mc-bg text-mc-text-secondary hover:text-mc-text hover:bg-mc-bg-tertiary flex items-center gap-2 text-sm"

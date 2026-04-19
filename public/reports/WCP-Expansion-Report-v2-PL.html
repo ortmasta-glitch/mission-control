@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="pl" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WCP Rozwój — Bartąg: Klinika Terapii Zabawą dla Dzieci</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script src="assets/js/stitch-echarts-theme.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e6c364; --gold-dim: #c9a84c;
+    --surface: #101418; --surface-low: #181c20; --surface-mid: #1c2024;
+    --surface-high: #262a2f; --surface-lowest: #0b0f12;
+    --on-surface: #e0e3e8; --muted: #8a9bb0; --outline-v: #4d4637;
+    --green-t: #4CAF7D; --red-t: #E05252; --blue-t: #4BA3C3; --purple-t: #9B59B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--surface);color:var(--on-surface);font-family:"Inter",system-ui,sans-serif;line-height:1.7}
+  .material-symbols-outlined{font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;font-size:1.1em;vertical-align:middle}
+  .sidebar{position:fixed;left:0;top:0;width:256px;height:100vh;background:var(--surface-lowest);display:flex;flex-direction:column;z-index:50;border-right:1px solid rgba(77,70,55,.3);overflow-y:auto}
+  .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:var(--outline-v);border-radius:2px}
+  .sidebar-logo{padding:20px 16px 14px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .sidebar-logo img{width:100%;height:auto;max-height:78px;object-fit:contain}
+  .sidebar-label{padding:14px 20px 6px;font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .sidebar nav{flex:1;padding:6px 0}
+  .nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:all 150ms ease;border-left:2px solid transparent}
+  .nav-link:hover{color:var(--gold);background:rgba(230,195,100,.06);border-left-color:rgba(230,195,100,.3)}
+  .nav-link.active{color:var(--gold);background:rgba(230,195,100,.08);border-left-color:var(--gold);font-weight:700}
+  .nav-link .nav-icon{font-size:.9rem;opacity:.7}.nav-link.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(77,70,55,.3)}
+  .sidebar-footer p{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(138,155,176,.45);line-height:1.6}
+  .topnav{position:fixed;top:0;left:256px;right:0;z-index:40;background:rgba(16,20,24,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(77,70,55,.25);padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .topnav-title{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+  .topnav-section{font-family:"Manrope",sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .main-content{margin-left:256px;padding-top:66px;min-height:100vh}
+  .page-canvas{max-width:940px;margin:0 auto;padding:48px 40px 80px}
+  .cover-section{min-height:480px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:64px 0 72px;margin-bottom:64px}
+  .cover-glow{position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:rgba(230,195,100,.04);border-radius:50%;filter:blur(80px);pointer-events:none}
+  .cover-badge{font-family:"Manrope",sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+  .cover-h1{font-family:"Inter",sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--on-surface);margin-bottom:16px}
+  .cover-h1 span{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-subtitle{font-size:1.05rem;font-weight:300;color:var(--muted);margin-bottom:36px;max-width:580px}
+  .cover-meta-row{display:flex;flex-wrap:wrap;gap:36px;padding-top:28px;border-top:1px solid rgba(77,70,55,.3)}
+  .cover-meta-item label{font-family:"Manrope",sans-serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+  .cover-meta-item p{font-size:.88rem;font-weight:600;color:var(--on-surface)}
+  .toc-block{background:var(--surface-low);border-left:3px solid var(--gold-dim);border-radius:4px;padding:24px 28px;margin-bottom:64px}
+  .toc-block h3{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .toc-block ol{padding-left:20px;columns:2;column-gap:36px}
+  .toc-block li{margin:5px 0;font-size:.86rem;break-inside:avoid}
+  .toc-block a{color:var(--muted);text-decoration:none;transition:color 150ms}
+  .toc-block a:hover{color:var(--gold)}
+  .section{background:var(--surface-low);border-radius:6px;margin-bottom:64px;overflow:hidden}
+  .section-header{padding:22px 28px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid rgba(77,70,55,.2)}
+  .section-header .icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+  .section-header h2{font-family:"Inter",sans-serif;font-size:1.1rem;font-weight:700;color:var(--on-surface);margin-bottom:2px}
+  .section-header .sec-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:3px}
+  .section-header .sub{font-size:.8rem;color:var(--muted)}
+  .section-body{padding:28px}
+  .callout{background:var(--surface-mid);border-left:3px solid var(--gold-dim);border-radius:0 4px 4px 0;padding:13px 17px;margin:18px 0;font-size:.9rem}
+  .callout strong{color:var(--gold)}
+  h3.sub-heading{font-family:"Manrope",sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(77,70,55,.3)}
+  .idea-card{background:var(--surface-mid);border-radius:4px;margin-bottom:18px;overflow:hidden}
+  .idea-card .idea-title{background:var(--surface-high);padding:11px 17px;font-weight:700;color:var(--gold);font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .idea-card .idea-body{padding:16px}
+  .idea-card .idea-body p{margin-bottom:9px;color:var(--on-surface);font-size:.9rem}
+  .idea-card .idea-body p:last-child{margin-bottom:0}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-right:4px;margin-bottom:2px}
+  .tag.high{background:rgba(224,82,82,.15);color:#f08080}
+  .tag.medium{background:rgba(245,200,66,.15);color:#f5c842}
+  .tag.low{background:rgba(75,163,195,.15);color:#7bc8e0}
+  .tag.quick-win{background:rgba(76,175,125,.15);color:#6fcf97}
+  .tag.long-term{background:rgba(155,89,182,.15);color:#c39bd3}
+  .kw-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem}
+  .kw-table th{background:var(--surface-high);color:var(--gold);padding:9px 13px;text-align:left;font-family:"Manrope",sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .kw-table td{padding:8px 13px;border-bottom:1px solid rgba(77,70,55,.2);color:var(--on-surface)}
+  .kw-table tr:nth-child(even) td{background:rgba(16,20,24,.4)}
+  .kw-table .vol-high{color:#6fcf97;font-weight:700}
+  .kw-table .vol-med{color:#f5c842;font-weight:700}
+  .kw-table .highlight{color:var(--gold);font-weight:700}
+  ul.clean{padding-left:18px}
+  ul.clean li{margin:5px 0;font-size:.88rem;color:var(--on-surface)}
+  .section-body p{color:var(--on-surface);font-size:.91rem;margin-bottom:10px}
+  .section-body strong{color:var(--on-surface)}
+.page-footer{display:none}
+.sub-report-link{display:inline-flex;align-items:center;gap:6px;background:var(--surface-high);border-radius:4px;padding:8px 14px;font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all 150ms;margin:8px 4px 8px 0}
+.sub-report-link:hover{background:var(--gold);color:var(--surface)}
+  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(77,70,55,.2)}
+  .funnel-step:last-child{border-bottom:none}
+  .funnel-step .step-num{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#101418;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.78rem;font-family:"Manrope",sans-serif}
+  .funnel-step .step-content h4{font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+  .funnel-step .step-content p{font-size:.86rem;color:var(--muted)}
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+  .kpi-card{background:var(--surface-high);border-radius:4px;padding:18px;text-align:center}
+  .kpi-card .kpi-value{font-family:"Inter",sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .kpi-card .kpi-label{font-family:"Manrope",sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+  .budget-total{background:linear-gradient(135deg,rgba(230,195,100,.08),rgba(230,195,100,.03));border:1px solid rgba(230,195,100,.25);border-radius:6px;padding:24px 28px;margin:24px 0;text-align:center}
+  .budget-total .amount{font-family:"Inter",sans-serif;font-size:2.4rem;font-weight:800;color:var(--gold);line-height:1.2}
+  .budget-total .label{font-family:"Manrope",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+  .layout-diagram{background:var(--surface-mid);border:1px solid rgba(77,70,55,.3);border-radius:6px;padding:24px;margin:18px 0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:10px;font-size:.82rem}
+  .layout-diagram .room{border:1px dashed rgba(230,195,100,.3);border-radius:4px;padding:14px;text-align:center}
+  .layout-diagram .room.gold{border-color:var(--gold);background:rgba(230,195,100,.04)}
+  .layout-diagram .room h4{color:var(--gold);font-size:.78rem;font-weight:700;margin-bottom:4px}
+  .layout-diagram .room p{color:var(--muted);font-size:.72rem}
+  .layout-diagram .corridor{grid-column:1/-1;border:1px dashed rgba(230,195,100,.2);border-radius:4px;padding:10px;text-align:center;background:rgba(230,195,100,.02)}
+  .echarts-chart-box{width:100%;height:380px;background:var(--surface-mid);border-radius:6px;border:1px solid rgba(77,70,55,.3);margin:18px 0}
+  .echarts-chart-box.tall{height:440px}
+  .echarts-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}
+  .echarts-grid .echarts-chart-box{height:340px}
+  @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.topnav{left:0}.kpi-row{grid-template-columns:1fr 1fr}.toc-block ol{columns:1}.page-canvas{padding:28px 16px 60px}.layout-diagram{grid-template-columns:1fr}.echarts-grid{grid-template-columns:1fr}.echarts-grid .echarts-chart-box{height:300px}}
+</style>
+</head>
+<body style="display:flex;min-height:100vh">
+
+<aside class="sidebar">
+  <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+    <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Powrót do Raportu Strategicznego →
+  </a>
+  <div class="sidebar-label">Nawigacja</div>
+  <nav>
+    <a class="nav-link active" href="#cover" data-section="cover">
+      <span class="material-symbols-outlined nav-icon">home</span> Przegląd
+    </a>
+    <a class="nav-link" href="#brief" data-section="brief">
+      <span class="material-symbols-outlined nav-icon">assignment</span> Wytyczne Karoliny
+    </a>
+    <a class="nav-link" href="#location" data-section="location">
+      <span class="material-symbols-outlined nav-icon">location_on</span> Bartąg
+    </a>
+    <a class="nav-link" href="#space" data-section="space">
+      <span class="material-symbols-outlined nav-icon">architecture</span> Wymagania Lokalu
+    </a>
+    <a class="nav-link" href="#rental" data-section="rental">
+      <span class="material-symbols-outlined nav-icon">real_estate_agent</span> Rynek Wynajmu
+    </a>
+    <a class="nav-link" href="#fitout" data-section="fitout">
+      <span class="material-symbols-outlined nav-icon">format_paint</span> Wykończenie
+    </a>
+    <a class="nav-link" href="#ccpt" data-section="ccpt">
+      <span class="material-symbols-outlined nav-icon">toys</span> Sprzęt CCPT
+    </a>
+    <a class="nav-link" href="#budget" data-section="budget">
+      <span class="material-symbols-outlined nav-icon">savings</span> Budżet Całkowity
+    </a>
+    <a class="nav-link" href="#revenue" data-section="revenue">
+      <span class="material-symbols-outlined nav-icon">trending_up</span> Prognoza Przychodu
+    </a>
+    <a class="nav-link" href="#charts" data-section="charts">
+      <span class="material-symbols-outlined nav-icon">analytics</span> Analiza Wizualna
+    </a>
+    <a class="nav-link" href="#next-steps" data-section="next-steps">
+      <span class="material-symbols-outlined nav-icon">flag</span> Następne Kroki
+    </a>
+  </nav>
+<div class="sidebar-footer">
+    <img src="assets/images/WCP_logo_white.svg" alt="WCP Logo" style="width:100%;height:auto;max-height:101px;margin-bottom:12px;">
+    <a href="WCP-Expansion-Report-v2.html" style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface-high);border-radius:4px;text-decoration:none;color:var(--gold);font-family:Manrope,sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:150ms;" onmouseover="this.style.background='rgba(230,195,100,.15)'" onmouseout="this.style.background='var(--surface-high)'">
+      <span style="font-size:1rem">🇬🇧</span> Wersja EN
+    </a>
+  </div>
+</aside>
+
+<header class="topnav"><span class="topnav-title">WCP &middot; Bartąg — Klinika Terapii Zabawą</span><span class="topnav-section" id="topnav-section">Przegląd</span></header>
+
+<main class="main-content"><div class="page-canvas">
+
+<!-- ========== COVER ========== -->
+<section id="cover" class="cover-section">
+  <div class="cover-glow"></div>
+  
+  
+  <span class="cover-badge">&#9679; Raport Rozwojowy v2 &middot; Kwiecień 2026</span>
+  <h1 class="cover-h1">Bartąg:<br><span>Klinika Terapii Zabawą dla Dzieci</span></h1>
+  <p class="cover-subtitle">Warmińskie Centrum Psychoterapii — Analiza otwarcia kliniki CCPT (Child-Centered Play Therapy) w rejonie Bartąg/Stawiguda. Wynajem, wykończenie, sprzęt, budżet.</p>
+  <div class="cover-meta-row">
+    <div class="cover-meta-item"><label>Lokalizacja</label><p>Bartąg / Stawiguda</p></div>
+    <div class="cover-meta-item"><label>Model</label><p>Wynajem mieszkania</p></div>
+    <div class="cover-meta-item"><label>Profil</label><p>Terapia Zabawą CCPT</p></div>
+    <div class="cover-meta-item"><label>Inwestycja początkowa</label><p>~25,000–35,000 PLN</p></div>
+  </div>
+</section>
+
+<div class="toc-block">
+  <h3>📋 Spis Treści</h3>
+  <ol>
+    <li><a href="#brief">Wytyczne Karoliny — Wizja i wymagania</a></li>
+    <li><a href="#location">Bartąg — Dlaczego tutaj?</a></li>
+    <li><a href="#space">Wymagania Lokalu — Układ mieszkania</a></li>
+    <li><a href="#rental">Rynek Wynajmu — Oferty i ceny</a></li>
+    <li><a href="#fitout">Wykończenie — Minimalne koszty</a></li>
+    <li><a href="#ccpt">Sprzęt CCPT — Zabawki i wyposażenie</a></li>
+    <li><a href="#budget">Budżet Całkowity — Podsumowanie inwestycji</a></li>
+    <li><a href="#revenue">Prognoza Przychodu — Model finansowy</a></li>
+    <li><a href="#charts">Analiza Wizualna — Wykresy ECharts</a></li>
+    <li><a href="#next-steps">Następne Kroki — Plan działania</a></li>
+  </ol>
+</div>
+
+<!-- ========== SECTION 1: KAROLINA'S BRIEF ========== -->
+<div class="section" id="brief">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">list_alt</span>
+    <div>
+      <div class="sec-label">Sekcja 1</div>
+      <h2>Wytyczne Karoliny — Wizja i Wymagania</h2>
+      <div class="sub">Bezpośrednia wiedza od założycielki WCP</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Filozofia:</strong> Minimalne koszty, maksymalny efekt. Lokal ma być gotowy do wejścia — malowanie, meble, zabawki. Bez remontów strukturalnych, bez kupna nieruchomości.
+    </div>
+
+    <h3 class="sub-heading">Kluczowe wymagania</h3>
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><h4>Jedna lokalizacja: Bartąg</h4><p>Nie rozważamy wielu lokalizacji — skupiamy się na rejonie Bartąg/Stawiguda, blisko Olsztyna. To rozwijające się przedmieście z młodymi rodzinami.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><h4>Wynajem, nie kupno</h4><p>Mieszkanie na wynajem — elastyczność, niższe koszty początkowe, możliwość zmiany lokalizacji jeśli biznes potrzebuje więcej przestrzeni.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><h4>Układ mieszkania = klinika</h4><p>Dwa pokoje (sypialnie) = sale terapii zabawą. Osobna kuchnia = pokój personelu. Korytarz = poczekalnia. Minimum 50–60 m², 3+ pokoje.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content"><h4>Gotowe do wejścia</h4><p>Koszty wykończenia minimalne: tylko malowanie, meble, zabawki/sprzęt. Żadnych zmian strukturalnych, ścian, instalacji.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">5</div>
+      <div class="step-content"><h4>Sprzęt CCPT — szczegółowa lista</h4><p>Potrzebna pełna lista zabawek i sprzętu do terapii zabawą (Child-Centered Play Therapy). Preferencja: drewno zamiast plastiku. Część zabawek może być używana (OLX, Allegro, Vinted).</p></div>
+    </div>
+
+    <h3 class="sub-heading">Dlaczego ten model ma sens</h3>
+    <ul class="clean">
+      <li><strong>Niskie ryzyko finansowe</strong> — depozyt + pierwszy miesiąc czynszu + meble + zabawki = 25–35 tys. PLN, nie 180–330 tys. jak przy zakupie/remontcie</li>
+      <li><strong>Szybki start</strong> — mieszkanie gotowe do wejścia, malowanie 2–3 dni, meble z IKEA w tydzień, zabawki przez internet</li>
+      <li><strong>Elastyczność</strong> — jeśli lokal nie działa, zmieniamy. Jeśli potrzebujemy więcej przestrzeni, przenosimy się</li>
+      <li><strong>Test rynku</strong> — potwierdzamy popyt na terapię zabawą w Bartągu przed większą inwestycją</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 2: LOCATION — BARTĄG ========== -->
+<div class="section" id="location">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">location_on</span>
+    <div>
+      <div class="sec-label">Sekcja 2</div>
+      <h2>Bartąg — Dlaczego Tutaj?</h2>
+      <div class="sub">Analiza lokalizacji: demografia, dostępność, konkurencja</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Kluczowa zaleta:</strong> WCP będzie <strong>pierwszą na rynku</strong> kliniką terapii zabawą dla dzieci w rejonie Bartąg/Stawiguda. Żadna inna placówka nie oferuje CCPT w Gminie Stawiguda.
+    </div>
+
+    <h3 class="sub-heading">Profil Gminy Stawiguda</h3>
+    <table class="kw-table">
+      <tr><th>Atrybut</th><th>Dane</th></tr>
+      <tr><td>Populacja</td><td class="highlight">13,319 mieszkańców</td></tr>
+      <tr><td>Odległość od centrum Olsztyna</td><td>8–12 km</td></tr>
+      <tr><td>Kluczowe wsie</td><td>Bartąg, Stawiguda, Bartążek, Gągławki, Tomaszkowo</td></tr>
+      <tr><td>Charakter</td><td>Szybko zurbanizowujące się przedmieście, przyjazne rodzinom</td></tr>
+      <tr><td>Nowe inwestycje mieszkaniowe</td><td>Wielorodzinne na ul. Kwiatowej, Bartąskiej</td></tr>
+    </table>
+
+    <div style="margin:32px 0;padding:24px 0;border-top:1px solid rgba(77,70,55,.2);border-bottom:1px solid rgba(77,70,55,.2);">
+      <img src="assets/images/bartagf_map.png" alt="Mapa Bartąga" style="width:100%;height:auto;display:block;border:1px solid var(--gold-dim);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.3);">
+    </div>
+
+    <h3 class="sub-heading">Dlaczego Bartąg jest idealny dla CCPT</h3>
+
+    <div class="idea-card">
+      <div class="idea-title">🏠 Młode rodziny</div>
+      <div class="idea-body">
+        <p>Bartąg i okolice to jeden z najszybciej rozwijających się rejonów pod Olsztynem. Nowe osiedla mieszkaniowe = młode rodziny z dziećmi w wieku przedszkolnym i wczesnoszkolnym (4–12 lat) — główna grupa docelowa CCPT.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">🚗 Dostępność</div>
+      <div class="idea-body">
+        <p>Bezpośrednie połączenie autobusowe z Olsztynem (MZK). Główna arteria ul. Olsztyńska/Bartąska. Rodzice dowożą dzieci po pracy — 15–20 min z centrum Olsztyna. Parking przy budynku to niezbędne.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">🏫 Szkoły = Źródło skierowań</div>
+      <div class="idea-body">
+        <p>Zespół Szkolno-Przedszkolny w Stawigudzie, szkoły w Bartągu — bez dedykowanych usług psychologicznych z diagnostyką. WCP może stać się głównym partnerem szkół w rejonie.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">💰 Niższe koszty</div>
+      <div class="idea-body">
+        <p>Czynsz za mieszkanie w Bartągu: 1,500–2,500 PLN/mies. Porównaj: Olsztyn centrum 3,500–7,000 PLN/mies. Różnica = 2,000–4,500 PLN/mies. oszczędności od pierwszego dnia.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Konkurencja</h3>
+    <table class="kw-table">
+      <tr><th>Usługa</th><th>Dostępność w Bartągu</th><th>Pozycja WCP</th></tr>
+      <tr><td>Terapia zabawą CCPT</td><td class="vol-high">❌ Brak</td><td>Pierwsza na rynku</td></tr>
+      <tr><td>Diagnostyka ADHD (MOXO/DIVA-5)</td><td class="vol-high">❌ Brak lokalnie</td><td>Unikalna oferta</td></tr>
+      <tr><td>Psychoterapia dziecięca</td><td class="vol-med">⚠️ Ograniczona</td><td>Możliwość współpracy</td></tr>
+      <tr><td>Poradnie psychologiczno-pedagogiczne</td><td class="vol-med">⚠️ PPP Olsztyn</td><td>Komplementarne, nie konkurencyjne</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 3: SPACE REQUIREMENTS ========== -->
+<div class="section" id="space">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">construction</span>
+    <div>
+      <div class="sec-label">Sekcja 3</div>
+      <h2>Wymagania Lokalu — Układ Mieszkania</h2>
+      <div class="sub">Dwa pokoje = sale terapii, kuchnia = pokój personelu, korytarz = poczekalnia</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Koncept Karoliny:</strong> Mieszkanie, nie lokal usługowy. Dzieci czują się bezpieczniej w przestrzeni domowej. Dwie sypialnie = sale terapii. Osobna kuchnia = pokój personelu. Korytarz = poczekalnia.
+    </div>
+
+    <h3 class="sub-heading">Wizualizacja układu</h3>
+    <div class="layout-diagram">
+      <div class="room gold">
+        <h4>🧸 Sala Terapii Zabawą 1</h4>
+        <p>Sypialnia · ~12–16 m²<br>Sprzęt CCPT, zabawki, stół artystyczny<br>Półki na wysokości dziecka</p>
+      </div>
+      <div class="room gold">
+        <h4>🎭 Sala Terapii Zabawą 2</h4>
+        <p>Sypialnia · ~12–16 m²<br>Sandtray, lalki, klocki<br>Alternatywnie: diagnostyka MOXO</p>
+      </div>
+      <div class="corridor">
+        <h4 style="color:var(--gold);font-size:.78rem;font-weight:700;margin-bottom:4px">🪑 Poczekalnia</h4>
+        <p style="color:var(--muted);font-size:.72rem">Korytarz · Krzesła, stolik, zabawki oczekiwania, ulotki</p>
+      </div>
+      <div class="room">
+        <h4>☕ Pokój Personelu</h4>
+        <p>Kuchnia · ~6–10 m²<br>Biuro, przerwy, przechowywanie materiałów</p>
+      </div>
+      <div class="room">
+        <h4>🚿 Łazienka</h4>
+        <p>Dla pacjentów i personelu<br>Czystość i porządek</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Wymagania minimalne</h3>
+    <table class="kw-table">
+      <tr><th>Parametr</th><th>Minimum</th><th>Optymalnie</th></tr>
+      <tr><td>Powierzchnia całkowita</td><td>50 m²</td><td class="highlight">55–65 m²</td></tr>
+      <tr><td>Liczba pokoi</td><td>3 (2 sypialnie + kuchnia)</td><td class="highlight">3+ pokoje</td></tr>
+      <tr><td>Wielkość sypialni (sala terapii)</td><td>10 m² każda</td><td class="highlight">12–16 m² każda</td></tr>
+      <tr><td>Parking</td><td>1 miejsce</td><td class="highlight">2+ miejsca</td></tr>
+      <tr><td>Piętro</td><td>Parter preferowany</td><td class="highlight">Parter z windą</td></tr>
+      <tr><td>Stan</td><td>Gotowe do zamieszkania</td><td class="highlight">Odświeżone malowanie</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Kluczowe cechy lokalu</h3>
+    <ul class="clean">
+      <li><strong>Oddzielne pokoje (sypialnie)</strong> — sale terapii muszą być oddzielne drzwiami, nie otwarte przestrzenie</li>
+      <li><strong>Osobna kuchnia</strong> — nie aneks, tylko osobne pomieszczenie na pokój personelu</li>
+      <li><strong>Szeroki korytarz</strong> — miejsca na 2–3 krzesła i stolik dla rodziców czekających</li>
+      <li><strong>Cisza</strong> — oddalone od głównych drogów hałaśliwych, dobre okna</li>
+      <li><strong>Parking</strong> — rodzice dowożą dzieci, potrzebują miejsca na zaparkowanie</li>
+      <li><strong>Bezpieczeństwo</strong> — zamykane drzwi wejściowe, bezpieczne okna</li>
+    </ul>
+
+    <h3 class="sub-heading">Pojemność tygodniowa (2 sale terapii)</h3>
+    <table class="kw-table">
+      <tr><th>Usługa</th><th>Sesji/dzień</th><th>Sesji/tydzień</th></tr>
+      <tr><td>Terapia Zabawą CCPT (dzieci 4–12)</td><td>6–8</td><td class="vol-high">30–40</td></tr>
+      <tr><td>Diagnostyka MOXO (w jednej sali)</td><td>2–3</td><td class="vol-med">10–15</td></tr>
+      <tr><td>Konsultacje dla rodziców</td><td>2–3</td><td class="vol-med">10–15</td></tr>
+      <tr><td class="highlight">RAZEM</td><td></td><td class="highlight">50–70</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 4: RENTAL MARKET ========== -->
+<div class="section" id="rental">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">apartment</span>
+    <div>
+      <div class="sec-label">Sekcja 4</div>
+      <h2>Rynek Wynajmu — Oferty i Ceny</h2>
+      <div class="sub">Aktualne oferty w rejonie Bartąg/Stawiguda</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Aktualne oferty (OLX, kwiecień 2026)</h3>
+
+    <div style="margin:0 0 24px;padding:0;border-radius:8px;overflow:hidden;border:1px solid var(--gold-dim);box-shadow:0 8px 24px rgba(0,0,0,.3);">
+      <img src="assets/images/bartag_upclose_map.png" alt="Mapa Bartąg — zbliżenie" style="width:100%;height:280px;object-fit:cover;object-position:center;display:block;">
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">🏠 Oferta 1: "Mieszkanie na wynajem Bartąg" — 42 m²</div>
+      <div class="idea-body">
+        <p><strong>Powierzchnia:</strong> 42 m² &middot; <strong>Data ogłoszenia:</strong> 11 kwietnia 2026</p>
+        <p><strong>Ocena:</strong> ⚠️ Poniżej minimum — 42 m² to za mało na 2 sale terapii + kuchnię + korytarz. Można rozważyć jeśli układ jest bardzo funkcjonalny.</p>
+        <p><strong>Szacowana cena:</strong> ~1,500–1,800 PLN/mies.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">🏠 Oferta 2: "Mieszkanie do wynajęcia Bartąska rondo" — 49 m²</div>
+      <div class="idea-body">
+        <p><strong>Powierzchnia:</strong> 49 m² &middot; <strong>Data ogłoszenia:</strong> 7 kwietnia 2026</p>
+        <p><strong>Ocena:</strong> ✅ Na granicy minimum — 49 m² może wystarczyć przy dobrym układzie (2 sypialnie + kuchnia). Lokalizacja przy rondzie = dobra widoczność.</p>
+        <p><strong>Szacowana cena:</strong> ~1,800–2,200 PLN/mies.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">⭐ Oferta 3: "Mieszkanie 3-pokojowe Bartąska" — 57 m²</div>
+      <div class="idea-body">
+        <p><strong>Powierzchnia:</strong> 57 m² &middot; <strong>Data ogłoszenia:</strong> 29 marca 2026</p>
+        <p><strong>Ocena:</strong> ✅✅ Najlepsza z dostępnych — 57 m², 3 pokoje. Odpowiada wymaganiom: 2 sypialnie na sale terapii + kuchnia na pokój personelu. Korytarz jako poczekalnia.</p>
+        <p><strong>Szacowana cena:</strong> ~2,000–2,500 PLN/mies.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Benchmark cenowy — wynajem mieszkań, przedmieścia Olsztyna</h3>
+    <table class="kw-table">
+      <tr><th>Rejon</th><th>PLN/m²/mies.</th><th>50–60 m² (PLN/mies.)</th></tr>
+      <tr><td>Bartąg / Stawiguda</td><td class="highlight">35–50</td><td class="highlight">1,750–3,000</td></tr>
+      <tr><td>Olsztyn — Jaroty</td><td>45–70</td><td>2,250–4,200</td></tr>
+      <tr><td>Olsztyn — Centrum</td><td>60–100</td><td>3,000–6,000</td></tr>
+      <tr><td>Dajtki / Gutkowo</td><td>40–60</td><td>2,000–3,600</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Na co zwrócić uwagę przy oględzinach</h3>
+    <ul class="clean">
+      <li><strong>Układ pokoi</strong> — czy sypialnie są oddzielne drzwiami? Kuchnia osobna?</li>
+      <li><strong>Stan malowania</strong> — czy wystarczy odświeżenie czy pełne malowanie?</li>
+      <li><strong>Parking</strong> — czy jest miejsce pod budynkiem? Czy sąsiedzi nie blokują?</li>
+      <li><strong>Cisza</strong> — czy sąsiadzi głośni? Hałas ulicy? Sesje terapii wymagają spokoju</li>
+      <li><strong>Właściciel</strong> — czy zgadza się na działalność gospodarczą w mieszkaniu? Kluczowe!</li>
+      <li><strong>Dostępność dla osób z ograniczoną mobilnością</strong> — parter lub winda</li>
+      <li><strong>Okna</strong> — rolety/zasłony do kontroli światła (ważne przy MOXO)</li>
+    </ul>
+
+    <h3 class="sub-heading">Negocjacje czynszu — porady</h3>
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><h4>Zaproponuj dłuższy kontrakt</h4><p>2–3 lata z gwarancją podwyżki cap = niższy czynsz bazowy. Właściciele wolą stabilność.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><h4>Wyjaśnij działalność</h4><p>Terapia dzieci = spokojni, cisi najemcy. Żadnych imprez, niskie zużycie. Właściciele to lubią.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><h4>Ustal kto płaci za media</h4><p>Przy 50–60 m²: prąd ~200–350 PLN, woda ~80–150 PLN, ogrzewanie ~150–300 PLN zimą. Wynajem z mediami = prostsze budżetowanie.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content"><h4>Kaucja = 1 miesiąc, nie 3</h4><p>Negocjuj kaucję do 1 miesiąca czynszu. Standard to 1–2 miesiące. 3 miesiące = ponadnormatywne.</p></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 5: FIT-OUT ========== -->
+<div class="section" id="fitout">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">palette</span>
+    <div>
+      <div class="sec-label">Sekcja 5</div>
+      <h2>Wykończenie — Minimalne Koszty</h2>
+      <div class="sub">Malowanie, meble, zero zmian strukturalnych</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Zasada:</strong> Mieszkanie jest gotowe do wejścia. Inwestujemy tylko w: (1) malowanie, (2) meble, (3) zabawki i sprzęt CCPT. Żadnych ścian, żadnych instalacji, żadnych remontów.
+    </div>
+
+    <h3 class="sub-heading">Budżet wykończenia</h3>
+    <table class="kw-table">
+      <tr><th>Pozycja</th><th>Szacowany koszt (PLN)</th><th>Uwagi</th></tr>
+      <tr><td>Malowanie 2 sal terapii (~28 m²)</td><td>800–1,500</td><td>Farbą na biało / jasne kolory uspokajające</td></tr>
+      <tr><td>Malowanie korytarza (~10 m²)</td><td>300–500</td><td>Odświeżenie poczekalni</td></tr>
+      <tr><td>Malowanie kuchni/pokoju personelu</td><td>200–400</td><td>Opcjonalnie, jeśli stan dobry</td></tr>
+      <tr><td>Rolety/zasłony (2 sale + korytarz)</td><td>300–600</td><td>Ważne przy diagnostyce MOXO</td></tr>
+      <tr><td class="highlight">RAZEM MALOWANIE / DROBNE</td><td class="highlight">1,600–3,000</td><td></td></tr>
+    </table>
+
+    <h3 class="sub-heading">Meble — sale terapii i poczekalnia</h3>
+    <table class="kw-table">
+      <tr><th>Pozycja</th><th>Sztuk</th><th>Koszt (PLN)</th><th>Źródło</th></tr>
+      <tr><td>Niskie półki otwarte (drewniane, na wysokość dziecka)</td><td>4</td><td>800–1,600</td><td>IKEA KALLAX / używane OLX</td></tr>
+      <tr><td>Stół dziecięcy + 2 krzesła (drewniane)</td><td>1 komplet</td><td>300–500</td><td>IKEA MAMMUT / używane</td></tr>
+      <tr><td>Krzesło terapeuty (dorosłe, wygodne)</td><td>2</td><td>600–1,000</td><td>IKEA / używane</td></tr>
+      <tr><td>Dywan/mata do zabawy (do prania)</td><td>2</td><td>300–400</td><td>IKEA / Allegro</td></tr>
+      <tr><td>Pojemniki na zabawki (podpisane)</td><td>8–10</td><td>200–400</td><td>IKEA SKUBB / kosze wiklinowe</td></tr>
+      <tr><td>Krzesła do poczekalni (korytarz)</td><td>3</td><td>450–750</td><td>IKEA / używane</td></tr>
+      <tr><td>Stolik do poczekalni</td><td>1</td><td>150–300</td><td>IKEA / używane</td></tr>
+      <tr><td>Mały regał na ulotki/materiały</td><td>1</td><td>100–200</td><td>IKEA</td></tr>
+      <tr><td>Stół biurowy + krzesło (pokój personelu)</td><td>1 komplet</td><td>400–700</td><td>IKEA / używane</td></tr>
+      <tr><td class="highlight">RAZEM MEBLE</td><td></td><td class="highlight">3,300–5,850</td><td></td></tr>
+    </table>
+
+    <h3 class="sub-heading">Kolorystyka sal terapii</h3>
+    <ul class="clean">
+      <li><strong>Ściany:</strong> Jasne, ciepłe tony — biały, kremowy, pastelowy zielony lub niebieski. Unikać jaskrawych kolorów (rozkoszują dzieci, utrudniają skupienie)</li>
+      <li><strong>Podłoga:</strong> Zostajemy przy istniejącej — dywan/mata do zabawy definiuje strefę zabawy</li>
+      <li><strong>Oświetlenie:</strong> Ciepłe, regulowane. Lamki na półkach. Unikać jarzeniówek</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Wskazówka:</strong> IKEA to najlepsze źródło mebli do terapii zabawą — niskie ceny, drewniane opcje, dostępność od ręki. Dostawa w 2–3 dni. Używane meble z OLX/Allegro Lokalnie mogą oszczędzić 30–50%.
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 6: CCPT EQUIPMENT ========== -->
+<div class="section" id="ccpt">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">toys</span>
+    <div>
+      <div class="sec-label">Sekcja 6</div>
+      <h2>Sprzęt CCPT — Zabawki i Wyposażenie</h2>
+      <div class="sub">Szczegółowa lista wg Landreth & A4PT · Preferencja: DREWNO zamiast plastiku</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout">
+      <strong>Źródło:</strong> Lista oparta na wytycznych Garry L. Landreth "Play Therapy: The Art of the Relationship" oraz standardach Association for Play Therapy (A4PT). Pokój CCPT wymaga zabawek z 5 kategorii: real-life/nurturing, aggressive/expressive, creative/expressive, construction/manipulative, emotional expression.
+    </div>
+
+    <!-- ===== CATEGORY 1: REAL-LIFE / NURTURING ===== -->
+    <h3 class="sub-heading">1. Zabawki Codzienne / Opiekuńcze</h3>
+    <p>Zabawki pozwalające dziecku odgrywać sceny z codziennego życia, budować relacje, wyrażać troskę. Fundament CCPT.</p>
+    <table class="kw-table">
+      <tr><th>Zabawka</th><th>Materiał</th><th>Sztuk</th><th>Cena (PLN)</th><th>Źródło</th></tr>
+      <tr><td>Domek dla lalek z mebelkami</td><td>🪵 Drewno</td><td>1</td><td>200–400</td><td>Używany OLX / Allegro</td></tr>
+      <tr><td>Rodzina lalek (mama, tata, dzieci)</td><td>🪵 Drewno</td><td>1–2</td><td>50–80</td><td>Allegro / sklep edukacyjny</td></tr>
+      <tr><td>Lalka-dziecko z butelką</td><td>Materiał + plastik</td><td>1</td><td>30–50</td><td>Allegro</td></tr>
+      <tr><td>Kukiełki (różne zwierzęta)</td><td>Materiał</td><td>5</td><td>100–200</td><td>5 × 20–40 PLN sztuka</td></tr>
+      <tr><td>Zestaw kuchni zabawowej</td><td>🪵 Drewno</td><td>1</td><td>150–300</td><td>Używany OLX / IKEA</td></tr>
+      <tr><td>Jedzenie zabawkowe</td><td>🪵 Drewno</td><td>1</td><td>50–100</td><td>Allegro / IKEA</td></tr>
+      <tr><td class="highlight">Podsumowanie kategoria 1</td><td></td><td></td><td class="highlight">580–1,130</td><td></td></tr>
+    </table>
+
+    <!-- ===== CATEGORY 2: AGGRESSIVE / EXPRESSIVE ===== -->
+    <h3 class="sub-heading">2. Zabawki Agresywne / Ekspresyjne</h3>
+    <p>Dzieci potrzebują bezpiecznego sposobu na wyrażanie gniewu, frustracji, lęku. Te zabawki są kluczowe — nie pomijamy ich.</p>
+    <table class="kw-table">
+      <tr><th>Zabawka</th><th>Materiał</th><th>Sztuk</th><th>Cena (PLN)</th><th>Źródło</th></tr>
+      <tr><td>Worek bokserski / bop bag</td><td>Materiał</td><td>1</td><td>80–150</td><td>Allegro / Decathlon</td></tr>
+      <tr><td>Żołnierzyki</td><td>Plastik</td><td>1 zestaw</td><td>20–40</td><td>Allegro</td></tr>
+      <tr><td>Dinozaury</td><td>🪵 Drewno preferowany</td><td>1 zestaw</td><td>50–80</td><td>Allegro / sklep edukacyjny</td></tr>
+      <tr><td>Dzikie zwierzęta (lwy, tygrysy, wilki)</td><td>🪵 Drewno / guma</td><td>1 zestaw</td><td>40–70</td><td>Allegro / Schleich</td></tr>
+      <tr><td>Gumowy nóż</td><td>Guma</td><td>1</td><td>10–15</td><td>Allegro</td></tr>
+      <tr><td class="highlight">Podsumowanie kategoria 2</td><td></td><td></td><td class="highlight">200–355</td><td></td></tr>
+    </table>
+
+    <!-- ===== CATEGORY 3: CREATIVE / EXPRESSIVE ===== -->
+    <h3 class="sub-heading">3. Materiały Kreatywne / Ekspresyjne</h3>
+    <p>Arteterapia w CCPT: rysowanie, modelowanie, piaskownica. Najdroższa kategoria ze względu na sandtray.</p>
+    <table class="kw-table">
+      <tr><th>Zabawka / Materiał</th><th>Materiał</th><th>Ilość</th><th>Cena (PLN)</th><th>Źródło</th></tr>
+      <tr><td>Sandtray (skrzynka do piasku, ~60×80 cm)</td><td>🪵 Drewno</td><td>1</td><td>200–400</td><td>Stolarz na zamówienie / OLX</td></tr>
+      <tr><td>Piasek do zabawy (jałowy, 10 kg)</td><td></td><td>1</td><td>30–50</td><td>Allegro / sklep zoologiczny</td></tr>
+      <tr><td>Miniatury do sandtray (50–100 sztuk)</td><td>Mieszane</td><td>1 zestaw</td><td>200–500</td><td>Allegro / OLX / Vinted</td></tr>
+      <tr><td>Markery zmywalne</td><td></td><td>1 zestaw</td><td>30–50</td><td>Allegro / Empik</td></tr>
+      <tr><td>Kredki (woskowe + ołówkowe)</td><td></td><td>2 zestawy</td><td>40–80</td><td>Allegro / Empik</td></tr>
+      <tr><td>Kolorowe ołówki</td><td></td><td>1 zestaw</td><td>30–50</td><td>Allegro / Empik</td></tr>
+      <tr><td>Papier do rysowania (A3 + A4)</td><td></td><td>Blok</td><td>30–50</td><td>Empik / Allegro</td></tr>
+      <tr><td>Modelina / Play-Doh</td><td></td><td>3–4 zestawy</td><td>30–50</td><td>Allegro / Empik</td></tr>
+      <tr><td>Nożyczki bezpieczne + klej</td><td></td><td>1 zestaw</td><td>20–30</td><td>Empik</td></tr>
+      <tr><td>Akwarele + pędzle</td><td></td><td>1 zestaw</td><td>40–60</td><td>Allegro / Empik</td></tr>
+      <tr><td class="highlight">Podsumowanie kategoria 3</td><td></td><td></td><td class="highlight">650–1,320</td><td></td></tr>
+    </table>
+
+    <!-- ===== CATEGORY 4: CONSTRUCTION / MANIPULATIVE ===== -->
+    <h3 class="sub-heading">4. Zabawki Konstrukcyjne / Manipulacyjne</h3>
+    <p>Klocki i puzzle rozwijają motorykę małą, dają poczucie kontroli i sprawstwa.</p>
+    <table class="kw-table">
+      <tr><th>Zabawka</th><th>Materiał</th><th>Sztuk</th><th>Cena (PLN)</th><th>Źródło</th></tr>
+      <tr><td>Klocki drewniane (zestaw podstawowy)</td><td>🪵 Drewno</td><td>1</td><td>80–150</td><td>Allegro / używane OLX</td></tr>
+      <tr><td>LEGO (cegły podstawowe, nie tematyczne)</td><td>Plastik</td><td>1</td><td>100–200</td><td>Używane OLX / Vinted</td></tr>
+      <tr><td>Kafelki magnetyczne</td><td>Plastik + magnes</td><td>1</td><td>80–150</td><td>Używane OLX / Vinted</td></tr>
+      <tr><td>Puzzle (zestaw, wiek 4–12)</td><td>Karton</td><td>3–4</td><td>40–80</td><td>Empik / Allegro</td></tr>
+      <tr><td class="highlight">Podsumowanie kategoria 4</td><td></td><td></td><td class="highlight">300–580</td><td></td></tr>
+    </table>
+
+    <!-- ===== CATEGORY 5: EMOTIONAL EXPRESSION ===== -->
+    <h3 class="sub-heading">5. Narzędzia Ekspresji Emocjonalnej</h3>
+    <p>Pomoc w identyfikacji i nazywaniu uczuć — kluczowe w CCPT i terapii dzieci.</p>
+    <table class="kw-table">
+      <tr><th>Narzędzie</th><th>Materiał</th><th>Sztuk</th><th>Cena (PLN)</th><th>Źródło</th></tr>
+      <tr><td>Plakat emocji (w języku polskim)</td><td>Papier</td><td>1</td><td>20–30</td><td>Allegro / Empik</td></tr>
+      <tr><td>Karty emocji (styl Dixit)</td><td>Karton</td><td>1</td><td>50–80</td><td>Allegro / Empik</td></tr>
+      <tr><td>Lustro niezbijalne (ścienne)</td><td>Akryl</td><td>1</td><td>40–60</td><td>Allegro / IKEA</td></tr>
+      <tr><td class="highlight">Podsumowanie kategoria 5</td><td></td><td></td><td class="highlight">110–170</td><td></td></tr>
+    </table>
+
+    <!-- ===== CATEGORY 6: ROOM SETUP ===== -->
+    <h3 class="sub-heading">6. Organizacja Pokoju / Wyposażenie</h3>
+    <p>Elementy wyposażenia sali, które organizują przestrzeń i ułatwiają prowadzenie sesji.</p>
+    <table class="kw-table">
+      <tr><th>Element</th><th>Materiał</th><th>Sztuk</th><th>Cena (PLN)</th><th>Źródło</th></tr>
+      <tr><td>Niskie półki otwarte (wysokość dziecka)</td><td>🪵 Drewno</td><td>4</td><td>800–1,600</td><td>IKEA KALLAX / używane OLX</td></tr>
+      <tr><td>Stół dziecięcy + 2 krzesła (drewniane)</td><td>🪵 Drewno</td><td>1</td><td>300–500</td><td>IKEA / używane</td></tr>
+      <tr><td>Krzesło dorosłe dla terapeuty</td><td>Drewno + tkanina</td><td>2</td><td>600–1,000</td><td>IKEA / używane</td></tr>
+      <tr><td>Dywan / mata do zabawy (do prania)</td><td>Tkanina</td><td>2</td><td>300–400</td><td>IKEA / Allegro</td></tr>
+      <tr><td>Pojemniki na zabawki (podpisane)</td><td>Wiklina / tkanina</td><td>8–10</td><td>200–400</td><td>IKEA / Allegro</td></tr>
+      <tr><td>Timer wizualny (do zakończenia sesji)</td><td>Plastik</td><td>1</td><td>30–50</td><td>Allegro</td></tr>
+      <tr><td class="highlight">Podsumowanie kategoria 6</td><td></td><td></td><td class="highlight">2,230–3,950</td><td></td></tr>
+    </table>
+
+    <h3 class="sub-heading">Podsumowanie budżetu sprzętu CCPT</h3>
+    <table class="kw-table">
+      <tr><th>Kategoria</th><th>Minimum (PLN)</th><th>Optymalnie (PLN)</th></tr>
+      <tr><td>1. Codzienne / Opiekuńcze</td><td>580</td><td>1,130</td></tr>
+      <tr><td>2. Agresywne / Ekspresyjne</td><td>200</td><td>355</td></tr>
+      <tr><td>3. Kreatywne / Ekspresyjne</td><td>650</td><td>1,320</td></tr>
+      <tr><td>4. Konstrukcyjne / Manipulacyjne</td><td>300</td><td>580</td></tr>
+      <tr><td>5. Ekspresja Emocjonalna</td><td>110</td><td>170</td></tr>
+      <tr><td>6. Organizacja Pokoju</td><td>2,230</td><td>3,950</td></tr>
+      <tr><td class="highlight">RAZEM SPRZĘT CCPT</td><td class="highlight">4,070</td><td class="highlight">7,505</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Gdzie kupować używane:</strong> OLX (największy wybór zabawek drewnianych), Allegro Lokalnie, Vinted (LEGO, klocki, kukiełki), grupy na Facebooku "Zabawki drewniane używane". Drewniane zabawki z OLX to często połowa ceny nowej. LEGO i kafelki magnetyczne z Vinted — 40–60% taniej.
+    </div>
+
+    <h3 class="sub-heading">Strategia zakupowa — drewno zamiast plastiku</h3>
+    <ul class="clean">
+      <li><strong>Domek dla lalek</strong> — drewniane na OLX od 200 PLN (nowe 500–800 PLN)</li>
+      <li><strong>Kuchnia zabawkowa</strong> — drewniana IKEA/used od 150 PLN (nowa 400–700 PLN)</li>
+      <li><strong>Klocki drewniane</strong> — na OLX od 80 PLN za duży zestaw</li>
+      <li><strong>Półki KALLAX (IKEA)</strong> — 4 sztuki × 99 PLN = 396 PLN nowe (używane 50–70 PLN/szt.)</li>
+      <li><strong>Miniatury do sandtray</strong> — budować stopniowo z OLX i Allegro, nie kupować gotowych zestawów (są droższe)</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 7: TOTAL INVESTMENT BUDGET ========== -->
+<div class="section" id="budget">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">savings</span>
+    <div>
+      <div class="sec-label">Sekcja 7</div>
+      <h2>Budżet Całkowity — Podsumowanie Inwestycji</h2>
+      <div class="sub">Kaucja + pierwszy miesiąc + wykończenie + sprzęt CCPT + meble</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="budget-total">
+      <div class="amount">25,000–35,000 PLN</div>
+      <div class="label">Całkowita Inwestycja Początkowa</div>
+    </div>
+
+    <h3 class="sub-heading">Rozbicie budżetu</h3>
+    <table class="kw-table">
+      <tr><th>Kategoria</th><th>Minimum (PLN)</th><th>Optymalnie (PLN)</th></tr>
+      <tr><td>Kaucja za mieszkanie (1 miesiąc)</td><td>1,500</td><td>2,500</td></tr>
+      <tr><td>Pierwszy miesiąc czynszu</td><td>1,500</td><td>2,500</td></tr>
+      <tr><td>Malowanie / drobne wykończenie</td><td>1,600</td><td>3,000</td></tr>
+      <tr><td>Meble (sale + poczekalnia + pokój personelu)</td><td>3,300</td><td>5,850</td></tr>
+      <tr><td>Sprzęt CCPT (zabawki, sandtray, materiały artystyczne)</td><td>4,070</td><td>7,505</td></tr>
+      <tr><td>Organizacja pokoju (półki, pojemniki, dywany, timer)</td><td class="highlight">Wliczone w sprzęt CCPT</td><td></td></tr>
+      <tr><td>Drobny sprzęt biurowy (drukarka, telefon)</td><td>500</td><td>1,000</td></tr>
+      <tr><td>Identyfikacja wizualna (logo, szyld, ulotki)</td><td>800</td><td>2,000</td></tr>
+      <tr><td>Marketing startowy (Google Ads, ulotki do szkół)</td><td>1,500</td><td>3,000</td></tr>
+      <tr><td>Rezerwa (nieprzewidziane)</td><td>2,000</td><td>3,000</td></tr>
+      <tr><td class="highlight">RAZEM INWESTYCJA POCZĄTKOWA</td><td class="highlight">16,770</td><td class="highlight">30,355</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>+ Kapitał obrotowy (3 miesiące):</strong> Jeśli chcemy bufor na 3 miesiące działania przed osiągnięciem rentowności: dodaj ~15,000–22,000 PLN (czynsz + media + terapeuta). <strong>Łącznie z buforem: 32,000–52,000 PLN.</strong>
+    </div>
+
+    <h3 class="sub-heading">Porównanie z modelem v1 (zakup/remont)</h3>
+    <table class="kw-table">
+      <tr><th>Model</th><th>Inwestycja początkowa</th><th>Miesięczny koszt stały</th><th>Ryzyko</th></tr>
+      <tr><td>v1: Zakup + remont (120 m² lokal usługowy)</td><td>180,000–330,000 PLN</td><td>6,550–10,100 PLN</td><td class="vol-med">Wysokie</td></tr>
+      <tr><td class="highlight">v2: Wynajem mieszkania (Bartąg)</td><td class="highlight">17,000–30,000 PLN</td><td class="highlight">2,500–4,000 PLN</td><td class="vol-high">Niskie</td></tr>
+    </table>
+
+    <p>Różnica inwestycji początkowej: <strong>10–15× mniejsza</strong>. Miesięczne koszty stałe: <strong>2–3× niższe</strong>. To pozwala na test rynku bez dużego ryzyka finansowego.</p>
+
+    <h3 class="sub-heading">Koszty miesięczne (operacyjne)</h3>
+    <table class="kw-table">
+      <tr><th>Pozycja</th><th>Miesięcznie (PLN)</th></tr>
+      <tr><td>Czynsz</td><td>1,500–2,500</td></tr>
+      <tr><td>Media (prąd, woda, ogrzewanie, internet)</td><td>500–900</td></tr>
+      <tr><td>Ubezpieczenie OC</td><td>150–300</td></tr>
+      <tr><td>Internet / telefon</td><td>100–200</td></tr>
+      <tr><td>Uzupełnienie materiałów CCPT</td><td>100–200</td></tr>
+      <tr><td class="highlight">KOSZTY STAŁE (bez terapeuty)</td><td class="highlight">2,350–4,100</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 8: REVENUE PROJECTION ========== -->
+<div class="section" id="revenue">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">trending_up</span>
+    <div>
+      <div class="sec-label">Sekcja 8</div>
+      <h2>Prognoza Przychodu — Model Finansowy</h2>
+      <div class="sub">Ceny potwierdzone z wcp.com.pl · 2 sale terapii</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-value">250 PLN</div>
+        <div class="kpi-label">Sesja indywidualna</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">300 PLN</div>
+        <div class="kpi-label">Test MOXO</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">600 PLN</div>
+        <div class="kpi-label">Diagnostyka DIVA-5</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">15–25</div>
+        <div class="kpi-label">Sesji/tydzień docelowo</div>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">Cennik WCP (potwierdzony)</h3>
+    <table class="kw-table">
+      <tr><th>Usługa</th><th>Czas</th><th>Cena (PLN)</th></tr>
+      <tr><td>Sesja indywidualna (terapia zabawą wliczona)</td><td>50 min</td><td class="highlight">250</td></tr>
+      <tr><td>Konsultacja rodzicielska</td><td>50 min</td><td>250</td></tr>
+      <tr><td>Test MOXO</td><td>30–50 min</td><td class="highlight">300</td></tr>
+      <tr><td>Diagnostyka DIVA-5</td><td>90–150 min</td><td class="highlight">600</td></tr>
+      <tr><td>Conners-3 + MOXO (pakiet)</td><td>—</td><td>1,000</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Scenariusze przychodowe (miesięcznie)</h3>
+    <table class="kw-table">
+      <tr><th>Scenariusz</th><th>Sesji/tydzień</th><th>Przychód/mies.</th><th>Koszty stałe</th><th>Koszt terapeuty (55%)</th><th>Zysk netto (przed opodatkowaniem)</th></tr>
+      <tr><td>Start (25% obłożenia)</td><td>12–15</td><td>12,000–15,000</td><td>3,500</td><td>6,600–8,250</td><td>1,250–3,250</td></tr>
+      <tr><td class="highlight">Umiarkowany (50%)</td><td class="highlight">25–30</td><td class="highlight">25,000–30,000</td><td>3,500</td><td>13,750–16,500</td><td class="highlight">4,750–10,000</td></tr>
+      <tr><td>Docelowy (75%)</td><td>38–45</td><td>38,000–45,000</td><td>3,500</td><td>20,900–24,750</td><td>9,600–16,750</td></tr>
+      <tr><td>Pełne obłożenie</td><td>50–60</td><td>50,000–60,000</td><td>3,500</td><td>27,500–33,000</td><td>13,500–23,500</td></tr>
+    </table>
+
+    <h3 class="sub-heading">Próg opłacalności</h3>
+    <div class="callout">
+      <strong>Próg opłacalności miesięczny:</strong> ~14 sesji/miesiąc (średnia 250 PLN/sesja = 3,500 PLN przychodu) pokrywa koszty stałe (czynsz + media). Z terapeutą (55%): ~30 sesji/miesiąc = 7,500 PLN pokrywa koszty stałe + terapeuta. <strong>To ~7–8 sesji/tydzień — osiągalne w miesiąc 2–3.</strong>
+    </div>
+
+    <h3 class="sub-heading">Prognoza roczna (Rok 1)</h3>
+    <table class="kw-table">
+      <tr><th>Kwartał</th><th>Sesji/tydzień</th><th>Przychód kwart.</th><th>Komentarz</th></tr>
+      <tr><td>Q1 (Miesiąc 1–3)</td><td>8–12</td><td>26,000–39,000 PLN</td><td>Budowa bazy pacjentów, skierowania ze szkół</td></tr>
+      <tr><td>Q2 (Miesiąc 4–6)</td><td>15–20</td><td>49,000–65,000 PLN</td><td>Rosnąca rejestracja, szeptanka</td></tr>
+      <tr><td>Q3 (Miesiąc 7–9)</td><td>22–30</td><td>72,000–97,500 PLN</td><td>Stabilny przepływ, diagnostyka rośnie</td></tr>
+      <tr><td>Q4 (Miesiąc 10–12)</td><td>25–35</td><td class="highlight">81,000–114,000 PLN</td><td>Ugruntowana pozycja, pakiety diagnostyczne</td></tr>
+      <tr><td class="highlight">ROK 1 RAZEM</td><td></td><td class="highlight">228,000–315,500 PLN</td><td></td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 9: ECHARTS VISUAL ANALYTICS ========== -->
+<div class="section" id="charts">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">analytics</span>
+    <div>
+      <div class="sec-label">Sekcja 9</div>
+      <h2>Analiza Wizualna — Wykresy Interaktywne</h2>
+      <div class="sub">Projekcja ROI, przepływ pacjentów, wykorzystanie mocy, przychody i struktura inwestycji</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <!-- ===== CHART 1: ROI PROJECTION ===== -->
+    <h3 class="sub-heading">Projekcja ROI Rozwoju — 24 Miesiące</h3>
+    <p>Wykres obszarowy pokazuje akumulację kosztów inwestycyjnych vs. przychodów. Punkt przecięcia = moment progu opłacalności, po którym inwestycja generuje zysk.</p>
+    <div id="chart-roi" class="echarts-chart-box tall"></div>
+
+    <!-- ===== CHART 2: PATIENT FLOW SANKEY ===== -->
+    <h3 class="sub-heading">Przepływ Pacjentów — Migracja do Bartąg</h3>
+    <p>Diagram Sankey ilustruje skąd pochodzą pacjenci nowej lokalizacji: migracja z istniejących klinik WCP + nowi pacjenci z rejonu Bartąg/Stawiguda.</p>
+    <div id="chart-sankey" class="echarts-chart-box tall"></div>
+
+    <!-- ===== CHART 3 + 4: GAUGE + PIE GRID ===== -->
+    <h3 class="sub-heading">Wykorzystanie Mocy i Struktura Inwestycji</h3>
+    <div class="echarts-grid">
+      <div>
+        <p style="font-size:.84rem;color:var(--muted);margin-bottom:6px">Wskaźnik wykorzystania mocy — obecne kliniki vs. projekcja z Bartąg</p>
+        <div id="chart-gauge" class="echarts-chart-box"></div>
+      </div>
+      <div>
+        <p style="font-size:.84rem;color:var(--muted);margin-bottom:6px">Podział inwestycji początkowej — Bartąg (25,000–35,000 PLN)</p>
+        <div id="chart-pie" class="echarts-chart-box"></div>
+      </div>
+    </div>
+
+    <!-- ===== CHART 5: REVENUE BY LOCATION ===== -->
+    <h3 class="sub-heading">Przychody wg Lokalizacji — Projekcja 12 Miesięcy</h3>
+    <p>Skumulowany wykres słupkowy: istniejące kliniki (Olsztyn, Elbląg, Ostróda) + prognoza nowej lokalizacji Bartąg. Wzrost w czasie od otwarcia.</p>
+    <div id="chart-revenue" class="echarts-chart-box tall"></div>
+
+  </div>
+</div>
+
+<!-- ========== SECTION 10: NEXT STEPS ========== -->
+<div class="section" id="next-steps">
+  <div class="section-header">
+    <span class="icon material-symbols-outlined">flag</span>
+    <div>
+      <div class="sec-label">Sekcja 10</div>
+      <h2>Następne Kroki — Plan Działania</h2>
+      <div class="sub">Konkretne akcje z priorytetami</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 class="sub-heading">Tydzień 1 — Natychmiastowe akcje</h3>
+    <div class="funnel-step">
+      <div class="step-num">1</div>
+      <div class="step-content"><h4>Skontaktuj się z ofertą #3 (57 m², 3-pokojowe)</h4><p>Najlepsza z dostępnych — 57 m², 3 pokoje, układ mieszkania pasuje do wymagań. Umów oględziny.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">2</div>
+      <div class="step-content"><h4>Ustaw alerty OLX / Otodom</h4><p>"Mieszkanie na wynajem Bartąg", "Mieszkanie Stawiguda", "3 pokoje Olsztyn południe". Powiadomienia na email.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">3</div>
+      <div class="step-content"><h4>Skontaktuj się z agentami nieruchomości</h4><p>Agenci w Olsztynie specjalizujący się w wynajmie mieszkań. Opisz wymagania: 50–60 m², 3 pokoje, Bartąg/Stawiguda, zgoda na działalność.</p></div>
+    </div>
+
+    <h3 class="sub-heading">Tydzień 2 — Oględziny i weryfikacja</h3>
+    <div class="funnel-step">
+      <div class="step-num">4</div>
+      <div class="step-content"><h4>Obejrzyj 2–3 mieszkania</h4><p>Sprawdź układ pokoi, parking, hałas, sąsiadów. Zrób zdjęcia. Oceń ile malowania potrzebne.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">5</div>
+      <div class="step-content"><h4>Porozmawiaj z właścicielem o działalności</h4><p>Czy zgadza się na wpis działalności gospodarczej pod adresem? To kluczowe — bez tego nie podpisujemy umowy.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">6</div>
+      <div class="step-content"><h4>Zacznij rekrutację terapeuty CCPT</h4><p>Poszukaj certyfikowanego terapeuty zabawą z dostępnością 20–30 godzin/tydzień. To wąskie gardło — zacznij już teraz.</p></div>
+    </div>
+
+    <h3 class="sub-heading">Tydzień 3–4 — Umowa i zamówienia</h3>
+    <div class="funnel-step">
+      <div class="step-num">7</div>
+      <div class="step-content"><h4>Podpisz umowę najmu</h4><p>Negocjuj: kaucja 1 miesiąc, długość 2–3 lata, zgoda na działalność, klauzula o rozwiązaniu z miesięcznym okresem wypowiedzenia.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">8</div>
+      <div class="step-content"><h4>Zamów malowanie</h4><p>2–3 dni pracy. Kolory: biały/jasny w salach terapii, neutralny w korytarzu. Farby bezwonne (dzieci!).</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">9</div>
+      <div class="step-content"><h4>Zamów meble IKEA</h4><p>Półki KALLAX, stół i krzesła, krzesła do poczekalni, pojemniki. Dostawa 2–3 dni. Montaż 1 dzień.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">10</div>
+      <div class="step-content"><h4>Kup zabawki CCPT</h4><p>Używane z OLX/Allegro (domek, kuchnia, LEGO, klocki drewniane) + nowe z Empik/Allegro (farby, kredki, modelina). Sandtray na zamówienie u stolarza. Budżet: 4,000–7,500 PLN.</p></div>
+    </div>
+
+    <h3 class="sub-heading">Tydzień 5–6 — Start</h3>
+    <div class="funnel-step">
+      <div class="step-num">11</div>
+      <div class="step-content"><h4>Otwarcie</h4><p>Ustawienie zabawek, organizacja sal, testy oświetlenia. Sesje próbne z własnymi dziećmi / znajomymi.</p></div>
+    </div>
+    <div class="funnel-step">
+      <div class="step-num">12</div>
+      <div class="step-content"><h4>Marketing lokalny</h4><p>Ulotki do szkół w Bartągu/Stawigudzie, post na FB lokalne grupy, Google Business Profile z nowym adresem, aktualizacja wcp.com.pl.</p></div>
+    </div>
+
+    <h3 class="sub-heading">Oś czasu — podsumowanie</h3>
+    <table class="kw-table">
+      <tr><th>Krok</th><th>Czas</th><th>Koszt</th></tr>
+      <tr><td>Oględziny + wybór lokalu</td><td>Tydzień 1–2</td><td>0 PLN</td></tr>
+      <tr><td>Podpisanie umowy (kaucja + 1. miesiąc)</td><td>Tydzień 2–3</td><td>3,000–5,000 PLN</td></tr>
+      <tr><td>Malowanie</td><td>Tydzień 3–4</td><td>1,600–3,000 PLN</td></tr>
+      <tr><td>Meble + sprzęt CCPT</td><td>Tydzień 3–5</td><td>7,370–13,355 PLN</td></tr>
+      <tr><td>Organizacja + testy</td><td>Tydzień 5</td><td>0–500 PLN</td></tr>
+      <tr><td>Start sesji</td><td>Tydzień 6</td><td>—</td></tr>
+      <tr><td class="highlight">RAZEM</td><td class="highlight">6 tygodni</td><td class="highlight">~17,000–30,000 PLN</td></tr>
+    </table>
+
+    <div class="callout">
+      <strong>Od decyzji do pierwszej sesji: ~6 tygodni.</strong> To możliwe dzięki modelowi wynajmu — bez remontów, bez pozwolen, bez czekania na dewelopera. Szybki start = szybki przepływ gotówki.
+    </div>
+
+  </div>
+</div>
+
+</div>
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(77,70,55,.3)">
+      <a href="WCP-Strategic-Intelligence-Report-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">description</span> Powrót do Raportu Strategicznego →
+      </a>
+      <a href="ANIMA-COUNTER-STRATEGY-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">shield</span> Strategia Przeciwdziałania ANIMA →
+      </a>
+      <a href="SOCIAL-MEDIA-ACTIVATION-REPORT-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">smartphone</span> Aktywacja Social Media →
+      </a>
+      <a href="WCP_Financial_Health_Report_2026-PL.html" class="sub-report-link">
+        <span class="material-symbols-outlined" style="font-size:.9rem">account_balance</span> Raport Zdrowia Finansowego →
+      </a>
+    </div>
+
+</main>
+<script>
+// Scroll spy
+const sections = document.querySelectorAll('.section, .cover-section');
+const navLinks = document.querySelectorAll('.nav-link');
+const topnavSection = document.getElementById('topnav-section');
+const sectionNames = {
+  'cover': 'Przegląd',
+  'brief': 'Wytyczne Karoliny',
+  'location': 'Bartąg',
+  'space': 'Wymagania Lokalu',
+  'rental': 'Rynek Wynajmu',
+  'fitout': 'Wykończenie',
+  'ccpt': 'Sprzęt CCPT',
+  'budget': 'Budżet Całkowity',
+  'revenue': 'Prognoza Przychodu',
+  'charts': 'Analiza Wizualna',
+  'next-steps': 'Następne Kroki'
+};
+
+function onScroll() {
+  let current = 'cover';
+  sections.forEach(s => {
+    const top = s.getBoundingClientRect().top;
+    if (top <= 120) current = s.id;
+  });
+  navLinks.forEach(l => {
+    l.classList.toggle('active', l.dataset.section === current);
+    if (l.dataset.section === current) {
+      topnavSection.textContent = sectionNames[current] || current;
+    }
+  });
+}
+document.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+// Smooth scroll
+navLinks.forEach(l => {
+  l.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(l.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ===== ECharts Initialization =====
+function initAllCharts() {
+  // ===== CHART 1: ROI PROJECTION (Area Chart) =====
+  const roiChart = echarts.init(document.getElementById('chart-roi'), 'stitch');
+  const months = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13','M14','M15','M16','M17','M18','M19','M20','M21','M22','M23','M24'];
+  // Cumulative investment: initial 30k + monthly costs (3250/mo avg)
+  const investment = [30000,33250,36500,39750,43000,46250,49500,52750,56000,59250,62500,65750,69000,72250,75500,78750,82000,85250,88500,91750,95000,98250,101500,104750];
+  // Cumulative revenue
+  const revenue = [3000,9000,18000,30000,43500,58500,75000,93000,112500,135000,159000,185000,212500,241500,272250,304750,339000,375000,412500,451500,492000,534000,577500,622500];
+  const net = revenue.map((r,i) => r - investment[i]);
+
+  roiChart.setOption({
+    title: { text: 'Projekcja ROI \u2014 24 Miesi\u0105ce (PLN)', left: 'center', top: 10 },
+    tooltip: { trigger: 'axis', axisPointer: { type: 'cross' },
+      formatter: function(params) {
+        let s = '<b>' + params[0].axisValue + '</b><br/>';
+        params.forEach(p => { s += p.marker + ' ' + p.seriesName + ': <b>' + p.value.toLocaleString('pl-PL') + ' PLN</b><br/>'; });
+        const mIdx = params[0].dataIndex;
+        s += '<br/><b>Saldo netto: ' + net[mIdx].toLocaleString('pl-PL') + ' PLN</b>';
+        return s;
+      }
+    },
+    legend: { data: ['Nak\u0142ady skumulowane','Przychody skumulowane','Saldo netto'], bottom: 0 },
+    grid: { left: 70, right: 30, top: 60, bottom: 50 },
+    xAxis: { type: 'category', data: months, boundaryGap: false },
+    yAxis: { type: 'value', axisLabel: { formatter: function(v) { return (v/1000).toFixed(0) + 'k'; } } },
+    series: [
+      {
+        name: 'Nak\u0142ady skumulowane', type: 'line', data: investment,
+        lineStyle: { color: '#f08080', width: 2, type: 'dashed' },
+        itemStyle: { color: '#f08080' }, symbol: 'none',
+        areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(240,128,128,0.15)'},{offset:1,color:'rgba(240,128,128,0.01)'}]) }
+      },
+      {
+        name: 'Przychody skumulowane', type: 'line', data: revenue,
+        lineStyle: { color: '#6fcf97', width: 3 },
+        itemStyle: { color: '#6fcf97' }, symbol: 'none',
+        areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(111,207,151,0.35)'},{offset:1,color:'rgba(111,207,151,0.02)'}]) },
+        markPoint: {
+          data: [{
+            name: 'Próg opłacalności',
+            coord: [4, 43500],
+            symbol: 'pin', symbolSize: 50,
+            itemStyle: { color: '#e6c364' },
+            label: { show: true, formatter: 'Próg opłacalności\nM5', color: '#101418', fontWeight: 700, fontSize: 11 }
+          }]
+        },
+        markLine: {
+          silent: true, lineStyle: { color: '#e6c364', type: 'dashed', width: 1 },
+          data: [{ yAxis: 43000, label: { formatter: 'Nak\u0142ady pocz\u0105tkowe', color: '#e6c364', fontSize: 10 } }]
+        }
+      },
+      {
+        name: 'Saldo netto', type: 'line', data: net,
+        lineStyle: { color: '#e6c364', width: 2 },
+        itemStyle: { color: '#e6c364' }, symbol: 'none',
+        areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(230,195,100,0.25)'},{offset:1,color:'rgba(230,195,100,0.01)'}]) }
+      }
+    ],
+    animationDuration: 2000, animationEasing: 'cubicOut'
+  });
+
+  // ===== CHART 2: PATIENT FLOW SANKEY =====
+  const sankeyChart = echarts.init(document.getElementById('chart-sankey'), 'stitch');
+  sankeyChart.setOption({
+    title: { text: 'Przep\u0142yw Pacjent\u00f3w \u2014 \u0179r\u00f3d\u0142a \u2192 Bart\u0105g', left: 'center', top: 10 },
+    tooltip: { trigger: 'item', formatter: function(p) { return p.name + ': <b>' + p.value + '</b> pacjent\u00f3w/mies.'; } },
+    series: [{
+      type: 'sankey',
+      left: 40, right: 40, top: 60, bottom: 20,
+      nodeWidth: 22, nodeGap: 14,
+      layoutIterations: 32,
+      orient: 'horizontal',
+      label: { color: '#e0e3e8', fontSize: 12, fontFamily: 'Inter, Manrope, sans-serif' },
+      lineStyle: { color: 'gradient', curveness: 0.5, opacity: 0.35 },
+      emphasis: { focus: 'adjacency' },
+      data: [
+        { name: 'WCP Olsztyn' },
+        { name: 'WCP Elbl\u0105g' },
+        { name: 'WCP Ostr\u00f3da' },
+        { name: 'Skierowania szk\u00f3\u0142' },
+        { name: 'Nowi pacjenci' },
+        { name: 'Szeptanka/Grupa FB' },
+        { name: 'Google/Strona WCP' },
+        { name: 'Sala CCPT 1' },
+        { name: 'Sala CCPT 2' },
+        { name: 'Diagnostyka MOXO' },
+        { name: 'Konsultacje rodzic\u00f3w' }
+      ],
+      links: [
+        { source: 'WCP Olsztyn', target: 'Sala CCPT 1', value: 12 },
+        { source: 'WCP Olsztyn', target: 'Diagnostyka MOXO', value: 5 },
+        { source: 'WCP Elbl\u0105g', target: 'Sala CCPT 2', value: 4 },
+        { source: 'WCP Ostr\u00f3da', target: 'Sala CCPT 2', value: 3 },
+        { source: 'Skierowania szk\u00f3\u0142', target: 'Sala CCPT 1', value: 10 },
+        { source: 'Skierowania szk\u00f3\u0142', target: 'Diagnostyka MOXO', value: 4 },
+        { source: 'Nowi pacjenci', target: 'Sala CCPT 1', value: 8 },
+        { source: 'Nowi pacjenci', target: 'Sala CCPT 2', value: 6 },
+        { source: 'Szeptanka/Grupa FB', target: 'Sala CCPT 2', value: 5 },
+        { source: 'Szeptanka/Grupa FB', target: 'Konsultacje rodzic\u00f3w', value: 4 },
+        { source: 'Google/Strona WCP', target: 'Sala CCPT 1', value: 6 },
+        { source: 'Google/Strona WCP', target: 'Sala CCPT 2', value: 3 },
+        { source: 'Google/Strona WCP', target: 'Diagnostyka MOXO', value: 3 },
+        { source: 'Google/Strona WCP', target: 'Konsultacje rodzic\u00f3w', value: 3 }
+      ],
+      itemStyle: { borderWidth: 0 }
+    }],
+    animationDuration: 1800, animationEasing: 'cubicInOut'
+  });
+
+  // ===== CHART 3: CAPACITY UTILIZATION GAUGE =====
+  const gaugeChart = echarts.init(document.getElementById('chart-gauge'), 'stitch');
+  gaugeChart.setOption({
+    title: { text: 'Wykorzystanie Mocy Przychodowych', left: 'center', top: 5, textStyle: { fontSize: 13 } },
+    series: [
+      {
+        type: 'gauge', center: ['50%', '65%'], radius: '85%',
+        startAngle: 180, endAngle: 0,
+        min: 0, max: 100,
+        splitNumber: 5,
+        axisLine: {
+          lineStyle: {
+            width: 18,
+            color: [[0.3, '#f08080'], [0.6, '#f5c842'], [0.8, '#e6c364'], [1, '#6fcf97']]
+          }
+        },
+        pointer: { icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z', length: '55%', width: 8, offsetCenter: [0, '-10%'], itemStyle: { color: '#e6c364' } },
+        axisTick: { length: 6, lineStyle: { color: 'auto', width: 1 } },
+        splitLine: { length: 14, lineStyle: { color: 'auto', width: 2 } },
+        axisLabel: { color: '#8a9bb0', fontSize: 10, distance: -30, formatter: '{value}%' },
+        title: { offsetCenter: [0, '15%'], fontSize: 12, color: '#8a9bb0' },
+        detail: { fontSize: 28, offsetCenter: [0, '-5%'], color: '#6fcf97', formatter: '{value}%', fontWeight: 700,
+          valueAnimation: true, animationDuration: 2000 },
+        data: [{ value: 72, name: 'Z Bart\u0105g (proj.)' }]
+      },
+      {
+        type: 'gauge', center: ['50%', '65%'], radius: '65%',
+        startAngle: 180, endAngle: 0,
+        min: 0, max: 100,
+        axisLine: { lineStyle: { width: 10, color: [[1, 'rgba(77,70,55,0.35)']] } },
+        pointer: { show: false },
+        axisTick: { show: false },
+        splitLine: { show: false },
+        axisLabel: { show: false },
+        title: { show: false },
+        detail: { show: false },
+        data: [{ value: 55 }]
+      }
+    ],
+    graphic: [
+      { type: 'text', left: 'center', bottom: 10, style: { text: 'Obecne kliniki: 55%  |  Z Bart\u0105g: 72%', fill: '#8a9bb0', fontSize: 11, fontFamily: 'Inter' } }
+    ]
+  });
+
+  // ===== CHART 4: INVESTMENT BREAKDOWN PIE =====
+  const pieChart = echarts.init(document.getElementById('chart-pie'), 'stitch');
+  pieChart.setOption({
+    title: { text: 'Struktura Inwestycji Pocz\u0105tkowej', left: 'center', top: 5, textStyle: { fontSize: 13 } },
+    tooltip: { trigger: 'item', formatter: '{b}: <b>{c}</b> PLN ({d}%)' },
+    legend: { orient: 'horizontal', bottom: 0, textStyle: { fontSize: 10 }, itemWidth: 12, itemHeight: 12 },
+    series: [{
+      type: 'pie',
+      radius: ['35%', '68%'],
+      center: ['50%', '48%'],
+      avoidLabelOverlap: true,
+      itemStyle: { borderRadius: 6, borderColor: '#101418', borderWidth: 2 },
+      label: {
+        show: true, formatter: '{b}\n{d}%', color: '#e0e3e8', fontSize: 10, lineHeight: 14
+      },
+      emphasis: {
+        label: { show: true, fontSize: 13, fontWeight: 700 },
+        itemStyle: { shadowBlur: 12, shadowOffsetX: 0, shadowColor: 'rgba(230,195,100,0.4)' }
+      },
+      data: [
+        { value: 5000, name: 'Czynsz + kaucja', itemStyle: { color: '#e6c364' } },
+        { value: 3000, name: 'Malowanie / wyko\u0144czenie', itemStyle: { color: '#f5c842' } },
+        { value: 5850, name: 'Meble', itemStyle: { color: '#eb984e' } },
+        { value: 7505, name: 'Sprz\u0119t CCPT', itemStyle: { color: '#6fcf97' } },
+        { value: 3000, name: 'Marketing startowy', itemStyle: { color: '#7bc8e0' } },
+        { value: 6000, name: 'Rezerwa / inne', itemStyle: { color: '#c39bd3' } }
+      ],
+      animationType: 'scale',
+      animationEasing: 'elasticOut',
+      animationDuration: 2000
+    }]
+  });
+
+  // ===== CHART 5: REVENUE BY LOCATION STACKED BAR =====
+  const revChart = echarts.init(document.getElementById('chart-revenue'), 'stitch');
+  const revMonths = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
+  const olsztyn =   [42000,42000,43000,43000,44000,44000,45000,45000,46000,46000,47000,47000];
+  const elblag =    [18000,18000,18500,18500,19000,19000,19500,19500,20000,20000,20500,20500];
+  const ostroda =   [10000,10000,10500,10500,11000,11000,11500,11500,12000,12000,12500,12500];
+  const bartag =    [3000,9000,18000,30000,37500,45000,52500,60000,67500,75000,82500,90000];
+
+  revChart.setOption({
+    title: { text: 'Przychody wg Lokalizacji \u2014 Pierwszy Rok (PLN)', left: 'center', top: 10 },
+    tooltip: { trigger: 'axis',
+      formatter: function(params) {
+        let s = '<b>' + params[0].axisValue + '</b><br/>';
+        let total = 0;
+        params.forEach(p => { total += p.value; s += p.marker + ' ' + p.seriesName + ': <b>' + p.value.toLocaleString('pl-PL') + '</b><br/>'; });
+        s += '<br/><b>Razem: ' + total.toLocaleString('pl-PL') + ' PLN</b>';
+        return s;
+      }
+    },
+    legend: { data: ['Olsztyn','Elbl\u0105g','Ostr\u00f3da','Bart\u0105g (proj.)'], bottom: 0 },
+    grid: { left: 70, right: 30, top: 50, bottom: 50 },
+    xAxis: { type: 'category', data: revMonths },
+    yAxis: { type: 'value', axisLabel: { formatter: function(v) { return (v/1000).toFixed(0) + 'k'; } } },
+    series: [
+      { name: 'Olsztyn', type: 'bar', stack: 'revenue', data: olsztyn,
+        itemStyle: { color: '#5dade2', borderRadius: [0,0,0,0] }, emphasis: { focus: 'series' } },
+      { name: 'Elbl\u0105g', type: 'bar', stack: 'revenue', data: elblag,
+        itemStyle: { color: '#7bc8e0', borderRadius: [0,0,0,0] }, emphasis: { focus: 'series' } },
+      { name: 'Ostr\u00f3da', type: 'bar', stack: 'revenue', data: ostroda,
+        itemStyle: { color: '#f5c842', borderRadius: [0,0,0,0] }, emphasis: { focus: 'series' } },
+      { name: 'Bart\u0105g (proj.)', type: 'bar', stack: 'revenue', data: bartag,
+        itemStyle: { color: '#6fcf97', borderRadius: [3,3,0,0] },
+        emphasis: { focus: 'series' },
+        markLine: {
+          silent: true, symbol: 'none',
+          lineStyle: { color: '#e6c364', type: 'dashed', width: 1 },
+          label: { formatter: 'Otwarcie Bart\u0105g', color: '#e6c364', fontSize: 10 },
+          data: [{ xAxis: 0 }]
+        }
+      }
+    ],
+    animationDuration: 2000, animationEasing: 'cubicOut'
+  });
+
+  // Responsive resize
+  window.addEventListener('resize', function() {
+    roiChart.resize();
+    sankeyChart.resize();
+    gaugeChart.resize();
+    pieChart.resize();
+    revChart.resize();
+  });
+}
+
+// Wait for DOM + theme
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAllCharts);
+} else {
+  initAllCharts();
+}
+</script>
+
+</body>
+</html>
