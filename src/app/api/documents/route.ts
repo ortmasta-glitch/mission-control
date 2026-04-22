@@ -21,17 +21,50 @@ const ACCEPTED_MIME_TYPES: Record<string, string[]> = {
 };
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-const BLOCKED_EXTENSIONS = ['.exe', '.bat', '.cmd', '.ps1', '.sh', '.js', '.vbs', '.wsf', '.msi', '.dll', '.com', '.scr'];
+const BLOCKED_EXTENSIONS = ['.exe', '.bat', '.cmd', '.ps1', '.sh', '.js', '.vbs', '.wsf', '.msi', '.dll', '.com', '.scr', '.html', '.htm', '.svg', '.xml', '.php', '.py', '.rb', '.pl', '.jar', '.class'];
+
+/** MIME type → allowed extensions for cross-validation */
+const MIME_TO_EXTENSIONS: Record<string, string[]> = {
+  'text/csv': ['.csv'],
+  'application/vnd.ms-excel': ['.xls', '.csv'],
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
+  'application/pdf': ['.pdf'],
+  'application/msword': ['.doc'],
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+};
 
 function hasPathTraversal(filename: string): boolean {
   const normalized = filename.replace(/\\/g, '/');
-  return normalized.includes('..') || normalized.startsWith('/') || /^[a-zA-Z]:/.test(normalized);
+  if (normalized.includes('..')) return true;
+  if (normalized.startsWith('/')) return true;
+  if (/^[a-zA-Z]:/.test(normalized)) return true;
+  if (normalized.includes('\0')) return true;
+  if (/%2e%2e|%252e/i.test(normalized)) return true; // URL-encoded traversal
+  return false;
 }
 
 function sanitizeFilename(filename: string): string {
   let safe = path.basename(filename).replace(/\0/g, '').replace(/^\./, '_');
   safe = safe.replace(/[/\\]/g, '_');
+  safe = safe.replace(/[\x00-\x1f\x7f]/g, ''); // Strip control characters
+  if (safe.length > 255) {
+    const ext = path.extname(safe);
+    safe = safe.substring(0, 255 - ext.length) + ext;
+  }
   return safe;
+}
+
+/** Validate MIME type and extension are consistent */
+function validateMimeExtensionConsistency(mimeType: string | null, extension: string): string | null {
+  if (!mimeType || mimeType === 'application/octet-stream') return null;
+  const allowedExts = MIME_TO_EXTENSIONS[mimeType];
+  if (!allowedExts) return null; // MIME not in mapping — allowed (category allowlist handles it)
+  if (!allowedExts.includes(extension.toLowerCase())) {
+    return `File extension "${extension}" doesn't match MIME type "${mimeType}". Expected: ${allowedExts.join(', ')}`;
+  }
+  return null;
 }
 
 function ensureCategoryDir(category: string): string {
@@ -71,22 +104,59 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `Invalid category. Must be one of: ${VALID_CATEGORIES.join(', ')}` }, { status: 400 });
     }
 
+    const ext = path.extname(file.name).toLowerCase();
     const acceptedMimes = ACCEPTED_MIME_TYPES[category] || [];
-    if (acceptedMimes.length > 0 && file.type && !acceptedMimes.includes(file.type) && file.type !== 'application/octet-stream') {
-      return NextResponse.json({ error: `File type "${file.type}" not accepted for ${category}. Accepted: ${acceptedMimes.join(', ')}` }, { status: 400 });
+
+    // Extension-based MIME fallback for Excel and Word files
+    const EXT_TO_MIME: Record<string, string> = {
+      '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      '.xls': 'application/vnd.ms-excel',
+      '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      '.doc': 'application/msword',
+      '.csv': 'text/csv',
+      '.pdf': 'application/pdf',
+    };
+
+    // Security: blocked extensions checked FIRST (before any other processing)
+    if (BLOCKED_EXTENSIONS.includes(ext)) {
+      return NextResponse.json({ error: `File extension "${ext}" is not allowed for security reasons.` }, { status: 400 });
     }
 
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: `File too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximum is ${MAX_FILE_SIZE / 1024 / 1024} MB.` }, { status: 400 });
+    // Security: must have a recognized extension
+    if (!ext || ext.length < 2) {
+      return NextResponse.json({ error: 'File must have a recognized extension (e.g., .xlsx, .csv, .pdf).' }, { status: 400 });
     }
 
+    // Security: path traversal check
     if (hasPathTraversal(file.name)) {
       return NextResponse.json({ error: 'Invalid filename: path traversal characters not allowed.' }, { status: 400 });
     }
 
-    const ext = path.extname(file.name).toLowerCase();
-    if (BLOCKED_EXTENSIONS.includes(ext)) {
-      return NextResponse.json({ error: `File extension "${ext}" is not allowed for security reasons.` }, { status: 400 });
+    // Security: reject zero-length files
+    if (file.size === 0) {
+      return NextResponse.json({ error: 'Empty file. Please upload a file with content.' }, { status: 400 });
+    }
+
+    // Security: file size check
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json({ error: `File too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximum is ${MAX_FILE_SIZE / 1024 / 1024} MB.` }, { status: 400 });
+    }
+
+    // Determine effective MIME type
+    const fileType = file.type || EXT_TO_MIME[ext] || null;
+
+    // Validate MIME type is accepted for this category
+    if (acceptedMimes.length > 0 && fileType && !acceptedMimes.includes(fileType) && fileType !== 'application/octet-stream') {
+      return NextResponse.json({ error: `File type "${fileType}" not accepted for ${category}. Accepted: ${acceptedMimes.join(', ')}` }, { status: 400 });
+    }
+
+    // Security: cross-validate MIME type and extension consistency (warn, don't block)
+    if (fileType && ext) {
+      const mimeMismatch = validateMimeExtensionConsistency(fileType, ext);
+      if (mimeMismatch) {
+        console.warn(`[documents POST] MIME/extension mismatch: ${mimeMismatch}`);
+        // In strict mode, you could block here. For now, log warning only.
+      }
     }
 
     const safeOriginalName = sanitizeFilename(file.name);
@@ -196,6 +266,16 @@ export async function POST(request: NextRequest) {
       db.prepare('UPDATE documents SET parse_status = ?, parse_error = ? WHERE id = ?').run(parse_status, parse_error, id);
     } catch (updateErr) {
       console.warn('[documents POST] Could not update parse_status:', updateErr);
+    }
+
+    // Fallback: categories without parsers get 'success' status (file stored, no parsing needed)
+    if (!parse_status) {
+      parse_status = 'success';
+      try {
+        db.prepare('UPDATE documents SET parse_status = ? WHERE id = ?').run(parse_status, id);
+      } catch (updateErr) {
+        console.warn('[documents POST] Could not set fallback status:', updateErr);
+      }
     }
 
     const doc = db.prepare('SELECT * FROM documents WHERE id = ?').get(id);

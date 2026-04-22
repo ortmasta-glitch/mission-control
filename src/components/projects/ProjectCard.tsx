@@ -10,7 +10,9 @@ import {
   ChevronRight,
   User,
   Calendar,
-  ExternalLink
+  ExternalLink,
+  AlertCircle,
+  AlertTriangle
 } from 'lucide-react';
 
 interface Project {
@@ -60,6 +62,43 @@ export function ProjectCard({ project }: ProjectCardProps) {
     paused: 'Paused',
   };
 
+  // Traffic light calculation based on project health
+  function getTrafficLight() {
+    // For active projects, determine health based on various factors
+    if (project.status === 'completed') {
+      return { color: 'green', icon: CheckCircle2, label: 'Complete' };
+    }
+    
+    if (project.status === 'paused') {
+      return { color: 'red', icon: AlertCircle, label: 'Blocked' };
+    }
+    
+    if (project.status === 'planning') {
+      return { color: 'amber', icon: Clock, label: 'Planning' };
+    }
+    
+    // Calculate days since update
+    const daysSinceUpdate = Math.floor(
+      (new Date().getTime() - new Date(project.updatedAt).getTime()) / (1000 * 60 * 60 * 24)
+    );
+    
+    // Red: No activity for 7+ days
+    if (daysSinceUpdate >= 7) {
+      return { color: 'red', icon: AlertCircle, label: 'Stale' };
+    }
+    
+    // Amber: No activity for 3+ days
+    if (daysSinceUpdate >= 3) {
+      return { color: 'amber', icon: AlertTriangle, label: 'Warning' };
+    }
+    
+    // Green: Active within 3 days
+    return { color: 'green', icon: CheckCircle2, label: 'On Track' };
+  }
+
+  const trafficLight = getTrafficLight();
+  const TrafficIcon = trafficLight.icon;
+
   const completionPercent = project.totalTasks 
     ? Math.round((project.completedTasks / project.totalTasks) * 100) 
     : 0;
@@ -90,9 +129,27 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
+              {/* Traffic Light */}
+              <div className={`w-3 h-3 rounded-full ${
+                trafficLight.color === 'green' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' :
+                trafficLight.color === 'amber' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]' :
+                'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]'
+              }`} title={trafficLight.label} />
+              
               <h3 className="text-lg font-semibold text-[#e0e4e8]">{project.name}</h3>
+              
               <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full border ${statusColors[project.status]}`}>
                 {statusLabels[project.status]}
+              </span>
+              
+              {/* Traffic Light Label */}
+              <span className={`text-xs flex items-center gap-1 ${
+                trafficLight.color === 'green' ? 'text-green-400' :
+                trafficLight.color === 'amber' ? 'text-amber-400' :
+                'text-red-400'
+              }`}>
+                <TrafficIcon className="w-3.5 h-3.5" />
+                {trafficLight.label}
               </span>
             </div>
             

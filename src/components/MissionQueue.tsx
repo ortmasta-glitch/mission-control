@@ -19,17 +19,17 @@ interface MissionQueueProps {
 type SourceFilter = 'all' | 'autonomous' | 'manual';
 
 const COLUMNS: { id: TaskStatus; label: string; color: string }[] = [
-  { id: 'planning', label: '📋 Planning', color: 'border-t-mc-accent-purple' },
+  { id: 'planning', label: '📋 Planning', color: 'border-t-[var(--gold)]' },
   { id: 'pending_approval', label: '⏳ Pending Approval', color: 'border-t-amber-400' },
-  { id: 'inbox', label: 'Inbox', color: 'border-t-mc-accent-pink' },
+  { id: 'inbox', label: 'Inbox', color: 'border-t-[var(--gold-dim)]' },
   { id: 'paused', label: '⏸️ Paused', color: 'border-t-slate-400' },
-  { id: 'assigned', label: 'Assigned', color: 'border-t-mc-accent-yellow' },
-  { id: 'in_progress', label: 'In Progress', color: 'border-t-mc-accent' },
+  { id: 'assigned', label: 'Assigned', color: 'border-t-[#4BA3C3]' },
+  { id: 'in_progress', label: 'In Progress', color: 'border-t-[var(--gold)]' },
   { id: 'convoy_active', label: '🚚 Convoy', color: 'border-t-cyan-400' },
-  { id: 'testing', label: 'Testing', color: 'border-t-mc-accent-cyan' },
-  { id: 'review', label: 'Review', color: 'border-t-mc-accent-purple' },
+  { id: 'testing', label: 'Testing', color: 'border-t-[#4BA3C3]' },
+  { id: 'review', label: 'Review', color: 'border-t-[#c084d6]' },
   { id: 'verification', label: 'Verification', color: 'border-t-orange-500' },
-  { id: 'done', label: 'Done', color: 'border-t-mc-accent-green' },
+  { id: 'done', label: 'Done', color: 'border-t-[#4CAF7D]' },
 ];
 
 export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = true }: MissionQueueProps) {

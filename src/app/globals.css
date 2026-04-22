@@ -2,20 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══ WCP Design System Theme ═══ */
 :root {
-  --mc-bg: #0d1117;
-  --mc-bg-secondary: #161b22;
-  --mc-bg-tertiary: #21262d;
-  --mc-border: #30363d;
-  --mc-text: #c9d1d9;
-  --mc-text-secondary: #8b949e;
-  --mc-accent: #58a6ff;
-  --mc-accent-green: #3fb950;
-  --mc-accent-yellow: #d29922;
-  --mc-accent-red: #f85149;
-  --mc-accent-purple: #a371f7;
+  /* Obsidian Palette */
+  --obsidian-base: #050508;
+  --obsidian-deep: #0a0a0f;
+  --obsidian-mid: #121218;
+  --obsidian-high: #1a1a24;
+  --obsidian-light: #252530;
+  --obsidian-surface: #0d0d12;
+  
+  /* Gold Accent */
+  --gold: #e6c364;
+  --gold-bright: #f0d784;
+  --gold-dim: #c9a84c;
+  --gold-glow: rgba(230, 195, 100, 0.4);
+  --gold-subtle: rgba(230, 195, 100, 0.15);
+  
+  /* Mission Control Variables */
+  --mc-bg: var(--obsidian-base);
+  --mc-bg-secondary: var(--obsidian-deep);
+  --mc-bg-tertiary: var(--obsidian-mid);
+  --mc-border: rgba(77, 70, 55, 0.3);
+  --mc-text: #e8e8f0;
+  --mc-text-secondary: #8a9bb0;
+  --mc-accent: var(--gold);
+  --mc-accent-green: #4CAF7D;
+  --mc-accent-yellow: #f5c842;
+  --mc-accent-red: #E05252;
+  --mc-accent-purple: #c084d6;
   --mc-accent-pink: #db61a2;
-  --mc-accent-cyan: #39d353;
+  --mc-accent-cyan: #4BA3C3;
+  --mc-accent-blue: #58a6ff;
 }
 
 * {
@@ -34,6 +52,7 @@ body {
 body {
   background-color: var(--mc-bg);
   color: var(--mc-text);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
 
 /* Custom scrollbar */

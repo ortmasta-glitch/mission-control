@@ -1,6 +1,13 @@
 import crypto from 'crypto';
 
 const ALGORITHM = 'aes-256-cbc';
+const DEFAULT_KEY_WARNED = Symbol('crypto-default-key-warned');
+if (typeof globalThis === 'object' && !(globalThis as any)[DEFAULT_KEY_WARNED]) {
+  if (!process.env.MC_API_TOKEN) {
+    console.warn('[SECURITY WARNING] MC_API_TOKEN not set — encryption uses a default key. Set MC_API_TOKEN in production for proper key derivation.');
+    (globalThis as any)[DEFAULT_KEY_WARNED] = true;
+  }
+}
 const IV_LENGTH = 16;
 const HMAC_LENGTH = 32; // SHA-256 = 32 bytes
 const HMAC_ALGO = 'sha256';

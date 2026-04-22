@@ -50,9 +50,10 @@ export function Header({ workspace, isPortrait = true }: HeaderProps) {
 
   return (
     <header
-      className={`bg-mc-bg-secondary border-b border-mc-border px-3 md:px-4 ${
+      className={`bg-mc-bg-secondary/80 backdrop-blur-xl border-b border-mc-border/50 px-3 md:px-4 ${
         portraitWorkspaceHeader ? 'py-2.5 space-y-2.5' : 'h-14 flex items-center justify-between gap-2'
       }`}
+      style={{ boxShadow: '0 4px 30px rgba(230, 195, 100, 0.1)' }}
     >
       {portraitWorkspaceHeader ? (
         <>
