@@ -64,6 +64,8 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
   };
 
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent, keepOpen = false) => {
     e.preventDefault();
@@ -172,6 +174,8 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
   const handleDelete = async () => {
     if (!task || !confirm(`Delete "${task.title}"?`)) return;
 
+    setIsDeleting(true);
+    setDeleteError(null);
     try {
       const res = await fetch(`/api/tasks/${task.id}`, { method: 'DELETE' });
       if (res.ok) {
@@ -179,9 +183,15 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
           tasks: state.tasks.filter((t) => t.id !== task.id),
         }));
         onClose();
+      } else {
+        const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        setDeleteError(errData.error || `Delete failed (${res.status})`);
       }
     } catch (error) {
       console.error('Failed to delete task:', error);
+      setDeleteError(error instanceof Error ? error.message : 'Network error — please try again');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -468,17 +478,23 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
         {/* Footer - only show on overview tab */}
         {activeTab === 'overview' && (
           <div className="flex items-center justify-between p-4 border-t border-mc-border flex-shrink-0">
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
               {task && (
                 <>
                   <button
                     type="button"
                     onClick={handleDelete}
-                    className="min-h-11 flex items-center gap-2 px-3 py-2 text-mc-accent-red hover:bg-mc-accent-red/10 rounded text-sm"
+                    disabled={isDeleting}
+                    className="min-h-11 flex items-center gap-2 px-3 py-2 text-mc-accent-red hover:bg-mc-accent-red/10 rounded text-sm disabled:opacity-50"
                   >
                     <Trash2 className="w-4 h-4" />
-                    Delete
+                    {isDeleting ? 'Deleting...' : 'Delete'}
                   </button>
+                  {deleteError && (
+                    <span className="text-xs text-red-400 max-w-48 truncate" title={deleteError}>
+                      {deleteError}
+                    </span>
+                  )}
                 </>
               )}
             </div>

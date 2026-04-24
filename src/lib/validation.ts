@@ -1,5 +1,12 @@
 import { z } from 'zod';
 
+// Agent IDs may be standard UUIDs (locally generated) or 32-char hex strings
+// (from OpenClaw gateway). Accept both formats.
+const agentId = z.string().regex(
+  /^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[0-9a-f]{32})$/i,
+  'Must be a valid UUID or hex identifier'
+);
+
 // Task status and priority enums from types
 const TaskStatus = z.enum([
   'pending_dispatch',
@@ -34,8 +41,8 @@ export const CreateTaskSchema = z.object({
   description: z.string().max(10000, 'Description must be 10000 characters or less').optional(),
   status: TaskStatus.optional(),
   priority: TaskPriority.optional(),
-  assigned_agent_id: z.string().uuid().optional().nullable(),
-  created_by_agent_id: z.string().uuid().optional().nullable(),
+  assigned_agent_id: agentId.optional().nullable(),
+  created_by_agent_id: agentId.optional().nullable(),
   business_id: z.string().optional(),
   workspace_id: z.string().optional(),
   due_date: z.string().optional().nullable(),
@@ -46,10 +53,10 @@ export const UpdateTaskSchema = z.object({
   description: z.string().max(10000).optional(),
   status: TaskStatus.optional(),
   priority: TaskPriority.optional(),
-  assigned_agent_id: z.string().uuid().optional().nullable(),
+  assigned_agent_id: agentId.optional().nullable(),
   workflow_template_id: z.string().optional().nullable(),
   due_date: z.string().optional().nullable(),
-  updated_by_agent_id: z.string().uuid().optional(),
+  updated_by_agent_id: agentId.optional(),
   status_reason: z.string().max(2000).optional(),
   board_override: z.boolean().optional(),
   override_reason: z.string().max(2000).optional(),
@@ -61,7 +68,7 @@ export const UpdateTaskSchema = z.object({
 export const CreateActivitySchema = z.object({
   activity_type: ActivityType,
   message: z.string().min(1, 'Message is required').max(5000, 'Message must be 5000 characters or less'),
-  agent_id: z.string().uuid().optional(),
+  agent_id: agentId.optional(),
   metadata: z.string().optional(),
 });
 

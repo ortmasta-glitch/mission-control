@@ -17,7 +17,8 @@ export default function AutopilotPage() {
       try {
         const res = await fetch('/api/products');
         if (res.ok) {
-          const prods: Product[] = await res.json();
+          const allProds: Product[] = await res.json();
+          const prods = allProds.filter(p => p.status !== 'archived');
           setProducts(prods);
 
           // Fetch pending idea counts in parallel

@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.5.0] - 2026-04-14
+
+### Fixed
+- **Per-task OpenClaw sessions** — Dispatch route now creates a unique session per agent + task combination instead of reusing a single session per agent. Previously, all tasks assigned to the same agent shared one OpenClaw conversation session, causing context to accumulate unboundedly until the model's context window was exhausted (~100% ctx) and the agent silently stalled. The `openclaw_sessions` table already had a `task_id` column with an index — dispatch now uses it for session lookup, session ID generation (`mission-control-{agent}-{taskId}`), and row insertion. Parallel tasks on the same agent work independently with isolated context. ([#99](https://github.com/crshdn/mission-control/issues/99))
+- **Agent ID UUID validation** — Zod validation schemas for `assigned_agent_id`, `created_by_agent_id`, `updated_by_agent_id`, and `agent_id` fields now accept both standard UUID format (`8-4-4-4-12`) and 32-character hex identifiers from the OpenClaw gateway. Previously, `z.string().uuid()` rejected gateway-format agent IDs like `d1368a848c6ceec1d876bfb559a9724d`, causing "Invalid UUID" validation errors when dispatching tasks to imported agents. ([#100](https://github.com/crshdn/mission-control/issues/100))
+- **Task delete button responsiveness** — The delete button in `TaskModal` now shows a loading state ("Deleting..."), disables during the request to prevent double-clicks, and displays inline error messages when deletion fails. Previously, the button had no visual feedback on click — if the API request failed or was slow, nothing happened and users assumed the button was non-functional. The `!res.ok` response path was completely unhandled. ([#111](https://github.com/crshdn/mission-control/issues/111))
+
+### Added
+- **Product pause & archive** — Product settings modal now includes a Status dropdown (Active / Paused) and a Danger Zone section with an Archive button. Paused products stop all automated research and ideation cycles. Archived products are soft-deleted (status set to `archived`) and hidden from the main Autopilot listing. The backend already supported these states via PATCH and DELETE endpoints — this release adds the missing UI. ([#98](https://github.com/crshdn/mission-control/issues/98))
+
+---
+
 ## [2.4.0] - 2026-03-22
 
 ### Added

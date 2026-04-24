@@ -137,6 +137,7 @@ export default function ProductDashboardPage() {
       default_branch: product.default_branch || 'main',
       build_mode: product.build_mode || 'plan_first',
       icon: product.icon || '📦',
+      status: product.status || 'active',
     });
     setSettingsError(null);
     setSettingsSaved(false);
@@ -156,6 +157,7 @@ export default function ProductDashboardPage() {
         default_branch: settingsForm.default_branch || 'main',
         build_mode: settingsForm.build_mode,
         icon: settingsForm.icon,
+        status: settingsForm.status,
       };
       const res = await fetch(`/api/products/${productId}`, {
         method: 'PATCH',
@@ -419,6 +421,50 @@ export default function ProductDashboardPage() {
                     <option value="plan_first">Plan First</option>
                     <option value="auto_build">Auto Build</option>
                   </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-mc-text-secondary uppercase tracking-wider mb-1">Status</label>
+                <select
+                  value={settingsForm.status || 'active'}
+                  onChange={e => setSettingsForm(f => ({ ...f, status: e.target.value }))}
+                  className="w-full bg-mc-bg border border-mc-border rounded-lg px-3 py-2 text-sm text-mc-text focus:outline-none focus:border-mc-accent"
+                >
+                  <option value="active">Active</option>
+                  <option value="paused">Paused</option>
+                </select>
+                <p className="text-xs text-mc-text-secondary mt-1">Paused products stop all automated research and ideation cycles.</p>
+              </div>
+
+              {/* Danger zone */}
+              <div className="border-t border-mc-border pt-4 mt-4">
+                <h3 className="text-xs font-medium text-red-400 uppercase tracking-wider mb-2">Danger Zone</h3>
+                <div className="flex items-center justify-between bg-red-500/5 border border-red-500/20 rounded-lg px-4 py-3">
+                  <div>
+                    <p className="text-sm font-medium text-mc-text">Archive this product</p>
+                    <p className="text-xs text-mc-text-secondary">Hides it from the dashboard. Data is preserved.</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!confirm(`Archive "${product.name}"? It will be hidden from the dashboard but data is preserved.`)) return;
+                      try {
+                        const res = await fetch(`/api/products/${productId}`, { method: 'DELETE' });
+                        if (res.ok) {
+                          window.location.href = '/autopilot';
+                        } else {
+                          const err = await res.json().catch(() => ({ error: 'Archive failed' }));
+                          setSettingsError(err.error || 'Archive failed');
+                        }
+                      } catch {
+                        setSettingsError('Network error — please try again');
+                      }
+                    }}
+                    className="px-3 py-1.5 text-sm font-medium text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/10"
+                  >
+                    Archive
+                  </button>
                 </div>
               </div>
             </div>

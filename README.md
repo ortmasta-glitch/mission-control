@@ -28,7 +28,7 @@ I highly recommend getting Hetzner VPS to run this. <a href="https://hetzner.clo
   <a href="https://missioncontrol.ghray.com"><strong>🎮 Live Demo</strong></a> •
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-docker">Docker</a> •
-  <a href="#-whats-new-in-v240">What's New</a> •
+  <a href="#-whats-new-in-v250">What's New</a> •
   <a href="#-features">Features</a> •
   <a href="#-how-it-works">How It Works</a> •
   <a href="#-configuration">Configuration</a> •
@@ -41,86 +41,46 @@ I highly recommend getting Hetzner VPS to run this. <a href="https://hetzner.clo
 
 ---
 
-## 🚀 What's New in v2.4.0
+## 🚀 What's New in v2.5.0
 
-### Agent Skill Creation Loop
-- **Agents learn reusable procedures** — When a task completes, the system extracts structured skills (build steps, deploy scripts, config patterns) from what the agent did. Skills are stored as executable playbooks with commands, prerequisites, and verification.
-- **Skills improve with use** — Agents report whether a skill worked. Bayesian confidence scoring promotes proven skills and deprecates unreliable ones. No manual curation needed.
-- **Injected at dispatch** — Matched skills are the first thing an agent sees, not a footnote. Agent #1 figures out the build process, Agent #2 gets it as primary instructions.
+### Per-Task Agent Sessions ([#99](https://github.com/crshdn/mission-control/issues/99))
+Each dispatched task now gets its own OpenClaw conversation session. Previously, all tasks assigned to the same agent shared one session, causing context to accumulate across tasks until the model's context window was exhausted and the agent stalled. The `openclaw_sessions` table already had a `task_id` column — dispatch now uses it for session lookup, session ID generation, and insert. Parallel tasks on the same agent work independently.
 
-### Previous Releases
+### Flexible Agent ID Validation ([#100](https://github.com/crshdn/mission-control/issues/100))
+Agent ID fields now accept both standard UUID format (`8-4-4-4-12`) and 32-character hex identifiers from the OpenClaw gateway. Previously, Zod's strict `.uuid()` validation rejected gateway-format agent IDs, causing "Invalid UUID" errors when assigning imported agents to tasks.
 
-<details>
-<summary>v2.3.x — Idea Dedup, Chat, Undo, A/B Testing, Rollback</summary>
+### Task Delete Button Fix ([#111](https://github.com/crshdn/mission-control/issues/111))
+The task delete button now shows a loading state ("Deleting..."), disables during the request, and displays inline error messages when deletion fails. Previously, the button had no feedback — if the API request failed or was slow, users saw no response and assumed the button was broken.
 
-- Idea similarity detection & auto-deduplication
-- Floating operator chat widget with @mentions
-- 10-second swipe undo + batch review mode
-- Product program A/B testing
-- Automated rollback pipeline via GitHub webhooks
-</details>
-
-### Idea Similarity Detection
-- **Auto-deduplication** — New ideas are compared against existing ones. Ideas >90% similar to rejected ideas are auto-suppressed. Similar ideas get a warning badge. Full audit trail.
-
-### Operator Chat Widget
-- **Chat from anywhere** — Floating chat widget with threaded conversations per task. `@agent` mentions, command palette (`/status`, `/nudge`, `/checkpoint`), and unread badges.
-
-### Swipe Undo & Batch Review
-- **10-second undo** — Full rollback of any swipe including task deletion. Batch review mode for table-view multi-select actions.
-
-### Product Program A/B Testing
-- **Test your product program** — Run concurrent or alternating A/B tests on product program variants. Research and ideation run against each variant. Statistical comparison of approval rates.
-
-### Automated Rollback Pipeline
-- **Auto-revert failed deploys** — GitHub webhook monitors merged PRs. Post-merge health checks. Auto-creates revert PRs when failures detected.
-
-### Activity Dashboard Picker
-- **Workspace selector** — `/activity` lists all workspaces instead of hardcoding to one.
+### Product Pause & Archive ([#98](https://github.com/crshdn/mission-control/issues/98))
+The Autopilot product settings modal now includes a **Status** dropdown (Active / Paused) and a **Danger Zone** section with an Archive button. Paused products stop automated research and ideation cycles. Archived products are hidden from the dashboard but data is preserved. The main product listing now filters out archived products.
 
 ### Previous Releases
 
 <details>
-<summary>v2.2.1 — Health Check & Backup API</summary>
+<summary>v2.4.1 — Community Bug Fixes</summary>
 
-- `/api/health` and `/api/health/metrics` for monitoring integration
-- Database backup API with optional S3 upload
+- **Autopilot model routing** — Provider models now route through `openclaw/default` with the original model in `x-openclaw-model`, fixing 404 errors on OpenClaw deployments. ([@Ahmedkasmi-dev](https://github.com/Ahmedkasmi-dev), [#109](https://github.com/crshdn/mission-control/pull/109))
+- **AUTOPILOT_MODEL env var** — Removed hardcoded model override in description generation so the shared `AUTOPILOT_MODEL` config is respected. ([@aaronmeza](https://github.com/aaronmeza), [#116](https://github.com/crshdn/mission-control/pull/116))
+- **Gateway catalog sync** — Local agent role assignments are now preserved during gateway sync instead of being overwritten every 60 seconds. ([@cgluttrell](https://github.com/cgluttrell), [#119](https://github.com/crshdn/mission-control/pull/119))
+- **Task chat reliability** — Agent replies are now captured even without an active SSE connection, and the "waiting" indicator no longer shows stale state. ([@heliokeplert-ctrl](https://github.com/heliokeplert-ctrl), [#126](https://github.com/crshdn/mission-control/pull/126))
 </details>
 
 <details>
-<summary>v2.2.0 — Preference Learning & Token Tracking</summary>
+<summary>v2.4.0 — Agent Skill Creation Loop</summary>
 
-- Swipe-driven preference learning (Karpathy AutoResearch pattern)
-- Token counts now recorded in activity log and cost tracker
+- Agents learn reusable procedures from completed tasks
+- Bayesian confidence scoring promotes proven skills
+- Matched skills injected at dispatch as primary instructions
 </details>
 
 <details>
-<summary>v2.1.x — Server-Side Pipeline, Error Reporting & Badges</summary>
+<summary>v2.0–v2.3 — Full changelog in <a href="https://github.com/crshdn/mission-control/releases">Releases</a></summary>
 
-- Server-side research → ideation pipeline (fire-and-forget)
-- LLM retry with exponential backoff
-- Toast notifications with one-click error reporting
-- Pending ideas badges on product cards
-- One-click error reporting via mailto (pre-filled with system logs)
-- Pending ideas badge on product cards (iPhone-style notification count)
-</details>
-
-<details>
-<summary>v2.0.2 — Session Key Prefix Support</summary>
-
-- Session Key Prefix UI for custom OpenClaw session routing. ([@balaji-g42](https://github.com/balaji-g42))
-- Session key sanitization — empty prefixes fall back to defaults.
-</details>
-
-<details>
-<summary>v2.0.1 — Dispatch Stability & Community Contributions</summary>
-
-- **Product Settings Modal** — Edit product config inline via the gear icon.
-- **Import README / Auto-Generate Description** — One-click README import and AI-generated descriptions in the New Product Wizard.
-- **Dispatch hang fix** — 30s timeout on all dispatch calls; stale WebSocket force-reconnect.
-- **Pre-migration database backups** — Automatic timestamped backups before migrations. ([@cgluttrell](https://github.com/cgluttrell))
-- **Migration 013 data guard** — Destructive migration skips databases with existing data. ([@cgluttrell](https://github.com/cgluttrell))
-- **Static device identity path** — Removes dynamic filesystem path parameter. ([@org4lap](https://github.com/org4lap))
+- v2.3.x — Idea dedup, operator chat, swipe undo, A/B testing, auto-rollback
+- v2.2.x — Preference learning, token tracking, health check endpoints, backup API
+- v2.1.x — Server-side pipeline, error reporting, idea badges
+- v2.0.x — Session key prefix, dispatch stability, community contributions
 </details>
 
 ### v2.0 Highlights
