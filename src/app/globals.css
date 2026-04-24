@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 /* ═══ WCP Design System Theme ═══ */
-:root {
+:root,
+.dark {
   /* Obsidian Palette */
   --obsidian-base: #050508;
   --obsidian-deep: #0a0a0f;
@@ -34,6 +35,30 @@
   --mc-accent-pink: #db61a2;
   --mc-accent-cyan: #4BA3C3;
   --mc-accent-blue: #58a6ff;
+}
+
+/* Light theme overrides */
+.light {
+  --obsidian-base: #f5f5f0;
+  --obsidian-deep: #eaeae5;
+  --obsidian-mid: #dcdcd6;
+  --obsidian-high: #d0d0ca;
+  --obsidian-light: #c4c4be;
+  --obsidian-surface: #f0f0eb;
+
+  --gold: #b8960d;
+  --gold-bright: #d4a817;
+  --gold-dim: #9a7d0a;
+  --gold-glow: rgba(184, 150, 13, 0.3);
+  --gold-subtle: rgba(184, 150, 13, 0.1);
+
+  --mc-bg: var(--obsidian-base);
+  --mc-bg-secondary: var(--obsidian-deep);
+  --mc-bg-tertiary: var(--obsidian-mid);
+  --mc-border: rgba(100, 95, 80, 0.25);
+  --mc-text: #1a1a24;
+  --mc-text-secondary: #5a6270;
+  --mc-accent: var(--gold);
 }
 
 * {
@@ -177,4 +202,54 @@ body {
 /* Glow effect for online status */
 .online-glow {
   box-shadow: 0 0 10px var(--mc-accent-green), 0 0 20px var(--mc-accent-green);
+}
+
+/* ═══ Sidebar ═══ */
+
+/* Sidebar nav item active indicator bar */
+aside [data-tour] a[class*="bg-mc-accent"],
+aside a.bg-mc-accent\/15 {
+  position: relative;
+}
+
+aside a.bg-mc-accent\/15::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 25%;
+  bottom: 25%;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--mc-accent);
+}
+
+/* Sidebar transition for mobile drawer */
+@media (max-width: 768px) {
+  aside {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Sidebar resize handle hover */
+aside [aria-label="Resize sidebar"]:hover > div {
+  background: var(--mc-accent);
+  opacity: 0.5;
+}
+
+/* Sidebar scrollbar - thin & subtle */
+aside nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+aside nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+aside nav::-webkit-scrollbar-thumb {
+  background: var(--mc-border);
+  border-radius: 2px;
+}
+
+aside nav::-webkit-scrollbar-thumb:hover {
+  background: var(--mc-text-secondary);
 }

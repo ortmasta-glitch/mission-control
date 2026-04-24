@@ -7,11 +7,15 @@ import { NextRequest } from 'next/server';
 import { registerClient, unregisterClient, getActiveConnectionCount } from '@/lib/events';
 import { runHealthCheckCycle } from '@/lib/agent-health';
 import { attachChatListener } from '@/lib/chat-listener';
+import { startGatewayStatusPolling } from '@/lib/gateway-status-store';
 
 export const dynamic = 'force-dynamic';
 
 // Attach the chat listener on first SSE connection (idempotent)
 attachChatListener();
+
+// Start gateway status polling (idempotent — safe to call on every module load)
+startGatewayStatusPolling();
 
 export async function GET(request: NextRequest) {
   const encoder = new TextEncoder();

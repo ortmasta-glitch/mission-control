@@ -5,11 +5,7 @@ export async function GET() {
   try {
     const db = getDb();
     
-    // Debug: Check if we can query
-    const testCount = db.prepare('SELECT COUNT(*) as c FROM projects').get() as { c: number };
-    console.log('[Projects API] Found', testCount.c, 'projects in DB');
-    
-    // Query projects directly from the projects table
+    // Query products as projects (products table is our projects)
     const projects = db.prepare(`
       SELECT 
         id,
@@ -18,10 +14,10 @@ export async function GET() {
         status,
         created_at as createdAt,
         updated_at as updatedAt,
-        completed_at as completedAt,
-        deliverables,
-        agent
-      FROM projects
+        NULL as completedAt,
+        '{}' as deliverables,
+        NULL as agent
+      FROM products
       ORDER BY created_at DESC
     `).all() as ProjectRow[];
 
@@ -36,7 +32,7 @@ export async function GET() {
 
     // Split into active and archived
     const activeProjects = transformedProjects.filter(p => 
-      p.status === 'in_progress' || p.status === 'planning'
+      p.status === 'active' || p.status === 'in_progress' || p.status === 'planning'
     );
     
     const archivedProjects = transformedProjects
@@ -55,9 +51,12 @@ export async function GET() {
     });
     
   } catch (error) {
-    console.error('Error fetching projects:', error);
+    const errMsg = error instanceof Error ? error.message : String(error);
+    const errStack = error instanceof Error ? error.stack : '';
+    console.error('[Projects API] Error:', errMsg);
+    console.error('[Projects API] Stack:', errStack);
     return NextResponse.json(
-      { error: 'Failed to fetch projects' },
+      { error: 'Failed to fetch projects', details: errMsg },
       { status: 500 }
     );
   }
@@ -66,11 +65,11 @@ export async function GET() {
 interface ProjectRow {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   status: string;
   createdAt: string;
   updatedAt: string;
   completedAt: string | null;
   deliverables: string;
-  agent: string;
+  agent: string | null;
 }

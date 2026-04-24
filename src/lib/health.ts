@@ -8,7 +8,7 @@
 import { getDb, queryOne, queryAll } from '@/lib/db';
 import { getAllAgentHealth } from '@/lib/agent-health';
 import { listCostCaps } from '@/lib/costs/caps';
-import { getOpenClawClient } from '@/lib/openclaw/client';
+import { getGatewayStatusStore } from '@/lib/gateway-status-store';
 import fs from 'fs';
 import path from 'path';
 
@@ -47,6 +47,8 @@ export interface DbHealth {
 export interface GatewayHealth {
   status: 'ok' | 'error' | 'unconfigured';
   connected: boolean;
+  latency_ms?: number;
+  active_sessions?: number;
   error?: string;
 }
 
@@ -155,9 +157,19 @@ function checkDb(): DbHealth {
 
 function checkGateway(): GatewayHealth {
   try {
-    const client = getOpenClawClient();
-    const connected = client.isConnected();
-    return { status: connected ? 'ok' : 'error', connected };
+    const store = getGatewayStatusStore();
+    const snapshot = store.getSnapshot();
+    const connected = snapshot.wsConnected && snapshot.connectionState !== 'disconnected' && snapshot.connectionState !== 'unconfigured';
+    const status: 'ok' | 'error' | 'unconfigured' =
+      snapshot.connectionState === 'unconfigured' ? 'unconfigured' :
+      connected ? 'ok' : 'error';
+    return {
+      status,
+      connected,
+      ...(snapshot.latencyMs !== null ? { latency_ms: snapshot.latencyMs } : {}),
+      ...(snapshot.activeSessions > 0 ? { active_sessions: snapshot.activeSessions } : {}),
+      ...(snapshot.lastError ? { error: snapshot.lastError } : {}),
+    };
   } catch (err) {
     return {
       status: 'error',

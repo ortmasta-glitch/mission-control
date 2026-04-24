@@ -6,3 +6,4 @@ export { MentionInput } from './MentionInput';
 export { CommandPalette, buildDefaultCommands } from './CommandPalette';
 export type { PaletteCommand } from './CommandPalette';
 export type { UnreadTask } from './ChatWidget';
+export { ChatView } from './ChatView';

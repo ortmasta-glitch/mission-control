@@ -849,7 +849,8 @@ export type SSEEventType =
   | 'ab_test_cancelled'
   | 'skill_created'
   | 'skill_promoted'
-  | 'skills_extracted';
+  | 'skills_extracted'
+  | 'gateway_status_changed';
 
 export interface SSEEvent {
   type: SSEEventType;

@@ -4,7 +4,6 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, ListTodo, Users, Activity, Settings as SettingsIcon, ExternalLink, Home, BarChart3 } from 'lucide-react';
-import { Header } from '@/components/Header';
 import { AgentsSidebar } from '@/components/AgentsSidebar';
 import { MissionQueue } from '@/components/MissionQueue';
 import { LiveFeed } from '@/components/LiveFeed';
@@ -205,8 +204,7 @@ export default function WorkspacePage() {
   const showMobileBottomTabs = isPortrait;
 
   return (
-    <div className="h-screen flex flex-col bg-mc-bg overflow-hidden">
-      <Header workspace={workspace} isPortrait={isPortrait} />
+    <div className="flex flex-1 overflow-hidden">
 
       <div className="hidden lg:flex flex-1 overflow-hidden">
         <AgentsSidebar workspaceId={workspace.id} />

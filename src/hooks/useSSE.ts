@@ -185,6 +185,17 @@ export function useSSE() {
               });
               break;
 
+            case 'gateway_status_changed':
+              debug.sse('Gateway status changed', sseEvent.payload);
+              // Dispatch custom event for useGatewayStatus hook listeners
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('gateway-status-changed', { detail: sseEvent.payload }));
+              }
+              // Also update isOnline based on gateway connectivity
+              const gwPayload = sseEvent.payload as { connectionState?: string };
+              setIsOnline(gwPayload.connectionState === 'connected' || gwPayload.connectionState === 'degraded');
+              break;
+
             default:
               debug.sse('Unknown event type', sseEvent);
           }
