@@ -1,0 +1,14 @@
+{
+  "name": "wcp-mission-control",
+  "version": "1.0.0",
+  "description": "WCP Staff Communications Hub",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "sqlite3": "^5.1.7"
+  }
+}

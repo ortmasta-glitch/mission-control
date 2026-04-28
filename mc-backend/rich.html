@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WCP Mission Control</title>
+<style>
+:root {
+    --bg: #101418;
+    --surface: #1a1e24;
+    --card: #222830;
+    --border: #2e343c;
+    --gold: #e6c364;
+    --gold-dim: #b89a3f;
+    --text: #e8e6e3;
+    --text-dim: #8b8d91;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --blue: #60a5fa;
+    --red: #f87171;
+    --purple: #a78bfa;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* ── Header ─────────────────────────────── */
+.header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 24px;
+}
+
+.logo-text {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--gold);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* ── Search Bar ─────────────────────────── */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    width: 360px;
+}
+
+.search-bar input {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+}
+
+.search-bar input::placeholder { color: var(--text-dim); }
+
+.search-icon { color: var(--text-dim); font-size: 18px; }
+
+/* ── Filters ────────────────────────────── */
+.filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.filter-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    transition: all 0.2s;
+}
+
+.filter-chip:hover { border-color: var(--gold); color: var(--text); }
+.filter-chip.active { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+
+.filter-chip .count {
+    background: rgba(0,0,0,0.2);
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+/* ── Date Navigation ────────────────────── */
+.date-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.date-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.date-btn:hover { border-color: var(--gold); }
+
+.date-label {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--gold);
+}
+
+.date-count {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-left: 8px;
+}
+
+/* ── Cards Feed ─────────────────────────── */
+.cards-feed {
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comm-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    transition: border-color 0.2s;
+}
+
+.comm-card:hover { border-color: var(--gold-dim); }
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.patient-name {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-type {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.card-type .type-icon { font-size: 16px; }
+.card-type.incoming { color: var(--green); }
+.card-type.outgoing { color: var(--blue); }
+
+.card-timestamp {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+}
+
+.card-events {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 4px;
+    border-left: 2px solid var(--border);
+    margin-left: 8px;
+}
+
+.card-event {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.event-time {
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+    min-width: 44px;
+}
+
+.event-icon { font-size: 14px; }
+.event-text { color: var(--text); }
+
+.event-ai {
+    background: rgba(230, 195, 100, 0.1);
+    border: 1px solid rgba(230, 195, 100, 0.2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--gold);
+}
+
+/* ── Empty State ────────────────────────── */
+.empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--text-dim);
+}
+
+.empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+.empty-state h3 { color: var(--text); margin-bottom: 8px; }
+
+/* ── Status Indicators ──────────────────── */
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.status-dot.new { background: var(--green); }
+.status-dot.in_progress { background: var(--yellow); }
+.status-dot.actioned { background: var(--blue); }
+
+/* ── Responsive ─────────────────────────── */
+@media (max-width: 768px) {
+    .search-bar { width: 100%; }
+    .header { flex-wrap: wrap; gap: 12px; }
+    .cards-feed { padding: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo">
+        <span class="logo-icon">🏛️</span>
+        <span class="logo-text">WCP MISSION CONTROL</span>
+    </div>
+    <div class="header-right">
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Szukaj po nazwisku..." oninput="handleSearch(this.value)">
+        </div>
+    </div>
+</div>
+
+<div class="filters" id="typeFilters">
+    <div class="filter-chip active" data-type="all" onclick="setFilter('all')">
+        Wszystkie <span class="count" id="count-all">0</span>
+    </div>
+    <div class="filter-chip" data-type="call_in" onclick="setFilter('call_in')">
+        📞 Połączenia <span class="count" id="count-calls">0</span>
+    </div>
+    <div class="filter-chip" data-type="whatsapp" onclick="setFilter('whatsapp')">
+        💬 WhatsApp <span class="count" id="count-whatsapp">0</span>
+    </div>
+    <div class="filter-chip" data-type="email" onclick="setFilter('email')">
+        📧 Email <span class="count" id="count-email">0</span>
+    </div>
+    <div class="filter-chip" data-type="booking" onclick="setFilter('booking')">
+        📅 Rezerwacje <span class="count" id="count-booking">0</span>
+    </div>
+</div>
+
+<div class="date-nav">
+    <button class="date-btn" onclick="changeDate(-1)">◀</button>
+    <span class="date-label" id="dateLabel">Dzisiaj</span>
+    <button class="date-btn" onclick="changeDate(1)">▶</button>
+    <span class="date-count" id="dateCount"></span>
+</div>
+
+<div class="cards-feed" id="cardsFeed">
+    <div class="empty-state">
+        <div class="icon">📡</div>
+        <h3>Oczekiwanie na komunikację</h3>
+        <p>Karty pojawią się automatycznie</p>
+    </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────
+let currentDate = new Date();
+let currentFilter = 'all';
+let searchQuery = '';
+
+const TYPE_ICONS = {
+    call_in: '📞', call_out: '📞',
+    whatsapp: '💬', email: '📧',
+    sms: '📱', booking: '📅',
+    'znany lekarz': '🏥'
+};
+
+const TYPE_LABELS = {
+    call_in: 'Połączenie przychodzące', call_out: 'Połączenie wychodzące',
+    whatsapp: 'WhatsApp', email: 'Email',
+    sms: 'SMS', booking: 'Rezerwacja',
+    'znany lekarz': 'ZnanyLekarz'
+};
+
+const DIRECTION_CLASS = { incoming: 'incoming', outgoing: 'outgoing' };
+
+// ── API Calls ──────────────────────────────
+async function fetchCommunications() {
+    const dateStr = currentDate.toISOString().split('T')[0];
+    let url = `/api/communications?date=${dateStr}&limit=100`;
+    if (currentFilter !== 'all') url += `&type=${currentFilter}`;
+    if (searchQuery) url += `&lastName=${encodeURIComponent(searchQuery)}`;
+
+    try {
+        const res = await fetch(url);
+        return await res.json();
+    } catch (e) {
+        console.error('Fetch error:', e);
+        return [];
+    }
+}
+
+async function fetchTypeCounts() {
+    try {
+        const res = await fetch('/api/types');
+        return await res.json();
+    } catch { return []; }
+}
+
+// ── Render ─────────────────────────────────
+function formatTime(ts) {
+    const d = new Date(ts);
+    return d.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+}
+
+function formatDate(d) {
+    const today = new Date().toISOString().split('T')[0];
+    const target = d.toISOString().split('T')[0];
+    if (target === today) return 'Dzisiaj';
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (target === yesterday.toISOString().split('T')[0]) return 'Wczoraj';
+    return d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function renderCards(data) {
+    const feed = document.getElementById('cardsFeed');
+
+    if (!data || data.length === 0) {
+        feed.innerHTML = `<div class="empty-state">
+            <div class="icon">📡</div>
+            <h3>Brak komunikacji tego dnia</h3>
+            <p>Spróbuj inny dzień lub filtr</p>
+        </div>`;
+        return;
+    }
+
+    feed.innerHTML = data.map(card => `
+        <div class="comm-card">
+            <div class="card-header">
+                <div style="display:flex;align-items:center;gap:10px">
+                    <span class="status-dot ${card.status}"></span>
+                    <span class="patient-name">${card.patient_last_name}${card.patient_first_name ? ', ' + card.patient_first_name : ''}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:16px">
+                    <span class="card-type ${DIRECTION_CLASS[card.direction] || ''}">
+                        <span class="type-icon">${TYPE_ICONS[card.type] || '📋'}</span>
+                        ${TYPE_LABELS[card.type] || card.type}
+                    </span>
+                    <span class="card-timestamp">${formatTime(card.timestamp)}</span>
+                </div>
+            </div>
+            <div class="card-events">
+                ${renderEvents(card)}
+            </div>
+        </div>
+    `).join('');
+
+    document.getElementById('dateCount').textContent = `${data.length} kart`;
+}
+
+function renderEvents(card) {
+    let events = '';
+
+    // Primary event
+    if (card.type.startsWith('call')) {
+        const dur = card.duration_seconds ? `${Math.round(card.duration_seconds/60)} min` : '';
+        events += `<div class="card-event">
+            <span class="event-time">${formatTime(card.timestamp)}</span>
+            <span class="event-icon">${card.type === 'call_in' ? '📞' : '📱'}</span>
+            <span class="event-text">${card.type === 'call_in' ? 'Połączenie przychodzące' : 'Połączenie wychodzące'} ${dur ? '— ' + dur : ''} ${card.therapist_name ? '(' + card.therapist_name + ')' : ''}</span>
+        </div>`;
+    } else if (card.type === 'whatsapp') {
+        events += `<div class="card-event">
+            <span class="event-time">${formatTime(card.timestamp)}</span>
+            <span class="event-icon">💬</span>
+            <span class="event-text">${card.transcription || 'Wiadomość WhatsApp'}</span>
+        </div>`;
+    } else if (card.type === 'email') {
+        events += `<div class="card-event">
+            <span class="event-time">${formatTime(card.timestamp)}</span>
+            <span class="event-icon">📧</span>
+            <span class="event-text">${card.transcription || 'Email'}</span>
+        </div>`;
+    } else {
+        events += `<div class="card-event">
+            <span class="event-time">${formatTime(card.timestamp)}</span>
+            <span class="event-icon">${TYPE_ICONS[card.type] || '📋'}</span>
+            <span class="event-text">${TYPE_LABELS[card.type] || card.type}</span>
+        </div>`;
+    }
+
+    // Transcription available
+    if (card.transcription && card.type.startsWith('call')) {
+        events += `<div class="card-event">
+            <span class="event-icon">📝</span>
+            <span class="event-text">Transkrypcja dostępna</span>
+        </div>`;
+    }
+
+    // AI Summary
+    if (card.ai_summary) {
+        events += `<div class="card-event">
+            <span class="event-icon">🤖</span>
+            <div class="event-ai">${card.ai_summary}</div>
+        </div>`;
+    }
+
+    return events;
+}
+
+// ── Handlers ───────────────────────────────
+async function refresh() {
+    document.getElementById('dateLabel').textContent = formatDate(currentDate);
+    const data = await fetchCommunications();
+    renderCards(data);
+
+    // Update type counts
+    const counts = await fetchTypeCounts();
+    let total = 0;
+    counts.forEach(c => {
+        total += c.count;
+        const el = document.getElementById(`count-${c.type === 'call_in' || c.type === 'call_out' ? 'calls' : c.type}`);
+        if (el) el.textContent = c.count;
+    });
+    document.getElementById('count-all').textContent = total;
+}
+
+function setFilter(type) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.type === type);
+    });
+    refresh();
+}
+
+function changeDate(offset) {
+    currentDate.setDate(currentDate.getDate() + offset);
+    refresh();
+}
+
+let searchTimeout;
+function handleSearch(value) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        searchQuery = value.trim();
+        refresh();
+    }, 300);
+}
+
+// ── Init ──────────────────────────────────
+refresh();
+
+// Auto-refresh every 30 seconds
+setInterval(refresh, 30000);
+</script>
+
+</body>
+</html>
